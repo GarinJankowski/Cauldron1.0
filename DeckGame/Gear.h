@@ -19,12 +19,15 @@ public:
 	Gear(const char *name);
 	~Gear();
 
+
 	const char *GearName;
 	const char *Description;
 	const char *Type;
 
 	void GearOnOrOff(bool On, Character &guy, Deck &deck);
-	void printGear(int position);
+	void TraitOnOrOff(bool On, Character &guy, Deck &deck);
+	void CardOnOrOff(bool On, Character &guy, Deck &deck);
+	void printGear(int position, Character &guy);
 };
 
 #endif //GEAR_H

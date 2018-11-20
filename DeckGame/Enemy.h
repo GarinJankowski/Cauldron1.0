@@ -39,6 +39,7 @@ public:
 
 	int bleeding;
 	int fumes;
+	int flay;
 
 	//enemy moves
 	void Turn(Character &guy, TextLog &log);

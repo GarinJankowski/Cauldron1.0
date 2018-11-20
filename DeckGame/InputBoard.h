@@ -26,6 +26,8 @@ public:
 	vector<Card> Discard;
 	vector<Card> DecisionCards;
 
+	int cardThere = 3;
+
 	vector<Gear> inventory;
 	Gear hands;
 	Gear body;
@@ -95,6 +97,7 @@ public:
 
 	void updateDeck(Deck &deck);
 	void clearBoard();
+	void clearBoardWhole();
 
 	//special other stuff
 	bool Third_Eye = FALSE;

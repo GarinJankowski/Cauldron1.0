@@ -44,21 +44,16 @@ Card::Card(const char *name):CardName(name)
 		Description = "Deal 6d(Str-5) damage. Remove all your block.";
 	}
 	else if (CardName == "Pierce") {
-		//
 		CardType = "Attack";
 		Description = "Deal 2d(Str) damage. Ignores block.";
 	}
 	else if (CardName == "Shoot") {
 		CardType = "Attack";
-		Description = "Deal 2d(Str) damage. Take 7 damage. Gain 1 turn.";
+		Description = "Deal 2d(Str) damage. Take 7 damage. Extra turn.";
 	}
 	else if (CardName == "Throw") {
 		CardType = "Attack";
-		Description = "Deal 1d(Str-2) damage. Gain 1 turn.";
-	}
-	else if (CardName == "Charge") {
-		CardType = "Attack";
-		Description = "Deal 7d(Str-5) damage, remove all your block.";
+		Description = "Deal 1d(Str-2) damage. Extra turn.";
 	}
 	else if (CardName == "Impale") {
 		CardType = "Attack";
@@ -66,7 +61,11 @@ Card::Card(const char *name):CardName(name)
 	}
 	else if (CardName == "Parry") {
 		CardType = "Attack";
-		Description = "Negate the next hit taken. Deal (Str)$ damage.";
+		Description = "Deal (Str) damage. Negate the next attack.";
+	}
+	else if (CardName == "Feint") {
+		CardType = "Attack";
+		Description = "Deal 2d(Str) damage. Fill your hand with Defends.";
 	}
 	else if (CardName == "Slice") {
 		CardType = "Attack";
@@ -78,7 +77,7 @@ Card::Card(const char *name):CardName(name)
 	}
 	else if (CardName == "Demolish") {
 		CardType = "Attack";
-		Description = "Deal 3x(Str) damage. Add a Tired card to$ your deck.";
+		Description = "Deal 3x(Str) damage. Lose 2 Str for the battle.";
 	}
 	else if (CardName == "Bleed") {
 		CardType = "Attack";
@@ -90,7 +89,7 @@ Card::Card(const char *name):CardName(name)
 	}
 	else if (CardName == "Stab") {
 		CardType = "Attack";
-		Description = "Chance to deal either 1 or 12 damage. Gain an extra turn.";
+		Description = "Chance to deal either 1 or 12 damage. Extra turn.";
 	}
 	else if (CardName == "Zap") {
 		CardType = "Attack";
@@ -100,6 +99,23 @@ Card::Card(const char *name):CardName(name)
 		CardType = "Attack";
 		Description = "Deal (Def)d2 damage.";
 	}
+	else if (CardName == "Flay") {
+		CardType = "Attack";
+		Description = "Deal 2d(Str) damage. Deal (Str/2) damage for 3 turns.";
+	}
+	else if (CardName == "Slash") {
+		CardType = "Attack";
+		Description = "Deal (Str)d2 damage. Fill your hand with attacks.";
+	}
+	else if (CardName == "Lash") {
+		CardType = "Attack";
+		Description = "Deal (Str)d3 damage. Take 6d2 damage.";
+	}
+	else if (CardName == "Pummel") {
+		CardType = "Attack";
+		Description = "Deal 2 damage. Increase this damage by 2d(Str/2).";
+	}
+
 //Defends
 	else if (CardName == "Endure") {
 		//(Def)+2
@@ -129,19 +145,19 @@ Card::Card(const char *name):CardName(name)
 	}
 	else if (CardName == "Dash") {
 		CardType = "Defend";
-		Description = "Gain 1d(Def) block. Gain an extra turn.";
+		Description = "Gain 1d(Def) block. Extra turn.";
 	}
 	else if (CardName == "Brace") {
 		CardType = "Defend";
-		Description = "Gain (Def) block. Fill your hand with$ defends.";
+		Description = "Gain (Def) block. Fill your hand with Defends.";
 	}
 	else if (CardName == "Counter") {
 		CardType = "Defend";
-		Description = "Gain (Def) block. Fill your hand with$ attacks.";
+		Description = "Gain (Def) block. Fill your hand with Attacks.";
 	}
 	else if (CardName == "Predict") {
 		CardType = "Defend";
-		Description = "Gain (Def) block. Fill your hand with$ spells.";
+		Description = "Gain (Def) block. Fill your hand with Spells.";
 	}
 	else if (CardName == "Absorb") {
 		CardType = "Defend";
@@ -161,7 +177,7 @@ Card::Card(const char *name):CardName(name)
 	}
 	else if (CardName == "Repulse") {
 		CardType = "Defend";
-		Description = "Take 7 damage, negate the next hit. Gain an extra turn.";
+		Description = "Take 7 damage, negate the next hit. Extra turn.";
 	}
 //Spells
 	else if (CardName == "Ponder") {
@@ -187,7 +203,7 @@ Card::Card(const char *name):CardName(name)
 	else if (CardName == "Blast") {
 		ManaCost = 8;
 		CardType = "Spell";
-		Description = "Cost 8 mana. Deal (Int)d2 damage. Extra$ turn.";
+		Description = "Cost 8 mana. Deal (Int)d2 damage. Extra turn.";
 	}
 
 	else if (CardName == "Leech") {
@@ -219,7 +235,7 @@ Card::Card(const char *name):CardName(name)
 	else if (CardName == "Singularity") {
 		ManaCost = 0;
 		CardType = "Spell";
-		Description = "Gain (Int)+7 block and (Int) mana. Lose a$ turn.";
+		Description = "Gain (Int)+7 block and (Int) mana. Lose a turn.";
 	}
 
 	else if (CardName == "Freeze") {
@@ -246,7 +262,7 @@ Card::Card(const char *name):CardName(name)
 	else if (CardName == "Smoke") {
 		ManaCost = 5;
 		CardType = "Spell";
-		Description = "Cost 5 mana. Get (Int)/2$ block for 5$ turns.";
+		Description = "Cost 5 mana. Get (Int)/2 block for 5 turns.";
 	}
 	else if (CardName == "Incense") {
 		ManaCost = 0;
@@ -280,7 +296,7 @@ Card::Card(const char *name):CardName(name)
 	else if (CardName == "Copy") {
 		ManaCost = 6;
 		CardType = "Spell";
-		Description = "Cost 6 mana. Use the next$ card twice.$ Extra turn.";
+		Description = "Cost 6 mana. Use the next card twice. Extra turn.";
 	}
 	else if (CardName == "Confuse") {
 		ManaCost = 0;
@@ -343,7 +359,7 @@ Card::Card(const char *name):CardName(name)
 	}
 	else if (CardName == "Steroids") {
 		CardType = "Special";
-		Description = "Your next attack deals$ double damage.";
+		Description = "Your next attack deals double damage.";
 	}
 	else if (CardName == "Change Mind") {
 		CardType = "Special";
@@ -351,7 +367,7 @@ Card::Card(const char *name):CardName(name)
 	}
 	else if (CardName == "Intimidate") {
 		CardType = "Special";
-		Description = "Take half damage for 2$ turns.";
+		Description = "Take half damage for 2 turns.";
 	}
 	else if (CardName == "Cripple") {
 		CardType = "Special";
@@ -363,7 +379,7 @@ Card::Card(const char *name):CardName(name)
 	}
 	else if (CardName == "Entomb") {
 		CardType = "Special";
-		Description = "Enemy cannot take or deal damage for 2$ turns.";
+		Description = "Enemy cannot take or deal damage for 2 turns.";
 	}
 	else if (CardName == "Distract") {
 		CardType = "Special";
@@ -409,7 +425,18 @@ Card::Card(const char *name):CardName(name)
 		CardType = "Special";
 		Description = "Deal your block as damage.";
 	}
-
+	else if (CardName == "Stall") {
+		CardType = "Special";
+		Description = "Extra turn.";
+	}
+	else if (CardName == "Strike") {
+		CardType = "Special";
+		Description = "Deal 3d(Str) damage.";
+	}
+	else if (CardName == "Defend") {
+		CardType = "Special";
+		Description = "Gain (Def)d3 block.";
+	}
 //Negatives
 	else if (CardName == "Steam") {
 		CardType = "Negative";
@@ -429,15 +456,15 @@ Card::Card(const char *name):CardName(name)
 	}
 	else if (CardName == "Drain Str") {
 		CardType = "Negative";
-		Description = "Lose 1 strength.";
+		Description = "Lose 1 Strength.";
 	}
 	else if (CardName == "Drain Def") {
 		CardType = "Negative";
-		Description = "Lose 1 defense.";
+		Description = "Lose 1 Defense.";
 	}
 	else if (CardName == "Drain Int") {
 		CardType = "Negative";
-		Description = "Lose 1 intelligence.";
+		Description = "Lose 1 Intelligence.";
 	}
 }
 
@@ -491,21 +518,21 @@ void Card::printCard(int position) {
 
 	switch (position) {
 	case 1:
-		manualBox("Card 1", 0);
 		mvprintInSize(17, 5, 15, CardName);
 		mvprintInSize(19, 4, 15, Description);
+		manualBox("Card 1", 0);
 		break;
 	case 2:
-		manualBox("Card 2", 0);
 		//cardWindow = makeWindow(8, 20, 16, 21);
 		mvprintInSize(17, 25, 15, CardName);
 		mvprintInSize(19, 24, 15, Description);
+		manualBox("Card 2", 0);
 		break;
 	case 3:
-		manualBox("Card 3", 0);
 		//cardWindow = makeWindow(8, 20, 16, 41);
 		mvprintInSize(17, 45, 15, CardName);
 		mvprintInSize(19, 44, 15, Description);
+		manualBox("Card 3", 0);
 		break;
 
 
@@ -522,8 +549,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			int damage = dealDamage(rtd(2, guy.Strength), guy, enemy, log);
 
 			string line = "-You smack the " + string(enemy.Name)
-				+ " for " + to_string(damage)
-				+ " damage.";
+				+ " for #y" + to_string(damage)
+				+ "#o damage.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Magic Smack") {
@@ -531,8 +558,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			int damage = dealDamage(rtd(2, guy.Intelligence), guy, enemy, log);
 
 			string line = "-You magically smack the " + string(enemy.Name)
-				+ " for " + to_string(damage)
-				+ " damage.";
+				+ " for #y" + to_string(damage)
+				+ "#o damage.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Charge") {
@@ -541,8 +568,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.CurrentBlock = 0;
 
 			string line = "-You charge at the " + string(enemy.Name)
-				+ " for " + to_string(damage)
-				+ " damage, losing all your block.";
+				+ " for #y" + to_string(damage)
+				+ "#o damage, #rlosing all your block.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Pierce") {
@@ -550,9 +577,9 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			pierce = TRUE;
 			int damage = dealDamage(rtd(2, guy.Strength), guy, enemy, log);
 
-			string line = "-You pierce the " + string(enemy.Name)
-				+ "'s block and deal " + to_string(damage)
-				+ " damage.";
+			string line = "-You #ypierce#o the " + string(enemy.Name)
+				+ "'s block and deal #y" + to_string(damage)
+				+ "#o damage.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Shoot") {
@@ -562,9 +589,9 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.extraTurns += 1;
 
 			string line = "-You shoot the " + string(enemy.Name)
-				+ " for " + to_string(damage)
-				+ " and take " + to_string(selfdamage) + ".";
-			string line2 = " EXTRA TURN";
+				+ " for #y" + to_string(damage)
+				+ "#o and take #r" + to_string(selfdamage) + "#o.";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line);
 			log.PushPop(line2);
 		}
@@ -574,8 +601,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			damage = dealDamage(damage, guy, enemy, log);
 
 			string line = "-You hit the " + string(enemy.Name)
-						+" for " + to_string(damage) + " damage.";
-			string line2 = " EXTRA TURN";
+						+" for #y" + to_string(damage) + "#o damage.";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line);
 			log.PushPop(line2);
 		}
@@ -584,27 +611,34 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			int damage = guy.Strength * 3;
 			damage = dealDamage(damage, guy, enemy, log);
 
-			string line = "-You impale the " + string(enemy.Name) + " for " + to_string(damage) + " damage.";
+			string line = "-You impale the " + string(enemy.Name) + " for #y" + to_string(damage) + "#o damage.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Parry") {
+			int damage = guy.Strength;
+			damage = dealDamage(damage, guy, enemy, log);
 			guy.Negate++;
 
-			int damage = rtd(guy.Strength, 1);
-			
-			damage = dealDamage(damage, guy, enemy, log);
-
-			string line = "-You parry for " + to_string(damage) + " damage.";
-			string line2 = "-You negate the next attack.";
+			string line = "-You #cnegate#o the next attack and parry for #y" + to_string(damage) + "#o damage.";
 			log.PushPop(line);
-			log.PushPop(line2);
+		}
+		else if (CardName == "Feint") {
+			int damage = rtd(2, guy.Strength);
+			damage = dealDamage(damage, guy, enemy, log);
+			guy.fillType = "Defend";
+			//guy.extraTurns++;
+
+			string line = "-You feint then deal #y" + to_string(damage) + "#o damage.";
+			//string line2 = " EXTRA TURN";
+			log.PushPop(line);
+			//log.PushPop(line2);
 		}
 		else if (CardName == "Slice") {
 			int damage = rtd(guy.Strength, 2);
 			damage = dealDamage(damage, guy, enemy, log);
 
 			string line = "-You slice the " + string(enemy.Name)
-						+ " for " + to_string(damage) + " damage.";
+						+ " for #y" + to_string(damage) + "#o damage.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Crush") {
@@ -612,28 +646,26 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			int damage = dealDamage(rtd(3, guy.Strength), guy, enemy, log);
 
 			string line = "-You crush the " + string(enemy.Name)
-				+ " for " + to_string(damage)
-				+ " damage.";
+				+ " for #y" + to_string(damage)
+				+ "#o damage.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Demolish") {
-			//do 3*(Str) dmg, add 1 Tired to the deck
+			//do 3*(Str) dmg, lose 2 str
 			int damage = dealDamage(3*guy.Strength, guy, enemy, log);
-			guy.negative = "Tired";
+			guy.ModStat(-2, "Strength");
+			guy.strMod+=2;
 
 			string line = "-You demolish the " + string(enemy.Name)
-				+ " for " + to_string(damage)
-				+ " damage.";
-			string line2 = "-You feel a bit tired.";
+				+ " for #y" + to_string(damage)
+				+ "#o damage.";
 			log.PushPop(line);
-			if(enemy.CurrentHealth > 0)
-				log.PushPop(line2);
 		}
 		else if (CardName == "Bleed") {
 		//deal 2d(Str/2) damage for 4 rounds
 			enemy.bleeding += 4;
-			string line = "-You tear the " + string(enemy.Name)
-						+ ", causing 4 extra rounds of bleed.";
+			string line = "#y-You tear the " + string(enemy.Name)
+						+ ", causing 4 extra rounds of bleed.#o";
 			log.PushPop(line);
 		}
 		//hey dont screw this up with damage multipliers
@@ -644,7 +676,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			string line;
 
 			if (enemy.invisible > 0) {
-				line = "-You hack the " + string(enemy.Name) + " for 0 damage.";
+				line = "-You hack the " + string(enemy.Name) + " for #y0#o damage.";
 				log.PushPop(line);
 				return;
 			}
@@ -670,7 +702,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 				damageHealth = damageNew2;
 				enemy.CurrentHealth -= damageNew2;
 			}
-			line = "-You hack the " + string(enemy.Name) + " for " + to_string(damageBlock + damageHealth) + " damage.";
+			line = "-You hack the " + string(enemy.Name) + " for #y" + to_string(damageBlock + damageHealth) + "#o damage.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Stab") {
@@ -685,9 +717,9 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.extraTurns++;
 
 			string line = "-You stab the " + string(enemy.Name)
-						+ " for " + to_string(damage)
-						+ " damage.";
-			string line2 = " EXTRA TURN";
+						+ " for #y" + to_string(damage)
+						+ "#o damage.";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line);
 			log.PushPop(line2);
 		}
@@ -697,7 +729,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			damage = dealDamage(damage, guy, enemy, log);
 			guy.extraTurns++;
 
-			string line = "-You zap the " + string(enemy.Name) + " for " + to_string(damage) + " damage.";
+			string line = "-You zap the " + string(enemy.Name) + " for #y" + to_string(damage) + "#o damage.";
 			string line2 = " EXTRA TURN";
 			log.PushPop(line);
 			log.PushPop(line2);
@@ -707,9 +739,56 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			int damage = rtd(guy.Defense, 2);
 			damage = dealDamage(damage, guy, enemy, log);
 
-			string line = "You ram the " + string(enemy.Name)
-						+ " for " + to_string(damage)
-						+ " damage.";
+			string line = "-You ram the " + string(enemy.Name)
+						+ " for #y" + to_string(damage)
+						+ "#o damage.";
+			log.PushPop(line);
+		}
+		else if (CardName == "Flay") {
+			//Deal 2d(Str) damage. Deal (Str/2) damage for 3 turns
+			int damage = rtd(2, guy.Strength);
+			damage = dealDamage(damage, guy, enemy, log);
+			enemy.flay += 3;
+
+			string line = "-You flay the " + string(enemy.Name)
+						+ " for #y" + to_string(damage)
+						+ "#o damage and cause #y3 more rounds of bleed.#o";
+			log.PushPop(line);
+		}
+		else if (CardName == "Slash") {
+			//Deal (Str)d2 damage. Fill your hand with attacks
+			int damage = rtd(guy.Strength, 2);
+			damage = dealDamage(damage, guy, enemy, log);
+			guy.fillType = "Attack";
+
+			string line = "-You slash the " + string(enemy.Name)
+						+ " for #y" + to_string(damage)
+						+ "#o damage.";
+			log.PushPop(line);
+		}
+		else if (CardName == "Lash"){
+			//Deal (Str)d3 damage. Take 6d2 damage
+			int damage = rtd(guy.Strength, 3);
+			int sd = rtd(6, 2);
+
+			damage = dealDamage(damage, guy, enemy, log);
+			sd = guy.TakeDamage(sd);
+
+			string line = "-You lash the " + string(enemy.Name)
+						+ " for #y" + to_string(damage)
+						+ "#o damage and take #r" + to_string(sd)
+						+ "#o.";
+			log.PushPop(line);
+		}
+		else if (CardName == "Pummel") {
+			//Deal (pummel) damage. Increase this damage by (Str/2)d2
+			int damage = pummel;
+			damage = dealDamage(damage, guy, enemy, log);
+			pummel += rtd(2,int(guy.Strength / 2));
+
+			string line = "-You pummel the " + string(enemy.Name)
+						+ " for #y" + to_string(damage)
+						+ "#o damage.";
 			log.PushPop(line);
 		}
 	}
@@ -719,8 +798,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			//block for (Def)+2
 			int block = gainBlock(guy.Defense + 2, guy, enemy);
 
-			string line = "-You gain " + to_string(block)
-				+ " block.";
+			string line = "-You gain #c" + to_string(block)
+				+ "#o block.";
 			
 			log.PushPop(line);
 		}
@@ -728,8 +807,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			//block for (int)d2
 			int block = gainBlock(rtd(guy.Intelligence, 2), guy, enemy);
 
-			string line = "-You gain " + to_string(block)
-				+ " block.";
+			string line = "-You gain #c" + to_string(block)
+				+ "#o block.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Block") {
@@ -737,7 +816,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			int block = gainBlock(int(guy.Defense / 2), guy, enemy);
 			guy.Negate++;
 
-			string line = "-You prepare to block an attack.";
+			string line = "-You gain #c" + to_string(block) + "#o block and #cnegate the next attack.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Obstruct") {
@@ -745,7 +824,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			int block = guy.Defense * 2;
 			gainBlock(block, guy, enemy);
 
-			string line = "-You gain " + to_string(block) + " block.";
+			string line = "-You gain #c" + to_string(block) + "#o block.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Disrupt") {
@@ -753,9 +832,9 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			int block = guy.Defense + 2;
 			gainBlock(block, guy, enemy);
 			enemy.CurrentBlock = 0;
-			string line = "-You gain " + to_string(block)
-						+ " block and remove the " + string(enemy.Name)
-						+ "'s block.";
+			string line = "-You gain #c" + to_string(block)
+						+ "#o block and #cremove the " + string(enemy.Name)
+						+ "'s block.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Dodge") {
@@ -764,7 +843,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.Negate++;
 			guy.shuffle = TRUE;
 			
-			string line = "-You lose all your block and dodge the next hit.";
+			string line = "-You #rlose all your block#o and #cdodge the next hit.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Dash") {
@@ -772,8 +851,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			int block = gainBlock(rtd(1, guy.Defense), guy, enemy);
 			guy.extraTurns += 1;
 
-			string line = "-You gain " + to_string(block) + " block.";
-			string line2 = " EXTRA TURN";
+			string line = "-You gain #c" + to_string(block) + "#o block.";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line);
 			log.PushPop(line2);
 		}
@@ -782,7 +861,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.fillType = "Defend";
 			int block = gainBlock(guy.Defense, guy, enemy);
 
-			string line = "-You gain " + to_string(block) + " block.";
+			string line = "-You gain #c" + to_string(block) + "#o block.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Counter") {
@@ -790,7 +869,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.fillType = "Attack";
 			int block = gainBlock(guy.Defense, guy, enemy);
 
-			string line = "-You gain " + to_string(block) + " block.";
+			string line = "-You gain #c" + to_string(block) + "#o block.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Predict") {
@@ -798,7 +877,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.fillType = "Spell";
 			int block = gainBlock(guy.Defense, guy, enemy);
 
-			string line = "-You gain " + to_string(block) + " block.";
+			string line = "-You gain #c" + to_string(block) + "#o block.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Absorb") {
@@ -806,14 +885,14 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			int block = gainBlock(guy.Defense+2, guy, enemy);
 			guy.DrainMana(-5);
 
-			string line = "-You gain " + to_string(block) + " block and 5 mana.";
+			string line = "-You gain #c" + to_string(block) + "#o block and #m5 mana.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Reinforce") {
 			//gain 1.5x your block
 			int block = int(guy.CurrentBlock / 2);
 			gainBlock(block, guy, enemy);
-			string line = "-You gain " + to_string(block) + " block.";
+			string line = "-You gain #c" + to_string(block) + "#o block.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Flee") {
@@ -821,8 +900,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 				guy.CurrentBlock = 0;
 				guy.extraTurns += 2;
 
-				string line = "-You lose all of your block.";
-				string line2 = " 2 EXTRA TURNS";
+				string line = "#r-You lose all of your block.#o";
+				string line2 = "#g 2 EXTRA TURNS#o";
 				log.PushPop(line);
 				log.PushPop(line2);
 		}
@@ -831,7 +910,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			int block = gainBlock(guy.Defense, guy, enemy);
 			int damage = dealDamage(7, guy, enemy, log);
 
-			string line = "-You gain " + to_string(block) + " block and deal " + to_string(damage) +" damage.";
+			string line = "-You gain #c" + to_string(block) + "#o block and deal #y" + to_string(damage) + "#o damage.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Repulse") {
@@ -840,8 +919,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.Negate++;
 			guy.extraTurns++;
 
-			string line = "-You take 7 damage and ignore the next hit taken.";
-			string line2 = " EXTRA TURN";
+			string line = "-You take #r7#o damage and #cnegate the next hit taken.#o";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line);
 			log.PushPop(line2);
 		}
@@ -858,7 +937,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		if (CardName == "Ponder") {
 			int mana = 2;
 			guy.DrainMana(-1 * mana);
-			string line = "-You gain " + to_string(mana) + " mana.";
+			string line = "#m-You gain " + to_string(mana) + " mana.#o";
 		}
 		
 		else if (CardName == "Channel") {
@@ -867,8 +946,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			int mana = ManaCost * -1;
 			guy.DrainMana(ManaCost);
 
-			string line = "-You regain " + to_string(mana)
-				+ " mana.";
+			string line = "#m-You regain " + to_string(mana)
+				+ " mana.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Meditate") {
@@ -879,8 +958,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			heal *= -1;
 			/*string line = "-You recover #y" + to_string(heal)
 				+ "#o health.";*/
-			string line = "-You recover " + to_string(heal)
-				+ " health.";
+			string line = "-You recover #g" + to_string(heal)
+				+ "#o health.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Blast") {
@@ -888,8 +967,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			int damage = dealDamage(rtd(guy.Intelligence, 2), guy, enemy, log);
 			guy.extraTurns++;
 
-			string line = "-You blast the " + string(enemy.Name) + " for " + to_string(damage) + " damage.";
-			string line2 = " EXTRA TURN";
+			string line = "-You blast the " + string(enemy.Name) + " for #y" + to_string(damage) + "#o damage.";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line);
 			log.PushPop(line2);
 		}
@@ -900,15 +979,15 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			if(enemy.invisible <= 0)
 				guy.TakeDamage(-1 * damage);
 
-			string line = "-You steal " + to_string(damage)
-				+ " health from the " + string(enemy.Name)
-				+ ".";
+			string line = "#m-You steal #g" + to_string(damage)
+				+ "#m health from the " + string(enemy.Name)
+				+ ".#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Regenerate") {
 			//5 mana, heal 2+1d(int) for 5 turns
 			guy.regenerateTurns += 5;
-			string line = "-You regenerate for 5 more turns.";
+			string line = "#m-You regenerate for 5 more turns.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Transmute") {
@@ -919,10 +998,10 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.DrainMana(mana);
 			guy.extraTurns++;
 
-			string line = "-You take " + to_string(damage)
-						+ " damage and gain " + to_string(guy.Intelligence)
-						+ " mana.";
-			string line2 = " EXTR TURN";
+			string line = "-You take #r" + to_string(damage)
+						+ "#o damage and gain #m" + to_string(guy.Intelligence)
+						+ " mana.#o";
+			string line2 = "#g EXTR TURN#o";
 			log.PushPop(line);
 			log.PushPop(line2);
 		}
@@ -930,7 +1009,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		else if (CardName == "Blink") {
 			//cost 9 mana, gain 2 extra turns
 			guy.extraTurns += 2;
-			string line = " 2 EXTRA TURNS";
+			string line = "#g 2 EXTRA TURNS#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Push") {
@@ -939,9 +1018,9 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.extraTurns += 1;
 
 			string line = "-You force the "+ string(enemy.Name)
-						+ " back for " + to_string(damage)
-						+ " damage.";
-			string line2 = " EXTRA TURN";
+						+ " back for #y" + to_string(damage)
+						+ "#o damage.";
+			string line2 = "#m EXTRA TURN#o";
 			log.PushPop(line);
 			log.PushPop(line2);
 		}
@@ -952,9 +1031,9 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.DrainMana(-1 * mana);
 			guy.extraTurns--;
 
-			string line = "-You gain " + to_string(block)
-						+ " block and " + to_string(mana)
-						+ " mana.";
+			string line = "-You gain #c" + to_string(block)
+						+ "#o block and #m" + to_string(mana)
+						+ "#o mana.";
 			log.PushPop(line);
 		}
 
@@ -965,8 +1044,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.extraTurns++;
 
 			string line = "-You freeze the " + string(enemy.Name)
-						+ " for " + to_string(block) + " block.";
-			string line2 = " EXTRA TURN";
+						+ " for #b" + to_string(block) + "#o block.";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line);
 			log.PushPop(line2);
 		}
@@ -976,9 +1055,9 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			enemy.CurrentBlock = 0;
 			damage = dealDamage(damage, guy, enemy, log);
 
-			string line = "-You remove the " + string(enemy.Name)
-						+ "'s block and deal " + to_string(damage)
-						+ " damage.";
+			string line = "-You #mremove the " + string(enemy.Name)
+						+ "'s block#o and deal #y" + to_string(damage)
+						+ "#o damage.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Melt") {
@@ -994,23 +1073,23 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			}
 			guy.DrainMana(-1 * mana);
 
-			string line = "-You remove " + to_string(mana)
+			string line = "-You #mremove " + to_string(mana)
 				+ " block from the " + string(enemy.Name)
-				+ " and gain " + to_string(mana) + " mana.";
+				+ "#o and gain #m" + to_string(mana) + "#o mana.";
 			log.PushPop(line);
 		}
 
 		else if (CardName == "Fumes") {
 			//8 mana, deal 1d(Int) damage for (Int) turns
 			enemy.fumes += guy.Intelligence;
-			string line = "-You release toxic fumes for " + to_string(guy.Intelligence) + " more turns.";
+			string line = "-You #mrelease toxic fumes#o for #m" + to_string(guy.Intelligence) + "#m more turns.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Smoke") {
 			//5 mana, gain (int)/2 block for 5 turns
 			int turns = int(guy.Intelligence / 2);
 			guy.smoke += turns;
-			string line = "-You create smoke for " + to_string(turns) + " more turns.";
+			string line = "-You #mcreate smoke#o for #m" + to_string(turns) + "#o more turns.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Incense") {
@@ -1018,9 +1097,9 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			int turns = guy.Intelligence - 1;
 			guy.incense += turns;
 			guy.extraTurns++;
-			string line = "-You burn incense for " + to_string(turns) + " more turns.";
+			string line = "-You #mburn incense#o for #m" + to_string(turns) + "#o more turns.";
 			log.PushPop(line);
-			string line2 = " EXTRA TURN";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line2);
 		}
 
@@ -1032,33 +1111,33 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 
 
 			string line = "-You lob a fireball at the " + string(enemy.Name)
-				+ " for " + to_string(damage)
-				+ " damage.";
+				+ " for #y" + to_string(damage)
+				+ "#o damage.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Conflagrate") {
 			//cost 6 mana, remove enemy block.
 			enemy.CurrentBlock = 0;
 			guy.extraTurns++;
-			string line = "-You remove the " + string(enemy.Name) + "'s block.";
+			string line = "#m-You remove the " + string(enemy.Name) + "'s block.#o";
 			log.PushPop(line);
-			string line2 = " EXTRA TURN";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line2);
 		}
 		else if (CardName == "Fuel") {
 			//on the next turn, gain mana for unblocked damage dealt
 			guy.damageToMana +=2;
 			guy.extraTurns++;
-			string line = "-You prepare to attack.";
+			string line = "#m -You prepare to attack.#o";
 			log.PushPop(line);
-			string line2 = " EXTRA TURN";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line2);
 		}
 
 		else if (CardName == "Mirror") {
 			//Cost 4 mana, The next damage taken is dealt to the enemy
 			guy.mirror++;
-			string line = "-You prepare a reflection of the " + string(enemy.Name) + "'s next attack.";
+			string line = "#m-You prepare a reflection of the " + string(enemy.Name) + "'s next attack.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Copy") {
@@ -1066,9 +1145,9 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.copy++;
 			guy.extraTurns++;
 
-			string line = "-You prepare a copy of your next card.";
+			string line = "#m-You prepare a copy of your next card.#o";
 			log.PushPop(line);
-			string line2 = " EXTRA TURN";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line2);
 			copyUsed = TRUE;
 		}
@@ -1077,8 +1156,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			int mana = int(guy.Intelligence / 2);
 			guy.DrainMana(-1 * mana);
 			guy.extraTurns++;
-			string line = "-You gain " + to_string(mana) + " mana.";
-			string line2 = " EXTRA TURN";
+			string line = "#m-You gain " + to_string(mana) + " mana.#o";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line);
 			log.PushPop(line2);
 		}
@@ -1089,8 +1168,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			damage = dealDamage(damage, guy, enemy, log);
 
 			string line = "-You electrocute the " + string(enemy.Name)
-						+ " for " + to_string(damage)
-						+ " damage.";
+						+ " for #y" + to_string(damage)
+						+ "#o damage.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Thunder") {
@@ -1098,7 +1177,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.CurrentBlock = 0;
 			guy.Negate = 0;
 			enemy.CurrentBlock = 0;
-			string line = "The thunderclap obliterates all block.";
+			string line = "#mThe thunderclap obliterates all block.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Overcharge") {
@@ -1106,9 +1185,9 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.charge++;
 			guy.extraTurns++;
 
-			string line = "You brace yourself.";
+			string line = "#mYou brace yourself.#o";
 			log.PushPop(line);
-			string line2 = " EXTRA TURN";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line2);
 		}
 	
@@ -1119,8 +1198,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.CurrentBlock = 0;
 
 			string line = "-You slam the " + string(enemy.Name)
-						+ " for " + to_string(damage)
-						+ " damage and lose your block.";
+						+ " for #y" + to_string(damage)
+						+ "#o damage and #rlose your block.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Construct") {
@@ -1128,7 +1207,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			int block = rtd(guy.Intelligence, 4);
 			gainBlock(block, guy, enemy);
 
-			string line = "-You gain " + to_string(block) + " block.";
+			string line = "-You gain #c" + to_string(block) + "#o block.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Deconstruct") {
@@ -1146,9 +1225,9 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			}
 			guy.Negate++;
 
-			string line = "-You lose " + to_string(mana)
-						+ " block and gain " + to_string(mana) + " mana.";
-			string line2 = " EXTRA TURN";
+			string line = "-You #rlose " + to_string(mana)
+						+ " block#m and gain #m" + to_string(mana) + "#o mana.";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line);
 			log.PushPop(line2);
 		}
@@ -1167,15 +1246,15 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.extraTurns++;
 
 			string line = "-You incinerate the " + string(enemy.Name)
-						+ " for " + to_string(damageB + damageH)
-						+ " damage.";
-			string line2 = " EXTRA TURN";
+						+ " for #y" + to_string(damageB + damageH)
+						+ "#o damage.";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line);
 			log.PushPop(line2);
 		}
 
-		//Power trait
-		if (guy.Power && CardType == "Spell") {
+		//Photosynthesis trait
+		if (guy.Photosynthesis && CardType == "Spell") {
 			int health = guy.Skill;
 			guy.TakeDamage(-1 * health);
 		}
@@ -1188,10 +1267,10 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.extraTurns += turns;
 
 			string line = " " + to_string(turns)
-				+ " EXTRA TURN(S)";
+				+ "#g EXTRA TURN(S)#o";
 			if (turns == 1) {
 				string line = " " + to_string(turns)
-					+ " EXTRA TURN";
+					+ "#g EXTRA TURN#o";
 			}
 			log.PushPop(line);
 		}
@@ -1205,26 +1284,26 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		else if (CardName == "Revivify") {
 			//Heal 4 health and 2 mana for 5 turns
 			guy.metabolise += 5;
-			string line = "You heal for 5 more turns.";
+			string line = "#g-You heal for 5 more turns.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Steroids") {
 			//Your next attack deals double damage
 			guy.steroids = TRUE;
-			string line = "You feel a boost in power.";
+			string line = "#y-You feel a boost in power.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Change Mind") {
 			//Shuffle your hand. Gain 5 block
 			guy.shuffle = TRUE;
 			int block = gainBlock(5, guy, enemy);
-			string line = "-You gain " + to_string(block) + " block.";
+			string line = "-You gain #c" + to_string(block) + "#o block.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Intimidate") {
 			//Take half damage for 2 turns
 			guy.intimidate += 2;
-			string line = "You intimidate the " + string(enemy.Name) + ".";
+			string line = "#cYou intimidate the " + string(enemy.Name) + ".#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Cripple") {
@@ -1232,8 +1311,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			int damage = int(enemy.CurrentHealth / 4);
 			damage = dealDamage(damage, guy, enemy, log);
 			string line = "-You cripple the " + string(enemy.Name)
-						+ " for " + to_string(damage)
-						+ " damage.";
+						+ " for #y" + to_string(damage)
+						+ "#o damage.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Merge") {
@@ -1242,13 +1321,13 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			int damage = guy.Skill * 6;
 			damage = dealDamage(damage, guy, enemy, log);
 
-			string line = "-You take 15 damage and deal " + to_string(damage) + " damage.";
+			string line = "-You take #r15#o damage and deal #y" + to_string(damage) + "#o damage.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Entomb") {
 			//Enemy cannot take or deal damage for 2 turns
 			guy.entomb += 2;
-			string line = "-You entomb the " + string(enemy.Name) + ".";
+			string line = "#c-You entomb the " + string(enemy.Name) + ".#m";
 			log.PushPop(line);
 		}
 		else if (CardName == "Distract") {
@@ -1256,8 +1335,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			enemy.CurrentBlock = 0;
 			guy.extraTurns++;
 
-			string line = "-You remove the " + string(enemy.Name) + "'s block.";
-			string line2 = " EXTRA TURN";
+			string line = "#c-You remove the " + string(enemy.Name) + "'s block.#o";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line);
 			log.PushPop(line2);
 		}
@@ -1266,8 +1345,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.fillType = "Spell";
 			guy.DrainMana(-5);
 			guy.extraTurns++;
-			string line = "-You gain 5 mana.";
-			string line2 = " EXTRA TURN";
+			string line = "#m-You gain 5 mana.#o";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line);
 			log.PushPop(line2);
 		}
@@ -1276,7 +1355,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.ModStat(1, "Strength");
 			guy.strMod--;
 			
-			string line = "-You gain 1 Strength.";
+			string line = "#g-You gain 1 Strength.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Solidify") {
@@ -1284,7 +1363,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.ModStat(1, "Defense");
 			guy.defMod--;
 
-			string line = "-You gain 1 Defense.";
+			string line = "#g-You gain 1 Defense.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Learn") {
@@ -1292,7 +1371,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.ModStat(1, "Intelligence");
 			guy.intMod--;
 
-			string line = "-You gain 1 Intelligence.";
+			string line = "#g-You gain 1 Intelligence.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Train") {
@@ -1300,7 +1379,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.ModStat(1, "Skill");
 			guy.sklMod--;
 
-			string line = "-You gain 1 Skill.";
+			string line = "#g-You gain 1 Skill.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Boost") {
@@ -1308,16 +1387,16 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.CurrentMana += 5;
 			guy.extraTurns++;
 
-			string line = "-You gain 5 mana.";
+			string line = "#m-You gain 5 mana.#o";
 			log.PushPop(line);
-			string line2 = " EXTRA TURN";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line2);
 		}
 		else if (CardName == "Vitalise") {
 			//Gain 15 health
 			guy.TakeDamage(-15);
 
-			string line = "You heal 15 health.";
+			string line = "You heal #g15#o health.";
 			log.PushPop(line);
 		}
 		else if (CardName == "Jump") {
@@ -1325,7 +1404,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			guy.fillType = "Attack";
 			guy.Negate++;
 
-			string line = "-You negate the next attack.";
+			string line = "#c-You negate the next attack.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Combo") {
@@ -1338,8 +1417,30 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			damage = dealDamage(damage, guy, enemy, log);
 
 			string line = "You slam the " + string(enemy.Name)
-						+ " for " + to_string(damage)
-						+ " damage.";
+						+ " for #y" + to_string(damage)
+						+ "#o damage.";
+			log.PushPop(line);
+		}
+		else if (CardName == "Stall") {
+			//extra turn
+			guy.extraTurns++;
+			string line = "#g EXTRA TURN#o";
+			log.PushPop(line);
+		}
+		else if (CardName == "Strike") {
+			//deal 3d(Str) damage
+			int damage = dealDamage(rtd(3, guy.Strength), guy, enemy, log);
+
+			string line = "You strike the " + string(enemy.Name)
+				+ " for #y" + to_string(damage)
+				+ "#o damage.";
+			log.PushPop(line);
+		}
+		else if (CardName == "Defend") {
+			//gain (Def)d3 block
+			int block = gainBlock(rtd(guy.Defense, 3), guy, enemy);
+
+			string line = "You gain #c" + to_string(block) + "#o block.";
 			log.PushPop(line);
 		}
 	}
@@ -1349,18 +1450,18 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			//take 5 damage, get extra turn
 			guy.TakeDamage(5);
 			guy.extraTurns += 1;
-			string line = "-You burn for 5 damage.";
+			string line = "-You burn for #r5#o damage.";
 			log.PushPop(line);
-			string line2 = " EXTRA TURN";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line2);
 		}
 		else if (CardName == "Scalding Steam") {
 			//take 5 damage, get extra turn
 			guy.TakeDamage(12);
 			guy.extraTurns += 1;
-			string line = "-You burn for 12 damage.";
+			string line = "-You burn for #r12#o damage.";
 			log.PushPop(line);
-			string line2 = " EXTRA TURN";
+			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line2);
 		}
 		else if (CardName == "Webbed") {
@@ -1372,7 +1473,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			else
 				guy.CurrentBlock = 0;
 
-			string line = "-You lose 2 block.";
+			string line = "-You #rlose 2 block.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Tired") {
@@ -1384,25 +1485,25 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			if (guy.CurrentMana > 0)
 				guy.CurrentMana--;
 
-			string line = "-You lose 2 block and 1 mana.";
+			string line = "-You lose #r2 block and 1 mana.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Drain Str") {
 			guy.ModStat(-1, "Strength");
 			guy.strMod++;
-			string line = "You lose 1 strength.";
+			string line = "-You #rlose 1 Strength.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Drain Def") {
 			guy.ModStat(-1, "Defense");
 			guy.defMod++;
-			string line = "You lose 1 defense.";
+			string line = "You #rlose 1 Defense.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Drain Int") {
 			guy.ModStat(-1, "Intelligence");
 			guy.intMod++;
-			string line = "You lose 1 intelligence.";
+			string line = "-You #rlose 1 Intelligence.#o";
 			log.PushPop(line);
 		}
 	}
@@ -1468,7 +1569,7 @@ int Card::dealDamage(int damage, Character &guy, Enemy &enemy, TextLog &log) {
 			mana = 0;
 		guy.DrainMana(-1 * mana);
 		guy.damageToMana = 0;
-		string line = "-You gain " + to_string(mana) + " mana.";
+		string line = "#m-You gain " + to_string(mana) + " mana.#o";
 		log.PushPop(line);
 	}
 

@@ -7,7 +7,7 @@ TextLog::TextLog()
 {
 	maxx = 32;
 	maxy = 13;
-	Lines.push_back(" Defeat the final boss.");
+	Lines.push_back("#g Defeat the final boss.#o");
 }
 
 
@@ -21,11 +21,14 @@ void TextLog::PushPop(string pushed) {
 		if (pushed[i] == '#')
 			size-=2;
 	}
-	if (Lines.size() >= 14)
+	if (Lines.size() >= 14) {
 		Lines.erase(Lines.begin());
-	if (Lines.size() >= 13 && size > maxx) {
-		Lines.erase(Lines.begin());
+		if(size > maxx)
+			Lines.erase(Lines.begin());
 	}
+	/*if (Lines.size() >= 13 && size > maxx) {
+		Lines.erase(Lines.begin());
+	}*/
 	Lines.push_back(pushed.c_str());
 }
 
@@ -49,14 +52,14 @@ void TextLog::printLog() {
 				break;
 			}
 
-			mvprintInSize(L + 1, 44, maxx - 1, Lines.at(y).c_str());
+			mvprintInSize(L + 1, 44, maxx, Lines.at(y).c_str());
 
 			int size = Lines.at(y).size();
 			for (int i = 0; i < Lines.at(y).size(); i++) {
 				if (Lines.at(y)[i] == '#')
 					size -= 2;
 			}
-			if (size > maxx) {
+			if (size > maxx+1) {
 				L++;
 			}
 			L++;

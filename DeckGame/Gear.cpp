@@ -15,6 +15,9 @@ void mvprintInSize(int starty, int startx, int maxx, const char* toBePrinted);
 //manually draw boxes
 void manualBox(string typebox, int colorpair);
 
+//printing Succumb trait
+bool Succumb = FALSE;
+
 Gear::Gear() {
 	GearName = "";
 }
@@ -42,13 +45,17 @@ Gear::Gear(const char *name):GearName(name)
 		Type = "Hands";
 		Description = "A one-handed sword with a heavy blade, great for hacking throuhg armor.";
 	}
-	else if (GearName == "Staff") {
+	else if (GearName == "Metal Staff") {
 		Type = "Hands";
-		Description = "A long stick made of steel, a much more lethal weapon than its wooden counterpart.";
+		Description = "A long metal stick, a much more lethal weapon than its wooden counterparts.";
 	}
 	else if (GearName == "Steel Spear") {
 		Type = "Hands";
-		Description = "A weapon not just used for long ranged stabbing, but a useful projectile, as well.";
+		Description = "The pointed blade proves useful at piercing tough armor.";
+	}
+	else if (GearName == "Javelin") {
+		Type = "Hands";
+		Description = "A spear not just used for long ranged stabbing, but a useful projectile, as well.";
 	}
 	else if (GearName == "Obsidian Spear") {
 		Type = "Hands";
@@ -117,6 +124,42 @@ Gear::Gear(const char *name):GearName(name)
 	else if (GearName == "Conductive Gloves") {
 		Type = "Hands";
 		Description = "These weapons allow you to direct magic into your fists for mighty blows.";
+	}
+	else if (GearName == "Sabre") {
+		Type = "Hands";
+		Description = "A single-edged blade for consistent slashing.";
+	}
+	else if (GearName == "Whip") {
+		Type = "Hands";
+		Description = "A simple cord on a handle, difficult to control at first, but powerful when used correctly.";
+	}
+	else if (GearName == "Twin Flail") {
+		Type = "Hands";
+		Description = "Two chains with spiked balls at the end. Dangerous.";
+	}
+	else if (GearName == "Leather Gauntlets") {
+		Type = "Hands";
+		Description = "The fists are mighty weapons, but flesh is soft and requires protection.";
+	}
+	else if (GearName == "Steel Gauntlets") {
+		Type = "Hands";
+		Description = "Converts your knuckes into hard and powerful steel.";
+	}
+	else if (GearName == "Spiked Gauntlets") {
+		Type = "Hands";
+		Description = "Steel gloves with spikes at the knuckles, allowing for puncturing blows.";
+	}
+	else if (GearName == "Arbalest") {
+		Type = "Hands";
+		Description = "A large crossbow with a mechanism to draw back bolts automatically, providing more power and speed.";
+	}
+	else if (GearName == "Dirk") {
+		Type = "Hands";
+		Description = "A long combat dagger.";
+	}
+	else if (GearName == "Cutlass") {
+		Type = "Hands";
+		Description = "A common weapon of sailors and pirates, useful for close quarters combat.";
 	}
 	//Body
 	else if (GearName == "No Armor") {
@@ -271,7 +314,7 @@ Gear::Gear(const char *name):GearName(name)
 	}
 	else if (GearName == "Devolve") {
 		Type = "Trait Sacrifice";
-		Description = "Remove 1 positive trait.$ +1 Skl.";
+		Description = "Remove 1 positive trait. +1 Skl.";
 	}
 	else if (GearName == "Volatile") {
 		Type = "Trait Sacrifice";
@@ -315,7 +358,7 @@ Gear::Gear(const char *name):GearName(name)
 	}
 	else if (GearName == "Corpse") {
 		Type = "Trait Sacrifice";
-		Description = "You can no longer heal.$ +5 max hp.";
+		Description = "You can no longer heal. +5 max hp.";
 	}
 	else if (GearName == "Radioactive") {
 		Type = "Trait Sacrifice";
@@ -323,7 +366,15 @@ Gear::Gear(const char *name):GearName(name)
 	}
 	else if (GearName == "Forgetful") {
 		Type = "Trait Sacrifice";
-		Description = "You start combat with zero mana.$ +2 max mana.";
+		Description = "You start combat with zero mana. +2 max mana.";
+	}
+	else if (GearName == "Tiny") {
+		Type = "Trait Sacrifice";
+		Description = "Reduce max hp by 39. +10 defense.";
+	}
+	else if (GearName == "Succumb") {
+		Type = "Trait Sacrifice";
+		Description = "Your traits are now randomly chosen. +2 Skill.";
 	}
 	
 	//Trait Reward
@@ -391,7 +442,7 @@ Gear::Gear(const char *name):GearName(name)
 		Type = "Trait Reward";
 		Description = "Choose a boss card.";
 	}
-	else if (GearName == "The Drink") {
+	else if (GearName == "The Juice") {
 		Type = "Trait Reward";
 		Description = "Get +6 and -5 to random stats every turn.";
 	}
@@ -403,13 +454,13 @@ Gear::Gear(const char *name):GearName(name)
 		Type = "Trait Reward";
 		Description = "Start your hand with spells.";
 	}
-	else if (GearName == "Power") {
+	else if (GearName == "Photosynthesis") {
 		Type = "Trait Reward";
 		Description = "Heal for (Skl) hp when you use a spell.";
 	}
 	else if (GearName == "Dexterous") {
 		Type = "Trait Reward";
-		Description = "Deal (Skl) damage when you$ use a defend.";
+		Description = "Deal (Skl) damage when you use a defend.";
 	}
 	else if (GearName == "Reconstruction") {
 		Type = "Trait Reward";
@@ -417,7 +468,7 @@ Gear::Gear(const char *name):GearName(name)
 	}
 	else if (GearName == "Laser Vision") {
 		Type = "Trait Reward";
-		Description = "Add a Laser card to your$ deck.";
+		Description = "Add a Laser card to your deck.";
 	}
 	else if (GearName == "Carnivore") {
 		Type = "Trait Reward";
@@ -426,6 +477,10 @@ Gear::Gear(const char *name):GearName(name)
 	else if (GearName == "Hemoglobin") {
 		Type = "Trait Reward";
 		Description = "Your heals are increased by 50%.";
+	}
+	else if (GearName == "Destiny") {
+		Type = "Trait Reward";
+		Description = "Get 3 Cauldrons. You cannot recieve any more.";
 	}
 	
 	else {
@@ -506,7 +561,7 @@ void Gear::GearOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.removeCard(hack);
 		}
 	}
-	else if (GearName == "Staff") {
+	else if (GearName == "Metal Staff") {
 		Card parry("Parry");
 		if (On) {
 			deck.addCard(parry);
@@ -516,6 +571,19 @@ void Gear::GearOnOrOff(bool On, Character &guy, Deck &deck) {
 		}
 	}
 	else if (GearName == "Steel Spear") {
+		Card pierce("Pierce");
+		if (On) {
+			deck.addCard(pierce);
+			deck.addCard(pierce);
+			deck.addCard(pierce);
+		}
+		else {
+			deck.removeCard(pierce);
+			deck.removeCard(pierce);
+			deck.removeCard(pierce);
+		}
+	}
+	else if (GearName == "Javelin") {
 		Card pierce("Pierce");
 		Card slice("Slice");
 		Card throww("Throw");
@@ -588,22 +656,23 @@ void Gear::GearOnOrOff(bool On, Character &guy, Deck &deck) {
 		}
 	}
 	else if (GearName == "Rapier") {
+		Card feint("Feint");
 		Card parry("Parry");
 		Card slice("Slice");
 		Card pierce("Pierce");
 		if (On) {
+			deck.addCard(slice);
+			deck.addCard(slice);
+			deck.addCard(pierce);
 			deck.addCard(parry);
-			deck.addCard(slice);
-			deck.addCard(slice);
-			deck.addCard(pierce);
-			deck.addCard(pierce);
+			deck.addCard(feint);
 		}
 		else {
+			deck.removeCard(slice);
+			deck.removeCard(slice);
+			deck.removeCard(pierce);
 			deck.removeCard(parry);
-			deck.removeCard(slice);
-			deck.removeCard(slice);
-			deck.removeCard(pierce);
-			deck.removeCard(pierce);
+			deck.removeCard(feint);
 		}
 	}
 	else if (GearName == "War Hammer") {
@@ -665,10 +734,12 @@ void Gear::GearOnOrOff(bool On, Character &guy, Deck &deck) {
 		if (On) {
 			deck.addCard(charge);
 			deck.addCard(hack);
+			deck.addCard(hack);
 			deck.addCard(demolish);
 		}
 		else {
 			deck.removeCard(charge);
+			deck.removeCard(hack);
 			deck.removeCard(hack);
 			deck.removeCard(demolish);
 		}
@@ -802,14 +873,129 @@ void Gear::GearOnOrOff(bool On, Character &guy, Deck &deck) {
 		if (On) {
 			deck.addCard(msmack);
 			deck.addCard(msmack);
-			deck.addCard(msmack);
 		}
 		else {
 			deck.removeCard(msmack);
 			deck.removeCard(msmack);
-			deck.removeCard(msmack);
+		}
 	}
+	else if (GearName == "Sabre") {
+		Card slash("Slash");
+		if (On) {
+			deck.addCard(slash);
+		}
+		else {
+			deck.removeCard(slash);
+		}
 	}
+	else if (GearName == "Whip") {
+		Card flay("Flay");
+		Card slice("Slice");
+		Card lash("Lash");
+		if (On) {
+			deck.addCard(slice);
+			deck.addCard(flay);
+			deck.addCard(lash);
+		}
+		else {
+			deck.removeCard(slice);
+			deck.removeCard(flay);
+			deck.removeCard(lash);
+		}
+	}
+	else if (GearName == "Twin Flail") {
+		Card flay("Flay");
+		Card demolish("Demolish");
+		Card lash("Lash");
+		if (On) {
+			deck.addCard(flay);
+			deck.addCard(lash);
+			deck.addCard(lash);
+			deck.addCard(demolish);
+		}
+		else {
+			deck.removeCard(flay);
+			deck.removeCard(lash);
+			deck.removeCard(lash);
+			deck.removeCard(demolish);
+		}
+	}
+	else if (GearName == "Leather Gauntlets") {
+		Card pummel("Pummel");
+		//Card smack("Smack");
+		if (On) {
+			deck.addCard(pummel);
+		}
+		else {
+			deck.removeCard(pummel);
+		}
+	}
+	else if (GearName == "Steel Gauntlets") {
+		Card pummel("Pummel");
+		Card crush("Crush");
+		if (On) {
+			deck.addCard(pummel);
+			deck.addCard(crush);
+		}
+		else {
+			deck.removeCard(pummel);
+			deck.removeCard(crush);
+		}
+	}
+	else if (GearName == "Spiked Gauntlets") {
+		Card pummel("Pummel");
+		Card bleed("Bleed");
+		if (On) {
+			deck.addCard(pummel);
+			deck.addCard(bleed);
+		}
+		else {
+			deck.removeCard(pummel);
+			deck.removeCard(bleed);
+		}
+	}
+	else if (GearName == "Arbalest") {
+		Card shoot("Shoot");
+		Card impale("Impale");
+		if (On) {
+			deck.addCard(shoot);
+			deck.addCard(shoot);
+			deck.addCard(impale);
+		}
+		else {
+			deck.removeCard(shoot);
+			deck.removeCard(shoot);
+			deck.removeCard(impale);
+		}
+	}
+	else if (GearName == "Dirk") {
+		Card stab("Stab");
+		Card slice("Slice");
+		Card feint("Feint");
+		if (On) {
+			deck.addCard(stab);
+			deck.addCard(slice);
+			deck.addCard(feint);
+		}
+		else {
+			deck.removeCard(stab);
+			deck.removeCard(slice);
+			deck.removeCard(feint);
+		}
+	}
+	else if (GearName == "Cutlass") {
+		Card slash("Slash");
+		Card feint("Feint");
+		if (On) {
+			deck.addCard(slash);
+			deck.addCard(feint);
+		}
+		else {
+			deck.removeCard(slash);
+			deck.removeCard(feint);
+		}
+	}
+
 	//Body
 	else if (GearName == "No Armor") {
 		Card endure("Endure");
@@ -1207,661 +1393,712 @@ void Gear::GearOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.removeCard(deconstruct);
 		}
 	}
-
-	//Trait Sacrifice
-	else if (GearName == "Anemia") {
-		if (On) {
-			guy.Anemia = TRUE;
-		}
-		else {
-			guy.Anemia = FALSE;
-		}
-	}
-	else if (GearName == "Dumb") {
-		if (On) {
-			guy.ModStat(-4, "Intelligence");
-			guy.ModStat(1, "Defense");
-		}
-		else {
-			guy.ModStat(4, "Intelligence");
-			guy.ModStat(-1, "Defense");
-		}
-	}
-	else if (GearName == "Mind Flooded") {
-		Card ponder("Ponder");
-		if (On) {
-			deck.addCard(ponder);
-		}
-		else {
-			deck.removeCard(ponder);
-		}
-	}
-	else if (GearName == "Tunnel Vision") {
-		if (On) {
-			guy.ModStat(-2, "Strength");
-			guy.ModStat(-2, "Defense");
-			guy.ModStat(1, "Skill");
-		}
-		else {
-			guy.ModStat(2, "Strength");
-			guy.ModStat(2, "Defense");
-			guy.ModStat(-1, "Skill");
-		}
-	}
-	else if (GearName == "Teleportitis") {
-		if (On) {
-			guy.Teleportitis = TRUE;
-		}
-		else {
-			guy.Teleportitis = FALSE;
-		}
-	}
-	else if (GearName == "Growing Pains") {
-		if (On) {
-			guy.Growing_Pains = TRUE;
-		}
-		else {
-			guy.Growing_Pains = FALSE;
-		}
-	}
-	else if (GearName == "Conversion") {
-		if (On) {
-			guy.Conversion = TRUE;
-		}
-		else {
-			guy.Conversion = FALSE;
-		}
-		}
-	else if (GearName == "Inversion") {
-		if (On) {
-			guy.Inversion = TRUE;
-		}
-		else {
-			guy.Inversion = FALSE;
-		}
-	}
-	else if (GearName == "Jittery") {
-		if (On) {
-			guy.Jittery = 0;
-		}
-		else {
-			guy.Jittery = -1;
-		}
-	}
-	else if (GearName == "Tumors") {
-		if (On) {
-			guy.Tumors = TRUE;
-		}
-		else {
-			guy.Tumors = FALSE;
-		}
-	}
-	else if (GearName == "Devolve") {
-		if (On) {
-			guy.Devolve = TRUE;
-		}
-		else {
-			guy.Devolve = FALSE;
-		}
-	}
-	else if (GearName == "Volatile") {
-		if (On) {
-			guy.Volatile = 0;
-		}
-		else {
-			guy.Volatile = -1;
-		}
-	}
-	else if (GearName == "Melting") {
-		if (On) {
-			guy.Melting = TRUE;
-		}
-		else {
-			guy.Melting = FALSE;
-		}
-	}
-	else if (GearName == "The Box") {
-		if (On) {
-			int statpool = 0;
-			int tempstat = guy.MaxHealthBase;
-			for (int i = 1; i < tempstat; i++) {
-				guy.MaxHealthBase--;
-				guy.MaxHealth--;
-				statpool++;
-			}
-			tempstat = guy.MaxManaBase;
-			for (int i = 0; i < tempstat; i++) {
-				guy.MaxMana--;
-				guy.MaxManaBase--;
-				statpool++;
-			}
-			tempstat = guy.Strength;
-			for (int i = 1; i < tempstat; i++) {
-				guy.Strength--;
-				statpool++;
-			}
-			tempstat = guy.Defense;
-			for (int i = 0; i < tempstat; i++) {
-				guy.Defense--;
-				statpool++;
-			}
-			tempstat = guy.Intelligence;
-			for (int i = 0; i < tempstat; i++) {
-				guy.Intelligence--;
-				statpool++;
-			}
-			tempstat = guy.Skill;
-			for (int i = 0; i < tempstat; i++) {
-				guy.Skill--;
-				statpool++;
-			}
-		
-			while (statpool > 0) {
-				int amount = (rand() % statpool+1)/2;
-				if (statpool == 1)
-					amount = 1;
-				statpool -= amount;
-				int stat = rand() % 6;
-				switch (stat) {
-				case 0:
-					guy.MaxHealthBase += amount;
-					guy.MaxHealth += amount;
-					break;
-				case 1:
-					guy.MaxManaBase += amount;
-					guy.MaxMana += amount;
-					break;
-				case 5:
-					guy.Strength += amount;
-					break;
-				case 2:
-					guy.Defense += amount;
-					break;
-				case 3:
-					guy.Intelligence += amount;
-					break;
-				case 4:
-					guy.Skill += amount;
-					break;
-				}
-				guy.CurrentHealth = guy.MaxHealth;
-				guy.CurrentMana = guy.MaxMana;
-				guy.printStats();
-			}
-		}
-		else {
-		}
-	}
-	else if (GearName == "Amnesia") {
-		if (On) {
-			for (int x = 1; x < 27; x++) {
-				for (int y = 6; y < 14; y++) {
-					if (rand() % 2 == 0)
-						if(x != guy.posx && y != guy.posy)
-							mvprintw(y, x, " ");
-				}
-			}
-		}
-		else {
-
-		}
-	}
-	else if (GearName == "Long Legs") {
-		if (On) {
-			guy.Long_Legs += 3;
-		}
-		else {
-			guy.Long_Legs = 0;
-		}
-	}
-	else if (GearName == "Oblivious") {
-		if (On) {
-			for (int y = 0; y < 15; y++) {
-				mvprintw(y, 44, "                                  ");
-			}
-			guy.Oblivious = TRUE;
-		}
-		else {
-			guy.Oblivious = FALSE;
-		}
-	}
-	else if (GearName == "Blind") {
-		if (On) {
-			guy.Blind = TRUE;
-		}
-		else {
-			guy.Blind = FALSE;
-		}
-	}
-	else if (GearName == "Numb") {
-		if (On) {
-			for (int y = 0; y < 5; y++) {
-				mvprintw(y, 17, "                          ");
-			}
-			guy.Numb = TRUE;
-		}
-		else {
-			guy.Numb = FALSE;
-		}
-	}
-	else if (GearName == "Sensitive") {
-		if (On) {
-			guy.Fast_Metabolism = TRUE;
-		}
-		else {
-			guy.Fast_Metabolism = FALSE;
-		}
-	}
-	else if (GearName == "Frenzy") {
-		if (On) {
-			guy.Deadly = TRUE;
-		}
-		else {
-			guy.Deadly = FALSE;
-		}
-	}
-	else if (GearName == "Corpse") {
-		if (On) {
-			guy.ModStat(5, "MaxHealth");
-			guy.CurrentHealth = guy.MaxHealth;
-			guy.Undead = TRUE;
-		}
-		else {
-			guy.ModStat(-5, "MaxHealth");
-			guy.CurrentHealth = guy.MaxHealth;
-			guy.Undead = FALSE;
-		}
-	}
-	else if (GearName == "Radioactive") {
-		if (On) {
-			guy.Radioactive = TRUE;
-		}
-		else {
-			guy.Radioactive = FALSE;
-		}
-	}
-	else if (GearName == "Forgetful") {
-		if (On) {
-			guy.MaxManaBase += 2;
-			guy.Forgetful = TRUE;
-		}
-		else {
-			guy.MaxManaBase -= 2;
-			guy.Forgetful = FALSE;
-		}
-	}
-
-	//Trait Reward
-	else if (GearName == "Mending Flesh") {
-		if (On) {
-			guy.Mending_Flesh = TRUE;
-		}
-		else {
-			guy.Mending_Flesh = FALSE;
-		}
-	}
-	else if (GearName == "Gymnast") {
-		if (On) {
-			guy.Gymnast = TRUE;
-		}
-		else {
-			guy.Gymnast = FALSE;
-		}
-	}
-	else if (GearName == "Third Eye") {
-		if (On) {
-			guy.Third_Eye = TRUE;
-		}
-		else {
-			guy.Third_Eye = FALSE;
-		}
-	}
-	else if (GearName == "Warper") {
-		if (On) {
-			guy.Warper += 5;
-		}
-		else {
-			guy.Warper = 0;
-		}
-	}
-	else if (GearName == "Growth Spurt") {
-		if (On) {
-			guy.Growth_Spurt = TRUE;
-		}
-		else {
-			guy.Growth_Spurt = FALSE;
-		}
-	}
-	else if (GearName == "Mind") {
-		if (On) {
-			guy.Mind = TRUE;
-		}
-		else {
-			guy.Mind = FALSE;
-		}
-	}
-	else if (GearName == "Matter") {
-		if (On) {
-			guy.Matter = TRUE;
-		}
-		else {
-			guy.Matter = FALSE;
-		}
-	}
-	else if (GearName == "Sharp Claws") {
-		if (On) {
-			guy.Sharp_Claws = TRUE;
-		}
-		else {
-			guy.Sharp_Claws = FALSE;
-		}
-	}
-	else if (GearName == "Gift") {
-		if (On) {
-			guy.Gift = TRUE;
-		}
-		else {
-			guy.Gift = FALSE;
-		}
-	}
-	else if (GearName == "Unseen") {
-		if (On) {
-			guy.Unseen = TRUE;
-		}
-		else {
-			guy.Unseen = FALSE;
-		}
-	}
-	else if (GearName == "Spiny Skin") {
-		if (On) {
-			guy.Spiny_Skin = TRUE;
-		}
-		else {
-			guy.Spiny_Skin = FALSE;
-		}
-	}
-	else if (GearName == "Adapt") {
-		if (On) {
-			guy.Adapt = TRUE;
-		}
-		else {
-			guy.Adapt = FALSE;
-		}
-	}
-	else if (GearName == "Wings") {
-		if (On) {
-			guy.Wings = TRUE;
-		}
-		else {
-			guy.Wings = FALSE;
-		}
-	}
-	else if (GearName == "Exoskeleton") {
-		if (On) {
-			guy.Exoskeleton = TRUE;
-		}
-		else {
-			guy.Exoskeleton = FALSE;
-		}
-	}
-	else if (GearName == "Unpredictable") {
-		if (On) {
-			guy.Dizzy = TRUE;
-		}
-		else {
-			guy.Dizzy = FALSE;
-		}
-	}
-	else if (GearName == "Ego") {
-		if (On) {
-			guy.Crown = TRUE;
-		}
-		else {
-			guy.Crown = FALSE;
-		}
-	}
-	else if (GearName == "The Drink") {
-		if (On) {
-			guy.The_Drink = TRUE;
-		}
-		else {
-			guy.The_Drink = FALSE;
-		}
-	}
-	else if (GearName == "Quick Thinker") {
-		if (On) {
-			guy.Quick_Thinker = TRUE;
-		}
-		else {
-			guy.Quick_Thinker = FALSE;
-		}
-	}
-	else if (GearName == "Foresight") {
-		if (On) {
-			guy.Foresight = 1;
-		}
-		else {
-			guy.Foresight = 1;
-		}
-	}
-	else if (GearName == "Power") {
-		if (On) {
-			guy.Power = TRUE;
-		}
-		else {
-			guy.Power = FALSE;
-		}
-	}
-	else if (GearName == "Dexterous") {
-		if (On) {
-			guy.Dexterous = TRUE;
-		}
-		else {
-			guy.Dexterous = FALSE;
-		}
-	}
-	else if (GearName == "Reconstruction") {
-		if (On) {
-			guy.Reconstruction = TRUE;
-		}
-		else {
-			guy.Reconstruction = FALSE;
-		}
-	}
-	else if (GearName == "Laser Vision") {
-		Card laser("Laser");
-		if (On) {
-			deck.addCard(laser);
-		}
-		else {
-			deck.removeCard(laser);
-		}
-	}
-	else if (GearName == "Carnivore") {
-		if (On) {
-			guy.Carnivore = TRUE;
-		}
-		else {
-			guy.Carnivore = FALSE;
-		}
-	}
-	else if (GearName == "Hemoglobin") {
-		if (On) {
-			guy.Hemoglobin = TRUE;
-		}
-		else {
-			guy.Hemoglobin = FALSE;
-		}
-	}
-	
-	//Special
-	else if (GearName == "Revivify") {
-		Card s("Revivify");
-		if (On) {
-			deck.addCard(s);
-		}
-		else {
-			deck.removeCard(s);
-		}
-	}
-	else if (GearName == "Steroids") {
-		Card s("Steroids");
-		if (On) {
-			deck.addCard(s);
-		}
-		else {
-			deck.removeCard(s);
-		}
-	}
-	else if (GearName == "Change Mind") {
-		Card s("Change Mind");
-		if (On) {
-			deck.addCard(s);
-		}
-		else {
-			deck.removeCard(s);
-		}
-	}
-	else if (GearName == "Intimidate") {
-		Card s("Intimidate");
-		if (On) {
-			deck.addCard(s);
-		}
-		else {
-			deck.removeCard(s);
-		}
-	}
-	else if (GearName == "Cripple") {
-		Card s("Cripple");
-		if (On) {
-			deck.addCard(s);
-		}
-		else {
-			deck.removeCard(s);
-		}
-	}
-	else if (GearName == "Merge") {
-		Card s("Merge");
-		if (On) {
-			deck.addCard(s);
-		}
-		else {
-			deck.removeCard(s);
-		}
-	}
-	else if (GearName == "Entomb") {
-		Card s("Entomb");
-		if (On) {
-			deck.addCard(s);
-		}
-		else {
-			deck.removeCard(s);
-		}
-	}
-	else if (GearName == "Distract") {
-		Card s("Distract");
-		if (On) {
-			deck.addCard(s);
-		}
-		else {
-			deck.removeCard(s);
-		}
-	}
-	else if (GearName == "Prepare") {
-		Card s("Prepare");
-		if (On) {
-			deck.addCard(s);
-		}
-		else {
-			deck.removeCard(s);
-		}
-	}
-	else if (GearName == "Grow") {
-		Card s("Grow");
-		if (On) {
-			deck.addCard(s);
-		}
-		else {
-			deck.removeCard(s);
-		}
-	}
-	else if (GearName == "Solidify") {
-		Card s("Solidify");
-		if (On) {
-			deck.addCard(s);
-		}
-		else {
-			deck.removeCard(s);
-		}
-	}
-	else if (GearName == "Learn") {
-		Card s("Learn");
-		if (On) {
-			deck.addCard(s);
-		}
-		else {
-			deck.removeCard(s);
-		}
-	}
-	else if (GearName == "Train") {
-		Card s("Train");
-		if (On) {
-			deck.addCard(s);
-		}
-		else {
-			deck.removeCard(s);
-		}
-	}
-	else if (GearName == "Boost") {
-		Card s("Boost");
-		if (On) {
-			deck.addCard(s);
-		}
-		else {
-			deck.removeCard(s);
-		}
-	}
-	else if (GearName == "Vitalise") {
-		Card s("Vitalise");
-		if (On) {
-			deck.addCard(s);
-		}
-		else {
-			deck.removeCard(s);
-		}
-	}
-	else if (GearName == "Jump") {
-		Card s("Jump");
-		if (On) {
-			deck.addCard(s);
-		}
-		else {
-			deck.removeCard(s);
-		}
-	}
-	else if (GearName == "Combo") {
-		Card s("Combo");
-		if (On) {
-			deck.addCard(s);
-		}
-		else {
-			deck.removeCard(s);
-		}
-	}
-	else if (GearName == "Slam") {
-		Card s("Slam");
-		if (On) {
-			deck.addCard(s);
-		}
-		else {
-			deck.removeCard(s);
-		}
-	}
 	
 	guy.printStats();
 }
 
-void Gear::printGear(int position) {
+void Gear::TraitOnOrOff(bool On, Character &guy, Deck &deck) {
+	//Trait Sacrifice
+	if (GearName == "Anemia") {
+	if (On) {
+		guy.Anemia = TRUE;
+	}
+	else {
+		guy.Anemia = FALSE;
+	}
+	}
+	else if (GearName == "Dumb") {
+	if (On) {
+		guy.ModStat(-4, "Intelligence");
+		guy.ModStat(1, "Defense");
+	}
+	else {
+		guy.ModStat(4, "Intelligence");
+		guy.ModStat(-1, "Defense");
+	}
+	}
+	else if (GearName == "Mind Flooded") {
+	Card ponder("Ponder");
+	if (On) {
+		deck.addCard(ponder);
+	}
+	else {
+		deck.removeCard(ponder);
+	}
+	}
+	else if (GearName == "Tunnel Vision") {
+	if (On) {
+		guy.ModStat(-2, "Strength");
+		guy.ModStat(-2, "Defense");
+		guy.ModStat(1, "Skill");
+	}
+	else {
+		guy.ModStat(2, "Strength");
+		guy.ModStat(2, "Defense");
+		guy.ModStat(-1, "Skill");
+	}
+	}
+	else if (GearName == "Teleportitis") {
+	if (On) {
+		guy.Teleportitis = TRUE;
+	}
+	else {
+		guy.Teleportitis = FALSE;
+	}
+	}
+	else if (GearName == "Growing Pains") {
+	if (On) {
+		guy.Growing_Pains = TRUE;
+	}
+	else {
+		guy.Growing_Pains = FALSE;
+	}
+	}
+	else if (GearName == "Conversion") {
+	if (On) {
+		guy.Conversion = TRUE;
+	}
+	else {
+		guy.Conversion = FALSE;
+	}
+		}
+	else if (GearName == "Inversion") {
+	if (On) {
+		guy.Inversion = TRUE;
+	}
+	else {
+		guy.Inversion = FALSE;
+	}
+	}
+	else if (GearName == "Jittery") {
+	if (On) {
+		guy.Jittery = 0;
+	}
+	else {
+		guy.Jittery = -1;
+	}
+	}
+	else if (GearName == "Tumors") {
+	if (On) {
+		guy.Tumors = TRUE;
+	}
+	else {
+		guy.Tumors = FALSE;
+	}
+	}
+	else if (GearName == "Devolve") {
+	if (On) {
+		guy.Devolve = TRUE;
+	}
+	else {
+		guy.Devolve = FALSE;
+	}
+	}
+	else if (GearName == "Volatile") {
+	if (On) {
+		guy.Volatile = 0;
+	}
+	else {
+		guy.Volatile = -1;
+	}
+	}
+	else if (GearName == "Melting") {
+	if (On) {
+		guy.Melting = TRUE;
+	}
+	else {
+		guy.Melting = FALSE;
+	}
+	}
+	else if (GearName == "The Box") {
+	if (On) {
+		int statpool = 0;
+		int tempstat = guy.MaxHealthBase;
+		for (int i = 1; i < tempstat; i++) {
+			guy.MaxHealthBase--;
+			guy.MaxHealth--;
+			statpool++;
+		}
+		tempstat = guy.MaxManaBase;
+		for (int i = 0; i < tempstat; i++) {
+			guy.MaxMana--;
+			guy.MaxManaBase--;
+			statpool++;
+		}
+		tempstat = guy.Strength;
+		for (int i = 1; i < tempstat; i++) {
+			guy.Strength--;
+			statpool++;
+		}
+		tempstat = guy.Defense;
+		for (int i = 0; i < tempstat; i++) {
+			guy.Defense--;
+			statpool++;
+		}
+		tempstat = guy.Intelligence;
+		for (int i = 0; i < tempstat; i++) {
+			guy.Intelligence--;
+			statpool++;
+		}
+		tempstat = guy.Skill;
+		for (int i = 0; i < tempstat; i++) {
+			guy.Skill--;
+			statpool++;
+		}
+
+		while (statpool > 0) {
+			int amount = (rand() % statpool + 1) / 2;
+			if (statpool == 1)
+				amount = 1;
+			statpool -= amount;
+			int stat = rand() % 6;
+			switch (stat) {
+			case 0:
+				guy.MaxHealthBase += amount;
+				guy.MaxHealth += amount;
+				break;
+			case 1:
+				guy.MaxManaBase += amount;
+				guy.MaxMana += amount;
+				break;
+			case 5:
+				guy.Strength += amount;
+				break;
+			case 2:
+				guy.Defense += amount;
+				break;
+			case 3:
+				guy.Intelligence += amount;
+				break;
+			case 4:
+				guy.Skill += amount;
+				break;
+			}
+			guy.CurrentHealth = guy.MaxHealth;
+			guy.CurrentMana = guy.MaxMana;
+			guy.printStats();
+		}
+	}
+	else {
+	}
+	}
+	else if (GearName == "Amnesia") {
+	if (On) {
+		for (int x = 1; x < 27; x++) {
+			for (int y = 6; y < 14; y++) {
+				if (rand() % 2 == 0)
+					if (x != guy.posx && y != guy.posy)
+						mvprintw(y, x, " ");
+			}
+		}
+	}
+	else {
+
+	}
+	}
+	else if (GearName == "Long Legs") {
+	if (On) {
+		guy.Long_Legs += 3;
+	}
+	else {
+		guy.Long_Legs = 0;
+	}
+	}
+	else if (GearName == "Oblivious") {
+	if (On) {
+		for (int y = 0; y < 15; y++) {
+			mvprintw(y, 44, "                                  ");
+		}
+		guy.Oblivious = TRUE;
+	}
+	else {
+		guy.Oblivious = FALSE;
+	}
+	}
+	else if (GearName == "Blind") {
+	if (On) {
+		guy.Blind = TRUE;
+	}
+	else {
+		guy.Blind = FALSE;
+	}
+	}
+	else if (GearName == "Numb") {
+	if (On) {
+		for (int y = 0; y < 5; y++) {
+			mvprintw(y, 17, "                          ");
+		}
+		guy.Numb = TRUE;
+	}
+	else {
+		guy.Numb = FALSE;
+	}
+	}
+	else if (GearName == "Sensitive") {
+	if (On) {
+		guy.Fast_Metabolism = TRUE;
+	}
+	else {
+		guy.Fast_Metabolism = FALSE;
+	}
+	}
+	else if (GearName == "Frenzy") {
+	if (On) {
+		guy.Deadly = TRUE;
+	}
+	else {
+		guy.Deadly = FALSE;
+	}
+	}
+	else if (GearName == "Corpse") {
+	if (On) {
+		guy.ModStat(5, "MaxHealth");
+		guy.CurrentHealth = guy.MaxHealth;
+		guy.Undead = TRUE;
+	}
+	else {
+		guy.ModStat(-5, "MaxHealth");
+		guy.CurrentHealth = guy.MaxHealth;
+		guy.Undead = FALSE;
+	}
+	}
+	else if (GearName == "Radioactive") {
+	if (On) {
+		guy.Radioactive = TRUE;
+	}
+	else {
+		guy.Radioactive = FALSE;
+	}
+	}
+	else if (GearName == "Forgetful") {
+	if (On) {
+		guy.ModStat(2, "MaxMana");
+		guy.Forgetful = TRUE;
+	}
+	else {
+		guy.ModStat(-2, "MaxMana");
+		guy.Forgetful = FALSE;
+	}
+	}
+
+	else if (GearName == "Tiny") {
+	if (On) {
+		guy.ModStat(-39, "MaxHealth");
+		guy.ModStat(10, "Defense");
+		guy.CurrentHealth = guy.MaxHealth;
+	}
+	else {
+		guy.ModStat(39, "MaxHealth");
+		guy.ModStat(-8, "Defense");
+		guy.CurrentHealth = guy.MaxHealth;
+	}
+	}
+	else if (GearName == "Succumb") {
+	if (On) {
+		guy.ModStat(2, "Skill");
+		guy.Succumb = TRUE;
+		Succumb = TRUE;
+	}
+	else {
+		guy.ModStat(-2, "Skill");
+		guy.Succumb = FALSE;
+		Succumb = FALSE;
+	}
+	}
+
+	//Trait Reward
+	else if (GearName == "Mending Flesh") {
+	if (On) {
+		guy.Mending_Flesh = TRUE;
+	}
+	else {
+		guy.Mending_Flesh = FALSE;
+	}
+	}
+	else if (GearName == "Gymnast") {
+	if (On) {
+		guy.Gymnast = TRUE;
+	}
+	else {
+		guy.Gymnast = FALSE;
+	}
+	}
+	else if (GearName == "Third Eye") {
+	if (On) {
+		guy.Third_Eye = TRUE;
+	}
+	else {
+		guy.Third_Eye = FALSE;
+	}
+	}
+	else if (GearName == "Warper") {
+	if (On) {
+		guy.Warper += 5;
+	}
+	else {
+		guy.Warper = 0;
+	}
+	}
+	else if (GearName == "Growth Spurt") {
+	if (On) {
+		guy.Growth_Spurt = TRUE;
+	}
+	else {
+		guy.Growth_Spurt = FALSE;
+	}
+	}
+	else if (GearName == "Mind") {
+	if (On) {
+		guy.Mind = TRUE;
+	}
+	else {
+		guy.Mind = FALSE;
+	}
+	}
+	else if (GearName == "Matter") {
+	if (On) {
+		guy.Matter = TRUE;
+	}
+	else {
+		guy.Matter = FALSE;
+	}
+	}
+	else if (GearName == "Sharp Claws") {
+	if (On) {
+		guy.Sharp_Claws = TRUE;
+	}
+	else {
+		guy.Sharp_Claws = FALSE;
+	}
+	}
+	else if (GearName == "Gift") {
+	if (On) {
+		guy.Gift = TRUE;
+	}
+	else {
+		guy.Gift = FALSE;
+	}
+	}
+	else if (GearName == "Unseen") {
+	if (On) {
+		guy.Unseen = TRUE;
+	}
+	else {
+		guy.Unseen = FALSE;
+	}
+	}
+	else if (GearName == "Spiny Skin") {
+	if (On) {
+		guy.Spiny_Skin = TRUE;
+	}
+	else {
+		guy.Spiny_Skin = FALSE;
+	}
+	}
+	else if (GearName == "Adapt") {
+	if (On) {
+		guy.Adapt = TRUE;
+	}
+	else {
+		guy.Adapt = FALSE;
+	}
+	}
+	else if (GearName == "Wings") {
+	if (On) {
+		guy.Wings = TRUE;
+	}
+	else {
+		guy.Wings = FALSE;
+	}
+	}
+	else if (GearName == "Exoskeleton") {
+	if (On) {
+		guy.Exoskeleton = TRUE;
+	}
+	else {
+		guy.Exoskeleton = FALSE;
+	}
+	}
+	else if (GearName == "Unpredictable") {
+	if (On) {
+		guy.Dizzy = TRUE;
+	}
+	else {
+		guy.Dizzy = FALSE;
+	}
+	}
+	else if (GearName == "Ego") {
+	if (On) {
+		guy.Crown = TRUE;
+	}
+	else {
+		guy.Crown = FALSE;
+	}
+	}
+	else if (GearName == "The Juice") {
+	if (On) {
+		guy.The_Juice = TRUE;
+	}
+	else {
+		guy.The_Juice = FALSE;
+	}
+	}
+	else if (GearName == "Quick Thinker") {
+	if (On) {
+		guy.Quick_Thinker = TRUE;
+	}
+	else {
+		guy.Quick_Thinker = FALSE;
+	}
+	}
+	else if (GearName == "Foresight") {
+	if (On) {
+		guy.Foresight = 1;
+	}
+	else {
+		guy.Foresight = 1;
+	}
+	}
+	else if (GearName == "Photosynthesis") {
+	if (On) {
+		guy.Photosynthesis = TRUE;
+	}
+	else {
+		guy.Photosynthesis = FALSE;
+	}
+	}
+	else if (GearName == "Dexterous") {
+	if (On) {
+		guy.Dexterous = TRUE;
+	}
+	else {
+		guy.Dexterous = FALSE;
+	}
+	}
+	else if (GearName == "Reconstruction") {
+	if (On) {
+		guy.Reconstruction = TRUE;
+	}
+	else {
+		guy.Reconstruction = FALSE;
+	}
+	}
+	else if (GearName == "Laser Vision") {
+	Card laser("Laser");
+	if (On) {
+		deck.addCard(laser);
+	}
+	else {
+		deck.removeCard(laser);
+	}
+	}
+	else if (GearName == "Carnivore") {
+	if (On) {
+		guy.Carnivore = TRUE;
+	}
+	else {
+		guy.Carnivore = FALSE;
+	}
+	}
+	else if (GearName == "Hemoglobin") {
+	if (On) {
+		guy.Hemoglobin = TRUE;
+	}
+	else {
+		guy.Hemoglobin = FALSE;
+	}
+	}
+	else if (GearName == "Destiny") {
+	if (On) {
+		guy.Destiny = 5;
+	}
+	else {
+		guy.Destiny = 0;
+	}
+	}
+
+	guy.printStats();
+}
+
+void Gear::CardOnOrOff(bool On, Character &guy, Deck &deck) {
+	//Special
+	if (GearName == "Revivify") {
+	Card s("Revivify");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+	else if (GearName == "Steroids") {
+	Card s("Steroids");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+	else if (GearName == "Change Mind") {
+	Card s("Change Mind");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+	else if (GearName == "Intimidate") {
+	Card s("Intimidate");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+	else if (GearName == "Cripple") {
+	Card s("Cripple");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+	else if (GearName == "Merge") {
+	Card s("Merge");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+	else if (GearName == "Entomb") {
+	Card s("Entomb");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+	else if (GearName == "Distract") {
+	Card s("Distract");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+	else if (GearName == "Prepare") {
+	Card s("Prepare");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+	else if (GearName == "Grow") {
+	Card s("Grow");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+	else if (GearName == "Solidify") {
+	Card s("Solidify");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+	else if (GearName == "Learn") {
+	Card s("Learn");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+	else if (GearName == "Train") {
+	Card s("Train");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+	else if (GearName == "Boost") {
+	Card s("Boost");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+	else if (GearName == "Vitalise") {
+	Card s("Vitalise");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+	else if (GearName == "Jump") {
+	Card s("Jump");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+	else if (GearName == "Combo") {
+	Card s("Combo");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+	else if (GearName == "Slam") {
+	Card s("Slam");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+	else if (GearName == "Stall") {
+	Card s("Stall");
+	if (On) {
+		deck.addCard(s);
+	}
+	else {
+		deck.removeCard(s);
+	}
+	}
+
+	guy.printStats();
+}
+
+
+void Gear::printGear(int position, Character &guy) {
 	WINDOW *gearWindow;
 
 	switch (position) {
@@ -1902,14 +2139,50 @@ void Gear::printGear(int position) {
 	case 1:
 		manualBox("Card 1", 0);
 		mvprintInSize(gy, 12-addx, 15, GearName);
-		if(Type == "Trait Sacrifice" || Type == "Trait Reward")
-			mvprintInSize(19, 4, 15, Description);
+		if (Type == "Trait Sacrifice" || Type == "Trait Reward") {
+			//Succumb trait
+			if (guy.Succumb) {
+				mvprintw(17, 6, "               ");
+				for (int x = 6; x < 14; x++) {
+					char a = rand() % 9000 + 50;
+					if (rand() % 4 > 0)
+						mvprintw(17, x, "%c", a);
+				}
+				for (int y = 19; y < 22; y++) {
+					for (int x = 3; x < 18; x++) {
+						char a = rand() % 9000 + 50;
+						if (rand() % 5 > 0)
+							mvprintw(y, x, "%c", a);
+					}
+				}
+			}
+			else
+				mvprintInSize(19, 4, 15, Description);
+		}
 		break;
 	case 2:
 		manualBox("Card 2", 0);
 		mvprintInSize(gy, 31-addx, 15, GearName);
-		if (Type == "Trait Sacrifice" || Type == "Trait Reward")
-			mvprintInSize(19, 24, 15, Description);
+		if (Type == "Trait Sacrifice" || Type == "Trait Reward") {
+			//Succumb trait
+			if (guy.Succumb) {
+				mvprintw(17, 26, "               ");
+				for (int x = 26; x < 34; x++) {
+					char a = rand() % 9000 + 50;
+					if (rand() % 4 > 0)
+						mvprintw(17, x, "%c", a);
+				}
+				for (int y = 19; y < 22; y++) {
+					for (int x = 24; x < 38; x++) {
+						char a = rand() % 9000 + 50;
+						if (rand() % 3 > 0)
+							mvprintw(y, x, "%c", a);
+					}
+				}
+			}
+			else
+				mvprintInSize(19, 24, 15, Description);
+		}
 		attroff(COLOR_PAIR(10));
 		if (Type != "Trait Sacrifice" && Type != "Trait Reward")
 			mvprintw(22, 22, "(P)ickup   (L)eave");
@@ -1917,8 +2190,26 @@ void Gear::printGear(int position) {
 	case 3:
 		manualBox("Card 3", 0);
 		mvprintInSize(gy, 52-addx, 15, GearName);
-		if (Type == "Trait Sacrifice" || Type == "Trait Reward")
-			mvprintInSize(19, 44, 15, Description);
+		if (Type == "Trait Sacrifice" || Type == "Trait Reward") {
+			//Succumb trait
+			if (guy.Succumb) {
+				mvprintw(17, 46, "               ");
+				for (int x = 46; x < 54; x++) {
+					char a = rand() % 9000 + 50;
+					if (rand() % 4 > 0)
+						mvprintw(17, x, "%c", a);
+				}
+				for (int y = 19; y < 22; y++) {
+					for (int x = 44; x < 58; x++) {
+						char a = rand() % 9000 + 50;
+						if (rand() % 3 > 0)
+							mvprintw(y, x, "%c", a);
+					}
+				}
+			}
+			else
+				mvprintInSize(19, 44, 15, Description);
+		}
 		break;
 
 	}

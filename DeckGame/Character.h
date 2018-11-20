@@ -34,7 +34,7 @@ public:
 	int extraTurns;
 	bool pierce;
 	bool shuffle;
-	const char* fillType;
+	const char* fillType = " ";
 	bool cannotUse;
 
 	//card specific mechanics
@@ -52,6 +52,7 @@ public:
 	bool steroids = FALSE;
 	int intimidate = 0;
 	int entomb = 0;
+	int pummel = 2;
 
 	int strMod;
 	int defMod;
@@ -100,9 +101,10 @@ public:
 		bool Fast_Metabolism = FALSE;
 		bool Deadly = FALSE;
 		bool Undead = FALSE;
-		bool The_Drink = FALSE;
+		bool The_Juice = FALSE;
 		bool Radioactive = FALSE;
 		bool Forgetful = FALSE;
+		bool Succumb = FALSE;
 	//Reward
 		bool Mending_Flesh = FALSE;
 		bool Gymnast = FALSE;
@@ -123,11 +125,12 @@ public:
 		bool Crown = FALSE;
 		bool Quick_Thinker = FALSE;
 		int Foresight = -1;
-		bool Power = FALSE;
+		bool Photosynthesis = FALSE;
 		bool Dexterous = FALSE;
 		bool Reconstruction = FALSE;
 		bool Carnivore = FALSE;
 		bool Hemoglobin = FALSE;
+		int Destiny = 0;
 
 	//change stats
 	int TakeDamage(int damageTaken);

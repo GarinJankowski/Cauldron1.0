@@ -26,6 +26,7 @@ public:
 	//variables for special cards
 	bool pierce = FALSE;
 	bool copyUsed = FALSE;
+	int pummel = 2;
 	
 	void printCard(int position);
 	int dealDamage(int damage, Character &guy, Enemy &enemy, TextLog &log);

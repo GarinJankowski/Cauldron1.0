@@ -26,35 +26,46 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	RoomType = "First";
 
 	//pushes all the cards in the deck to the discard pile
-	for (int i = 0; i < deck.size(); i++) {
-		//Draw.push_back(deck.at(i));
-		Discard.push_back(deck.at(i));
+	if (deck.size() > 0) {
+		for (int i = 0; i < deck.size(); i++) {
+			//Draw.push_back(deck.at(i));
+			Discard.push_back(deck.at(i));
+		}
 	}
-
 	//create vector for every equipment type for each piece of equipment
 	//hands
 	handsNorm.push_back(Gear("Long Sword"));
 	handsNorm.push_back(Gear("Falchion"));
 	handsNorm.push_back(Gear("Steel Spear"));
+	handsNorm.push_back(Gear("Javelin"));
 	handsNorm.push_back(Gear("Halberd"));
 	handsNorm.push_back(Gear("Battle Axe"));
 	handsNorm.push_back(Gear("Shiv"));
 	handsNorm.push_back(Gear("Serrated Dagger"));
 	handsNorm.push_back(Gear("Simple Bow"));
-	handsLate.push_back(Gear("Throwing Stars"));
+	handsNorm.push_back(Gear("Sabre"));
+	handsNorm.push_back(Gear("Whip"));
+	handsNorm.push_back(Gear("Leather Gauntlets"));
+	handsNorm.push_back(Gear("Conductive Gloves"));
+	handsNorm.push_back(Gear("Lance"));
+	handsNorm.push_back(Gear("Dirk"));
+	handsNorm.push_back(Gear("Cutlass"));
 
-	handsLate.push_back(Gear("Staff"));
+	handsLate.push_back(Gear("Metal Staff"));
 	handsLate.push_back(Gear("Rapier"));
 	handsLate.push_back(Gear("Sickle"));
 	handsLate.push_back(Gear("Obsidian Spear"));
-	handsLate.push_back(Gear("Lance"));
 	handsLate.push_back(Gear("War Hammer"));
 	handsLate.push_back(Gear("Morning Star"));
 	handsLate.push_back(Gear("Double Axe"));
 	handsLate.push_back(Gear("Recurve Bow"));
+	handsLate.push_back(Gear("Twin Flail"));
+	handsLate.push_back(Gear("Throwing Stars"));
+	handsLate.push_back(Gear("Steel Gauntlets"));
+	handsLate.push_back(Gear("Spiked Gauntlets"));
+	handsLate.push_back(Gear("Crystal Ball"));
+	handsLate.push_back(Gear("Arbalest"));
 
-	handsRare.push_back(Gear("Crystal Ball"));
-	handsRare.push_back(Gear("Conductive Gloves"));
 	handsRare.push_back(Gear("Shield"));
 	handsRare.push_back(Gear("Wand"));
 	handsRare.push_back(Gear("Hand Cannon"));
@@ -74,8 +85,8 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	bodyLate.push_back(Gear("Dragon Scales"));
 	bodyLate.push_back(Gear("Twilight Robes"));
 	bodyLate.push_back(Gear("Crystal Breastplate"));
+	bodyLate.push_back(Gear("Amulet of Aura"));
 
-	bodyRare.push_back(Gear("Amulet of Aura"));
 	bodyRare.push_back(Gear("Turtle Shell"));
 	bodyRare.push_back(Gear("Mage Armor"));
 
@@ -105,6 +116,9 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	specialNorm.push_back(Card("Vitalise"));
 	specialNorm.push_back(Card("Combo"));
 	specialNorm.push_back(Card("Slam"));
+	specialNorm.push_back(Card("Stall"));
+	specialNorm.push_back(Card("Strike"));
+	specialNorm.push_back(Card("Defend"));
 
 	specialRare.push_back(Card("Steroids"));
 	specialRare.push_back(Card("Distract"));
@@ -136,6 +150,8 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsSacrifice.push_back(Gear("Corpse"));
 	AvailableTraitsSacrifice.push_back(Gear("Radioactive"));
 	AvailableTraitsSacrifice.push_back(Gear("Forgetful"));
+	AvailableTraitsSacrifice.push_back(Gear("Tiny"));
+	AvailableTraitsSacrifice.push_back(Gear("Succumb"));
 
 	AvailableTraitsReward.push_back(Gear("Mending Flesh"));
 	AvailableTraitsReward.push_back(Gear("Gymnast"));
@@ -155,11 +171,13 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsReward.push_back(Gear("Ego"));
 	AvailableTraitsReward.push_back(Gear("Quick Thinker"));
 	AvailableTraitsReward.push_back(Gear("Foresight"));
-	AvailableTraitsReward.push_back(Gear("Power"));
+	AvailableTraitsReward.push_back(Gear("Photosynthesis"));
 	AvailableTraitsReward.push_back(Gear("Dexterous"));
 	AvailableTraitsReward.push_back(Gear("Reconstruction"));
 	AvailableTraitsReward.push_back(Gear("Laser Vision"));
 	AvailableTraitsReward.push_back(Gear("Carnivore"));
+	AvailableTraitsReward.push_back(Gear("Hemoglobin"));
+	AvailableTraitsReward.push_back(Gear("Destiny"));
 
 	//vector of bosses
 	bosses.push_back(Enemy("Paladin"));
@@ -171,13 +189,17 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	bosses.push_back(Enemy("Demigod"));
 
 	//decide final boss
-	int rngboss = rand() % 3;
+	int rngboss = rand() % 4;
 	if(rngboss == 0)
 		FinalBoss = Enemy("Dragon");
 	else if (rngboss == 1)
 		FinalBoss = Enemy("King");
 	else if (rngboss == 2)
 		FinalBoss = Enemy("Machine");
+	else if (rngboss == 3)
+		FinalBoss = Enemy("Witch");
+	else if (rngboss == 4)
+		FinalBoss = Enemy("Demon");
 }
 
 
@@ -200,6 +222,11 @@ void InputBoard::clearBoard() {
 	}
 	for (int y = 17; y < 23; y++) {
 		mvprintw(y, 42, "                  ");
+	}
+}
+void InputBoard::clearBoardWhole() {
+	for (int y = 16; y < 24; y++) {
+		mvprintw(y, 2, "                                                                      ");
 	}
 }
 
@@ -562,31 +589,43 @@ void InputBoard::showTraits() {
 			mvprintw(y, x, "i) %s", Traits.at(i).GearName);
 			break;
 		case 9:
-			mvprintw(y, x, "(j) %s", Traits.at(i).GearName);
+			mvprintw(y, x, "j) %s", Traits.at(i).GearName);
 			break;
 		case 10:
-			mvprintw(y, x, "(k) %s", Traits.at(i).GearName);
+			mvprintw(y, x, "k) %s", Traits.at(i).GearName);
 			break;
 		case 11:
-			mvprintw(y, x, "(l) %s", Traits.at(i).GearName);
+			mvprintw(y, x, "l) %s", Traits.at(i).GearName);
 			break;
 		case 12:
-			mvprintw(y, x, "(m) %s", Traits.at(i).GearName);
+			mvprintw(y, x, "m) %s", Traits.at(i).GearName);
 			break;
 		case 13:
-			mvprintw(y, x, "(n) %s", Traits.at(i).GearName);
+			mvprintw(y, x, "n) %s", Traits.at(i).GearName);
 			break;
 		case 14:
-			mvprintw(y, x, "(o) %s", Traits.at(i).GearName);
+			mvprintw(y, x, "o) %s", Traits.at(i).GearName);
 			break;
 		case 15:
-			mvprintw(y, x, "(p) %s", Traits.at(i).GearName);
+			mvprintw(y, x, "p) %s", Traits.at(i).GearName);
 			break;
 		case 16:
-			mvprintw(y, x, "(q) %s", Traits.at(i).GearName);
+			mvprintw(y, x, "q) %s", Traits.at(i).GearName);
 			break;
 		case 17:
-			mvprintw(y, x, "(r) %s", Traits.at(i).GearName);
+			mvprintw(y, x, "r) %s", Traits.at(i).GearName);
+			break;
+		case 18:
+			mvprintw(y, x, "s) %s", Traits.at(i).GearName);
+			break;
+		case 19:
+			mvprintw(y, x, "t) %s", Traits.at(i).GearName);
+			break;
+		case 20:
+			mvprintw(y, x, "u) %s", Traits.at(i).GearName);
+			break;
+		case 21:
+			mvprintw(y, x, "v) %s", Traits.at(i).GearName);
 			break;
 		}
 		y++;
@@ -668,6 +707,18 @@ void InputBoard::traitsLoopWhole() {
 		case 17:
 			ccc = 'r';
 			break;
+		case 18:
+			ccc = 's';
+			break;
+		case 19:
+			ccc = 't';
+			break;
+		case 20:
+			ccc = 'u';
+			break;
+		case 21:
+			ccc = 'v';
+			break;
 		}
 		if (c == ccc) {
 			for (int y = 1; y < 14; y++) {
@@ -739,16 +790,11 @@ void InputBoard::traitsLoopWhole() {
   pushing forward cards from the draw pile into the cards that can be chosen,
   and printing the cards that can be chosen*/
 void InputBoard::ShuffleAddPrint() {
-	//prints the boxes
-	manualBox("Card 1", 0);
-	manualBox("Card 2", 0);
-	manualBox("Card 3", 0);
-	standend();
 	//mvprintw(17, 63, "Next: ");
 
 	//shuffle
 		//if there isn't enough cards in the draw pile, add cards from the discard pile into draw pile in a random order
-		if (Draw.size() <= 0) {
+		if (Draw.size() == 0) {
 			while (Discard.size() > 0) {
 				Card tempCard = Discard.front();
 				Discard.erase(Discard.begin());
@@ -757,19 +803,48 @@ void InputBoard::ShuffleAddPrint() {
 				Draw.insert(Draw.begin() + rng, tempCard);
 			}
 		}
+		
 	//add
+		//draw for a deck with less than 3 cards
+		if (Draw.size() < 3 && DecisionCards.size() < 2) {
+			cardThere = Draw.size();
+		}
+
+		if (Draw.size() < 3 && Discard.size() == 0) {
+			while (Draw.size() > 0) {
+				Card innout = Draw.back();
+				Draw.pop_back();
+				DecisionCards.push_back(innout);
+			}
+		}
 		//if there aren't 3 cards to choose from, add cards from the draw pile to here until there are three
-		while (DecisionCards.size() < 3) {
-			Card innout = Draw.back();
-			Draw.pop_back();
-			DecisionCards.push_back(innout);
+		else {
+			while (DecisionCards.size() < 3) {
+				Card innout = Draw.back();
+				Draw.pop_back();
+				DecisionCards.push_back(innout);
+			}
 		}
 
 	//print
+		//prints the boxes
+		//if (cardThere > 0)
+		//manualBox("Card 1", 0);
+		//if (cardThere > 1)
+		//manualBox("Card 2", 0);
+		//if (cardThere > 2)
+		//manualBox("Card 3", 0);
+		standend();
 		//prints the cards to choose from
-		for (int i = 0; i < (int)DecisionCards.size(); i++) {
-			DecisionCards.at(i).printCard(i + 1);
-		}
+		/*if (DecisionCards.size() == 0) {
+			clearBoard();
+		}*/
+		//else {
+			for (int i = 0; i < (int)DecisionCards.size(); i++) {
+				DecisionCards.at(i).printCard(i + 1);
+			}
+		//}
+		
 
 		/*for (int i = 0; i < (int)Draw.size(); i++) {
 			mvprintw(5 + i, 45, "%s   ", Draw.at(i).CardName);
@@ -813,6 +888,9 @@ void InputBoard::ShuffleAddPrint() {
 			}
 			standend();
 		}
+
+		//redraws the decision box
+		manualBox("Desicion", 0);
 }
 
 //get choice of card in combat
@@ -913,8 +991,12 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 bool InputBoard::checkUsable(Character &guy, Enemy &enemy) {
 	int cardsUsable = 3;
 	bool usable = TRUE;
+	if (DecisionCards.size() == 0)
+		return FALSE;
 	for (int i = 0; i < 3; i++) {
-		if ((DecisionCards.at(i).ManaCost > guy.CurrentMana) ||
+		if (DecisionCards.size() <= i)
+			cardsUsable--;
+		else if ((DecisionCards.at(i).ManaCost > guy.CurrentMana) ||
 			(DecisionCards.at(i).CardName == "Flee" && guy.CurrentBlock <= 0) ||
 			(DecisionCards.at(i).CardName == "Impale" && enemy.CurrentHealth + enemy.CurrentBlock > guy.Strength * 3) ||
 			(DecisionCards.at(i).CardName == "Shoot" && guy.CurrentHealth + guy.CurrentBlock <= 7))
@@ -927,7 +1009,9 @@ bool InputBoard::checkUsable(Character &guy, Enemy &enemy) {
 //checks if you cant use a card in a specific place in your hand
 bool InputBoard::checkUsable(int i, Character &guy, Enemy &enemy) {
 	bool usable = TRUE;
-	if ((DecisionCards.at(i).ManaCost > guy.CurrentMana) ||
+	if (DecisionCards.size() <= i)
+		return FALSE;
+	else if ((DecisionCards.at(i).ManaCost > guy.CurrentMana) ||
 		(DecisionCards.at(i).CardName == "Flee" && guy.CurrentBlock <= 0) ||
 		(DecisionCards.at(i).CardName == "Impale" && enemy.CurrentHealth + enemy.CurrentBlock > guy.Strength * 3))
 		usable = FALSE;
@@ -1048,20 +1132,20 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 		//Growing Pains trait
 		if (guy.Growing_Pains) {
 			int damage = 10;
-			guy.TakeDamage(damage);
-			string pains = "-You take " + to_string(damage) + " damage.";
+			damage = guy.TakeDamage(damage);
+			string pains = "-You take #r" + to_string(damage) + "#o damage.";
 			log.PushPop(pains);
 		}
 		//Forgetful trait
 		if (guy.Forgetful) {
 			guy.CurrentMana = 0;
-			string forget = "-You lose all of your mana.";
+			string forget = "#f-You lose all of your mana.#o";
 			log.PushPop(forget);
 		}
 		//Unseen trait
 		if (guy.Unseen) {
 			guy.extraTurns++;
-			string un = " EXTRA TURN";
+			string un = "#g EXTRA TURN#o";
 			log.PushPop(un);
 		}
 
@@ -1085,7 +1169,7 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 				if (guy.Reconstruction && guy.Skill > 1) {
 					guy.CurrentHealth = guy.MaxHealth;
 					guy.ModStat(-2, "Skill");
-					string recon = " You come back to life!";
+					string recon = "#g You come back to life!#o";
 					log.PushPop(recon);
 				}
 				guy.Alive = FALSE;
@@ -1122,7 +1206,7 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 				if (guy.Reconstruction && guy.Skill > 1) {
 					guy.CurrentHealth = guy.MaxHealth;
 					guy.ModStat(-2, "Skill");
-					string recon = " You come back to life!";
+					string recon = "#g You come back to life!#o";
 					log.PushPop(recon);
 				}
 				else
@@ -1251,7 +1335,7 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 				if (guy.Reconstruction && guy.Skill > 1) {
 					guy.CurrentHealth = guy.MaxHealth;
 					guy.ModStat(-2, "Skill");
-					string recon = " You come back to life!";
+					string recon = "#g You come back to life!#o";
 					log.PushPop(recon);
 				}
 				else
@@ -1323,12 +1407,15 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 
 //call special mechanics on characters if requested
 void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, TextLog &log) {
+	if (enemy.CurrentHealth <= 0) {
+		return;
+	}
 	if (guy.CurrentHealth <= 0) {
 		//Reconstruction Trait
 		if (guy.Reconstruction && guy.Skill > 1) {
 			guy.CurrentHealth = guy.MaxHealth;
 			guy.ModStat(-2, "Skill");
-			string recon = " You come back to life!";
+			string recon = "#g You come back to life!#o";
 			log.PushPop(recon);
 		}
 		else
@@ -1339,7 +1426,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	if (guy.regenerateTurns > 0) {
 		int heal = 2 + rtd(1, guy.Intelligence);
 		guy.TakeDamage(-1 * heal);
-		string line = "-You gain " + to_string(heal) + " health.";
+		string line = "-You gain #g" + to_string(heal) + "#o health.";
 		log.PushPop(line);
 		guy.regenerateTurns--;
 	}
@@ -1348,7 +1435,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 		int block = int(guy.Intelligence / 2);
 		guy.CurrentBlock += block;
 
-		string line = "-You gain " + to_string(block) + " block.";
+		string line = "-You gain #c" + to_string(block) + "#o block.";
 		log.PushPop(line);
 		guy.smoke--;
 	}
@@ -1357,7 +1444,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 		int mana = 3;
 		guy.DrainMana(-1 * mana);
 
-		string line = "-You gain " + to_string(mana) + " mana.";
+		string line = "-You gain #m" + to_string(mana) + "#o mana.";
 		log.PushPop(line);
 		guy.incense--;
 	}
@@ -1368,7 +1455,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 		guy.TakeDamage(-1 * health);
 		guy.DrainMana(-1 * 2);
 
-		string line = "-You gain " + to_string(health) + " health and " + to_string(mana) + " mana.";
+		string line = "-You gain #g" + to_string(health) + "#o health and #m" + to_string(mana) + "#o mana.";
 		log.PushPop(line);
 		guy.metabolise--;
 	}
@@ -1380,15 +1467,15 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	if (guy.Exoskeleton) {
 		int block = rtd(1, guy.Skill-1);
 		guy.CurrentBlock += block;
-		string exo = "-You gain " + to_string(block) + " block.";
-		log.PushPop(exo);
+		string exo = "-You gain #c" + to_string(block) + "#o block.";
+		//log.PushPop(exo);
 	}
 	//Mending Flesh trait
 	if (guy.Mending_Flesh) {
 		int hp = rtd(1, guy.Skill);
 		guy.TakeDamage(-1 * hp);
-		string mend = "-You regenerate " + to_string(hp) + " health.";
-		log.PushPop(mend);
+		string mend = "-You regenerate #g" + to_string(hp) + "#o health.";
+		//log.PushPop(mend);
 	}
 	//Quick Thinker trait
 	if (guy.Quick_Thinker && guy.CurrentMana <= guy.MaxMana) {
@@ -1396,7 +1483,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 			int mana = 10;
 			guy.DrainMana(-1*mana);
 
-			string think = "-You suddenly gain 10 mana.";
+			string think = "#m-You suddenly gain 10 mana.#o";
 			log.PushPop(think);
 		}
 	}
@@ -1404,14 +1491,14 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	if (guy.Conversion) {
 		guy.DrainMana(2);
 		guy.TakeDamage(-1);
-		string conv = "-You lose 2 mana and gain 1 health.";
-		log.PushPop(conv);
+		string conv = "-You #rlose 2 mana#o and gain #g1#o health.";
+		//log.PushPop(conv);
 	}
 	//Anemia trait
 	if (guy.Anemia && guy.CurrentHealth > 5) {
 		if (rand() % 4 == 0) {
 			guy.CurrentHealth -= 5;
-			string line = "-You lose 5 health.";
+			string line = "-You #rlose 5 health.#o";
 			log.PushPop(line);
 		}
 	}
@@ -1419,8 +1506,8 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	if (guy.Inversion) {
 		guy.DrainMana(-1);
 		guy.TakeDamage(3);
-		string inv = "-You gain 1 mana and take 3 damage.";
-		log.PushPop(inv);
+		string inv = "-You gain #m1#o mana and take #r3#o damage.";
+		//log.PushPop(inv);
 	}
 
 	//Melting trait
@@ -1432,17 +1519,17 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 
 		guy.TakeDamage(1);
 
-		string melt = "-You lose 2 block and take 1 damage.";
-		log.PushPop(melt);
+		string melt = "-You #rlose 2 block#o and take #r1#o damage.";
+		//log.PushPop(melt);
 	}
 	//Radioactive trait
 	if (guy.Radioactive) {
 		int damage = guy.Skill / 2;
-		guy.TakeDamage(damage);
+		damage = guy.TakeDamage(damage);
 		enemy.takeDamage(damage, guy, log);
 
-		string radiate = "-You radiate " + to_string(damage) + " damage.";
-		log.PushPop(radiate);
+		string radiate = "-You radiate #r" + to_string(damage) + "#o damage.";
+		//log.PushPop(radiate);
 	}
 	//Jittery trait
 	if (guy.Jittery != -1) {
@@ -1454,7 +1541,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 			guy.Negate = 0;
 			guy.Jittery = 0;
 
-			string jitter = "-You lose all of your defenses.";
+			string jitter = "#r-You lose all of your defenses.#o";
 			log.PushPop(jitter);
 		}
 		else if (guy.CurrentBlock > 0 || guy.Negate > 0) {
@@ -1465,19 +1552,19 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	if (guy.Volatile != -1) {
 		if (guy.Volatile == 3) {
 			int damage = 15;
-			guy.TakeDamage(15);
+			damage = guy.TakeDamage(15);
 			enemy.takeDamage(15, guy, log);
 			guy.Volatile = 0;
 
-			string erupt = "-You erupt, taking and dealing " + to_string(damage) + " damage.";
+			string erupt = "#r-You erupt, taking and dealing " + to_string(damage) + " damage.#o";
 			log.PushPop(erupt);
 		}
 		else{
 			guy.Volatile++;
 		}
 	}
-	//The Drink
-	if (guy.The_Drink) {
+	//The Juice
+	if (guy.The_Juice) {
 		vector<string> stats;
 		stats.push_back("Max Health");
 		stats.push_back("Max Mana");
@@ -1497,22 +1584,22 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 		int rngline = rand() % 6;
 		switch (rngline) {
 		case 0:
-			drink = " You change.";
+			drink = "#g You change.#o";
 			break;
 		case 1:
-			drink = " You morph.";
+			drink = "#g You morph.#o";
 			break;
 		case 2:
-			drink = " You shift.";
+			drink = "#g You shift.#o";
 			break;
 		case 3:
-			drink = " You mutate.";
+			drink = "#g You mutate.#o";
 			break;
 		case 4:
-			drink = " You deform.";
+			drink = "#g You deform.#o";
 			break;
 		case 5:
-			drink = " You reshape.";
+			drink = "#g You reshape.#o";
 			break;
 		}
 		log.PushPop(drink);
@@ -1544,7 +1631,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 		int exturn = rand() % 100;
 		if (exturn < 4 * guy.Skill) {
 			guy.extraTurns++;
-			string ex = " EXTRA TURN";
+			string ex = "#g EXTRA TURN#o";
 			log.PushPop(ex);
 		}
 	}
@@ -1583,11 +1670,16 @@ void InputBoard::restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, Te
 //separated from getch because getch must always go after all of this printing, easier to maintain and add stuff this way
 void InputBoard::printDecision(Character &guy, TextLog &log) {
 	//clears the decision board, reprints windows
-	clearBoard();
+	clearBoardWhole();
 	manualBox("Decision", 0);
 	manualBox("Card 1", 0);
 	manualBox("Card 2", 0);
 	manualBox("Card 3", 0);
+
+	//Destiny trait
+	if (guy.Destiny == 1 && RoomType == "Cauldron") {
+		RoomType = "Empty";
+	}
 
 	//if it is the first room, print choice of movement
 	if (RoomType == "First") {
@@ -1648,7 +1740,8 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 
 		if (guy.Carnivore) {
 			guy.ModStat(1, "MaxHealth");
-			string car = "~You gain 1 Max Health.";
+			guy.CurrentHealth = guy.MaxHealth;
+			string car = "#g~You gain 1 Max Health.#o";
 			log.PushPop(car);
 		}
 	}
@@ -1677,7 +1770,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 					guy.posy += tiles;
 			}
 
-			string tele = " You teleport.";
+			string tele = "#r You teleport.#o";
 			log.PushPop(tele);
 			log.printLog();
 			return;
@@ -1738,7 +1831,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		}
 		mvprintInSize(17, 4, 15, "You found some gear: ");
 		generateGear(guy);
-		pickup.printGear(2);
+		pickup.printGear(2, guy);
 		/*else if (RoomType == "Gear Body") {
 			//put procgen here
 			mvprintInSize(19, 4, 15, "You found some gear: ");
@@ -1775,7 +1868,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		guy.ModStat(1, "Skill");
 		guy.printStats();
 		mvprintw(6, 32, "+1 Skill");
-		string skill1 = "~You gain 1 Skill.";
+		string skill1 = "#g~You gain 1 Skill.#o";
 		log.PushPop(skill1);
 		log.printLog();
 
@@ -1791,7 +1884,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		generateTraits();
 
 		for (int i = 0; i < 3; i++) {
-			TraitsDecision.at(i).printGear(i+1);
+			TraitsDecision.at(i).printGear(i+1, guy);
 		}
 	}
 	else if (RoomType == "Cauldron 2") {
@@ -1811,7 +1904,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		generateTraits();
 
 		for (int i = 0; i < 3; i++) {
-			TraitsDecision.at(i).printGear(i + 1);
+			TraitsDecision.at(i).printGear(i + 1, guy);
 		}
 	}
 }
@@ -2085,7 +2178,7 @@ void InputBoard::generateTraits() {
 	}
 	else if (RoomType == "Cauldron 2") {
 		if (rand() % 100 == 0) {
-			TraitsDecision.push_back(Gear("The Drink"));
+			TraitsDecision.push_back(Gear("The Juice"));
 		}
 		while (TraitsDecision.size() < 3) {
 			int rngt = rand() % AvailableTraitsReward.size();
@@ -2103,7 +2196,7 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 		if (guy.Reconstruction && guy.Skill > 1) {
 			guy.CurrentHealth = guy.MaxHealth;
 			guy.ModStat(-2, "Skill");
-			string recon = " You come back to life!";
+			string recon = "#g You come back to life!#o";
 			log.PushPop(recon);
 		}
 		else
@@ -2172,21 +2265,21 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 			//char choose = getch();
 			if (choose == '1') {
 				guy.ModStat(1, "Strength");
-				string gain = "~You gain 1 Strength.";
+				string gain = "#g~You gain 1 Strength.#o";
 				log.PushPop(gain);
 				log.printLog();
 				RoomType = "Empty";
 			}
 			else if (choose == '2') {
 				guy.ModStat(1, "Defense");
-				string gain = "~You gain 1 Defense.";
+				string gain = "#g~You gain 1 Defense.#o";
 				log.PushPop(gain);
 				log.printLog();
 				RoomType = "Empty";
 			}
 			else if (choose == '3') {
 				guy.ModStat(1, "Intelligence");
-				string gain = "~You gain 1 Intelligence.";
+				string gain = "#g~You gain 1 Intelligence.#o";
 				log.PushPop(gain);
 				log.printLog();
 				RoomType = "Empty";
@@ -2209,29 +2302,29 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					string gain2;
 					if (grow < 20) {
 						guy.ModStat(1, "Strength");
-						gain2 = "~You grow +1 Strength.";
+						gain2 = "#g~You grow +1 Strength.#o";
 					}
 					else if (grow <= 20 && grow < 40) {
 						guy.ModStat(1, "Defense");
-						gain2 = "~You grow +1 Defense.";
+						gain2 = "#g~You grow +1 Defense.#o";
 					}
 					else if (grow <= 40 && grow < 60) {
 						guy.ModStat(1, "Intelligence");
-						gain2 = "~You grow +1 Intelligence.";
+						gain2 = "#g~You grow +1 Intelligence.#o";
 					}
 					else if (grow <= 60 && grow < 80) {
 						guy.ModStat(1, "MaxHealth");
-						gain2 = "~You grow +1 Maximum Health.";
+						gain2 = "#g~You grow +1 Maximum Health.#o";
 						guy.CurrentHealth = guy.MaxHealth;
 					}
 					else if (grow >= 80 && grow < 85) {
 						guy.ModStat(1, "MaxMana");
-						gain2 = "~You grow +1 Maximum Mana.";
+						gain2 = "#g~You grow +1 Maximum Mana.#o";
 						guy.CurrentMana = guy.MaxMana;
 					}
 					else {
 						guy.ModStat(1, "Skill");
-						gain2 = "~You grow +1 Skill.";
+						gain2 = "#g~You grow +1 Skill.#o";
 					}
 					log.PushPop(gain2);
 					log.printLog();
@@ -2382,8 +2475,8 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 		else if (RoomType == "Gear Head" || RoomType == "Gear Body" || RoomType == "Gear Hands") {
 			if (inventory.size()<9 && choose == 'p') {
 				inventory.push_back(pickup);
-				string line = "-You pick up the " + string(pickup.GearName)
-							+ ".";
+				string line = "#b-You pick up the " + string(pickup.GearName)
+							+ ".#o";
 				log.PushPop(line);
 				log.printLog();
 				RoomType = "Empty";
@@ -2391,7 +2484,7 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				getchDecision(guy, deck, log);
 			}
 			else if (inventory.size() >= 9 && choose == 'p') {
-				string line = "*Your inventory is full.";
+				string line = "#r*Your inventory is full.#o";
 				log.PushPop(line);
 				log.printLog();
 				RoomType = "Empty";
@@ -2413,21 +2506,21 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				if (choose == '1') {
 					Gear specialPickup(specialDecision.at(0).CardName);
 					specialDecision.erase(specialDecision.begin());
-					specialPickup.GearOnOrOff(TRUE, guy, deck);
-					line = "~You add " + string(specialPickup.GearName) + " to your deck.";
+					specialPickup.CardOnOrOff(TRUE, guy, deck);
+					line = "#g~You add " + string(specialPickup.GearName) + " to your deck.#o";
 					log.PushPop(line);
 				}
 				else if (choose == '2') {
 					Gear specialPickup(specialDecision.at(1).CardName);
 					specialDecision.erase(specialDecision.begin()+1);
-					specialPickup.GearOnOrOff(TRUE, guy, deck);
-					line = "~You add " + string(specialPickup.GearName) + " to your deck.";
+					specialPickup.CardOnOrOff(TRUE, guy, deck);
+					line = "#g~You add " + string(specialPickup.GearName) + " to your deck.#o";
 					log.PushPop(line);
 				}
 				else if (choose == '3') {
 					Gear specialPickup(specialDecision.at(2).CardName);
 					specialDecision.erase(specialDecision.begin()+2);
-					specialPickup.GearOnOrOff(TRUE, guy, deck);
+					specialPickup.CardOnOrOff(TRUE, guy, deck);
 					line = "~You add " + string(specialPickup.GearName) + " to your deck.";
 					log.PushPop(line);
 				}
@@ -2452,22 +2545,46 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 		}
 		else if (RoomType == "Cauldron" || RoomType == "Cauldron 2") {
 			if (choose == '1' || choose == '2' || choose == '3') {
+				//Succumb trait
+				if (guy.Succumb) {
+					int ch = (rand() % 3) + 1;
+					switch (ch) {
+					case 1:
+						choose = '1';
+						break;
+					case 2:
+						choose = '2';
+						break;
+					case 3:
+						choose = '3';
+						break;
+					}
+				}
 				string line;
 				if (choose == '1') {
-					TraitsDecision.at(0).GearOnOrOff(TRUE, guy, deck);
-					line = "~You recieve " + string(TraitsDecision.at(0).GearName) + ".";
+					TraitsDecision.at(0).TraitOnOrOff(TRUE, guy, deck);
+					if(TraitsDecision.at(0).Type == "Trait Sacrifice")
+						line = "#r~You recieve " + string(TraitsDecision.at(0).GearName) + ".#o";
+					else if (TraitsDecision.at(0).Type == "Trait Reward")
+						line = "#g~You recieve " + string(TraitsDecision.at(0).GearName) + ".#o";
 					AddRemoveTrait(1, TraitsDecision.at(0).GearName);
 					TraitsDecision.erase(TraitsDecision.begin());
 				}
 				else if (choose == '2') {
-					TraitsDecision.at(1).GearOnOrOff(TRUE, guy, deck);
-					line = "~You recieve " + string(TraitsDecision.at(1).GearName) + ".";
+					TraitsDecision.at(1).TraitOnOrOff(TRUE, guy, deck);
+					if (TraitsDecision.at(1).Type == "Trait Sacrifice")
+						line = "#r~You recieve " + string(TraitsDecision.at(0).GearName) + ".#o";
+					else if (TraitsDecision.at(1).Type == "Trait Reward")
+						line = "#g~You recieve " + string(TraitsDecision.at(0).GearName) + ".#o";
 					AddRemoveTrait(1, TraitsDecision.at(1).GearName);
 					TraitsDecision.erase(TraitsDecision.begin()+1);
 				}
 				else if (choose == '3') {
-					TraitsDecision.at(2).GearOnOrOff(TRUE, guy, deck);
-					line = "~You recieve " + string(TraitsDecision.at(2).GearName) + ".";
+					TraitsDecision.at(2).TraitOnOrOff(TRUE, guy, deck);
+					if (TraitsDecision.at(2).Type == "Trait Sacrifice")
+						line = "#r~You recieve " + string(TraitsDecision.at(0).GearName) + ".#o";
+					else if (TraitsDecision.at(2).Type == "Trait Reward")
+						line = "#g~You recieve " + string(TraitsDecision.at(0).GearName) + ".#o";
 					AddRemoveTrait(1, TraitsDecision.at(2).GearName);
 					TraitsDecision.erase(TraitsDecision.begin() + 2);
 				}
@@ -2521,7 +2638,16 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 						printDecision(guy, log);
 						getchDecision(guy, deck, log);
 					}
-					RoomType = "Empty";
+
+					//Destiny trait
+					if (guy.Destiny > 1) {
+						RoomType = "Cauldron";
+						guy.Destiny--;
+						//printDecision(guy, log);
+						//getchDecision(guy, deck, log);
+					}
+					else
+						RoomType = "Empty";
 					printDecision(guy, log);
 					getchDecision(guy, deck, log);
 				}
@@ -2587,6 +2713,10 @@ bool InputBoard::removeNegatives(Deck &deck) {
 			deck.cardDeck.erase(deck.cardDeck.begin() + i);
 			i--;
 			removed = TRUE;
+		}
+		//also using this function to reset the Pummel card
+		else if (deck.at(i).CardName == "Pummel") {
+			deck.cardDeck.at(i).pummel = 2;
 		}
 	}
 	return removed;
