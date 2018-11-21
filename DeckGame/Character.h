@@ -33,7 +33,7 @@ public:
 
 	int extraTurns;
 	bool pierce;
-	bool shuffle;
+	bool shuffle = FALSE;
 	const char* fillType = " ";
 	bool cannotUse;
 
@@ -53,6 +53,8 @@ public:
 	int intimidate = 0;
 	int entomb = 0;
 	int pummel = 2;
+	bool drown = FALSE;
+	bool refresh = FALSE;
 
 	int strMod;
 	int defMod;
@@ -99,12 +101,17 @@ public:
 		bool Blind = FALSE;
 		bool Numb = FALSE;
 		bool Fast_Metabolism = FALSE;
-		bool Deadly = FALSE;
+		bool Frenzy = FALSE;
 		bool Undead = FALSE;
 		bool The_Juice = FALSE;
 		bool Radioactive = FALSE;
 		bool Forgetful = FALSE;
 		bool Succumb = FALSE;
+		bool Slow = FALSE;
+		int Sticky_Feet = -1;
+		bool Overconfidence = FALSE;
+		bool Hallucinations = FALSE;
+		bool Tail = FALSE;
 	//Reward
 		bool Mending_Flesh = FALSE;
 		bool Gymnast = FALSE;
@@ -131,6 +138,8 @@ public:
 		bool Carnivore = FALSE;
 		bool Hemoglobin = FALSE;
 		int Destiny = 0;
+		int Scavenger = -1;
+		bool Horns = FALSE;
 
 	//change stats
 	int TakeDamage(int damageTaken);

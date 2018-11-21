@@ -101,6 +101,7 @@ public:
 
 	//special other stuff
 	bool Third_Eye = FALSE;
+	bool Tail;
 };
 
 #endif //INPUTBOARD_H

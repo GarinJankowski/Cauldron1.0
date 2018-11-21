@@ -99,6 +99,8 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	headNorm.push_back(Gear("Shifting Veil"));
 	headNorm.push_back(Gear("Copper Cage"));
 	headNorm.push_back(Gear("Bedstone Helmet"));
+	headNorm.push_back(Gear("Glass Eye"));
+	headNorm.push_back(Gear("Laurel Wreath"));
 
 	headRare.push_back(Gear("Brown Hat"));
 
@@ -152,6 +154,11 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsSacrifice.push_back(Gear("Forgetful"));
 	AvailableTraitsSacrifice.push_back(Gear("Tiny"));
 	AvailableTraitsSacrifice.push_back(Gear("Succumb"));
+	AvailableTraitsSacrifice.push_back(Gear("Slow"));
+	AvailableTraitsSacrifice.push_back(Gear("Sticky Feet"));
+	AvailableTraitsSacrifice.push_back(Gear("Overconfidence"));
+	AvailableTraitsSacrifice.push_back(Gear("Hallucinations"));
+	AvailableTraitsSacrifice.push_back(Gear("Tail"));
 
 	AvailableTraitsReward.push_back(Gear("Mending Flesh"));
 	AvailableTraitsReward.push_back(Gear("Gymnast"));
@@ -178,6 +185,8 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsReward.push_back(Gear("Carnivore"));
 	AvailableTraitsReward.push_back(Gear("Hemoglobin"));
 	AvailableTraitsReward.push_back(Gear("Destiny"));
+	AvailableTraitsReward.push_back(Gear("Scavenger"));
+	AvailableTraitsReward.push_back(Gear("Horns"));
 
 	//vector of bosses
 	bosses.push_back(Enemy("Paladin"));
@@ -1128,7 +1137,14 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 			encounter = " You encounter a " + string(enemy.Name) + ".";
 		log.PushPop(encounter);
 
-		
+		//activate Tail trait
+		if (guy.Tail) {
+			Tail = TRUE;
+		}
+		//Slow trait
+		if (guy.Slow) {
+			enemy.enemyNegate++;
+		}
 		//Growing Pains trait
 		if (guy.Growing_Pains) {
 			int damage = 10;
@@ -1381,13 +1397,21 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 
 					//if its a boss, set the room to addition (not done yet)
 					if (RoomType == "Boss") {
-						RoomType = "Special";
+						//Overconfidence trait
+						if (guy.Overconfidence)
+							RoomType = "Stat";
+						else
+							RoomType = "Special";
 						printDecision(guy, log);
 						getchDecision(guy, deck, log);
 					}
 					//if its a regular enemy, set the room to stat
 					else if (RoomType == "Combat") {
-						RoomType = "Stat";
+						//Overconfidence trait
+						if (guy.Overconfidence)
+							RoomType = "Special";
+						else
+							RoomType = "Stat";
 						printDecision(guy, log);
 						getchDecision(guy, deck, log);
 					}
@@ -1444,9 +1468,17 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 		int mana = 3;
 		guy.DrainMana(-1 * mana);
 
-		string line = "-You gain #m" + to_string(mana) + "#o mana.";
+		string line = "#m-You gain " + to_string(mana) + " mana.#o";
 		log.PushPop(line);
 		guy.incense--;
+	}
+	//refresh
+	if (guy.refresh) {
+		int mana = 1;
+		guy.DrainMana(-1*mana);
+
+		string line = "#m-You gain " + to_string(mana) + " mana.#o";
+		log.PushPop(line);
 	}
 	//metabolise
 	if (guy.metabolise > 0) {
@@ -1479,7 +1511,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	}
 	//Quick Thinker trait
 	if (guy.Quick_Thinker && guy.CurrentMana <= guy.MaxMana) {
-		if (rand() % 10 < guy.Skill) {
+		if (rand() % 100 < guy.Skill*8) {
 			int mana = 10;
 			guy.DrainMana(-1*mana);
 
@@ -1605,6 +1637,79 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 		log.PushPop(drink);
 		guy.printStats();
 	}
+	//Sticky Feet trait
+	if (guy.Sticky_Feet != -1) {
+		if (guy.Sticky_Feet == 10) {
+			guy.Sticky_Feet = 0;
+			guy.extraTurns--;
+			string stick = "#r You lose a turn.#o";
+			log.PushPop(stick);
+		}
+		else
+			guy.Sticky_Feet++;
+	}
+	//Hallucinations trait
+	if (guy.Hallucinations) {
+		if (rand() % 7 == 0) {
+			int enemyhp = enemy.CurrentHealth;
+			int enemyblock = enemy.CurrentBlock;
+			int enemyneg = enemy.enemyNegate;
+			int enemytc = enemy.TurnCount;
+			int enemydot = enemy.dot;
+
+			vector<Enemy> enemylist;
+			enemylist.push_back(Enemy("Rat"));
+			enemylist.push_back(Enemy("Crab"));
+			enemylist.push_back(Enemy("Hound"));
+			enemylist.push_back(Enemy("Zombie"));
+			enemylist.push_back(Enemy("Kobold"));
+			enemylist.push_back(Enemy("Giant Rat"));
+			enemylist.push_back(Enemy("Wild Buffalo"));
+			enemylist.push_back(Enemy("Harpy"));
+			enemylist.push_back(Enemy("Brown Recluse"));
+			enemylist.push_back(Enemy("Adventurer"));
+			enemylist.push_back(Enemy("Adventurer"));
+			enemylist.push_back(Enemy("Troll"));
+			enemylist.push_back(Enemy("Elemental"));
+
+			enemylist.push_back(Enemy("Paladin"));
+			enemylist.push_back(Enemy("Juggernaut"));
+			enemylist.push_back(Enemy("Vampire"));
+			enemylist.push_back(Enemy("Hydra"));
+			enemylist.push_back(Enemy("Demigod"));
+			enemylist.push_back(Enemy("Hunter"));
+			enemylist.push_back(Enemy("Exorcist"));
+
+			enemylist.push_back(Enemy("King"));
+			enemylist.push_back(Enemy("Demon"));
+			enemylist.push_back(Enemy("Witch"));
+			enemylist.push_back(Enemy("Dragon"));
+			enemylist.push_back(Enemy("Machine"));
+
+			int randenemy = rand() % enemylist.size();
+			enemy = enemylist.at(randenemy);
+
+			enemy.CurrentHealth = enemyhp;
+			enemy.CurrentBlock = enemyblock;
+			enemy.enemyNegate = enemyneg;
+			enemy.TurnCount = enemytc;
+			enemy.dot = enemydot;
+
+			if (enemy.CurrentHealth > enemy.MaxHealth) {
+				enemy.CurrentHealth = enemy.MaxHealth;
+			}
+
+			string line;
+			int rngline = rand() % 3;
+			if(rngline == 0)
+				line = "#b The #renemy #gchanges!#o";
+			else if (rngline == 1)
+				line = "#r The #genemy #bchanges!#o";
+			else if (rngline == 2)
+				line = "#g The #benemy #rchanges!#o";
+			log.PushPop(line);
+		}
+	}
 
 	//apply any damage over time from enemies
 	enemy.ActivateDOT(guy, log);
@@ -1654,6 +1759,10 @@ void InputBoard::restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, Te
 	guy.copy = 0;
 	guy.charge = 0;
 	guy.chargeMana = 0;
+	guy.shuffle = FALSE;
+	guy.fillType = " ";
+	guy.drown = FALSE;
+	guy.refresh = FALSE;
 	if(guy.Volatile != -1)
 		guy.Volatile = 0;
 	if(guy.Jittery != -1)
@@ -1829,21 +1938,30 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		for (int y = 16; y < 24; y++) {
 			mvprintw(y, 1, "                                                                      ");
 		}
-		mvprintInSize(17, 4, 15, "You found some gear: ");
-		generateGear(guy);
-		pickup.printGear(2, guy);
-		/*else if (RoomType == "Gear Body") {
-			//put procgen here
-			mvprintInSize(19, 4, 15, "You found some gear: ");
-			pickup = Gear("Mage Armor");
-			pickup.printGear(2);
+		if (inventory.size() >= 9) {
+			string line = "#r*Your inventory is full.#o";
+			log.PushPop(line);
+			log.printLog();
+			RoomType = "Empty";
+			printDecision(guy, log);
 		}
-		else if (RoomType == "Gear Hands") {
-			//put procgen here
-			mvprintInSize(19, 4, 15, "You found some gear: ");
-			pickup = Gear("Crystal Ball");
-			pickup.printGear(2);
-		}*/
+		else {
+			mvprintInSize(17, 4, 15, "You found some gear: ");
+			generateGear(guy);
+			pickup.printGear(2, guy);
+			/*else if (RoomType == "Gear Body") {
+				//put procgen here
+				mvprintInSize(19, 4, 15, "You found some gear: ");
+				pickup = Gear("Mage Armor");
+				pickup.printGear(2);
+			}
+			else if (RoomType == "Gear Hands") {
+				//put procgen here
+				mvprintInSize(19, 4, 15, "You found some gear: ");
+				pickup = Gear("Crystal Ball");
+				pickup.printGear(2);
+			}*/
+		}
 	}
 	else if (RoomType == "Special") {
 		for (int i = 0; i < 8; i++)
@@ -2145,7 +2263,7 @@ void InputBoard::generateTraits() {
 		AvailableTraitsSacrifice.push_back(Gear("Numb"));
 		AvailableTraitsSacrifice.push_back(Gear("Blind"));
 		AvailableTraitsSacrifice.push_back(Gear("Sensitive"));
-		AvailableTraitsSacrifice.push_back(Gear("Deadly"));
+		AvailableTraitsSacrifice.push_back(Gear("Frenzy"));
 	}
 	if (AvailableTraitsReward.size() < 3) {
 		AvailableTraitsReward.push_back(Gear("Mending Flesh"));
@@ -2479,7 +2597,28 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 							+ ".#o";
 				log.PushPop(line);
 				log.printLog();
-				RoomType = "Empty";
+
+				//Scavenger trait
+				if (guy.Scavenger != -1) {
+					if (guy.Scavenger == 1) {
+						if (RoomType == "Gear Head") {
+							RoomType = "Gear Head";
+						}
+						else if (RoomType == "Gear Body") {
+							RoomType = "Gear Body";
+						}
+						else if (RoomType == "Gear Hands") {
+							RoomType = "Gear Hands";
+						}
+						guy.Scavenger = 0;
+					}
+					else {
+						RoomType = "Empty";
+						guy.Scavenger++;
+					}
+				}
+				else
+					RoomType = "Empty";
 				printDecision(guy, log);
 				getchDecision(guy, deck, log);
 			}
@@ -2492,7 +2631,27 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				getchDecision(guy, deck, log);
 			}
 			else if (choose == 'l') {
-				RoomType = "Empty";
+				//Scavenger trait
+				if (guy.Scavenger != -1) {
+					if (guy.Scavenger == 1) {
+						if (RoomType == "Gear Head") {
+							RoomType = "Gear Head";
+						}
+						else if (RoomType == "Gear Body") {
+							RoomType = "Gear Body";
+						}
+						else if (RoomType == "Gear Hands") {
+							RoomType = "Gear Hands";
+						}
+						guy.Scavenger = 0;
+					}
+					else {
+						RoomType = "Empty";
+						guy.Scavenger++;
+					}
+				}
+				else
+					RoomType = "Empty";
 				printDecision(guy, log);
 				getchDecision(guy, deck, log);
 			}
@@ -2573,18 +2732,18 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				else if (choose == '2') {
 					TraitsDecision.at(1).TraitOnOrOff(TRUE, guy, deck);
 					if (TraitsDecision.at(1).Type == "Trait Sacrifice")
-						line = "#r~You recieve " + string(TraitsDecision.at(0).GearName) + ".#o";
+						line = "#r~You recieve " + string(TraitsDecision.at(1).GearName) + ".#o";
 					else if (TraitsDecision.at(1).Type == "Trait Reward")
-						line = "#g~You recieve " + string(TraitsDecision.at(0).GearName) + ".#o";
+						line = "#g~You recieve " + string(TraitsDecision.at(1).GearName) + ".#o";
 					AddRemoveTrait(1, TraitsDecision.at(1).GearName);
 					TraitsDecision.erase(TraitsDecision.begin()+1);
 				}
 				else if (choose == '3') {
 					TraitsDecision.at(2).TraitOnOrOff(TRUE, guy, deck);
 					if (TraitsDecision.at(2).Type == "Trait Sacrifice")
-						line = "#r~You recieve " + string(TraitsDecision.at(0).GearName) + ".#o";
+						line = "#r~You recieve " + string(TraitsDecision.at(2).GearName) + ".#o";
 					else if (TraitsDecision.at(2).Type == "Trait Reward")
-						line = "#g~You recieve " + string(TraitsDecision.at(0).GearName) + ".#o";
+						line = "#g~You recieve " + string(TraitsDecision.at(2).GearName) + ".#o";
 					AddRemoveTrait(1, TraitsDecision.at(2).GearName);
 					TraitsDecision.erase(TraitsDecision.begin() + 2);
 				}
@@ -2757,25 +2916,27 @@ void InputBoard::AddRemoveTrait(int pm, const char *Name){
 
 //fills hand with a certain type of card based off the player's fillType variable
 void InputBoard::fillHand(Character &guy) {
-	if (guy.fillType != " ") {
-		while (DecisionCards.size() > 0) {
-			Discard.push_back(DecisionCards.back());
-			DecisionCards.pop_back();
-		}
-		while (Draw.size() > 0) {
-			Discard.push_back(Draw.back());
-			Draw.pop_back();
-		}
-		int counter = 0;
-		for (int i = 0; i < Discard.size(); i++) {
-			if (counter < 3 && Discard.at(i).CardType == guy.fillType) {
-				DecisionCards.push_back(Discard.at(i));
-				Discard.erase(Discard.begin() + i);
-				counter++;
-				i--;
+	if (!Tail) {
+		if (guy.fillType != " ") {
+			while (DecisionCards.size() > 0) {
+				Discard.push_back(DecisionCards.back());
+				DecisionCards.pop_back();
 			}
+			while (Draw.size() > 0) {
+				Discard.push_back(Draw.back());
+				Draw.pop_back();
+			}
+			int counter = 0;
+			for (int i = 0; i < Discard.size(); i++) {
+				if (counter < 3 && Discard.at(i).CardType == guy.fillType) {
+					DecisionCards.push_back(Discard.at(i));
+					Discard.erase(Discard.begin() + i);
+					counter++;
+					i--;
+				}
+			}
+			ShuffleAddPrint();
 		}
-		ShuffleAddPrint();
 	}
 	guy.fillType = " ";
 }
@@ -2796,8 +2957,10 @@ void InputBoard::updateDeck(Deck &deck) {
 
 //shuffles the player's hand
 void InputBoard::shuffleHand() {
-	//put everything in the discard pile
-		while(DecisionCards.size()>0) {
+	//Tail trait
+	if (!Tail) {
+		//put everything in the discard pile
+		while (DecisionCards.size() > 0) {
 			Discard.push_back(DecisionCards.back());
 			DecisionCards.pop_back();
 		}
@@ -2806,4 +2969,5 @@ void InputBoard::shuffleHand() {
 			Draw.pop_back();
 		}
 		ShuffleAddPrint();
+	}
 }

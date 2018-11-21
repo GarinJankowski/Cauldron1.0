@@ -314,8 +314,8 @@ int Character::TakeDamage(int damageTaken) {
 	if (damageTaken < 0 && Undead) {
 		damageTaken = 0;
 	}
-	//Deadly trait
-	if (damageTaken > 0 && Deadly) {
+	//Frenzy trait
+	if (damageTaken > 0 && Frenzy) {
 		damageTaken *= 2;
 	}
 	//entomb

@@ -25,6 +25,8 @@ void TextLog::PushPop(string pushed) {
 		Lines.erase(Lines.begin());
 		if(size > maxx)
 			Lines.erase(Lines.begin());
+		if (size > maxx*2)
+			Lines.erase(Lines.begin());
 	}
 	/*if (Lines.size() >= 13 && size > maxx) {
 		Lines.erase(Lines.begin());
@@ -59,8 +61,10 @@ void TextLog::printLog() {
 				if (Lines.at(y)[i] == '#')
 					size -= 2;
 			}
-			if (size > maxx+1) {
+			if (size > maxx+2) {
 				L++;
+				if (size > 2 * (maxx+2))
+					L++;
 			}
 			L++;
 

@@ -291,12 +291,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			damage += int(guy.Strength / 2);
 			flay--;
 		}
-		if (CurrentBlock > damage)
-			CurrentBlock -= damage;
-		else {
-			int damage2 = damage - CurrentBlock;
-			CurrentHealth -= damage;
-		}
+		damage = takeDamage(damage, guy, log);
 
 		string bleedline = "-The " + string(Name) + " bleeds for #y" + to_string(damage) + "#o damage.";
 		log.PushPop(bleedline);
@@ -305,16 +300,21 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 	}
 	if (fumes > 0) {
 		int damage = rtd(1, guy.Intelligence);
-		if (CurrentBlock > damage)
-			CurrentBlock -= damage;
-		else {
-			int damage2 = damage - CurrentBlock;
-			CurrentHealth -= damage;
-		}
+		damage = takeDamage(damage, guy, log);
 
 		string fumesline = "-The " + string(Name) + " takes #y" + to_string(damage) + "#o poison damage.";
 		log.PushPop(fumesline);
 		fumes--;
+	}
+	if (guy.drown && guy.CurrentMana > 0) {
+		int mana = 1;
+		int damage = int(guy.Intelligence / 2);
+		damage = takeDamage(damage, guy, log);
+		guy.DrainMana(mana);
+
+		string drown = "-You drown the " + string(Name) + " for #y"
+					+ to_string(damage) + "#o damage.";
+		log.PushPop(drown);
 	}
 
 	if (CurrentHealth <= 0) {
@@ -1395,7 +1395,10 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 							guy.negative = "Drain Def";
 						}
 					}
-					line = "#r-The Witch chants.#o";
+					
+					line = "-The Witch gains #b" + to_string(block) + "#o block.";
+					string line2 = "#r-The Witch chants.#o";
+					log.PushPop(line2);
 				}
 				else if (TurnCount == 3) {
 					guy.fillType = "Negative";
@@ -1490,6 +1493,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			if (stepOne) {
 				stepOne = FALSE;
 				guy.Defense += 8;
+				guy.defMod -= 8;
 				string line = "-You regain your composure.";
 				log.PushPop(line);
 			}
@@ -1537,6 +1541,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				}
 				else if (rng == 4) {
 					guy.Defense -= 8;
+					guy.defMod += 8;
 					guy.fillType = "Defend";
 					string line2 = "#b The Demon stares into your eyes.#o";
 					log.PushPop(line2);
@@ -1694,6 +1699,9 @@ void Enemy::ActivateDOT(Character &guy, TextLog &log) {
 
 int Enemy::takeDamage(int damage, Character &guy, TextLog &log) {
 	int damage2 = damage;
+	if (damage > 0 && guy.Frenzy) {
+		damage *= 2;
+	}
 	if (damage < 0) {
 		damage2 = 0;
 	}
@@ -1701,7 +1709,6 @@ int Enemy::takeDamage(int damage, Character &guy, TextLog &log) {
 		CurrentHealth -= damage2;
 		guy.pierce = FALSE;
 	}
-
 
 	else {
 		if (CurrentBlock > damage2)
@@ -1712,7 +1719,7 @@ int Enemy::takeDamage(int damage, Character &guy, TextLog &log) {
 			CurrentBlock = 0;
 		}
 	}
-	if (guy.damageToMana > 0) {
+	/*if (guy.damageToMana > 0) {
 		int mana = damage2 - CurrentBlock;
 		if (mana < 0)
 			mana = 0;
@@ -1720,7 +1727,7 @@ int Enemy::takeDamage(int damage, Character &guy, TextLog &log) {
 		guy.damageToMana = 0;
 		string line = "#m-You gain " + to_string(mana) + " mana.#o";
 		log.PushPop(line);
-	}
+	}*/
 
 	return damage2;
 	updateEnemy(guy);

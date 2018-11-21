@@ -25,252 +25,83 @@ Gear::Gear(const char *name):GearName(name)
 {
 	GearName = name;
 	//Hands
-	if (GearName == "No Weapon") {
+	if (GearName == "No Weapon" ||
+		GearName == "Crystal Ball" ||
+		GearName == "Shield" ||
+		GearName == "Long Sword" ||
+		GearName == "Falchion" ||
+		GearName == "Metal Staff" ||
+		GearName == "Steel Spear" ||
+		GearName == "Javelin" ||
+		GearName == "Obsidian Spear" ||
+		GearName == "Halberd" ||
+		GearName == "Lance" ||
+		GearName == "Rapier" ||
+		GearName == "War Hammer" ||
+		GearName == "Morning Star" ||
+		GearName == "Battle Axe" ||
+		GearName == "Double Axe" ||
+		GearName == "Shiv" ||
+		GearName == "Serrated Dagger" ||
+		GearName == "Simple Bow" ||
+		GearName == "Recurve Bow" ||
+		GearName == "Throwing Stars" ||
+		GearName == "Wand" ||
+		GearName == "Sickle" ||
+		GearName == "Hand Cannon" ||
+		GearName == "Conductive Gloves" ||
+		GearName == "Sabre" ||
+		GearName == "Whip" ||
+		GearName == "Twin Flail" ||
+		GearName == "Leather Gauntlets" ||
+		GearName == "Steel Gauntlets" ||
+		GearName == "Spiked Gauntlets" ||
+		GearName == "Arbalest" ||
+		GearName == "Dirk" ||
+		GearName == "Cutlass") {
 		Type = "Hands";
-		Description = "Bare hands are better than no hands.";
-	}
-	else if (GearName == "Crystal Ball") {
-		Type = "Hands";
-		Description = "A glass ball on a stand, supposedly used for scrying. Not a very good weapon, though.";
-	}
-	else if (GearName == "Shield") {
-		Type = "Hands";
-		Description = "Although it doesn't look like much of a weapon, it can pack quite an offensive punch.";
-	}
-	else if (GearName == "Long Sword") {
-		Type = "Hands";
-		Description = "A sturdy weapon with a double sided blade.";
-	}
-	else if (GearName == "Falchion") {
-		Type = "Hands";
-		Description = "A one-handed sword with a heavy blade, great for hacking throuhg armor.";
-	}
-	else if (GearName == "Metal Staff") {
-		Type = "Hands";
-		Description = "A long metal stick, a much more lethal weapon than its wooden counterparts.";
-	}
-	else if (GearName == "Steel Spear") {
-		Type = "Hands";
-		Description = "The pointed blade proves useful at piercing tough armor.";
-	}
-	else if (GearName == "Javelin") {
-		Type = "Hands";
-		Description = "A spear not just used for long ranged stabbing, but a useful projectile, as well.";
-	}
-	else if (GearName == "Obsidian Spear") {
-		Type = "Hands";
-		Description = "This spear has been sharpened so much that it will slide right through the victim.";
-	}
-	else if (GearName == "Halberd") {
-		Type = "Hands";
-		Description = "An axe head on a spear, a multipurpose tool.";
-	}
-	else if (GearName == "Lance") {
-		Type = "Hands";
-		Description = "A heavy charging spear made for cavalry, but will do just fine without a mount.";
-	}
-	else if (GearName == "Rapier") {
-		Type = "Hands";
-		Description = "A thin sword, capable of swift movements and deadly thrusts.";
-	}
-	else if (GearName == "War Hammer") {
-		Type = "Hands";
-		Description = "Extremely heavy, capable of dealing devastating blows.";
-	}
-	else if (GearName == "Morning Star") {
-		Type = "Hands";
-		Description = "A spiked mace, both used for blunt force and piercing strikes.";
-	}
-	else if (GearName == "Battle Axe") {
-		Type = "Hands";
-		Description = "An axe not for chopping trees but for chopping enemies.";
-	}
-	else if (GearName == "Double Axe") {
-		Type = "Hands";
-		Description = "A heavy war axe that can deal most powerful cleaving blows.";
-	}
-	else if (GearName == "Shiv") {
-		Type = "Hands";
-		Description = "A small blade, even compared to a dagger, used for a quick stab or two.";
-	}
-	else if (GearName == "Serrated Dagger") {
-		Type = "Hands";
-		Description = "A short blade with a jagged edge, wonderful for punturing its victims.";
-	}
-	else if (GearName == "Simple Bow") {
-		Type = "Hands";
-		Description = "A long ranged weapon so that enemies may be dealt with from afar.";
-	}
-	else if (GearName == "Recurve Bow") {
-		Type = "Hands";
-		Description = "A bow with its ends curved outwards, capable of firing more quick and powerful shots.";
-	}
-	else if (GearName == "Throwing Stars") {
-		Type = "Hands";
-		Description = "An ancient assassin's tool for quick and accurate strikes from range. ";
-	}
-	else if (GearName == "Wand") {
-		Type = "Hands";
-		Description = "A short, carved stick that has been enchanted to channel an amount of the user's arcane energy outwards to inflict harm.";
-	}
-	else if (GearName == "Sickle") {
-		Type = "Hands";
-		Description = "A very strange and surprisingly versatile tool, modified to be used as a weapon rather than a farming apparatus.";
-	}
-	else if (GearName == "Hand Cannon") {
-		Type = "Hands";
-		Description = "A terrible piece of technology, capable of firing immensely destructive shots without even the use of magic.";
-	}
-	else if (GearName == "Conductive Gloves") {
-		Type = "Hands";
-		Description = "These weapons allow you to direct magic into your fists for mighty blows.";
-	}
-	else if (GearName == "Sabre") {
-		Type = "Hands";
-		Description = "A single-edged blade for consistent slashing.";
-	}
-	else if (GearName == "Whip") {
-		Type = "Hands";
-		Description = "A simple cord on a handle, difficult to control at first, but powerful when used correctly.";
-	}
-	else if (GearName == "Twin Flail") {
-		Type = "Hands";
-		Description = "Two chains with spiked balls at the end. Dangerous.";
-	}
-	else if (GearName == "Leather Gauntlets") {
-		Type = "Hands";
-		Description = "The fists are mighty weapons, but flesh is soft and requires protection.";
-	}
-	else if (GearName == "Steel Gauntlets") {
-		Type = "Hands";
-		Description = "Converts your knuckes into hard and powerful steel.";
-	}
-	else if (GearName == "Spiked Gauntlets") {
-		Type = "Hands";
-		Description = "Steel gloves with spikes at the knuckles, allowing for puncturing blows.";
-	}
-	else if (GearName == "Arbalest") {
-		Type = "Hands";
-		Description = "A large crossbow with a mechanism to draw back bolts automatically, providing more power and speed.";
-	}
-	else if (GearName == "Dirk") {
-		Type = "Hands";
-		Description = "A long combat dagger.";
-	}
-	else if (GearName == "Cutlass") {
-		Type = "Hands";
-		Description = "A common weapon of sailors and pirates, useful for close quarters combat.";
+		HandsDescription();
 	}
 	//Body
-	else if (GearName == "No Armor") {
+	else if (GearName == "No Armor" ||
+		GearName == "Mage Armor" ||
+		GearName == "Glitter Robes" ||
+		GearName == "Riveted Chainmail" ||
+		GearName == "Reinforced Mail" ||
+		GearName == "Full Plate Armor" ||
+		GearName == "Cape" ||
+		GearName == "Feathered Cloak" ||
+		GearName == "Leather Hauberk" ||
+		GearName == "Twilight Robes" ||
+		GearName == "Dragon Scales" ||
+		GearName == "Spiked Mail" ||
+		GearName == "Buffalo Hide" ||
+		GearName == "Steel Breastplate" ||
+		GearName == "Amulet of Aura" ||
+		GearName == "Turtle Shell" ||
+		GearName == "Crystal Breastplate") {
 		Type = "Body";
-		Description = "Your tough form can take a hit or two.";
-	}
-	else if (GearName == "Mage Armor") {
-		Type = "Body";
-		Description = "This full body armor was specifically built for arcane soldiers, channeling the user's power in order to harden the material.";
-	}
-	else if (GearName == "Glitter Robes") {
-		Type = "Body";
-		Description = "These blindingly shiny robes provide almost no protection, but do provide a modest boost to the wearer's arcane energy.";
-	}
-	else if (GearName == "Riveted Chainmail") {
-		Type = "Body";
-		Description = "The strongest and lightest mail. Having taken so long to make, only the greatest of champions were given these.";
-	}
-	else if (GearName == "Reinforced Mail") {
-		Type = "Body";
-		Description = "A mix of mail and plates, this armor is reliable and fairly easy to move in.";
-	}
-	else if (GearName == "Full Plate Armor") {
-		Type = "Body";
-		Description = "The heaviest armor you can find, it is restricting but extremely sturdy.";
-	}
-	else if (GearName == "Cape") {
-		Type = "Body";
-		Description = "This is not only an accessory, but provides great dexterity in combat.";
-	}
-	else if (GearName == "Feathered Cloak") {
-		Type = "Body";
-		Description = "This cloak is composed of feathers, specifically made to increase your swiftness as you run.";
-	}
-	else if (GearName == "Leather Hauberk") {
-		Type = "Body";
-		Description = "Although leather may not be as strong as steel, this tunic provides great versatility in combat.";
-	}
-	else if (GearName == "Twilight Robes") {
-		Type = "Body";
-		Description = "Dash through the darkness, concealing your exact position even in combat.";
-	}
-	else if (GearName == "Dragon Scales") {
-		Type = "Body";
-		Description = "As tough as plate armor and as sharp as daggers, dragon scales also provide slight psychic enhancement.";
-	}
-	else if (GearName == "Spiked Mail") {
-		Type = "Body";
-		Description = "Sturdy mail interwoven with long spikes, this piece of equipment will deal great harm to any attacker.";
-	}
-	else if (GearName == "Buffalo Hide") {
-		Type = "Body";
-		Description = "The primary choice of battle-wear for the Berserkers, this clothing displays full commitment to unequivocal offensive rage.";
-	}
-	else if (GearName == "Steel Breastplate") {
-		Type = "Body";
-		Description = "A sturdy plate made with a the strongest alloy those alchemists could muster.";
-	}
-	else if (GearName == "Amulet of Aura") {
-		Type = "Body";
-		Description = "This jewelled necklace shines brightly when worn, emanating some kind of force that the user is given control over.";
-	}
-	else if (GearName == "Turtle Shell") {
-		Type = "Body";
-		Description = "A thick shell from an extraordinarily large turtle, one wearing this would probably not feel a thing from oncoming attackers.";
-	}
-	else if (GearName == "Crystal Breastplate") {
-		Type = "Body";
-		Description = "Made from the hardest materials one can manage to find, this mesmerizingly iridescent plate also connects with the wearer's mind.";
+		BodyDescription();
 	}
 	//Head
-	else if (GearName == "No Headgear") {
+	else if (GearName == "No Headgear" ||
+		GearName == "Brown Hat" ||
+		GearName == "Vampire Fangs" ||
+		GearName == "Warp Goggles" ||
+		GearName == "Tundra Cap" ||
+		GearName == "Plague Mask" ||
+		GearName == "Dragonskin Hood" ||
+		GearName == "Shifting Veil" ||
+		GearName == "Copper Cage" ||
+		GearName == "Bedstone Helmet" ||
+		GearName == "Glass Eye" ||
+		GearName == "Laurel Wreath" ||
+		GearName == "Diving Gear") {
 		Type = "Head";
-		Description = "Focus the mind, channel your inner power.";
+		HeadDescription();
+
 	}
-	else if (GearName == "Brown Hat") {
-		Type = "Head";
-		Description = "Who needs spells?";
-	}
-	else if (GearName == "Vampire Fangs") {
-		Type = "Head";
-		Description = "These loose canines will attach to yours like a magnet. It siphons the life of the wearer, but provides returns through its victims.";
-	}
-	else if (GearName == "Warp Goggles") {
-		Type = "Head";
-		Description = "These telescopic goggles allow you too manipulate and modify space as you see fit.";
-	}
-	else if (GearName == "Tundra Cap") {
-		Type = "Head";
-		Description = "This winter hat has been enchanted to steal and release heat at a focused area. This makes it very warm when being used.";
-	}
-	else if (GearName == "Plague Mask") {
-		Type = "Head";
-		Description = "Resembling the head of a bird, the beak of this mask contains many herbs and spices meant to shield the wearer from miasma.";
-	}
-	else if (GearName == "Dragonskin Hood") {
-		Type = "Head";
-		Description = "Skinned from an actual dragon, this hood radiates heat. It infuses the user with some abilities of a fire breather.";
-	}
-	else if (GearName == "Shifting Veil") {
-		Type = "Head";
-		Description = "The mind of whoever looks at this veil is bound to the whims of the wearer on the other side.";
-	}
-	else if (GearName == "Copper Cage") {
-		Type = "Head";
-		Description = "An odd piece of headgear, whoever created this cage probably wished to channel the power of electricity, and likely died trying.";
-	}
-	else if (GearName == "Bedstone Helmet") {
-		Type = "Head";
-		Description = "An extremely large and heavy and piece of equipment. This helmet allows the user to destroy and reform it to create unbreakable walls and bludgeons.";
-	}
+	
 	//Trait Sacrifice
 	else if (GearName == "Anemia") {
 		Type = "Trait Sacrifice";
@@ -350,7 +181,7 @@ Gear::Gear(const char *name):GearName(name)
 	}
 	else if (GearName == "Sensitive") {
 		Type = "Trait Sacrifice";
-		Description = "All of your over-time effects occur twice every turn.";
+		Description = "All of your over time effects occur twice every turn.";
 	}
 	else if (GearName == "Frenzy") {
 		Type = "Trait Sacrifice";
@@ -375,6 +206,26 @@ Gear::Gear(const char *name):GearName(name)
 	else if (GearName == "Succumb") {
 		Type = "Trait Sacrifice";
 		Description = "Your traits are now randomly chosen. +2 Skill.";
+	}
+	else if (GearName == "Slow") {
+		Type = "Trait Sacrifice";
+		Description = "Every enemy starts battle with one negate.";
+	}
+	else if (GearName == "Sticky Feet") {
+		Type = "Trait Sacrifice";
+		Description = "Every 10 turns, lose a turn.";
+	}
+	else if (GearName == "Overconfidence") {
+		Type = "Trait Sacrifice";
+		Description = "Combat and Boss rewards are swapped.";
+	}
+	else if (GearName == "Hallucinations") {
+		Type = "Trait Sacrifice";
+		Description = "Enemies have a chance of changing form.";
+	}
+	else if (GearName == "Tail") {
+		Type = "Trait Sacrifice";
+		Description = "Your hand can neither be shuffled nor filled.";
 	}
 	
 	//Trait Reward
@@ -448,7 +299,7 @@ Gear::Gear(const char *name):GearName(name)
 	}
 	else if (GearName == "Quick Thinker") {
 		Type = "Trait Reward";
-		Description = "10x(Skl)% chance to gain 10 mana each turn.";
+		Description = "8x(Skl)% chance to gain 10 mana each turn.";
 	}
 	else if (GearName == "Foresight") {
 		Type = "Trait Reward";
@@ -482,6 +333,14 @@ Gear::Gear(const char *name):GearName(name)
 		Type = "Trait Reward";
 		Description = "Get 3 Cauldrons. You cannot recieve any more.";
 	}
+	else if (GearName == "Scavenger") {
+		Type = "Trait Reward";
+		Description = "You find twice as much gear.";
+	}
+	else if (GearName == "Horns") {
+		Type = "Trait Reward";
+		Description = "When you play an Attack, (Skl)+7% chance for a negate.";
+	}
 	
 	else {
 		Type = "";
@@ -494,8 +353,232 @@ Gear::~Gear()
 {
 }
 
+void Gear::HandsDescription() {
+	if (GearName == "No Weapon") {
+		Description = "Bare hands are better than no hands.";
+	}
+	else if (GearName == "Crystal Ball") {
+		Description = "A glass ball on a stand, supposedly used for scrying. Not a very good weapon, though.";
+	}
+	else if (GearName == "Shield") {
+		Description = "Although it doesn't look like much of a weapon, it can pack quite an offensive punch.";
+	}
+	else if (GearName == "Long Sword") {
+		Description = "A sturdy weapon with a double sided blade.";
+	}
+	else if (GearName == "Falchion") {
+		Description = "A one-handed sword with a heavy blade, great for hacking throuhg armor.";
+	}
+	else if (GearName == "Metal Staff") {
+		Description = "A long metal stick, a much more lethal weapon than its wooden counterparts.";
+	}
+	else if (GearName == "Steel Spear") {
+		Description = "The pointed blade proves useful at piercing tough armor.";
+	}
+	else if (GearName == "Javelin") {
+		Description = "A spear not just used for long ranged stabbing, but a useful projectile, as well.";
+	}
+	else if (GearName == "Obsidian Spear") {
+		Description = "This spear has been sharpened so much that it will slide right through the victim.";
+	}
+	else if (GearName == "Halberd") {
+		Description = "An axe head on a spear, a multipurpose tool.";
+	}
+	else if (GearName == "Lance") {
+		Description = "A heavy charging spear made for cavalry, but will do just fine without a mount.";
+	}
+	else if (GearName == "Rapier") {
+		Description = "A thin sword, capable of swift movements and deadly thrusts.";
+	}
+	else if (GearName == "War Hammer") {
+		Description = "Extremely heavy, capable of dealing devastating blows.";
+	}
+	else if (GearName == "Morning Star") {
+		Description = "A spiked mace, both used for blunt force and piercing strikes.";
+	}
+	else if (GearName == "Battle Axe") {
+		Description = "An axe not for chopping trees but for chopping enemies.";
+	}
+	else if (GearName == "Double Axe") {
+		Description = "A heavy war axe that can deal most powerful cleaving blows.";
+	}
+	else if (GearName == "Shiv") {
+		Description = "A small blade, even compared to a dagger, used for a quick stab or two.";
+	}
+	else if (GearName == "Serrated Dagger") {
+		Description = "A short blade with a jagged edge, wonderful for punturing its victims.";
+	}
+	else if (GearName == "Simple Bow") {
+		Description = "A long ranged weapon so that enemies may be dealt with from afar.";
+	}
+	else if (GearName == "Recurve Bow") {
+		Description = "A bow with its ends curved outwards, capable of firing more quick and powerful shots.";
+	}
+	else if (GearName == "Throwing Stars") {
+		Description = "An ancient assassin's tool for quick and accurate strikes from range. ";
+	}
+	else if (GearName == "Wand") {
+		Description = "A short, carved stick that has been enchanted to channel an amount of the user's arcane energy outwards to inflict harm.";
+	}
+	else if (GearName == "Sickle") {
+		Description = "A very strange and surprisingly versatile tool, modified to be used as a weapon rather than a farming apparatus.";
+	}
+	else if (GearName == "Hand Cannon") {
+		Description = "A terrible piece of technology, capable of firing immensely destructive shots without even the use of magic.";
+	}
+	else if (GearName == "Conductive Gloves") {
+		Description = "These weapons allow you to direct magic into your fists for mighty blows.";
+	}
+	else if (GearName == "Sabre") {
+		Description = "A single-edged blade for consistent slashing.";
+	}
+	else if (GearName == "Whip") {
+		Description = "A simple cord on a handle, difficult to control at first, but powerful when used correctly.";
+	}
+	else if (GearName == "Twin Flail") {
+		Description = "Two chains with spiked balls at the end. Dangerous.";
+	}
+	else if (GearName == "Leather Gauntlets") {
+		Description = "The fists are mighty weapons, but flesh is soft and requires protection.";
+	}
+	else if (GearName == "Steel Gauntlets") {
+		Description = "Converts your knuckes into hard and powerful steel.";
+	}
+	else if (GearName == "Spiked Gauntlets") {
+		Description = "Steel gloves with spikes at the knuckles, allowing for puncturing blows.";
+	}
+	else if (GearName == "Arbalest") {
+		Description = "A large crossbow with a mechanism to draw back bolts automatically, providing more power and speed.";
+	}
+	else if (GearName == "Dirk") {
+		Description = "A long combat dagger.";
+	}
+	else if (GearName == "Cutlass") {
+		Description = "A common weapon of sailors and pirates, useful for close quarters combat.";
+	}
+}
+void Gear::BodyDescription() {
+	if (GearName == "No Armor") {
+		Description = "Your tough form can take a hit or two.";
+	}
+	else if (GearName == "Mage Armor") {
+		Description = "This full body armor was specifically built for arcane soldiers, channeling the user's power in order to harden the material.";
+	}
+	else if (GearName == "Glitter Robes") {
+		Description = "These blindingly shiny robes provide almost no protection, but do provide a modest boost to the wearer's arcane energy.";
+	}
+	else if (GearName == "Riveted Chainmail") {
+		Description = "The strongest and lightest mail. Having taken so long to make, only the greatest of champions were given these.";
+	}
+	else if (GearName == "Reinforced Mail") {
+		Description = "A mix of mail and plates, this armor is reliable and fairly easy to move in.";
+	}
+	else if (GearName == "Full Plate Armor") {
+		Description = "The heaviest armor you can find, it is restricting but extremely sturdy.";
+	}
+	else if (GearName == "Cape") {
+		Description = "This is not only an accessory, but provides great dexterity in combat.";
+	}
+	else if (GearName == "Feathered Cloak") {
+		Description = "This cloak is composed of feathers, specifically made to increase your swiftness as you run.";
+	}
+	else if (GearName == "Leather Hauberk") {
+		Description = "Although leather may not be as strong as steel, this tunic provides great versatility in combat.";
+	}
+	else if (GearName == "Twilight Robes") {
+		Description = "Dash through the darkness, concealing your exact position even in combat.";
+	}
+	else if (GearName == "Dragon Scales") {
+		Description = "As tough as plate armor and as sharp as daggers, dragon scales also provide slight psychic enhancement.";
+	}
+	else if (GearName == "Spiked Mail") {
+		Description = "Sturdy mail interwoven with long spikes, this piece of equipment will deal great harm to any attacker.";
+	}
+	else if (GearName == "Buffalo Hide") {
+		Description = "The primary choice of battle-wear for the Berserkers, this clothing displays full commitment to unequivocal offensive rage.";
+	}
+	else if (GearName == "Steel Breastplate") {
+		Description = "A sturdy plate made with a the strongest alloy those alchemists could muster.";
+	}
+	else if (GearName == "Amulet of Aura") {
+		Description = "This jewelled necklace shines brightly when worn, emanating some kind of force that the user is given control over.";
+	}
+	else if (GearName == "Turtle Shell") {
+		Description = "A thick shell from an extraordinarily large turtle, one wearing this would probably not feel a thing from oncoming attackers.";
+	}
+	else if (GearName == "Crystal Breastplate") {
+		Description = "Made from the hardest materials one can manage to find, this mesmerizingly iridescent plate also connects with the wearer's mind.";
+	}
+}
+void Gear::HeadDescription() {
+	if (GearName == "No Headgear") {
+		Description = "Focus the mind, channel your inner power.";
+	}
+	else if (GearName == "Brown Hat") {
+		Description = "Who needs spells?";
+	}
+	else if (GearName == "Vampire Fangs") {
+		Description = "These loose canines will attach to yours like a magnet. It siphons the life of the wearer, but provides returns through its victims.";
+	}
+	else if (GearName == "Warp Goggles") {
+		Description = "These telescopic goggles allow you too manipulate and modify space as you see fit.";
+	}
+	else if (GearName == "Tundra Cap") {
+		Description = "This winter hat has been enchanted to steal and release heat at a focused area. This makes it very warm when being used.";
+	}
+	else if (GearName == "Plague Mask") {
+		Description = "Resembling the head of a bird, the beak of this mask contains many herbs and spices meant to shield the wearer from miasma.";
+	}
+	else if (GearName == "Dragonskin Hood") {
+		Description = "Skinned from an actual dragon, this hood radiates heat. It infuses the user with some abilities of a fire breather.";
+	}
+	else if (GearName == "Shifting Veil") {
+		Description = "The mind of whoever looks at this veil is bound to the whims of the wearer on the other side.";
+	}
+	else if (GearName == "Copper Cage") {
+		Description = "An odd piece of headgear, whoever created this cage probably wished to channel the power of electricity, and likely died trying.";
+	}
+	else if (GearName == "Bedstone Helmet") {
+		Description = "An extremely large and heavy and piece of equipment. This helmet allows the user to destroy and reform it to create unbreakable walls and bludgeons.";
+	}
+	else if (GearName == "Glass Eye") {
+		Description = "A glass sphere with a prism contained inside. It seems to be drawn towards your own eyes, as if it wants to replace one of them.";
+	}
+	else if (GearName == "Laurel Wreath") {
+		Description = "A simple crown of leaves and branches, although these ones seem to twist and write as if they were sentient.";
+	}
+	else if (GearName == "Diving Gear") {
+		Description = "An ancient bronze helmet, meant to be airtight against a suit to protect from the ocean.";
+	}
+}
+
+void Gear::TraitSDescription() {
+
+}
+void Gear::TraitRDescription() {
+
+}
+
 void Gear::GearOnOrOff(bool On, Character &guy, Deck &deck) {
 	//Hands
+	if (Type == "Hands") {
+		HandsOnOrOff(On, guy, deck);
+	}
+
+	//Body
+	else if (Type == "Body") {
+		BodyOnOrOff(On, guy, deck);
+	}
+
+	//Head
+	else if (Type == "Head") {
+		HeadOnOrOff(On, guy, deck);
+	}
+	
+	guy.printStats();
+}
+
+void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 	if (GearName == "No Weapon") {
 		Card smack("Smack");
 		if (On) {
@@ -995,9 +1078,10 @@ void Gear::GearOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.removeCard(feint);
 		}
 	}
+}
 
-	//Body
-	else if (GearName == "No Armor") {
+void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
+	if (GearName == "No Armor") {
 		Card endure("Endure");
 		if (On) {
 			deck.addCard(endure);
@@ -1243,9 +1327,10 @@ void Gear::GearOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.removeCard(repulse);
 		}
 	}
+}
 
-	//Head
-	else if (GearName == "No Headgear") {
+void Gear::HeadOnOrOff(bool On, Character &guy, Deck &deck) {
+	if (GearName == "No Headgear") {
 		Card channel("Channel");
 		Card meditate("Meditate");
 		Card blast("Blast");
@@ -1299,21 +1384,16 @@ void Gear::GearOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Tundra Cap") {
 		Card freeze("Freeze");
-		Card shatter("Shatter");
-		Card melt("Melt");
+		Card shard("Shard");
 		if (On) {
 			deck.addCard(freeze);
-			deck.addCard(freeze);
-			deck.addCard(freeze);
-			deck.addCard(shatter);
-			deck.addCard(melt);
+			deck.addCard(shard);
+			deck.addCard(shard);
 		}
 		else {
 			deck.removeCard(freeze);
-			deck.removeCard(freeze);
-			deck.removeCard(freeze);
-			deck.removeCard(shatter);
-			deck.removeCard(melt);
+			deck.removeCard(shard);
+			deck.removeCard(shard);
 		}
 	}
 	else if (GearName == "Plague Mask") {
@@ -1333,7 +1413,6 @@ void Gear::GearOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Dragonskin Hood") {
 		Card fireball("Fireball");
-		//Card conflagrate("Conflagrate");
 		Card fuel("Fuel");
 		if (On) {
 			deck.addCard(fireball);
@@ -1363,562 +1442,665 @@ void Gear::GearOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Copper Cage") {
 		Card lightning("Lightning");
-		Card thunder("Thunder");
-		Card charge("Overcharge");
+		Card shock("Shock");
 		if (On) {
 			deck.addCard(lightning);
-			deck.addCard(thunder);
-			deck.addCard(charge);
-			deck.addCard(charge);
+			deck.addCard(shock);
+			deck.addCard(shock);
 		}
 		else {
 			deck.removeCard(lightning);
-			deck.removeCard(thunder);
-			deck.removeCard(charge);
-			deck.removeCard(charge);
+			deck.removeCard(shock);
+			deck.removeCard(shock);
 		}
 	}
 	else if (GearName == "Bedstone Helmet") {
 		Card destroy("Destroy");
 		Card construct("Construct");
-		Card deconstruct("Deconstruct");
 		if (On) {
 			deck.addCard(destroy);
 			deck.addCard(construct);
-			deck.addCard(deconstruct);
+			deck.addCard(construct);
 		}
 		else {
 			deck.removeCard(destroy);
 			deck.removeCard(construct);
-			deck.removeCard(deconstruct);
+			deck.removeCard(construct);
 		}
 	}
-	
-	guy.printStats();
+	else if (GearName == "Glass Eye") {
+		Card beam("Beam");
+		Card diffract("Diffract");
+		if (On) {
+			deck.addCard(beam);
+			deck.addCard(diffract);
+		}
+		else {
+			deck.removeCard(beam);
+			deck.removeCard(diffract);
+		}
+	}
+	else if (GearName == "Laurel Wreath") {
+		Card sap("Sap");
+		Card synth("Synthesize");
+		if (On) {
+			deck.addCard(sap);
+			deck.addCard(sap);
+			deck.addCard(synth);
+		}
+		else {
+			deck.removeCard(sap);
+			deck.removeCard(sap);
+			deck.removeCard(synth);
+		}
+	}
+	else if (GearName == "Diving Gear") {
+		Card drown("Drown");
+		Card refresh("Refresh");
+		if (On) {
+			deck.addCard(drown);
+			deck.addCard(refresh);
+		}
+		else {
+			deck.removeCard(drown);
+			deck.removeCard(refresh);
+		}
+	}
 }
+
 
 void Gear::TraitOnOrOff(bool On, Character &guy, Deck &deck) {
 	//Trait Sacrifice
-	if (GearName == "Anemia") {
-	if (On) {
-		guy.Anemia = TRUE;
-	}
-	else {
-		guy.Anemia = FALSE;
-	}
-	}
-	else if (GearName == "Dumb") {
-	if (On) {
-		guy.ModStat(-4, "Intelligence");
-		guy.ModStat(1, "Defense");
-	}
-	else {
-		guy.ModStat(4, "Intelligence");
-		guy.ModStat(-1, "Defense");
-	}
-	}
-	else if (GearName == "Mind Flooded") {
-	Card ponder("Ponder");
-	if (On) {
-		deck.addCard(ponder);
-	}
-	else {
-		deck.removeCard(ponder);
-	}
-	}
-	else if (GearName == "Tunnel Vision") {
-	if (On) {
-		guy.ModStat(-2, "Strength");
-		guy.ModStat(-2, "Defense");
-		guy.ModStat(1, "Skill");
-	}
-	else {
-		guy.ModStat(2, "Strength");
-		guy.ModStat(2, "Defense");
-		guy.ModStat(-1, "Skill");
-	}
-	}
-	else if (GearName == "Teleportitis") {
-	if (On) {
-		guy.Teleportitis = TRUE;
-	}
-	else {
-		guy.Teleportitis = FALSE;
-	}
-	}
-	else if (GearName == "Growing Pains") {
-	if (On) {
-		guy.Growing_Pains = TRUE;
-	}
-	else {
-		guy.Growing_Pains = FALSE;
-	}
-	}
-	else if (GearName == "Conversion") {
-	if (On) {
-		guy.Conversion = TRUE;
-	}
-	else {
-		guy.Conversion = FALSE;
-	}
-		}
-	else if (GearName == "Inversion") {
-	if (On) {
-		guy.Inversion = TRUE;
-	}
-	else {
-		guy.Inversion = FALSE;
-	}
-	}
-	else if (GearName == "Jittery") {
-	if (On) {
-		guy.Jittery = 0;
-	}
-	else {
-		guy.Jittery = -1;
-	}
-	}
-	else if (GearName == "Tumors") {
-	if (On) {
-		guy.Tumors = TRUE;
-	}
-	else {
-		guy.Tumors = FALSE;
-	}
-	}
-	else if (GearName == "Devolve") {
-	if (On) {
-		guy.Devolve = TRUE;
-	}
-	else {
-		guy.Devolve = FALSE;
-	}
-	}
-	else if (GearName == "Volatile") {
-	if (On) {
-		guy.Volatile = 0;
-	}
-	else {
-		guy.Volatile = -1;
-	}
-	}
-	else if (GearName == "Melting") {
-	if (On) {
-		guy.Melting = TRUE;
-	}
-	else {
-		guy.Melting = FALSE;
-	}
-	}
-	else if (GearName == "The Box") {
-	if (On) {
-		int statpool = 0;
-		int tempstat = guy.MaxHealthBase;
-		for (int i = 1; i < tempstat; i++) {
-			guy.MaxHealthBase--;
-			guy.MaxHealth--;
-			statpool++;
-		}
-		tempstat = guy.MaxManaBase;
-		for (int i = 0; i < tempstat; i++) {
-			guy.MaxMana--;
-			guy.MaxManaBase--;
-			statpool++;
-		}
-		tempstat = guy.Strength;
-		for (int i = 1; i < tempstat; i++) {
-			guy.Strength--;
-			statpool++;
-		}
-		tempstat = guy.Defense;
-		for (int i = 0; i < tempstat; i++) {
-			guy.Defense--;
-			statpool++;
-		}
-		tempstat = guy.Intelligence;
-		for (int i = 0; i < tempstat; i++) {
-			guy.Intelligence--;
-			statpool++;
-		}
-		tempstat = guy.Skill;
-		for (int i = 0; i < tempstat; i++) {
-			guy.Skill--;
-			statpool++;
-		}
-
-		while (statpool > 0) {
-			int amount = (rand() % statpool + 1) / 2;
-			if (statpool == 1)
-				amount = 1;
-			statpool -= amount;
-			int stat = rand() % 6;
-			switch (stat) {
-			case 0:
-				guy.MaxHealthBase += amount;
-				guy.MaxHealth += amount;
-				break;
-			case 1:
-				guy.MaxManaBase += amount;
-				guy.MaxMana += amount;
-				break;
-			case 5:
-				guy.Strength += amount;
-				break;
-			case 2:
-				guy.Defense += amount;
-				break;
-			case 3:
-				guy.Intelligence += amount;
-				break;
-			case 4:
-				guy.Skill += amount;
-				break;
-			}
-			guy.CurrentHealth = guy.MaxHealth;
-			guy.CurrentMana = guy.MaxMana;
-			guy.printStats();
-		}
-	}
-	else {
-	}
-	}
-	else if (GearName == "Amnesia") {
-	if (On) {
-		for (int x = 1; x < 27; x++) {
-			for (int y = 6; y < 14; y++) {
-				if (rand() % 2 == 0)
-					if (x != guy.posx && y != guy.posy)
-						mvprintw(y, x, " ");
-			}
-		}
-	}
-	else {
-
-	}
-	}
-	else if (GearName == "Long Legs") {
-	if (On) {
-		guy.Long_Legs += 3;
-	}
-	else {
-		guy.Long_Legs = 0;
-	}
-	}
-	else if (GearName == "Oblivious") {
-	if (On) {
-		for (int y = 0; y < 15; y++) {
-			mvprintw(y, 44, "                                  ");
-		}
-		guy.Oblivious = TRUE;
-	}
-	else {
-		guy.Oblivious = FALSE;
-	}
-	}
-	else if (GearName == "Blind") {
-	if (On) {
-		guy.Blind = TRUE;
-	}
-	else {
-		guy.Blind = FALSE;
-	}
-	}
-	else if (GearName == "Numb") {
-	if (On) {
-		for (int y = 0; y < 5; y++) {
-			mvprintw(y, 17, "                          ");
-		}
-		guy.Numb = TRUE;
-	}
-	else {
-		guy.Numb = FALSE;
-	}
-	}
-	else if (GearName == "Sensitive") {
-	if (On) {
-		guy.Fast_Metabolism = TRUE;
-	}
-	else {
-		guy.Fast_Metabolism = FALSE;
-	}
-	}
-	else if (GearName == "Frenzy") {
-	if (On) {
-		guy.Deadly = TRUE;
-	}
-	else {
-		guy.Deadly = FALSE;
-	}
-	}
-	else if (GearName == "Corpse") {
-	if (On) {
-		guy.ModStat(5, "MaxHealth");
-		guy.CurrentHealth = guy.MaxHealth;
-		guy.Undead = TRUE;
-	}
-	else {
-		guy.ModStat(-5, "MaxHealth");
-		guy.CurrentHealth = guy.MaxHealth;
-		guy.Undead = FALSE;
-	}
-	}
-	else if (GearName == "Radioactive") {
-	if (On) {
-		guy.Radioactive = TRUE;
-	}
-	else {
-		guy.Radioactive = FALSE;
-	}
-	}
-	else if (GearName == "Forgetful") {
-	if (On) {
-		guy.ModStat(2, "MaxMana");
-		guy.Forgetful = TRUE;
-	}
-	else {
-		guy.ModStat(-2, "MaxMana");
-		guy.Forgetful = FALSE;
-	}
-	}
-
-	else if (GearName == "Tiny") {
-	if (On) {
-		guy.ModStat(-39, "MaxHealth");
-		guy.ModStat(10, "Defense");
-		guy.CurrentHealth = guy.MaxHealth;
-	}
-	else {
-		guy.ModStat(39, "MaxHealth");
-		guy.ModStat(-8, "Defense");
-		guy.CurrentHealth = guy.MaxHealth;
-	}
-	}
-	else if (GearName == "Succumb") {
-	if (On) {
-		guy.ModStat(2, "Skill");
-		guy.Succumb = TRUE;
-		Succumb = TRUE;
-	}
-	else {
-		guy.ModStat(-2, "Skill");
-		guy.Succumb = FALSE;
-		Succumb = FALSE;
-	}
+	if (Type == "Trait Sacrifice") {
+		SacrificeOnOrOff(On, guy, deck);
 	}
 
 	//Trait Reward
-	else if (GearName == "Mending Flesh") {
-	if (On) {
-		guy.Mending_Flesh = TRUE;
-	}
-	else {
-		guy.Mending_Flesh = FALSE;
-	}
-	}
-	else if (GearName == "Gymnast") {
-	if (On) {
-		guy.Gymnast = TRUE;
-	}
-	else {
-		guy.Gymnast = FALSE;
-	}
-	}
-	else if (GearName == "Third Eye") {
-	if (On) {
-		guy.Third_Eye = TRUE;
-	}
-	else {
-		guy.Third_Eye = FALSE;
-	}
-	}
-	else if (GearName == "Warper") {
-	if (On) {
-		guy.Warper += 5;
-	}
-	else {
-		guy.Warper = 0;
-	}
-	}
-	else if (GearName == "Growth Spurt") {
-	if (On) {
-		guy.Growth_Spurt = TRUE;
-	}
-	else {
-		guy.Growth_Spurt = FALSE;
-	}
-	}
-	else if (GearName == "Mind") {
-	if (On) {
-		guy.Mind = TRUE;
-	}
-	else {
-		guy.Mind = FALSE;
-	}
-	}
-	else if (GearName == "Matter") {
-	if (On) {
-		guy.Matter = TRUE;
-	}
-	else {
-		guy.Matter = FALSE;
-	}
-	}
-	else if (GearName == "Sharp Claws") {
-	if (On) {
-		guy.Sharp_Claws = TRUE;
-	}
-	else {
-		guy.Sharp_Claws = FALSE;
-	}
-	}
-	else if (GearName == "Gift") {
-	if (On) {
-		guy.Gift = TRUE;
-	}
-	else {
-		guy.Gift = FALSE;
-	}
-	}
-	else if (GearName == "Unseen") {
-	if (On) {
-		guy.Unseen = TRUE;
-	}
-	else {
-		guy.Unseen = FALSE;
-	}
-	}
-	else if (GearName == "Spiny Skin") {
-	if (On) {
-		guy.Spiny_Skin = TRUE;
-	}
-	else {
-		guy.Spiny_Skin = FALSE;
-	}
-	}
-	else if (GearName == "Adapt") {
-	if (On) {
-		guy.Adapt = TRUE;
-	}
-	else {
-		guy.Adapt = FALSE;
-	}
-	}
-	else if (GearName == "Wings") {
-	if (On) {
-		guy.Wings = TRUE;
-	}
-	else {
-		guy.Wings = FALSE;
-	}
-	}
-	else if (GearName == "Exoskeleton") {
-	if (On) {
-		guy.Exoskeleton = TRUE;
-	}
-	else {
-		guy.Exoskeleton = FALSE;
-	}
-	}
-	else if (GearName == "Unpredictable") {
-	if (On) {
-		guy.Dizzy = TRUE;
-	}
-	else {
-		guy.Dizzy = FALSE;
-	}
-	}
-	else if (GearName == "Ego") {
-	if (On) {
-		guy.Crown = TRUE;
-	}
-	else {
-		guy.Crown = FALSE;
-	}
-	}
-	else if (GearName == "The Juice") {
-	if (On) {
-		guy.The_Juice = TRUE;
-	}
-	else {
-		guy.The_Juice = FALSE;
-	}
-	}
-	else if (GearName == "Quick Thinker") {
-	if (On) {
-		guy.Quick_Thinker = TRUE;
-	}
-	else {
-		guy.Quick_Thinker = FALSE;
-	}
-	}
-	else if (GearName == "Foresight") {
-	if (On) {
-		guy.Foresight = 1;
-	}
-	else {
-		guy.Foresight = 1;
-	}
-	}
-	else if (GearName == "Photosynthesis") {
-	if (On) {
-		guy.Photosynthesis = TRUE;
-	}
-	else {
-		guy.Photosynthesis = FALSE;
-	}
-	}
-	else if (GearName == "Dexterous") {
-	if (On) {
-		guy.Dexterous = TRUE;
-	}
-	else {
-		guy.Dexterous = FALSE;
-	}
-	}
-	else if (GearName == "Reconstruction") {
-	if (On) {
-		guy.Reconstruction = TRUE;
-	}
-	else {
-		guy.Reconstruction = FALSE;
-	}
-	}
-	else if (GearName == "Laser Vision") {
-	Card laser("Laser");
-	if (On) {
-		deck.addCard(laser);
-	}
-	else {
-		deck.removeCard(laser);
-	}
-	}
-	else if (GearName == "Carnivore") {
-	if (On) {
-		guy.Carnivore = TRUE;
-	}
-	else {
-		guy.Carnivore = FALSE;
-	}
-	}
-	else if (GearName == "Hemoglobin") {
-	if (On) {
-		guy.Hemoglobin = TRUE;
-	}
-	else {
-		guy.Hemoglobin = FALSE;
-	}
-	}
-	else if (GearName == "Destiny") {
-	if (On) {
-		guy.Destiny = 5;
-	}
-	else {
-		guy.Destiny = 0;
-	}
+	else if (Type == "Trait Reward") {
+		RewardOnOrOff(On, guy, deck);
 	}
 
 	guy.printStats();
 }
+
+void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
+	if (GearName == "Anemia") {
+		if (On) {
+			guy.Anemia = TRUE;
+		}
+		else {
+			guy.Anemia = FALSE;
+		}
+	}
+	else if (GearName == "Dumb") {
+		if (On) {
+			guy.ModStat(-4, "Intelligence");
+			guy.ModStat(1, "Defense");
+		}
+		else {
+			guy.ModStat(4, "Intelligence");
+			guy.ModStat(-1, "Defense");
+		}
+	}
+	else if (GearName == "Mind Flooded") {
+		Card ponder("Ponder");
+		if (On) {
+			deck.addCard(ponder);
+		}
+		else {
+			deck.removeCard(ponder);
+		}
+	}
+	else if (GearName == "Tunnel Vision") {
+		if (On) {
+			guy.ModStat(-2, "Strength");
+			guy.ModStat(-2, "Defense");
+			guy.ModStat(1, "Skill");
+		}
+		else {
+			guy.ModStat(2, "Strength");
+			guy.ModStat(2, "Defense");
+			guy.ModStat(-1, "Skill");
+		}
+	}
+	else if (GearName == "Teleportitis") {
+		if (On) {
+			guy.Teleportitis = TRUE;
+		}
+		else {
+			guy.Teleportitis = FALSE;
+		}
+	}
+	else if (GearName == "Growing Pains") {
+		if (On) {
+			guy.Growing_Pains = TRUE;
+		}
+		else {
+			guy.Growing_Pains = FALSE;
+		}
+	}
+	else if (GearName == "Conversion") {
+		if (On) {
+			guy.Conversion = TRUE;
+		}
+		else {
+			guy.Conversion = FALSE;
+		}
+	}
+	else if (GearName == "Inversion") {
+		if (On) {
+			guy.Inversion = TRUE;
+		}
+		else {
+			guy.Inversion = FALSE;
+		}
+	}
+	else if (GearName == "Jittery") {
+		if (On) {
+			guy.Jittery = 0;
+		}
+		else {
+			guy.Jittery = -1;
+		}
+	}
+	else if (GearName == "Tumors") {
+		if (On) {
+			guy.Tumors = TRUE;
+		}
+		else {
+			guy.Tumors = FALSE;
+		}
+	}
+	else if (GearName == "Devolve") {
+		if (On) {
+			guy.Devolve = TRUE;
+		}
+		else {
+			guy.Devolve = FALSE;
+		}
+	}
+	else if (GearName == "Volatile") {
+		if (On) {
+			guy.Volatile = 0;
+		}
+		else {
+			guy.Volatile = -1;
+		}
+	}
+	else if (GearName == "Melting") {
+		if (On) {
+			guy.Melting = TRUE;
+		}
+		else {
+			guy.Melting = FALSE;
+		}
+	}
+	else if (GearName == "The Box") {
+		if (On) {
+			int statpool = 0;
+			int tempstat = guy.MaxHealthBase;
+			for (int i = 1; i < tempstat; i++) {
+				guy.MaxHealthBase--;
+				guy.MaxHealth--;
+				statpool++;
+			}
+			tempstat = guy.MaxManaBase;
+			for (int i = 0; i < tempstat; i++) {
+				guy.MaxMana--;
+				guy.MaxManaBase--;
+				statpool++;
+			}
+			tempstat = guy.Strength;
+			for (int i = 1; i < tempstat; i++) {
+				guy.Strength--;
+				statpool++;
+			}
+			tempstat = guy.Defense;
+			for (int i = 0; i < tempstat; i++) {
+				guy.Defense--;
+				statpool++;
+			}
+			tempstat = guy.Intelligence;
+			for (int i = 0; i < tempstat; i++) {
+				guy.Intelligence--;
+				statpool++;
+			}
+			tempstat = guy.Skill;
+			for (int i = 0; i < tempstat; i++) {
+				guy.Skill--;
+				statpool++;
+			}
+
+			while (statpool > 0) {
+				int amount = (rand() % statpool + 1) / 2;
+				if (statpool == 1)
+					amount = 1;
+				statpool -= amount;
+				int stat = rand() % 6;
+				switch (stat) {
+				case 0:
+					guy.MaxHealthBase += amount;
+					guy.MaxHealth += amount;
+					break;
+				case 1:
+					guy.MaxManaBase += amount;
+					guy.MaxMana += amount;
+					break;
+				case 5:
+					guy.Strength += amount;
+					break;
+				case 2:
+					guy.Defense += amount;
+					break;
+				case 3:
+					guy.Intelligence += amount;
+					break;
+				case 4:
+					guy.Skill += amount;
+					break;
+				}
+				guy.CurrentHealth = guy.MaxHealth;
+				guy.CurrentMana = guy.MaxMana;
+				guy.printStats();
+			}
+		}
+		else {
+		}
+	}
+	else if (GearName == "Amnesia") {
+		if (On) {
+			for (int x = 1; x < 27; x++) {
+				for (int y = 6; y < 14; y++) {
+					if (rand() % 2 == 0)
+						if (x != guy.posx && y != guy.posy)
+							mvprintw(y, x, " ");
+				}
+			}
+		}
+		else {
+
+		}
+	}
+	else if (GearName == "Long Legs") {
+		if (On) {
+			guy.Long_Legs += 3;
+		}
+		else {
+			guy.Long_Legs = 0;
+		}
+	}
+	else if (GearName == "Oblivious") {
+		if (On) {
+			for (int y = 0; y < 15; y++) {
+				mvprintw(y, 44, "                                  ");
+			}
+			guy.Oblivious = TRUE;
+		}
+		else {
+			guy.Oblivious = FALSE;
+		}
+	}
+	else if (GearName == "Blind") {
+		if (On) {
+			guy.Blind = TRUE;
+		}
+		else {
+			guy.Blind = FALSE;
+		}
+	}
+	else if (GearName == "Numb") {
+		if (On) {
+			for (int y = 0; y < 5; y++) {
+				mvprintw(y, 17, "                          ");
+			}
+			guy.Numb = TRUE;
+		}
+		else {
+			guy.Numb = FALSE;
+		}
+	}
+	else if (GearName == "Sensitive") {
+		if (On) {
+			guy.Fast_Metabolism = TRUE;
+		}
+		else {
+			guy.Fast_Metabolism = FALSE;
+		}
+	}
+	else if (GearName == "Frenzy") {
+		if (On) {
+			guy.Frenzy = TRUE;
+		}
+		else {
+			guy.Frenzy = FALSE;
+		}
+	}
+	else if (GearName == "Corpse") {
+		if (On) {
+			guy.ModStat(5, "MaxHealth");
+			guy.CurrentHealth = guy.MaxHealth;
+			guy.Undead = TRUE;
+		}
+		else {
+			guy.ModStat(-5, "MaxHealth");
+			guy.CurrentHealth = guy.MaxHealth;
+			guy.Undead = FALSE;
+		}
+	}
+	else if (GearName == "Radioactive") {
+		if (On) {
+			guy.Radioactive = TRUE;
+		}
+		else {
+			guy.Radioactive = FALSE;
+		}
+	}
+	else if (GearName == "Forgetful") {
+		if (On) {
+			guy.ModStat(2, "MaxMana");
+			guy.Forgetful = TRUE;
+		}
+		else {
+			guy.ModStat(-2, "MaxMana");
+			guy.Forgetful = FALSE;
+		}
+	}
+
+	else if (GearName == "Tiny") {
+		if (On) {
+			guy.ModStat(-39, "MaxHealth");
+			guy.ModStat(10, "Defense");
+			guy.CurrentHealth = guy.MaxHealth;
+		}
+		else {
+			guy.ModStat(39, "MaxHealth");
+			guy.ModStat(-8, "Defense");
+			guy.CurrentHealth = guy.MaxHealth;
+		}
+	}
+	else if (GearName == "Succumb") {
+		if (On) {
+			guy.ModStat(2, "Skill");
+			guy.Succumb = TRUE;
+			Succumb = TRUE;
+		}
+		else {
+			guy.ModStat(-2, "Skill");
+			guy.Succumb = FALSE;
+			Succumb = FALSE;
+		}
+	}
+	else if (GearName == "Slow") {
+		if (On) {
+			guy.Slow = TRUE;
+		}
+		else {
+			guy.Slow = FALSE;
+		}
+	}
+	else if (GearName == "Sticky Feet") {
+		if (On) {
+			guy.Sticky_Feet = 0;
+		}
+		else {
+			guy.Sticky_Feet = -1;
+		}
+	}
+	else if (GearName == "Overconfidence") {
+		if (On) {
+			guy.Overconfidence = TRUE;
+		}
+		else {
+			guy.Overconfidence = FALSE;
+		}
+	}
+	else if (GearName == "Hallucinations") {
+		if (On) {
+			guy.Hallucinations = TRUE;
+		}
+		else {
+			guy.Hallucinations = FALSE;
+		}
+	}
+	else if (GearName == "Tail") {
+	if (On) {
+		guy.Tail = TRUE;
+	}
+	else {
+		guy.Tail = FALSE;
+	}
+	}
+}
+
+void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
+	if (GearName == "Mending Flesh") {
+		if (On) {
+			guy.Mending_Flesh = TRUE;
+		}
+		else {
+			guy.Mending_Flesh = FALSE;
+		}
+	}
+	else if (GearName == "Gymnast") {
+		if (On) {
+			guy.Gymnast = TRUE;
+		}
+		else {
+			guy.Gymnast = FALSE;
+		}
+	}
+	else if (GearName == "Third Eye") {
+		if (On) {
+			guy.Third_Eye = TRUE;
+		}
+		else {
+			guy.Third_Eye = FALSE;
+		}
+	}
+	else if (GearName == "Warper") {
+		if (On) {
+			guy.Warper += 5;
+		}
+		else {
+			guy.Warper = 0;
+		}
+	}
+	else if (GearName == "Growth Spurt") {
+		if (On) {
+			guy.Growth_Spurt = TRUE;
+		}
+		else {
+			guy.Growth_Spurt = FALSE;
+		}
+	}
+	else if (GearName == "Mind") {
+		if (On) {
+			guy.Mind = TRUE;
+		}
+		else {
+			guy.Mind = FALSE;
+		}
+	}
+	else if (GearName == "Matter") {
+		if (On) {
+			guy.Matter = TRUE;
+		}
+		else {
+			guy.Matter = FALSE;
+		}
+	}
+	else if (GearName == "Sharp Claws") {
+		if (On) {
+			guy.Sharp_Claws = TRUE;
+		}
+		else {
+			guy.Sharp_Claws = FALSE;
+		}
+	}
+	else if (GearName == "Gift") {
+		if (On) {
+			guy.Gift = TRUE;
+		}
+		else {
+			guy.Gift = FALSE;
+		}
+	}
+	else if (GearName == "Unseen") {
+		if (On) {
+			guy.Unseen = TRUE;
+		}
+		else {
+			guy.Unseen = FALSE;
+		}
+	}
+	else if (GearName == "Spiny Skin") {
+		if (On) {
+			guy.Spiny_Skin = TRUE;
+		}
+		else {
+			guy.Spiny_Skin = FALSE;
+		}
+	}
+	else if (GearName == "Adapt") {
+		if (On) {
+			guy.Adapt = TRUE;
+		}
+		else {
+			guy.Adapt = FALSE;
+		}
+	}
+	else if (GearName == "Wings") {
+		if (On) {
+			guy.Wings = TRUE;
+		}
+		else {
+			guy.Wings = FALSE;
+		}
+	}
+	else if (GearName == "Exoskeleton") {
+		if (On) {
+			guy.Exoskeleton = TRUE;
+		}
+		else {
+			guy.Exoskeleton = FALSE;
+		}
+	}
+	else if (GearName == "Unpredictable") {
+		if (On) {
+			guy.Dizzy = TRUE;
+		}
+		else {
+			guy.Dizzy = FALSE;
+		}
+	}
+	else if (GearName == "Ego") {
+		if (On) {
+			guy.Crown = TRUE;
+		}
+		else {
+			guy.Crown = FALSE;
+		}
+	}
+	else if (GearName == "The Juice") {
+		if (On) {
+			guy.The_Juice = TRUE;
+		}
+		else {
+			guy.The_Juice = FALSE;
+		}
+	}
+	else if (GearName == "Quick Thinker") {
+		if (On) {
+			guy.Quick_Thinker = TRUE;
+		}
+		else {
+			guy.Quick_Thinker = FALSE;
+		}
+	}
+	else if (GearName == "Foresight") {
+		if (On) {
+			guy.Foresight = 1;
+		}
+		else {
+			guy.Foresight = 1;
+		}
+	}
+	else if (GearName == "Photosynthesis") {
+		if (On) {
+			guy.Photosynthesis = TRUE;
+		}
+		else {
+			guy.Photosynthesis = FALSE;
+		}
+	}
+	else if (GearName == "Dexterous") {
+		if (On) {
+			guy.Dexterous = TRUE;
+		}
+		else {
+			guy.Dexterous = FALSE;
+		}
+	}
+	else if (GearName == "Reconstruction") {
+		if (On) {
+			guy.Reconstruction = TRUE;
+		}
+		else {
+			guy.Reconstruction = FALSE;
+		}
+	}
+	else if (GearName == "Laser Vision") {
+		Card laser("Laser");
+		if (On) {
+			deck.addCard(laser);
+		}
+		else {
+			deck.removeCard(laser);
+		}
+	}
+	else if (GearName == "Carnivore") {
+		if (On) {
+			guy.Carnivore = TRUE;
+		}
+		else {
+			guy.Carnivore = FALSE;
+		}
+	}
+	else if (GearName == "Hemoglobin") {
+		if (On) {
+			guy.Hemoglobin = TRUE;
+		}
+		else {
+			guy.Hemoglobin = FALSE;
+		}
+	}
+	else if (GearName == "Destiny") {
+		if (On) {
+			guy.Destiny = 5;
+		}
+		else {
+			guy.Destiny = 0;
+		}
+	}
+	else if (GearName == "Scavenger") {
+		if (On) {
+			guy.Scavenger = 1;
+		}
+		else {
+			guy.Scavenger = -1;
+		}
+	}
+	else if (GearName == "Horns") {
+		if (On) {
+			guy.Horns = TRUE;
+		}
+		else {
+			guy.Horns = FALSE;
+		}
+	}
+
+}
+
 
 void Gear::CardOnOrOff(bool On, Character &guy, Deck &deck) {
 	//Special

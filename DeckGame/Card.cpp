@@ -203,7 +203,7 @@ Card::Card(const char *name):CardName(name)
 	else if (CardName == "Blast") {
 		ManaCost = 8;
 		CardType = "Spell";
-		Description = "Cost 8 mana. Deal (Int)d2 damage. Extra turn.";
+		Description = "Costs 8 mana. Deal (Int)d2 damage. Extra turn.";
 	}
 
 	else if (CardName == "Leech") {
@@ -214,7 +214,7 @@ Card::Card(const char *name):CardName(name)
 	else if (CardName == "Regenerate") {
 		ManaCost = 5;
 		CardType = "Spell";
-		Description = "Cost 5 mana. Heal 2+1d(Int) health for 5 turns.";
+		Description = "Costs 5 mana. Heal 2+1d(Int) health for 5 turns.";
 	}
 	else if (CardName == "Transmute") {
 		ManaCost = 0;
@@ -225,12 +225,12 @@ Card::Card(const char *name):CardName(name)
 	else if (CardName == "Blink") {
 		ManaCost = 9;
 		CardType = "Spell";
-		Description = "Cost 9 mana. Gain 2 extra turns.";
+		Description = "Costs 9 mana. Gain 2 extra turns.";
 	}
 	else if (CardName == "Push") {
 		ManaCost = 4;
 		CardType = "Spell";
-		Description = "Cost 4 mana. Deal 2d(Int) damage. Gain an extra turn.";
+		Description = "Costs 4 mana. Deal 2d(Int) damage. Gain an extra turn.";
 	}
 	else if (CardName == "Singularity") {
 		ManaCost = 0;
@@ -239,30 +239,25 @@ Card::Card(const char *name):CardName(name)
 	}
 
 	else if (CardName == "Freeze") {
-		ManaCost = 0;
-		CardType = "Spell";
-		Description = "Enemy gains (Int)d2 block. Extra turn.";
-	}
-	else if (CardName == "Shatter") {
 		ManaCost = 10;
 		CardType = "Spell";
-		Description = "Cost 10 mana. Remove enemy block, deal that much damage.";
+		Description = "Costs 10 mana. Gain 6+ 2d(Int) block.";
 	}
-	else if (CardName == "Melt") {
+	else if (CardName == "Shard") {
 		ManaCost = 0;
 		CardType = "Spell";
-		Description = "Enemy loses (Int) block. Gain that as mana.";
+		Description = "Take 6 damage. +3 mana. Deal (Int/2)d2 damage. Extra turn.";
 	}
 
 	else if (CardName == "Fumes") {
 		ManaCost = 8;
 		CardType = "Spell";
-		Description = "Cost 8 mana. Deal 1d(Int) damage for (Int) turns.";
+		Description = "Costs 8 mana. Deal 1d(Int) damage for (Int) turns.";
 	}
 	else if (CardName == "Smoke") {
 		ManaCost = 5;
 		CardType = "Spell";
-		Description = "Cost 5 mana. Get (Int)/2 block for 5 turns.";
+		Description = "Costs 5 mana. Get (Int)/2 block for 5 turns.";
 	}
 	else if (CardName == "Incense") {
 		ManaCost = 0;
@@ -276,11 +271,6 @@ Card::Card(const char *name):CardName(name)
 		ManaCost = 5;
 		CardType = "Spell";
 		Description = "Cost 5 mana. Deal (Int)d5 damage.";
-	}
-	else if (CardName == "Conflagrate") {
-		ManaCost = 6;
-		CardType = "Spell";
-		Description = "Cost 6 mana. Remove enemy block. Extra turn.";
 	}
 	else if (CardName == "Fuel") {
 		ManaCost = 0;
@@ -305,36 +295,59 @@ Card::Card(const char *name):CardName(name)
 	}
 
 	else if (CardName == "Lightning") {
-		ManaCost = 20;
+		ManaCost = 1;
 		CardType = "Spell";
-		Description = "Cost 20 mana. Deal 8d(Int) damage.";
+		Description = "Lose all your mana. Deal 1d(Int/2) damage (Mana) times.";
 	}
-	else if (CardName == "Thunder") {
-		ManaCost = 5;
-		CardType = "Spell";
-		Description = "Cost 5 mana. Remove all block on the field.";
-	}
-	else if (CardName == "Overcharge") {
+	else if (CardName == "Shock") {
 		ManaCost = 0;
 		CardType = "Spell";
-		Description = "Overcharge mana based on next damage taken. Extra turn.";
+		Description = "Gain 2 mana. Take 5 damage. Extra turn.";
 	}
 
 	else if (CardName == "Destroy") {
-		ManaCost = 6;
+		ManaCost = 10;
 		CardType = "Spell";
-		Description = "Cost 6 mana. Deal your block as damage, lose your block.";
+		Description = "Costs 10 mana. Deal your block as damage, lose your block.";
 	}
 	else if (CardName == "Construct") {
-		ManaCost = 5;
-		CardType = "Spell";
-		Description = "Cost 5 mana. Gain (Int)d4 block.";
-	}
-	else if (CardName == "Deconstruct") {
 		ManaCost = 0;
 		CardType = "Spell";
-		Description = "Use your block to refill your mana. Extra turn.";
+		Description = "Gain (Int/2) mana. Gain (Int)d2 block.";
 	}
+
+	else if (CardName == "Beam") {
+		ManaCost = 3;
+		CardType = "Spell";
+		Description = "Costs 3 mana. Deal (Int)d2 damage. Fill hand with Spells.";
+	}
+	else if (CardName == "Diffract") {
+		ManaCost = 0;
+		CardType = "Spell";
+		Description = "Gain 5 mana. Shuffle your hand.";
+	}
+	
+	else if (CardName == "Sap") {
+		ManaCost = 0;
+		CardType = "Spell";
+		Description = "Deal 1d(Int) damage. Gain that much mana.";
+	}
+	else if (CardName == "Synthesize") {
+		ManaCost = 10;
+		CardType = "Spell";
+		Description = "Costs 10 mana. Heal for 8d(Int).";
+	}
+	else if (CardName == "Drown") {
+		ManaCost = 0;
+		CardType = "Spell";
+		Description = "Stop Refresh. Lose 1 mana and deal (Int)/2 damage every turn.";
+	}
+	else if (CardName == "Refresh") {
+		ManaCost = 0;
+		CardType = "Spell";
+		Description = "Stop Drown. Gain 1 mana every turn.";
+	}
+
 
 	else if (CardName == "Laser") {
 		ManaCost = 0;
@@ -791,6 +804,15 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 						+ "#o damage.";
 			log.PushPop(line);
 		}
+
+		//Horns trait
+		if (CardType == "Attack" && guy.Horns) {
+			if (rand() % 100 < guy.Skill + 7) {
+				guy.Negate++;
+				string horn = "#c-You negate the next attack.#o";
+				log.PushPop(horn);
+			}
+		}
 	}
 	//defends
 	if (CardType == "Defend") {
@@ -1038,45 +1060,27 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		}
 
 		else if (CardName == "Freeze") {
-			//enemy gains (int)d2 block, extra turn
-			int block = rtd(guy.Intelligence, 2);
-			enemy.CurrentBlock += block;
+			//Costs 6 mana. Gain 6+(Int)d2 block
+			int block = 6+rtd(guy.Intelligence, 3);
+			block = gainBlock(block, guy, enemy);
+
+			string line = "-You gain #c" + to_string(block) + "#o block.";
+			log.PushPop(line);
+		}
+		else if (CardName == "Shard") {
+			//Take 6 damage. +3 mana. Deal (Int/2)d2 damage. Extra turn."
+			int selfdamage = guy.TakeDamage(6);
+			int damage = rtd(int(guy.Intelligence/2), 2);
+			damage = dealDamage(damage, guy, enemy, log);
+			guy.DrainMana(-3);
 			guy.extraTurns++;
 
-			string line = "-You freeze the " + string(enemy.Name)
-						+ " for #b" + to_string(block) + "#o block.";
+			string line = "-You deal #y" + to_string(damage)
+						+ "#o damage, take #r" + to_string(selfdamage)
+						+ "#o and #mgain 3 mana#o.";
 			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line);
 			log.PushPop(line2);
-		}
-		else if (CardName == "Shatter") {
-			//10 mana, remove enemy block, deal that much damage
-			int damage = enemy.CurrentBlock;
-			enemy.CurrentBlock = 0;
-			damage = dealDamage(damage, guy, enemy, log);
-
-			string line = "-You #mremove the " + string(enemy.Name)
-						+ "'s block#o and deal #y" + to_string(damage)
-						+ "#o damage.";
-			log.PushPop(line);
-		}
-		else if (CardName == "Melt") {
-			//enemy loses (Int)block, gain that much mana
-			int mana;
-			if (enemy.CurrentBlock < guy.Intelligence) {
-				mana = enemy.CurrentBlock;
-				enemy.CurrentBlock = 0;
-			}
-			else {
-				mana = guy.Intelligence;
-				enemy.CurrentBlock -= guy.Intelligence;
-			}
-			guy.DrainMana(-1 * mana);
-
-			string line = "-You #mremove " + to_string(mana)
-				+ " block from the " + string(enemy.Name)
-				+ "#o and gain #m" + to_string(mana) + "#o mana.";
-			log.PushPop(line);
 		}
 
 		else if (CardName == "Fumes") {
@@ -1114,15 +1118,6 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 				+ " for #y" + to_string(damage)
 				+ "#o damage.";
 			log.PushPop(line);
-		}
-		else if (CardName == "Conflagrate") {
-			//cost 6 mana, remove enemy block.
-			enemy.CurrentBlock = 0;
-			guy.extraTurns++;
-			string line = "#m-You remove the " + string(enemy.Name) + "'s block.#o";
-			log.PushPop(line);
-			string line2 = "#g EXTRA TURN#o";
-			log.PushPop(line2);
 		}
 		else if (CardName == "Fuel") {
 			//on the next turn, gain mana for unblocked damage dealt
@@ -1163,74 +1158,131 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		}
 	
 		else if (CardName == "Lightning") {
-			//Cost 20 mana. Deal 8d(Int) damage
-			int damage = rtd(8, guy.Intelligence);
-			damage = dealDamage(damage, guy, enemy, log);
+			//Lose all your mana. Deal 1d(Int/2) damage (Mana) times.
+			int total = 0;
+			for (int i = 0; i < guy.CurrentMana+1; i++) {
+				int damage = rtd(1, int(guy.Intelligence / 2));
+				damage = dealDamage(damage, guy, enemy, log);
+				total += damage;
+			}
+			string line;
+			if (guy.CurrentMana == 0) {
+				line = "-You electrocute the " + string(enemy.Name) + " #m"
+					+ to_string(guy.CurrentMana + 1) + " time#o for a total of #y" + to_string(total)
+					+ "#o damage.";
+			}
+			else {
+				line = "-You electrocute the " + string(enemy.Name) + " #m"
+					+ to_string(guy.CurrentMana + 1) + " times#o for a total of #y" + to_string(total)
+					+ "#o damage.";
+			}
+			log.PushPop(line);
 
-			string line = "-You electrocute the " + string(enemy.Name)
-						+ " for #y" + to_string(damage)
-						+ "#o damage.";
-			log.PushPop(line);
+			guy.CurrentMana = 0;
 		}
-		else if (CardName == "Thunder") {
-			//Cost 5 mana. Remove all block on the field
-			guy.CurrentBlock = 0;
-			guy.Negate = 0;
-			enemy.CurrentBlock = 0;
-			string line = "#mThe thunderclap obliterates all block.#o";
-			log.PushPop(line);
-		}
-		else if (CardName == "Overcharge") {
-			//Gain mana based on next unblocked damage taken. Can overcharge.
-			guy.charge++;
+		else if (CardName == "Shock") {
+			//Gain 2 mana. Take 5 damage. Extra turn
+			guy.DrainMana(-2);
 			guy.extraTurns++;
+			int damage = guy.TakeDamage(5);
 
-			string line = "#mYou brace yourself.#o";
+			string line = "-You #mgain 2 mana#o and take #r" + to_string(damage) + "#o damage.";
 			log.PushPop(line);
 			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line2);
 		}
 	
 		else if (CardName == "Destroy") {
-			//Cost 6 mana. Deal your block as damage, lose your block
+			//Costs 10 mana. Deal your block as damage, lose your block
 			int damage = guy.CurrentBlock;
 			damage = dealDamage(damage, guy, enemy, log);
 			guy.CurrentBlock = 0;
 
-			string line = "-You slam the " + string(enemy.Name)
+			string line = "-You destroy the " + string(enemy.Name)
 						+ " for #y" + to_string(damage)
 						+ "#o damage and #rlose your block.#o";
 			log.PushPop(line);
 		}
 		else if (CardName == "Construct") {
-			//Cost 5 mana. Gain (Int)d4 block
-			int block = rtd(guy.Intelligence, 4);
+			//Gain (Int/2) mana. Gain (Int)d2 block
+			int block = rtd(guy.Intelligence, 2);
+			int mana = int(guy.Intelligence/2);
 			gainBlock(block, guy, enemy);
+			guy.DrainMana(-1 * mana);
 
-			string line = "-You gain #c" + to_string(block) + "#o block.";
+			string line = "-You #mgain " + to_string(guy.Intelligence)
+						+ " mana#o and #c" + to_string(block)
+						+ "#o block.";
 			log.PushPop(line);
 		}
-		else if (CardName == "Deconstruct") {
-			//use your block to refill your mana
-			int missingMana = guy.MaxMana - guy.CurrentMana;
-			int mana = 0;
-			if (missingMana > guy.CurrentBlock) {
-				mana = guy.CurrentBlock;
-				guy.DrainMana(-1 * mana);
-			}
-			else {
-				mana = missingMana;
-				guy.CurrentBlock -= mana;
-				guy.DrainMana(-1 * mana);
-			}
-			guy.Negate++;
+		else if (CardName == "Beam") {
+			//Costs 3 mana. Deal (Int)d2 damage. Fill your hand with Spells
+			int damage = dealDamage(rtd(guy.Intelligence, 2), guy, enemy, log);
+			guy.fillType = "Spell";
 
-			string line = "-You #rlose " + to_string(mana)
-						+ " block#m and gain #m" + to_string(mana) + "#o mana.";
+			string line = "-You sear the " + string(enemy.Name)
+						+ " for #y" + to_string(damage)
+						+ "#o damage.";
+			log.PushPop(line);
+		}
+		else if (CardName == "Diffract") {
+			//Gain 3 mana. Shuffle your hand. Extra turn
+			int mana = 2;
+			guy.DrainMana(-1 * mana);
+			guy.shuffle = TRUE;
+			//guy.extraTurns++;
+
+			string line = "#m-You gain " + to_string(mana) + " mana.#o";
 			string line2 = "#g EXTRA TURN#o";
 			log.PushPop(line);
-			log.PushPop(line2);
+			//log.PushPop(line2);
 		}
+		else if (CardName == "Sap") {
+			//Deal 1d(Int) damage. Gain that much mana
+			int damage = rtd(1, guy.Intelligence);
+			int mana = damage;
+			damage = dealDamage(damage, guy, enemy, log);
+			guy.DrainMana(-1 * mana);
+
+			string line = "-You deal #y" + to_string(damage)
+						+ "#o damage and #mgain " + to_string(mana)
+						+ " mana#o.";
+			log.PushPop(line);
+		}
+		else if (CardName == "Synthesize") {
+			//Costs 10 mana. Heal for 8d(Int)
+			int health = rtd(8, guy.Intelligence);
+			guy.TakeDamage(-1 * health);
+
+			string line = "-You heal for #g" + to_string(health) + "#o.";
+			log.PushPop(line);
+		}
+		else if (CardName == "Drown") {
+			//Stop Refresh. Lose 1 mana and deal (Int)/2 damage every turn
+			guy.refresh = FALSE;
+			guy.drown = TRUE;
+
+			string line = "#m-You begin to drown the " + string(enemy.Name) + ".#o";
+			log.PushPop(line);
+		}
+		else if (CardName == "Refresh") {
+			//Stop Drown. Gain 1 mana every turn
+			guy.drown = FALSE;
+			guy.refresh = TRUE;
+
+			string line = "#m-You begin to refresh your mana.#o";
+			log.PushPop(line);
+		}
+		/*else if (CardName == "Drown") {
+			ManaCost = 0;
+			CardType = "Spell";
+			Description = "Stop Refresh. Lose 1 mana and deal (Int)/2 damage every turn.";
+		}
+		else if (CardName == "Refresh") {
+			ManaCost = 0;
+			CardType = "Spell";
+			Description = "Stop Drown. Gain 1 mana every turn.";
+		}*/
 		else if (CardName == "Laser") {
 			//Deal 2d(Skl) damage to health and block. Extra turn.
 			int damageH = rtd(2, guy.Skill);
@@ -1521,8 +1573,8 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 }
 
 int Card::dealDamage(int damage, Character &guy, Enemy &enemy, TextLog &log) {
-	//Deadly trait
-	if (damage > 0 && guy.Deadly) {
+	//Frenzy trait
+	if (damage > 0 && guy.Frenzy) {
 		damage *= 2;
 	}
 	//entomb

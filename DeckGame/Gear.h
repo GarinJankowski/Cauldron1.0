@@ -24,8 +24,21 @@ public:
 	const char *Description;
 	const char *Type;
 
+	void HandsDescription();
+	void BodyDescription();
+	void HeadDescription();
+	void TraitSDescription();
+	void TraitRDescription();
+
 	void GearOnOrOff(bool On, Character &guy, Deck &deck);
+	void HandsOnOrOff(bool On, Character &guy, Deck &deck);
+	void BodyOnOrOff(bool On, Character &guy, Deck &deck);
+	void HeadOnOrOff(bool On, Character &guy, Deck &deck);
+
 	void TraitOnOrOff(bool On, Character &guy, Deck &deck);
+	void SacrificeOnOrOff(bool On, Character &guy, Deck &deck);
+	void RewardOnOrOff(bool On, Character &guy, Deck &deck);
+
 	void CardOnOrOff(bool On, Character &guy, Deck &deck);
 	void printGear(int position, Character &guy);
 };
