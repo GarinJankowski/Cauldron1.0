@@ -22,8 +22,7 @@ public:
 	int size();
 
 	Card addCard(Card cardToBeAdded);
-	Card removeCard(Card cardToBeRemoved);
-	void shuffleDeck();
+	Card removeCard(Card cardToBeRemoved, Character &guy);
 	Card at(int i);
 	void deckScreen();
 };

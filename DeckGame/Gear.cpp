@@ -11,7 +11,7 @@
 		No Headgear: nothing
 */
 WINDOW *makeWindow(int height, int width, int starty, int startx);
-void mvprintInSize(int starty, int startx, int maxx, const char* toBePrinted);
+void mvprintInSize(int starty, int startx, int maxx, const char* toBePrinted, bool Fuzzy);
 //manually draw boxes
 void manualBox(string typebox, int colorpair);
 
@@ -96,10 +96,23 @@ Gear::Gear(const char *name):GearName(name)
 		GearName == "Bedstone Helmet" ||
 		GearName == "Glass Eye" ||
 		GearName == "Laurel Wreath" ||
-		GearName == "Diving Gear") {
+		GearName == "Diving Gear" ||
+		GearName == "Makeup Set" ||
+		GearName == "Safety Glasses") {
 		Type = "Head";
 		HeadDescription();
 
+	}
+
+	//Modifications
+	else if (GearName == "Burn" ||
+		GearName == "Stay" ||
+		GearName == "Flow" ||
+		GearName == "Copy" ||
+		GearName == "Push" ||
+		GearName == "Void" ||
+		GearName == "Link") {
+		Type = "Mod";
 	}
 	
 	//Trait Sacrifice
@@ -227,6 +240,26 @@ Gear::Gear(const char *name):GearName(name)
 		Type = "Trait Sacrifice";
 		Description = "Your hand can neither be shuffled nor filled.";
 	}
+	else if (GearName == "Weak Back") {
+		Type = "Trait Sacrifice";
+		Description = "You can no longer pick up gear.";
+	}
+	else if (GearName == "Charred Skin") {
+		Type = "Trait Sacrifice";
+		Description = "You heal instead of gaining block.";
+	}
+	else if (GearName == "Purple") {
+		Type = "Trait Sacrifice";
+		Description = "All stat changes are now permanent.";
+	}
+	else if (GearName == "Madness") {
+		Type = "Trait Sacrifice";
+		Description = "Add a Mad card to your deck.";
+	}
+	else if (GearName == "Inefficient") {
+		Type = "Trait Sacrifice";
+		Description = "Everyone takes 2 turns instead of 1.";
+	}
 	
 	//Trait Reward
 	else if (GearName == "Mending Flesh") {
@@ -299,7 +332,7 @@ Gear::Gear(const char *name):GearName(name)
 	}
 	else if (GearName == "Quick Thinker") {
 		Type = "Trait Reward";
-		Description = "8x(Skl)% chance to gain 10 mana each turn.";
+		Description = "8x(Skl)% chance to gain 5 mana each turn.";
 	}
 	else if (GearName == "Foresight") {
 		Type = "Trait Reward";
@@ -340,6 +373,22 @@ Gear::Gear(const char *name):GearName(name)
 	else if (GearName == "Horns") {
 		Type = "Trait Reward";
 		Description = "When you play an Attack, (Skl)+7% chance for a negate.";
+	}
+	else if (GearName == "Genius") {
+		Type = "Trait Reward";
+		Description = "+2 Int. Choose a spell.";
+	}
+	else if (GearName == "Green Blood") {
+		Type = "Trait Reward";
+		Description = "All damage taken is reduced by (Skl/2).";
+	}
+	else if (GearName == "Multi-Tongued") {
+		Type = "Trait Reward";
+		Description = "You can now talk to your enemies.";
+	}
+	else if (GearName == "Triple-Jointed") {
+		Type = "Trait Reward";
+		Description = "Draw 1 more card every turn.";
 	}
 	
 	else {
@@ -542,13 +591,43 @@ void Gear::HeadDescription() {
 		Description = "An extremely large and heavy and piece of equipment. This helmet allows the user to destroy and reform it to create unbreakable walls and bludgeons.";
 	}
 	else if (GearName == "Glass Eye") {
-		Description = "A glass sphere with a prism contained inside. It seems to be drawn towards your own eyes, as if it wants to replace one of them.";
+		Description = "A glass sphere with a prism contained inside. It seems to stare back at you.";
 	}
 	else if (GearName == "Laurel Wreath") {
-		Description = "A simple crown of leaves and branches, although these ones seem to twist and write as if they were sentient.";
+		Description = "A simple crown of leaves and branches. These ones seem to twist and write as if they were sentient.";
 	}
 	else if (GearName == "Diving Gear") {
 		Description = "An ancient bronze helmet, meant to be airtight against a suit to protect from the ocean.";
+	}
+	else if (GearName == "Makeup Set") {
+		Description = "These glimmering cosmetics could make even the most hideous beast attract another.";
+	}
+	else if (GearName == "Safety Glasses") {
+		Description = "A good Alchemist always wears protection from harmful ingredients.";
+	}
+}
+
+void Gear::ModDescription() {
+	if (GearName == "Burn") {
+		Description = "Remove this card for the rest of combat.";
+	}
+	else if (GearName == "Stay") {
+		Description = "This card does not discard after use.";
+	}
+	else if (GearName == "Flow") {
+		Description = "This card discards at the end of the turn.";
+	}
+	else if (GearName == "Copy") {
+		Description = "Duplicate this card for the rest of combat.";
+	}
+	else if (GearName == "Push") {
+		Description = "Discard entire hand after use.";
+	}
+	else if (GearName == "Void") {
+		Description = "This card cannot be drawn.";
+	}
+	else if (GearName == "Link") {
+		Description = "Draws the next card in the Link chain.";
 	}
 }
 
@@ -586,8 +665,8 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(smack);
 		}
 		else {
-			deck.removeCard(smack);
-			deck.removeCard(smack);
+			deck.removeCard(smack, guy);
+			deck.removeCard(smack, guy);
 		}
 	}
 	else if (GearName == "Crystal Ball") {
@@ -608,10 +687,10 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(block);
 		}
 		else {
-			deck.removeCard(ram);
-			deck.removeCard(ram);
-			deck.removeCard(ram);
-			deck.removeCard(block);
+			deck.removeCard(ram, guy);
+			deck.removeCard(ram, guy);
+			deck.removeCard(ram, guy);
+			deck.removeCard(block, guy);
 		}
 	}
 	else if (GearName == "Long Sword") {
@@ -624,10 +703,10 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(crush);
 		}
 		else {
-			deck.removeCard(slice);
-			deck.removeCard(slice);
-			deck.removeCard(slice);
-			deck.removeCard(crush);
+			deck.removeCard(slice, guy);
+			deck.removeCard(slice, guy);
+			deck.removeCard(slice, guy);
+			deck.removeCard(crush, guy);
 		}
 	}
 	else if (GearName == "Falchion") {
@@ -639,9 +718,9 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(hack);
 		}
 		else {
-			deck.removeCard(slice);
-			deck.removeCard(slice);
-			deck.removeCard(hack);
+			deck.removeCard(slice, guy);
+			deck.removeCard(slice, guy);
+			deck.removeCard(hack, guy);
 		}
 	}
 	else if (GearName == "Metal Staff") {
@@ -650,7 +729,7 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(parry);
 		}
 		else {
-			deck.removeCard(parry);
+			deck.removeCard(parry, guy);
 		}
 	}
 	else if (GearName == "Steel Spear") {
@@ -661,9 +740,9 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(pierce);
 		}
 		else {
-			deck.removeCard(pierce);
-			deck.removeCard(pierce);
-			deck.removeCard(pierce);
+			deck.removeCard(pierce, guy);
+			deck.removeCard(pierce, guy);
+			deck.removeCard(pierce, guy);
 		}
 	}
 	else if (GearName == "Javelin") {
@@ -679,12 +758,12 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(throww);
 		}
 		else {
-			deck.removeCard(pierce);
-			deck.removeCard(pierce);
-			deck.removeCard(slice);
-			deck.removeCard(slice);
-			deck.removeCard(throww);
-			deck.removeCard(throww);
+			deck.removeCard(pierce, guy);
+			deck.removeCard(pierce, guy);
+			deck.removeCard(slice, guy);
+			deck.removeCard(slice, guy);
+			deck.removeCard(throww, guy);
+			deck.removeCard(throww, guy);
 		}
 	}
 	else if (GearName == "Obsidian Spear") {
@@ -696,9 +775,9 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(impale);
 		}
 		else {
-			deck.removeCard(pierce);
-			deck.removeCard(pierce);
-			deck.removeCard(impale);
+			deck.removeCard(pierce, guy);
+			deck.removeCard(pierce, guy);
+			deck.removeCard(impale, guy);
 		}
 	}
 	else if (GearName == "Halberd") {
@@ -716,12 +795,12 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(parry);
 		}
 		else {
-			deck.removeCard(charge);
-			deck.removeCard(hack);
-			deck.removeCard(pierce);
-			deck.removeCard(slice);
-			deck.removeCard(slice);
-			deck.removeCard(parry);
+			deck.removeCard(charge, guy);
+			deck.removeCard(hack, guy);
+			deck.removeCard(pierce, guy);
+			deck.removeCard(slice, guy);
+			deck.removeCard(slice, guy);
+			deck.removeCard(parry, guy);
 		}
 	}
 	else if (GearName == "Lance") {
@@ -733,9 +812,9 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(impale);
 		}
 		else {
-			deck.removeCard(charge);
-			deck.removeCard(charge);
-			deck.removeCard(impale);
+			deck.removeCard(charge, guy);
+			deck.removeCard(charge, guy);
+			deck.removeCard(impale, guy);
 		}
 	}
 	else if (GearName == "Rapier") {
@@ -751,11 +830,11 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(feint);
 		}
 		else {
-			deck.removeCard(slice);
-			deck.removeCard(slice);
-			deck.removeCard(pierce);
-			deck.removeCard(parry);
-			deck.removeCard(feint);
+			deck.removeCard(slice, guy);
+			deck.removeCard(slice, guy);
+			deck.removeCard(pierce, guy);
+			deck.removeCard(parry, guy);
+			deck.removeCard(feint, guy);
 		}
 	}
 	else if (GearName == "War Hammer") {
@@ -767,9 +846,9 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(demolish);
 		}
 		else {
-			deck.removeCard(crush);
-			deck.removeCard(crush);
-			deck.removeCard(demolish);
+			deck.removeCard(crush, guy);
+			deck.removeCard(crush, guy);
+			deck.removeCard(demolish, guy);
 		}
 	}
 	else if (GearName == "Morning Star") {
@@ -784,11 +863,11 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(demolish);
 		}
 		else {
-			deck.removeCard(crush);
-			deck.removeCard(crush);
-			deck.removeCard(pierce);
-			deck.removeCard(pierce);
-			deck.removeCard(demolish);
+			deck.removeCard(crush, guy);
+			deck.removeCard(crush, guy);
+			deck.removeCard(pierce, guy);
+			deck.removeCard(pierce, guy);
+			deck.removeCard(demolish, guy);
 		}
 	}
 	else if (GearName == "Battle Axe") {
@@ -803,11 +882,11 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(bleed);
 		}
 		else {
-			deck.removeCard(hack);
-			deck.removeCard(hack);
-			deck.removeCard(hack);
-			deck.removeCard(crush);
-			deck.removeCard(bleed);
+			deck.removeCard(hack, guy);
+			deck.removeCard(hack, guy);
+			deck.removeCard(hack, guy);
+			deck.removeCard(crush, guy);
+			deck.removeCard(bleed, guy);
 		}
 	}
 	else if (GearName == "Double Axe") {
@@ -821,10 +900,10 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(demolish);
 		}
 		else {
-			deck.removeCard(charge);
-			deck.removeCard(hack);
-			deck.removeCard(hack);
-			deck.removeCard(demolish);
+			deck.removeCard(charge, guy);
+			deck.removeCard(hack, guy);
+			deck.removeCard(hack, guy);
+			deck.removeCard(demolish, guy);
 		}
 	}
 	else if (GearName == "Shiv") {
@@ -835,8 +914,8 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(pierce);
 		}
 		else {
-			deck.removeCard(stab);
-			deck.removeCard(pierce);
+			deck.removeCard(stab, guy);
+			deck.removeCard(pierce, guy);
 		}
 	}
 	else if (GearName == "Serrated Dagger") {
@@ -850,10 +929,10 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(stab);
 		}
 		else {
-			deck.removeCard(bleed);
-			deck.removeCard(bleed);
-			deck.removeCard(slice);
-			deck.removeCard(stab);
+			deck.removeCard(bleed, guy);
+			deck.removeCard(bleed, guy);
+			deck.removeCard(slice, guy);
+			deck.removeCard(stab, guy);
 		}
 	}
 	else if (GearName == "Simple Bow") {
@@ -868,11 +947,11 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(pierce);
 		}
 		else {
-			deck.removeCard(shoot);
-			deck.removeCard(shoot);
-			deck.removeCard(slice);
-			deck.removeCard(slice);
-			deck.removeCard(pierce);
+			deck.removeCard(shoot, guy);
+			deck.removeCard(shoot, guy);
+			deck.removeCard(slice, guy);
+			deck.removeCard(slice, guy);
+			deck.removeCard(pierce, guy);
 		}
 	}
 	else if (GearName == "Recurve Bow") {
@@ -883,9 +962,9 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(shoot);
 		}
 		else {
-			deck.removeCard(shoot);
-			deck.removeCard(shoot);
-			deck.removeCard(shoot);
+			deck.removeCard(shoot, guy);
+			deck.removeCard(shoot, guy);
+			deck.removeCard(shoot, guy);
 		}
 	}
 	else if (GearName == "Throwing Stars") {
@@ -897,9 +976,9 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(bleed);
 		}
 		else {
-			deck.removeCard(throww);
-			deck.removeCard(throww);
-			deck.removeCard(bleed);
+			deck.removeCard(throww, guy);
+			deck.removeCard(throww, guy);
+			deck.removeCard(bleed, guy);
 		}
 	}
 	else if (GearName == "Wand") {
@@ -911,9 +990,9 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(stab);
 		}
 		else {
-			deck.removeCard(zap);
-			deck.removeCard(zap);
-			deck.removeCard(stab);
+			deck.removeCard(zap, guy);
+			deck.removeCard(zap, guy);
+			deck.removeCard(stab, guy);
 		}
 	}
 	else if (GearName == "Sickle") {
@@ -930,11 +1009,11 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(impale);
 		}
 		else {
-			deck.removeCard(bleed);
-			deck.removeCard(hack);
-			deck.removeCard(parry);
-			deck.removeCard(pierce);
-			deck.removeCard(impale);
+			deck.removeCard(bleed, guy);
+			deck.removeCard(hack, guy);
+			deck.removeCard(parry, guy);
+			deck.removeCard(pierce, guy);
+			deck.removeCard(impale, guy);
 		}
 	}
 	else if (GearName == "Hand Cannon") {
@@ -946,9 +1025,9 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(demolish);
 		}
 		else {
-			deck.removeCard(shoot);
-			deck.removeCard(shoot);
-			deck.removeCard(demolish);
+			deck.removeCard(shoot, guy);
+			deck.removeCard(shoot, guy);
+			deck.removeCard(demolish, guy);
 		}
 	}
 	else if (GearName == "Conductive Gloves") {
@@ -958,8 +1037,8 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(msmack);
 		}
 		else {
-			deck.removeCard(msmack);
-			deck.removeCard(msmack);
+			deck.removeCard(msmack, guy);
+			deck.removeCard(msmack, guy);
 		}
 	}
 	else if (GearName == "Sabre") {
@@ -968,7 +1047,7 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(slash);
 		}
 		else {
-			deck.removeCard(slash);
+			deck.removeCard(slash, guy);
 		}
 	}
 	else if (GearName == "Whip") {
@@ -981,9 +1060,9 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(lash);
 		}
 		else {
-			deck.removeCard(slice);
-			deck.removeCard(flay);
-			deck.removeCard(lash);
+			deck.removeCard(slice, guy);
+			deck.removeCard(flay, guy);
+			deck.removeCard(lash, guy);
 		}
 	}
 	else if (GearName == "Twin Flail") {
@@ -997,10 +1076,10 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(demolish);
 		}
 		else {
-			deck.removeCard(flay);
-			deck.removeCard(lash);
-			deck.removeCard(lash);
-			deck.removeCard(demolish);
+			deck.removeCard(flay, guy);
+			deck.removeCard(lash, guy);
+			deck.removeCard(lash, guy);
+			deck.removeCard(demolish, guy);
 		}
 	}
 	else if (GearName == "Leather Gauntlets") {
@@ -1010,7 +1089,7 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(pummel);
 		}
 		else {
-			deck.removeCard(pummel);
+			deck.removeCard(pummel, guy);
 		}
 	}
 	else if (GearName == "Steel Gauntlets") {
@@ -1021,8 +1100,8 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(crush);
 		}
 		else {
-			deck.removeCard(pummel);
-			deck.removeCard(crush);
+			deck.removeCard(pummel, guy);
+			deck.removeCard(crush, guy);
 		}
 	}
 	else if (GearName == "Spiked Gauntlets") {
@@ -1033,8 +1112,8 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(bleed);
 		}
 		else {
-			deck.removeCard(pummel);
-			deck.removeCard(bleed);
+			deck.removeCard(pummel, guy);
+			deck.removeCard(bleed, guy);
 		}
 	}
 	else if (GearName == "Arbalest") {
@@ -1046,9 +1125,9 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(impale);
 		}
 		else {
-			deck.removeCard(shoot);
-			deck.removeCard(shoot);
-			deck.removeCard(impale);
+			deck.removeCard(shoot, guy);
+			deck.removeCard(shoot, guy);
+			deck.removeCard(impale, guy);
 		}
 	}
 	else if (GearName == "Dirk") {
@@ -1061,9 +1140,9 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(feint);
 		}
 		else {
-			deck.removeCard(stab);
-			deck.removeCard(slice);
-			deck.removeCard(feint);
+			deck.removeCard(stab, guy);
+			deck.removeCard(slice, guy);
+			deck.removeCard(feint, guy);
 		}
 	}
 	else if (GearName == "Cutlass") {
@@ -1074,8 +1153,8 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(feint);
 		}
 		else {
-			deck.removeCard(slash);
-			deck.removeCard(feint);
+			deck.removeCard(slash, guy);
+			deck.removeCard(feint, guy);
 		}
 	}
 }
@@ -1088,8 +1167,8 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(endure);
 		}
 		else {
-			deck.removeCard(endure);
-			deck.removeCard(endure);
+			deck.removeCard(endure, guy);
+			deck.removeCard(endure, guy);
 		}
 	}
 	else if (GearName == "Mage Armor") {
@@ -1100,9 +1179,9 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(forcefield);
 		}
 		else {
-			deck.removeCard(forcefield);
-			deck.removeCard(forcefield);
-			deck.removeCard(forcefield);
+			deck.removeCard(forcefield, guy);
+			deck.removeCard(forcefield, guy);
+			deck.removeCard(forcefield, guy);
 		}
 	}
 	else if (GearName == "Glitter Robes") {
@@ -1111,12 +1190,10 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 		if (On) {
 			deck.addCard(predict);
 			deck.addCard(predict);
-			deck.addCard(absorb);
 		}
 		else {
-			deck.removeCard(predict);
-			deck.removeCard(predict);
-			deck.removeCard(absorb);
+			deck.removeCard(predict, guy);
+			deck.removeCard(predict, guy);
 		}
 	}
 	else if (GearName == "Riveted Chainmail") {
@@ -1129,9 +1206,9 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(reinforce);
 		}
 		else {
-			deck.removeCard(counter);
-			deck.removeCard(dash);
-			deck.removeCard(reinforce);
+			deck.removeCard(counter, guy);
+			deck.removeCard(dash, guy);
+			deck.removeCard(reinforce, guy);
 		}
 	}
 	else if (GearName == "Reinforced Mail") {
@@ -1139,28 +1216,22 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 		Card obstruct("Obstruct");
 		if (On) {
 			deck.addCard(brace);
-			deck.addCard(obstruct);
 		}
 		else {
-			deck.removeCard(brace);
-			deck.removeCard(obstruct);
+			deck.removeCard(brace, guy);
 		}
 	}
 	else if (GearName == "Full Plate Armor") {
-		Card reinforce("Reinforce");
 		Card obstruct("Obstruct");
-		Card endure("Endure");
 		if (On) {
-			deck.addCard(reinforce);
 			deck.addCard(obstruct);
-			deck.addCard(endure);
-			deck.addCard(endure);
+			deck.addCard(obstruct);
+			deck.addCard(obstruct);
 		}
 		else {
-			deck.removeCard(reinforce);
-			deck.removeCard(obstruct);
-			deck.removeCard(endure);
-			deck.removeCard(endure);
+			deck.removeCard(obstruct, guy);
+			deck.removeCard(obstruct, guy);
+			deck.removeCard(obstruct, guy);
 		}
 	}
 	else if (GearName == "Cape") {
@@ -1169,7 +1240,7 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(dodge);
 		}
 		else {
-			deck.removeCard(dodge);
+			deck.removeCard(dodge, guy);
 		}
 	}
 	else if (GearName == "Feathered Cloak") {
@@ -1182,9 +1253,9 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(disrupt);
 		}
 		else {
-			deck.removeCard(dash);
-			deck.removeCard(flee);
-			deck.removeCard(disrupt);
+			deck.removeCard(dash, guy);
+			deck.removeCard(flee, guy);
+			deck.removeCard(disrupt, guy);
 		}
 	}
 	else if (GearName == "Leather Hauberk") {
@@ -1197,9 +1268,9 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(predict);
 		}
 		else {
-			deck.removeCard(counter);
-			deck.removeCard(brace);
-			deck.removeCard(predict);
+			deck.removeCard(counter, guy);
+			deck.removeCard(brace, guy);
+			deck.removeCard(predict, guy);
 		}
 	}
 	else if (GearName == "Twilight Robes") {
@@ -1213,10 +1284,10 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(flee);
 		}
 		else {
-			deck.removeCard(dash);
-			deck.removeCard(dodge);
-			deck.removeCard(dodge);
-			deck.removeCard(flee);
+			deck.removeCard(dash, guy);
+			deck.removeCard(dodge, guy);
+			deck.removeCard(dodge, guy);
+			deck.removeCard(flee, guy);
 		}
 	}
 	else if (GearName == "Dragon Scales") {
@@ -1230,10 +1301,10 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(predict);
 		}
 		else {
-			deck.removeCard(spikes);
-			deck.removeCard(spikes);
-			deck.removeCard(counter);
-			deck.removeCard(predict);
+			deck.removeCard(spikes, guy);
+			deck.removeCard(spikes, guy);
+			deck.removeCard(counter, guy);
+			deck.removeCard(predict, guy);
 		}
 	}
 	else if (GearName == "Spiked Mail") {
@@ -1246,10 +1317,10 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(counter);
 		}
 		else {
-			deck.removeCard(spikes);
-			deck.removeCard(spikes);
-			deck.removeCard(spikes);
-			deck.removeCard(counter);
+			deck.removeCard(spikes, guy);
+			deck.removeCard(spikes, guy);
+			deck.removeCard(spikes, guy);
+			deck.removeCard(counter, guy);
 		}
 	}
 	else if (GearName == "Buffalo Hide") {
@@ -1259,8 +1330,8 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(counter);
 		}
 		else {
-			deck.removeCard(counter);
-			deck.removeCard(counter);
+			deck.removeCard(counter, guy);
+			deck.removeCard(counter, guy);
 		}
 	}
 	else if (GearName == "Steel Breastplate") {
@@ -1268,13 +1339,11 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 		Card obstruct("Obstruct");
 		if (On) {
 			deck.addCard(endure);
-			deck.addCard(endure);
 			deck.addCard(obstruct);
 		}
 		else {
-			deck.removeCard(endure);
-			deck.removeCard(endure);
-			deck.removeCard(obstruct);
+			deck.removeCard(endure, guy);
+			deck.removeCard(obstruct, guy);
 		}
 	}
 	else if (GearName == "Amulet of Aura") {
@@ -1289,23 +1358,21 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(repulse);
 		}
 		else {
-			deck.removeCard(forcefield);
-			deck.removeCard(absorb);
-			deck.removeCard(predict);
-			deck.removeCard(repulse);
+			deck.removeCard(forcefield, guy);
+			deck.removeCard(absorb, guy);
+			deck.removeCard(predict, guy);
+			deck.removeCard(repulse, guy);
 		}
 	}
 	else if (GearName == "Turtle Shell") {
 		Card block("Block");
-		Card brace("Brace");
 		if (On) {
 			deck.addCard(block);
-			deck.addCard(brace);
+			deck.addCard(block);
 		}
 		else {
-			deck.removeCard(block);
-			deck.removeCard(block);
-			deck.removeCard(brace);
+			deck.removeCard(block, guy);
+			deck.removeCard(block, guy);
 		}
 	}
 	else if (GearName == "Crystal Breastplate") {
@@ -1320,11 +1387,11 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(repulse);
 		}
 		else {
-			deck.removeCard(absorb);
-			deck.removeCard(absorb);
-			deck.removeCard(obstruct);
-			deck.removeCard(obstruct);
-			deck.removeCard(repulse);
+			deck.removeCard(absorb, guy);
+			deck.removeCard(absorb, guy);
+			deck.removeCard(obstruct, guy);
+			deck.removeCard(obstruct, guy);
+			deck.removeCard(repulse, guy);
 		}
 	}
 }
@@ -1332,15 +1399,14 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 void Gear::HeadOnOrOff(bool On, Character &guy, Deck &deck) {
 	if (GearName == "No Headgear") {
 		Card channel("Channel");
-		Card meditate("Meditate");
 		Card blast("Blast");
 		if (On) {
 			deck.addCard(channel);
 			deck.addCard(blast);
 		}
 		else {
-			deck.removeCard(channel);
-			deck.removeCard(blast);
+			deck.removeCard(channel, guy);
+			deck.removeCard(blast, guy);
 		}
 	}
 	else if (GearName == "Brown Hat") {
@@ -1353,33 +1419,31 @@ void Gear::HeadOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Vampire Fangs") {
 		Card leech("Leech");
-		Card regen("Regenerate");
 		Card transmute("Transmute");
 		if (On) {
 			deck.addCard(leech);
-			deck.addCard(regen);
+			deck.addCard(leech);
 			deck.addCard(transmute);
 		}
 		else {
-			deck.removeCard(leech);
-			deck.removeCard(regen);
-			deck.removeCard(transmute);
+			deck.removeCard(leech, guy);
+			deck.removeCard(leech, guy);
+			deck.removeCard(transmute, guy);
 		}
 	}
 	else if (GearName == "Warp Goggles") {
 		Card blink("Blink");
-		Card push("Push");
 		Card hole("Singularity");
 		if (On) {
 			deck.addCard(blink);
-			deck.addCard(push);
+			deck.addCard(blink);
 			deck.addCard(hole);
 		}
 		else {
 
-			deck.removeCard(blink);
-			deck.removeCard(push);
-			deck.removeCard(hole);
+			deck.removeCard(blink, guy);
+			deck.removeCard(blink, guy);
+			deck.removeCard(hole, guy);
 		}
 	}
 	else if (GearName == "Tundra Cap") {
@@ -1391,24 +1455,21 @@ void Gear::HeadOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(shard);
 		}
 		else {
-			deck.removeCard(freeze);
-			deck.removeCard(shard);
-			deck.removeCard(shard);
+			deck.removeCard(freeze, guy);
+			deck.removeCard(shard, guy);
+			deck.removeCard(shard, guy);
 		}
 	}
 	else if (GearName == "Plague Mask") {
 		Card fumes("Fumes");
 		Card incense("Incense");
-		Card smoke("Smoke");
 		if (On) {
 			deck.addCard(fumes);
 			deck.addCard(incense);
-			deck.addCard(smoke);
 		}
 		else {
-			deck.removeCard(fumes);
-			deck.removeCard(incense);
-			deck.removeCard(smoke);
+			deck.removeCard(fumes, guy);
+			deck.removeCard(incense, guy);
 		}
 	}
 	else if (GearName == "Dragonskin Hood") {
@@ -1420,9 +1481,9 @@ void Gear::HeadOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(fuel);
 		}
 		else {
-			deck.removeCard(fireball);
-			deck.removeCard(fireball);
-			deck.removeCard(fuel);
+			deck.removeCard(fireball, guy);
+			deck.removeCard(fireball, guy);
+			deck.removeCard(fuel, guy);
 		}
 	}
 	else if (GearName == "Shifting Veil") {
@@ -1430,14 +1491,14 @@ void Gear::HeadOnOrOff(bool On, Character &guy, Deck &deck) {
 		Card copy("Copy");
 		Card confuse("Confuse");
 		if (On) {
-			deck.addCard(mirror);
 			deck.addCard(copy);
+			deck.addCard(confuse);
 			deck.addCard(confuse);
 		}
 		else {
-			deck.removeCard(mirror);
-			deck.removeCard(copy);
-			deck.removeCard(confuse);
+			deck.removeCard(copy, guy);
+			deck.removeCard(confuse, guy);
+			deck.removeCard(confuse, guy);
 		}
 	}
 	else if (GearName == "Copper Cage") {
@@ -1449,9 +1510,9 @@ void Gear::HeadOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(shock);
 		}
 		else {
-			deck.removeCard(lightning);
-			deck.removeCard(shock);
-			deck.removeCard(shock);
+			deck.removeCard(lightning, guy);
+			deck.removeCard(shock, guy);
+			deck.removeCard(shock, guy);
 		}
 	}
 	else if (GearName == "Bedstone Helmet") {
@@ -1463,9 +1524,9 @@ void Gear::HeadOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(construct);
 		}
 		else {
-			deck.removeCard(destroy);
-			deck.removeCard(construct);
-			deck.removeCard(construct);
+			deck.removeCard(destroy, guy);
+			deck.removeCard(construct, guy);
+			deck.removeCard(construct, guy);
 		}
 	}
 	else if (GearName == "Glass Eye") {
@@ -1476,8 +1537,8 @@ void Gear::HeadOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(diffract);
 		}
 		else {
-			deck.removeCard(beam);
-			deck.removeCard(diffract);
+			deck.removeCard(beam, guy);
+			deck.removeCard(diffract, guy);
 		}
 	}
 	else if (GearName == "Laurel Wreath") {
@@ -1489,9 +1550,9 @@ void Gear::HeadOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(synth);
 		}
 		else {
-			deck.removeCard(sap);
-			deck.removeCard(sap);
-			deck.removeCard(synth);
+			deck.removeCard(sap, guy);
+			deck.removeCard(sap, guy);
+			deck.removeCard(synth, guy);
 		}
 	}
 	else if (GearName == "Diving Gear") {
@@ -1502,8 +1563,34 @@ void Gear::HeadOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(refresh);
 		}
 		else {
-			deck.removeCard(drown);
-			deck.removeCard(refresh);
+			deck.removeCard(drown, guy);
+			deck.removeCard(refresh, guy);
+		}
+	}
+	else if (GearName == "Makeup Set") {
+		Card charm("Charm");
+		Card attract("Attract");
+		if (On) {
+			deck.addCard(charm);
+			deck.addCard(charm);
+			deck.addCard(attract);
+		}
+		else {
+			deck.removeCard(charm, guy);
+			deck.removeCard(charm, guy);
+			deck.removeCard(attract, guy);
+		}
+	}
+	else if (GearName == "Safety Glasses") {
+		Card reag("Reagent");
+		Card react("Reactant");
+		if (On) {
+			deck.addCard(reag);
+			deck.addCard(react);
+		}
+		else {
+			deck.removeCard(reag, guy);
+			deck.removeCard(react, guy);
 		}
 	}
 }
@@ -1548,7 +1635,7 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(ponder);
 		}
 		else {
-			deck.removeCard(ponder);
+			deck.removeCard(ponder, guy);
 		}
 	}
 	else if (GearName == "Tunnel Vision") {
@@ -1731,9 +1818,6 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Oblivious") {
 		if (On) {
-			for (int y = 0; y < 15; y++) {
-				mvprintw(y, 44, "                                  ");
-			}
 			guy.Oblivious = TRUE;
 		}
 		else {
@@ -1750,9 +1834,6 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Numb") {
 		if (On) {
-			for (int y = 0; y < 5; y++) {
-				mvprintw(y, 17, "                          ");
-			}
 			guy.Numb = TRUE;
 		}
 		else {
@@ -1863,12 +1944,53 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 		}
 	}
 	else if (GearName == "Tail") {
-	if (On) {
-		guy.Tail = TRUE;
+		if (On) {
+			guy.Tail = TRUE;
+		}
+		else {
+			guy.Tail = FALSE;
+		}
 	}
-	else {
-		guy.Tail = FALSE;
+	else if (GearName == "Weak Back") {
+		if (On) {
+			guy.Weak_Back = TRUE;
+		}
+		else {
+			guy.Weak_Back = FALSE;
+		}
 	}
+	else if (GearName == "Charred Skin") {
+		if (On) {
+			guy.Charred_Skin = TRUE;
+		}
+		else {
+			guy.Charred_Skin = FALSE;
+		}
+	}
+	else if (GearName == "Purple") {
+		if (On) {
+			guy.Purple = TRUE;
+		}
+		else {
+			guy.Purple = FALSE;
+		}
+	}
+	else if (GearName == "Madness") {
+		Card mad("Mad");
+		if (On) {
+			deck.addCard(mad);
+		}
+		else {
+			deck.removeCard(mad, guy);
+		}
+	}
+	else if (GearName == "Inefficient") {
+		if (On) {
+			guy.Inefficient = 0;
+		}
+		else {
+			guy.Inefficient = -1;
+		}
 	}
 }
 
@@ -1995,10 +2117,20 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Ego") {
 		if (On) {
-			guy.Crown = TRUE;
+			guy.Ego = TRUE;
 		}
 		else {
-			guy.Crown = FALSE;
+			guy.Ego = FALSE;
+		}
+	}
+	else if (GearName == "Genius") {
+		if (On) {
+			guy.ModStat(2, "Intelligence");
+			guy.Genius = TRUE;
+		}
+		else {
+			guy.ModStat(-2, "Intelligence");
+			guy.Genius = FALSE;
 		}
 	}
 	else if (GearName == "The Juice") {
@@ -2055,7 +2187,7 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(laser);
 		}
 		else {
-			deck.removeCard(laser);
+			deck.removeCard(laser, guy);
 		}
 	}
 	else if (GearName == "Carnivore") {
@@ -2098,13 +2230,71 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 			guy.Horns = FALSE;
 		}
 	}
+	else if (GearName == "Green Blood") {
+		if (On) {
+			guy.Green_Blood = TRUE;
+		}
+		else {
+			guy.Green_Blood = FALSE;
+		}
+	}
+	else if (GearName == "Multi-Tongued") {
+		if (On) {
+			guy.Multi_Tongued = TRUE;
+		}
+		else {
+			guy.Multi_Tongued = FALSE;
+		}
+	}
+	else if (GearName == "Triple-Jointed") {
+		if (On) {
+			guy.handSize = 4;
+		}
+		else {
+			guy.handSize = 3;
+		}
+	}
 
 }
 
-
 void Gear::CardOnOrOff(bool On, Character &guy, Deck &deck) {
-	//Special
-	if (GearName == "Revivify") {
+	vector<Card> specials;
+	specials.push_back(Card("Revivify"));
+	specials.push_back(Card("Change Mind"));
+	specials.push_back(Card("Intimidate"));
+	specials.push_back(Card("Cripple"));
+	specials.push_back(Card("Merge"));
+	specials.push_back(Card("Entomb"));
+	specials.push_back(Card("Grow"));
+	specials.push_back(Card("Solidify"));
+	specials.push_back(Card("Learn"));
+	specials.push_back(Card("Boost"));
+	specials.push_back(Card("Vitalise"));
+	specials.push_back(Card("Combo"));
+	specials.push_back(Card("Slam"));
+	specials.push_back(Card("Stall"));
+	specials.push_back(Card("Strike"));
+	specials.push_back(Card("Defend"));
+	specials.push_back(Card("Steroids"));
+	specials.push_back(Card("Distract"));
+	specials.push_back(Card("Prepare"));
+	specials.push_back(Card("Train"));
+	specials.push_back(Card("Jump"));
+
+	int index = 0;
+	for (int i = 0; i < specials.size(); i++) {
+		if (specials.at(i).CardName == GearName) {
+			if (On) {
+				deck.addCard(specials.at(i));
+			}
+			else {
+				deck.removeCard(specials.at(i), guy);
+			}
+			break;
+		}
+	}
+	
+	/*if (GearName == "Revivify") {
 	Card s("Revivify");
 	if (On) {
 		deck.addCard(s);
@@ -2274,7 +2464,7 @@ void Gear::CardOnOrOff(bool On, Character &guy, Deck &deck) {
 	else {
 		deck.removeCard(s);
 	}
-	}
+	}*/
 
 	guy.printStats();
 }
@@ -2317,10 +2507,12 @@ void Gear::printGear(int position, Character &guy) {
 	int gy = 19;
 	if (Type == "Trait Sacrifice" || Type == "Trait Reward")
 		gy = 17;
+	const char* car;
 	switch (position) {
 	case 1:
 		manualBox("Card 1", 0);
-		mvprintInSize(gy, 12-addx, 15, GearName);
+		car = GearName;
+		mvprintInSize(gy, 12-addx, 15, car, FALSE);
 		if (Type == "Trait Sacrifice" || Type == "Trait Reward") {
 			//Succumb trait
 			if (guy.Succumb) {
@@ -2338,13 +2530,16 @@ void Gear::printGear(int position, Character &guy) {
 					}
 				}
 			}
-			else
-				mvprintInSize(19, 4, 15, Description);
+			else {
+				car = Description;
+				mvprintInSize(19, 4, 15, car, FALSE);
+			}
 		}
 		break;
 	case 2:
 		manualBox("Card 2", 0);
-		mvprintInSize(gy, 31-addx, 15, GearName);
+		car = GearName;
+		mvprintInSize(gy, 31-addx, 15, car, FALSE);
 		if (Type == "Trait Sacrifice" || Type == "Trait Reward") {
 			//Succumb trait
 			if (guy.Succumb) {
@@ -2362,16 +2557,19 @@ void Gear::printGear(int position, Character &guy) {
 					}
 				}
 			}
-			else
-				mvprintInSize(19, 24, 15, Description);
+			else {
+				car = Description;
+				mvprintInSize(19, 24, 15, car, FALSE);
+			}
 		}
 		attroff(COLOR_PAIR(10));
 		if (Type != "Trait Sacrifice" && Type != "Trait Reward")
-			mvprintw(22, 22, "(P)ickup   (L)eave");
+			mvprintw(22, 22, "(P)ickup  (I)gnore");
 		break;
 	case 3:
 		manualBox("Card 3", 0);
-		mvprintInSize(gy, 52-addx, 15, GearName);
+		car = GearName;
+		mvprintInSize(gy, 52-addx, 15, car, FALSE);
 		if (Type == "Trait Sacrifice" || Type == "Trait Reward") {
 			//Succumb trait
 			if (guy.Succumb) {
@@ -2389,8 +2587,10 @@ void Gear::printGear(int position, Character &guy) {
 					}
 				}
 			}
-			else
-				mvprintInSize(19, 44, 15, Description);
+			else {
+				car = Description;
+				mvprintInSize(19, 44, 15, car, FALSE);
+			}
 		}
 		break;
 

@@ -11,6 +11,8 @@
 
 using namespace std;
 
+void mvprintInSize(int starty, int startx, int maxx, const char* toBePrinted, bool Fuzzy);
+
 //abstract enemy class
 class Enemy
 {
@@ -57,34 +59,42 @@ public:
 		}
 		int n = (strlen(Name))/2;
 		
-		if (invisible)
+		if (invisible > 0)
 			attron(COLOR_PAIR(2));
 		else
 			standend();
 
 		//Blind trait
-		if (!guy.Blind) {
-			mvprintw(6, 35 - n, "%s", Name);
+		bool fuzzy = FALSE;
+		if (guy.Blind)
+			fuzzy = TRUE;
 
-			mvprintw(7, 35, "/");
+		string stat = string(Name);
+		mvprintInSize(6, 35 - n, 0, stat.c_str(), fuzzy);
 
-			mvprintw(7, 36, "%d)  ", MaxHealth);
+		mvprintInSize(7, 35, 0, "/", fuzzy);
 
-			if (CurrentHealth >= 100)
-				mvprintw(7, 29, "  (%d", CurrentHealth);
-			else if (CurrentHealth >= 10)
-				mvprintw(7, 30, "  (%d", CurrentHealth);
-			else if (CurrentHealth >= 0)
-				mvprintw(7, 31, "  (%d", CurrentHealth);
+		stat = to_string(MaxHealth) + ")  ";
+		mvprintInSize(7, 36, 0, stat.c_str(), fuzzy);
 
-			if (enemyNegate > 0) {
-				mvprintw(8, 29, "Block: %d    ", CurrentBlock);
-				mvprintw(8, 39, "(%d)", enemyNegate);
-			}
-			else {
-				mvprintw(8, 29, "  Block: %d  ", CurrentBlock);
-				mvprintw(8, 41, " ");
-			}
+		stat = "  (" + to_string(CurrentHealth);
+		if (CurrentHealth >= 100)
+			mvprintInSize(7, 29, 0, stat.c_str(), fuzzy);
+		else if (CurrentHealth >= 10)
+			mvprintInSize(7, 30, 0, stat.c_str(), fuzzy);
+		else if (CurrentHealth >= 0)
+			mvprintInSize(7, 31, 0, stat.c_str(), fuzzy);
+
+		if (enemyNegate > 0) {
+			stat = "Block: " + to_string(CurrentBlock) + "    ";
+			mvprintInSize(8, 29, 0, stat.c_str(), fuzzy);
+			stat = "(" + to_string(enemyNegate) + ")";
+			mvprintInSize(8, 39, 0, stat.c_str(), fuzzy);
+		}
+		else {
+			stat = "  Block: " + to_string(CurrentBlock) + "  ";
+			mvprintInSize(8, 29, 0, stat.c_str(), fuzzy);
+			mvprintInSize(8, 41, 0, " ", fuzzy);
 		}
 		
 		standend();
@@ -98,6 +108,17 @@ public:
 			CurrentHealth += health;
 		}
 	}
+
+	//other stuff
+	string negotiate1;
+	string negotiate2;
+	string negotiate2b;
+	string you1;
+	string you2;
+	string you2b;
+	string you3;
+	string price;
+	void initNegotiateLines();
 };
 /*               TEMPLATE
 ------------------------------------------

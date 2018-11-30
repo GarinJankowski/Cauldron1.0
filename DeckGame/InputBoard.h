@@ -22,11 +22,15 @@ public:
 	InputBoard(Deck &deck, Character &guy);
 	~InputBoard();
 
+	int handSize = 3;
 	vector<Card> Draw;
 	vector<Card> Discard;
 	vector<Card> DecisionCards;
 
 	int cardThere = 3;
+
+	vector<Card> screendeck;
+	vector<int> screendeckCounter;
 
 	vector<Gear> inventory;
 	Gear hands;
@@ -34,6 +38,9 @@ public:
 	Gear head;
 
 	Gear pickup;
+
+	string modpickup1;
+	string modpickup2;
 
 	vector<Gear> handsNorm;
 	vector<Gear> handsLate;
@@ -50,6 +57,9 @@ public:
 	vector<Card> specialRare;
 	vector<Card> specialDecision;
 
+	vector<Card> AvailableSpells;
+	vector<Card> spellDecision;
+
 	vector<Gear> AvailableTraitsSacrifice;
 	vector<Gear> AvailableTraitsReward;
 	vector<Gear> Traits;
@@ -57,8 +67,15 @@ public:
 
 	vector<Enemy> bosses;
 
+	Enemy tierone;
+	Enemy tiertwo;
+	Enemy tierthree1;
+	Enemy tierthree2;
+
 	Enemy FinalBoss;
 
+	bool pushthisturn = FALSE;
+	char linkdraw = '0';
 	const char* negative;
 
 	const char *RoomType;
@@ -76,6 +93,15 @@ public:
 	void startBattle(Character &guy, Deck &deck, TextLog &log);
 	void effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 	void restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
+	bool checkEnemyLife(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
+
+	void showDeck(Character &guy, Deck &cardDeck);
+	void deckLoopWhole(Character &guy, Deck &cardDeck);
+	void deckLoopCard(Character &guy, Deck &cardDeck, int modindex);
+	void deckLoopMod(Character &guy, Deck &cardDeck, int modindex);
+	void generateMods();
+
+	void showMods(Character &guy, Deck &cardDeck);
 
 	void showInventory(Character &guy, Deck &deck);
 	void inventoryLoopWhole(Character &guy, Deck &deck);
@@ -95,11 +121,15 @@ public:
 	void fillHand(Character &guy);
 	void shuffleHand();
 
+	int gainBlock(int block, Character &guy);
 	void updateDeck(Deck &deck);
 	void clearBoard();
 	void clearBoardWhole();
 
 	//special other stuff
+	int negotiateStep;
+	bool Negotiate(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
+	bool NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 	bool Third_Eye = FALSE;
 	bool Tail;
 };

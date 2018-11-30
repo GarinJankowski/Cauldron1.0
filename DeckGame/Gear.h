@@ -27,6 +27,7 @@ public:
 	void HandsDescription();
 	void BodyDescription();
 	void HeadDescription();
+	void ModDescription();
 	void TraitSDescription();
 	void TraitRDescription();
 

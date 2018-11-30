@@ -70,7 +70,7 @@ Map::Map()
 					//combat, hands, body, head, cauldron, boss
 					rng = rand() % 22;
 					Room e;
-					if (cauldronCounter < 12 && (rng == 0 || rng == 21)) {
+					if (cauldronCounter < 12 && (rng == 0 || rng == 21 || rng == 22)) {
 						e = Room("Cauldron", x, y);
 						cauldronCounter++;
 					}

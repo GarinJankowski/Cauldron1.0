@@ -1,8 +1,7 @@
 #include "pch.h"
 #include "InputBoard.h"
 
-void mvprintInSize(int starty, int startx, int 
-	x, const char* toBePrinted);
+void mvprintInSize(int starty, int startx, int x, const char* toBePrinted, bool Fuzzy);
 WINDOW *makeWindow(int height, int width, int starty, int startx);
 void rePrint(Character guy, Enemy enemy);
 void escapeLoop(int getch);
@@ -28,8 +27,8 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	//pushes all the cards in the deck to the discard pile
 	if (deck.size() > 0) {
 		for (int i = 0; i < deck.size(); i++) {
-			//Draw.push_back(deck.at(i));
-			Discard.push_back(deck.at(i));
+			if(!deck.at(i).Void)
+				Discard.push_back(deck.at(i));
 		}
 	}
 	//create vector for every equipment type for each piece of equipment
@@ -101,6 +100,9 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	headNorm.push_back(Gear("Bedstone Helmet"));
 	headNorm.push_back(Gear("Glass Eye"));
 	headNorm.push_back(Gear("Laurel Wreath"));
+	headNorm.push_back(Gear("Diving Gear"));
+	headNorm.push_back(Gear("Makeup Set"));
+	headNorm.push_back(Gear("Safety Glasses"));
 
 	headRare.push_back(Gear("Brown Hat"));
 
@@ -128,6 +130,36 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	specialRare.push_back(Card("Train"));
 	specialRare.push_back(Card("Jump"));
 
+	//spells
+	AvailableSpells.push_back(Card("Channel"));
+	AvailableSpells.push_back(Card("Blast"));
+	AvailableSpells.push_back(Card("Leech"));
+	AvailableSpells.push_back(Card("Transmute"));
+	AvailableSpells.push_back(Card("Blink"));
+	AvailableSpells.push_back(Card("Singularity"));
+	AvailableSpells.push_back(Card("Freeze"));
+	AvailableSpells.push_back(Card("Shard"));
+	AvailableSpells.push_back(Card("Fumes"));
+	AvailableSpells.push_back(Card("Incense"));
+	AvailableSpells.push_back(Card("Fireball"));
+	AvailableSpells.push_back(Card("Fuel"));
+	AvailableSpells.push_back(Card("Charm"));
+	AvailableSpells.push_back(Card("Attract"));
+	AvailableSpells.push_back(Card("Copy"));
+	AvailableSpells.push_back(Card("Confuse"));
+	AvailableSpells.push_back(Card("Lightning"));
+	AvailableSpells.push_back(Card("Shock"));
+	AvailableSpells.push_back(Card("Destroy"));
+	AvailableSpells.push_back(Card("Construct"));
+	AvailableSpells.push_back(Card("Beam"));
+	AvailableSpells.push_back(Card("Diffract"));
+	AvailableSpells.push_back(Card("Sap"));
+	AvailableSpells.push_back(Card("Synthesize"));
+	AvailableSpells.push_back(Card("Drown"));
+	AvailableSpells.push_back(Card("Refresh"));
+	AvailableSpells.push_back(Card("Reagent"));
+	AvailableSpells.push_back(Card("Reactant"));
+
 	//traits
 	AvailableTraitsSacrifice.push_back(Gear("Anemia"));
 	AvailableTraitsSacrifice.push_back(Gear("Dumb"));
@@ -139,7 +171,6 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsSacrifice.push_back(Gear("Inversion"));
 	AvailableTraitsSacrifice.push_back(Gear("Jittery"));
 	AvailableTraitsSacrifice.push_back(Gear("Tumors"));
-	//AvailableTraitsSacrifice.push_back(Gear("Devolve")); not yet
 	AvailableTraitsSacrifice.push_back(Gear("Volatile"));
 	AvailableTraitsSacrifice.push_back(Gear("Melting"));
 	AvailableTraitsSacrifice.push_back(Gear("Amnesia"));
@@ -159,6 +190,11 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsSacrifice.push_back(Gear("Overconfidence"));
 	AvailableTraitsSacrifice.push_back(Gear("Hallucinations"));
 	AvailableTraitsSacrifice.push_back(Gear("Tail"));
+	AvailableTraitsSacrifice.push_back(Gear("Weak Back"));
+	AvailableTraitsSacrifice.push_back(Gear("Charred Skin"));
+	AvailableTraitsSacrifice.push_back(Gear("Purple"));
+	AvailableTraitsSacrifice.push_back(Gear("Madness"));
+	AvailableTraitsSacrifice.push_back(Gear("Inefficient"));
 
 	AvailableTraitsReward.push_back(Gear("Mending Flesh"));
 	AvailableTraitsReward.push_back(Gear("Gymnast"));
@@ -168,10 +204,8 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsReward.push_back(Gear("Mind"));
 	AvailableTraitsReward.push_back(Gear("Matter"));
 	AvailableTraitsReward.push_back(Gear("Sharp Claws"));
-	//AvailableTraitsReward.push_back(Gear("Gift")); not yet
 	AvailableTraitsReward.push_back(Gear("Unseen"));
 	AvailableTraitsReward.push_back(Gear("Spiny Skin"));
-	//AvailableTraitsReward.push_back(Gear("Adapt")); not yet
 	AvailableTraitsReward.push_back(Gear("Wings"));
 	AvailableTraitsReward.push_back(Gear("Exoskeleton"));
 	AvailableTraitsReward.push_back(Gear("Unpredictable"));
@@ -187,6 +221,10 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsReward.push_back(Gear("Destiny"));
 	AvailableTraitsReward.push_back(Gear("Scavenger"));
 	AvailableTraitsReward.push_back(Gear("Horns"));
+	AvailableTraitsReward.push_back(Gear("Genius"));
+	AvailableTraitsReward.push_back(Gear("Green Blood"));
+	AvailableTraitsReward.push_back(Gear("Multi-Tongued"));
+	AvailableTraitsReward.push_back(Gear("Triple-Jointed"));
 
 	//vector of bosses
 	bosses.push_back(Enemy("Paladin"));
@@ -196,19 +234,53 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	bosses.push_back(Enemy("Hydra"));
 	bosses.push_back(Enemy("Exorcist"));
 	bosses.push_back(Enemy("Demigod"));
+	bosses.push_back(Enemy("Wolf"));
 
-	//decide final boss
-	int rngboss = rand() % 4;
-	if(rngboss == 0)
+	//decide final boss and themed enemies
+	int rngboss = rand() % 5;
+	if (rngboss == 0) {
 		FinalBoss = Enemy("Dragon");
-	else if (rngboss == 1)
+
+		tierone = Enemy("Hatchling");
+		tiertwo = Enemy("Molten Jelly");
+		tierthree1 = Enemy("Knight");
+		tierthree2 = Enemy("Drake");
+	}
+	else if (rngboss == 1) {
 		FinalBoss = Enemy("King");
-	else if (rngboss == 2)
+
+		tierone = Enemy("Slave");
+		tiertwo = Enemy("Soldier");
+		tierthree1 = Enemy("Guard");
+		tierthree2 = Enemy("Jester");
+	}
+	else if (rngboss == 2) {
 		FinalBoss = Enemy("Machine");
-	else if (rngboss == 3)
+
+		tierone = Enemy("Robot");
+		tiertwo = Enemy("Golem");
+		tierthree1 = Enemy("Merchant");
+		tierthree2 = Enemy("Turret");
+	}
+	else if (rngboss == 3) {
 		FinalBoss = Enemy("Witch");
-	else if (rngboss == 4)
+
+		tierone = Enemy("Eyeball");
+		tiertwo = Enemy("Apprentice");
+		tierthree1 = Enemy("Monster");
+		tierthree2 = Enemy("Brain");
+	}
+	else if (rngboss == 4) {
 		FinalBoss = Enemy("Demon");
+
+		tierone = Enemy("Cultist");
+		tiertwo = Enemy("Imp");
+		tierthree1 = Enemy("Weeping Soul");
+		tierthree2 = Enemy("Hellhound");
+	}
+
+	//Multi-Tongued trait
+	negotiateStep = 0;
 }
 
 
@@ -235,7 +307,516 @@ void InputBoard::clearBoard() {
 }
 void InputBoard::clearBoardWhole() {
 	for (int y = 16; y < 24; y++) {
-		mvprintw(y, 2, "                                                                      ");
+		mvprintw(y, 2, "                                                                           ");
+	}
+}
+
+//shows your deck in place of the text log, allows you too see cards and choose modifiers
+void InputBoard::showDeck(Character &guy, Deck &cardDeck) {
+	standend();
+	for (int y = 0; y < 15; y++) {
+		mvprintw(y, 44, "                                  ");
+	}
+
+	vector<Card> tempdeck = cardDeck.cardDeck;
+	vector<Card> tempscreendeck;
+	vector<int> tempscreendeckcounter;
+
+	//updates the screendeck and screendeck counter vectors
+		//screendeck holds each card in the deck, but doesn't add duplicates as individual cards
+		//screendeckcounter holds the amount of duplicates for each relative index of screendeck
+	while (tempdeck.size() > 0) {
+		Card cardnow = tempdeck.at(0);
+		int counter = 0;
+		for (int i = 0; i < tempdeck.size(); i++) {
+			if (tempdeck.at(i).CardName == cardnow.CardName && tempdeck.at(i).checkSameMods(cardnow)) {
+				tempdeck.erase(tempdeck.begin() + i);
+				i--;
+				counter++;
+			}
+		}
+		tempscreendeck.push_back(cardnow);
+		tempscreendeckcounter.push_back(counter);
+	}
+
+	screendeck = tempscreendeck;
+	screendeckCounter = tempscreendeckcounter;
+
+	mvprintw(0, 50, "Deck (ESC to exit deck)");
+	mvprintInSize(14, 59, 0, "                  ", FALSE);
+
+	int x = 45;
+	int y = 2;
+	for (int i = 0; i < screendeck.size(); i++) {
+		Card cardnow = screendeck.at(i);
+		int counternow = screendeckCounter.at(i);
+
+		char ccc;
+		switch (i) {
+		case 0:
+			ccc = 'a';
+			break;
+		case 1:
+			ccc = 'b';
+			break;
+		case 2:
+			ccc = 'c';
+			break;
+		case 3:
+			ccc = 'd';
+			break;
+		case 4:
+			ccc = 'e';
+			break;
+		case 5:
+			ccc = 'f';
+			break;
+		case 6:
+			ccc = 'g';
+			break;
+		case 7:
+			ccc = 'h';
+			break;
+		case 8:
+			ccc = 'i';
+			break;
+		case 9:
+			ccc = 'j';
+			break;
+		case 10:
+			ccc = 'k';
+			break;
+		case 11:
+			ccc = 'l';
+			break;
+		case 12:
+			ccc = 'm';
+			break;
+		case 13:
+			ccc = 'n';
+			break;
+		case 14:
+			ccc = 'o';
+			break;
+		case 15:
+			ccc = 'p';
+			break;
+		case 16:
+			ccc = 'q';
+			break;
+		case 17:
+			ccc = 'r';
+			break;
+		case 18:
+			ccc = 's';
+			break;
+		case 19:
+			ccc = 't';
+			break;
+		case 20:
+			ccc = 'u';
+			break;
+		case 21:
+			ccc = 'v';
+			break;
+		}
+
+		string option(1, ccc);
+		option += ") ";
+		mvprintInSize(y, x, 0, option.c_str(), FALSE);
+
+		if (cardnow.CardType == "Attack") {
+			attron(COLOR_PAIR(1));
+		}
+		else if (cardnow.CardType == "Defend") {
+			attron(COLOR_PAIR(2));
+		}
+		else if (cardnow.CardType == "Spell") {
+			attron(COLOR_PAIR(3));
+		}
+		else if (cardnow.CardType == "Special") {
+			standend();
+		}
+		else if (cardnow.CardType == "Negative") {
+			attron(COLOR_PAIR(5));
+		}
+
+		//creates a string of the duplicate count (if any), the card name, and the modifiers (if any) and prints it
+		string whole = "";
+		
+
+		if (counternow == 1) {
+			whole = string(cardnow.CardName);
+		}
+		else {
+			whole = to_string(counternow) + "x ";
+			whole += string(cardnow.CardName);
+		}
+		whole += " " + cardnow.modchars();
+		mvprintInSize(y, x+3, 0, whole.c_str(), FALSE);
+
+		standend();
+
+		y++;
+		if (y > 13) {
+			if (x == 61)
+				return;
+			else {
+				x += 16;
+				y = 2;
+			}
+		}
+	}
+	standend();
+	deckLoopWhole(guy, cardDeck);
+}
+
+//gets decision to choose cards to look at individually
+void InputBoard::deckLoopWhole(Character &guy, Deck &cardDeck) {
+	char c = getch();
+	//esc
+	if (c == 27) {
+		return;
+	}
+	int desc_x = 50;
+	int desc_maxx = 20;
+	int x = 59;
+
+	bool chosen = FALSE;
+
+	for (int i = 0; i < screendeck.size(); i++) {
+		char ccc;
+		//decides the char based off of the index
+		switch (i) {
+		case 0:
+			ccc = 'a';
+			break;
+		case 1:
+			ccc = 'b';
+			break;
+		case 2:
+			ccc = 'c';
+			break;
+		case 3:
+			ccc = 'd';
+			break;
+		case 4:
+			ccc = 'e';
+			break;
+		case 5:
+			ccc = 'f';
+			break;
+		case 6:
+			ccc = 'g';
+			break;
+		case 7:
+			ccc = 'h';
+			break;
+		case 8:
+			ccc = 'i';
+			break;
+		case 9:
+			ccc = 'j';
+			break;
+		case 10:
+			ccc = 'k';
+			break;
+		case 11:
+			ccc = 'l';
+			break;
+		case 12:
+			ccc = 'm';
+			break;
+		case 13:
+			ccc = 'n';
+			break;
+		case 14:
+			ccc = 'o';
+			break;
+		case 15:
+			ccc = 'p';
+			break;
+		case 16:
+			ccc = 'q';
+			break;
+		case 17:
+			ccc = 'r';
+			break;
+		case 18:
+			ccc = 's';
+			break;
+		case 19:
+			ccc = 't';
+			break;
+		case 20:
+			ccc = 'u';
+			break;
+		case 21:
+			ccc = 'v';
+			break;
+		}
+		if (c == ccc) {
+			chosen = TRUE;
+			for (int y = 1; y < 15; y++) {
+				mvprintw(y, 44, "                                  ");
+			}
+			/*if (kard.CardType == "Attack") {
+				attron(COLOR_PAIR(1));
+			}
+			else if (kard.CardType == "Defend") {
+				attron(COLOR_PAIR(2));
+			}
+			else if (kard.CardType == "Spell") {
+				attron(COLOR_PAIR(3));
+			}
+			else if (kard.CardType == "Special") {
+				standend();
+			}
+			else if (kard.CardType == "Negative") {
+				attron(COLOR_PAIR(5));
+			}
+			int ax = int(strlen(kard.CardName) / 2);
+			const char *desc = kard.Description;
+			mvprintInSize(2, x - ax, 0, kard.CardName, FALSE);
+			mvprintInSize(4, desc_x, desc_maxx, desc, FALSE);
+
+			string mods = kard.modstrings();
+			int modx = 59;
+			modx -= (mods.size() / 4) - 1;
+			mvprintInSize(3, modx, 0, mods.c_str(), FALSE);
+
+			standend();
+			mvprintInSize(14, 59, 0, "(M)odify this card", FALSE);*/
+
+			for (int k = 0; k < cardDeck.size(); k++) {
+				if (cardDeck.at(k).CardName == screendeck.at(i).CardName && cardDeck.at(k).checkSameMods(screendeck.at(i))) {
+					deckLoopCard(guy, cardDeck, k);
+					break;
+				}
+			}
+
+			break;
+		}
+	}
+	if (!chosen) {
+		deckLoopWhole(guy, cardDeck);
+	}
+}
+//checks if you want to apply modifiers
+void InputBoard::deckLoopCard(Character &guy, Deck &cardDeck, int modindex) {
+	for (int y = 1; y < 15; y++) {
+		mvprintw(y, 44, "                                  ");
+	}
+
+	int desc_x = 50;
+	int desc_maxx = 20;
+	int x = 59;
+	
+	if (cardDeck.at(modindex).CardType == "Attack") {
+		attron(COLOR_PAIR(1));
+	}
+	else if (cardDeck.at(modindex).CardType == "Defend") {
+		attron(COLOR_PAIR(2));
+	}
+	else if (cardDeck.at(modindex).CardType == "Spell") {
+		attron(COLOR_PAIR(3));
+	}
+	else if (cardDeck.at(modindex).CardType == "Special") {
+		standend();
+	}
+	else if (cardDeck.at(modindex).CardType == "Negative") {
+		attron(COLOR_PAIR(5));
+	}
+	int ax = int(strlen(cardDeck.at(modindex).CardName) / 2);
+	const char *desc = cardDeck.at(modindex).Description;
+	mvprintInSize(2, x - ax, 0, cardDeck.at(modindex).CardName, FALSE);
+	mvprintInSize(4, desc_x, desc_maxx, desc, FALSE);
+
+	string mods = cardDeck.at(modindex).modstrings();
+	int modx = 59;
+	modx -= (mods.size() / 4) - 1;
+	mvprintInSize(3, modx, 0, mods.c_str(), FALSE);
+
+	standend();
+	mvprintInSize(13, 56, 0, "(M)odify this card", FALSE);
+	mvprintInSize(14, 56, 0, "(R)emove all modifiers", FALSE);
+
+	char m = getch();
+	if (m == 27) {
+		showDeck(guy, cardDeck);
+	}
+	else if (m == 'm') {
+		deckLoopMod(guy, cardDeck, modindex);
+	}
+	else if (m == 'r') {
+		cardDeck.cardDeck.at(modindex).removeMods(guy);
+		showDeck(guy, cardDeck);
+	}
+	else {
+		deckLoopCard(guy, cardDeck, modindex);
+	}
+}
+//shows list of modifiers to apply it
+void InputBoard::deckLoopMod(Character &guy, Deck &cardDeck, int modindex) {
+	for (int y = 1; y < 15; y++) {
+		mvprintw(y, 44, "                                  ");
+	}
+
+	/*bool burn = FALSE;
+	bool stay = FALSE;
+	bool flow = FALSE;
+	bool copy = FALSE;
+	bool push = FALSE;
+	bool voidd = FALSE;
+	bool link = FALSE;*/
+
+
+	mvprintInSize(14, 59, 0, "                  ", FALSE);
+	mvprintw(0, 49, "Modifiers (ESC to exit) ");
+	int modcount = 0;
+	/*if (Burn > 0) {
+		modcount++;
+		burn = TRUE;
+	}
+	if (Stay > 0) {
+		modcount++;
+		stay = TRUE;
+	}
+	if (Flow > 0) {
+		modcount++;
+		flow = TRUE;
+	}
+	if (Copy > 0) {
+		modcount++;
+		copy = TRUE;
+	}
+	if (Push > 0) {
+		modcount++;
+		push = TRUE;
+	}
+	if (Void > 0) {
+		modcount++;
+		voidd = TRUE;
+	}
+	if (Link > 0) {
+		modcount++;
+		link = TRUE;
+	}*/
+
+	int y = 2;
+	for (int i = 0; i < 7; i++) {
+		char ccc = ' ';
+		string modtype = "";
+		switch (i) {
+		case 0:
+			if (guy.Burn > 0) {
+				ccc = 'a';
+			}
+			modtype = "#rBurn#o x" + to_string(guy.Burn);
+			break;
+		case 1:
+			if (guy.Stay > 0) {
+				ccc = 'b';
+			}
+			modtype = "#gStay#o x" + to_string(guy.Stay);
+			break;
+		case 2:
+			if (guy.Flow > 0) {
+				ccc = 'c';
+			}
+			modtype = "#cFlow#o x" + to_string(guy.Flow);
+			break;
+		case 3:
+			if (guy.Copy > 0) {
+				ccc = 'd';
+			}
+			modtype = "#mCopy#o x" + to_string(guy.Copy);
+			break;
+		case 4:
+			if (guy.Push > 0) {
+				ccc = 'e';
+			}
+			modtype = "#yPush#o x" + to_string(guy.Push);
+			break;
+		case 5:
+			if (guy.Void > 0) {
+				ccc = 'f';
+			}
+
+			modtype = "#oVoid#o x" + to_string(guy.Void);
+			break;
+		case 6:
+			if (guy.Link > 0) {
+				ccc = 'g';
+			}
+			modtype = "#bLink#o x" + to_string(guy.Link);
+			break;
+		
+		}
+
+		string c(1, ccc);
+		if (ccc != ' ') {
+			c += ") " + modtype;
+		}
+		else {
+			c += "  " + modtype;
+		}
+		mvprintInSize(y, 45, 0, c.c_str(), FALSE);
+		y++;
+	}
+
+	char mmm = getch();
+
+	if (mmm == 27) {
+		deckLoopCard(guy, cardDeck, modindex);
+	}
+	else {
+	if (mmm == 'a' && guy.Burn > 0) {
+	if (!cardDeck.cardDeck.at(modindex).Burn) {
+		guy.Burn--;
+	}
+	cardDeck.cardDeck.at(modindex).setMod("Burn", true, guy);
+	}
+	else if (mmm == 'b' && guy.Stay > 0) {
+	if (!cardDeck.cardDeck.at(modindex).Stay) {
+		guy.Stay--;
+	}
+	cardDeck.cardDeck.at(modindex).setMod("Stay", true, guy);
+	}
+	else if (mmm == 'c' && guy.Flow > 0) {
+	if (!cardDeck.cardDeck.at(modindex).Flow) {
+		guy.Flow--;
+	}
+	cardDeck.cardDeck.at(modindex).setMod("Flow", true, guy);
+	}
+	else if (mmm == 'd' && guy.Copy > 0) {
+	if (!cardDeck.cardDeck.at(modindex).Copy) {
+		guy.Copy--;
+	}
+	cardDeck.cardDeck.at(modindex).setMod("Copy", true, guy);
+	}
+	else if (mmm == 'e' && guy.Push > 0) {
+	if (!cardDeck.cardDeck.at(modindex).Push) {
+		guy.Push--;
+	}
+	cardDeck.cardDeck.at(modindex).setMod("Push", true, guy);
+	}
+	else if (mmm == 'f' && guy.Void > 0) {
+	if (!cardDeck.cardDeck.at(modindex).Void) {
+		guy.Void--;
+	}
+	cardDeck.cardDeck.at(modindex).setMod("Void", true, guy);
+	}
+	else if (mmm == 'g' && guy.Link > 0) {
+	if (cardDeck.cardDeck.at(modindex).Link == '0') {
+		guy.Link--;
+	}
+	cardDeck.cardDeck.at(modindex).setMod("Link", true, guy);
+	}
+	else {
+	deckLoopMod(guy, cardDeck, modindex);
+	}
+	showDeck(guy, cardDeck);
 	}
 }
 
@@ -301,7 +882,6 @@ void InputBoard::showInventory(Character &guy, Deck &deck) {
 	//calls getch loop for choosing gear
 	inventoryLoopWhole(guy, deck);
 }
-
 //erases gear from inventory, used when equipping gear
 void InputBoard::removeGear(Gear &item) {
 	for (int i = 0; i < inventory.size(); i++) {
@@ -311,7 +891,6 @@ void InputBoard::removeGear(Gear &item) {
 		}
 	}
 }
-
 //getch loop for choosing gear
 void InputBoard::inventoryLoopWhole(Character &guy, Deck &deck) {
 	
@@ -339,7 +918,7 @@ void InputBoard::inventoryLoopWhole(Character &guy, Deck &deck) {
 		const char *desc = cgear.Description;
 		mvprintw(2, x-ax, "%s", cgear.GearName);
 		mvprintw(3, 56, "(%s)", cgear.Type);
-		mvprintInSize(5, desc_x, desc_maxx, desc);
+		mvprintInSize(5, desc_x, desc_maxx, desc, FALSE);
 		if (cgear.Type == "Hands")
 			mvprintw(14, 58, "(W)ield this item");
 		else
@@ -360,7 +939,7 @@ void InputBoard::inventoryLoopWhole(Character &guy, Deck &deck) {
 		int ax = int(strlen(cgear.GearName) / 2);
 		mvprintw(2, x-ax, "%s", cgear.GearName);
 		mvprintw(3, 56, "(%s)", cgear.Type);
-		mvprintInSize(5, desc_x, desc_maxx, desc);
+		mvprintInSize(5, desc_x, desc_maxx, desc, FALSE);
 		if (cgear.Type == "Hands")
 			mvprintw(14, 58, "(W)ield this item");
 		else
@@ -379,7 +958,7 @@ void InputBoard::inventoryLoopWhole(Character &guy, Deck &deck) {
 		int ax = int(strlen(cgear.GearName) / 2);
 		mvprintw(2, x-ax, "%s", cgear.GearName);
 		mvprintw(3, 56, "(%s)", cgear.Type);
-		mvprintInSize(5, desc_x, desc_maxx, desc);
+		mvprintInSize(5, desc_x, desc_maxx, desc, FALSE);
 		if (cgear.Type == "Hands")
 			mvprintw(14, 58, "(W)ield this item");
 		else
@@ -398,7 +977,7 @@ void InputBoard::inventoryLoopWhole(Character &guy, Deck &deck) {
 		int ax = int(strlen(cgear.GearName) / 2);
 		mvprintw(2, x-ax, "%s", cgear.GearName);
 		mvprintw(3, 56, "(%s)", cgear.Type);
-		mvprintInSize(5, desc_x, desc_maxx, desc);
+		mvprintInSize(5, desc_x, desc_maxx, desc, FALSE);
 		if (cgear.Type == "Hands")
 			mvprintw(14, 58, "(W)ield this item");
 		else
@@ -417,7 +996,7 @@ void InputBoard::inventoryLoopWhole(Character &guy, Deck &deck) {
 		int ax = int(strlen(cgear.GearName) / 2);
 		mvprintw(2, x-ax, "%s", cgear.GearName);
 		mvprintw(3, 56, "(%s)", cgear.Type);
-		mvprintInSize(5, desc_x, desc_maxx, desc);
+		mvprintInSize(5, desc_x, desc_maxx, desc, FALSE);
 		if (cgear.Type == "Hands")
 			mvprintw(14, 58, "(W)ield this item");
 		else
@@ -436,7 +1015,7 @@ void InputBoard::inventoryLoopWhole(Character &guy, Deck &deck) {
 		int ax = int(strlen(cgear.GearName) / 2);
 		mvprintw(2, x-ax, "%s", cgear.GearName);
 		mvprintw(3, 56, "(%s)", cgear.Type);
-		mvprintInSize(5, desc_x, desc_maxx, desc);
+		mvprintInSize(5, desc_x, desc_maxx, desc, FALSE);
 		if (cgear.Type == "Hands")
 			mvprintw(14, 58, "(W)ield this item");
 		else
@@ -455,7 +1034,7 @@ void InputBoard::inventoryLoopWhole(Character &guy, Deck &deck) {
 	int ax = int(strlen(cgear.GearName) / 2);
 	mvprintw(2, x-ax, "%s", cgear.GearName);
 	mvprintw(3, 56, "(%s)", cgear.Type);
-	mvprintInSize(5, desc_x, desc_maxx, desc);
+	mvprintInSize(5, desc_x, desc_maxx, desc, FALSE);
 	if (cgear.Type == "Hands")
 		mvprintw(14, 58, "(W)ield this item");
 	else
@@ -474,7 +1053,7 @@ void InputBoard::inventoryLoopWhole(Character &guy, Deck &deck) {
 	int ax = int(strlen(cgear.GearName) / 2);
 	mvprintw(2, x-ax, "%s", cgear.GearName);
 	mvprintw(3, 56, "(%s)", cgear.Type);
-	mvprintInSize(5, desc_x, desc_maxx, desc);
+	mvprintInSize(5, desc_x, desc_maxx, desc, FALSE);
 	if (cgear.Type == "Hands")
 		mvprintw(14, 58, "(W)ield this item");
 	else
@@ -493,7 +1072,7 @@ void InputBoard::inventoryLoopWhole(Character &guy, Deck &deck) {
 	int ax = int(strlen(cgear.GearName) / 2);
 	mvprintw(2, x-ax, "%s", cgear.GearName);
 	mvprintw(3, 56, "(%s)", cgear.Type);
-	mvprintInSize(5, desc_x, desc_maxx, desc);
+	mvprintInSize(5, desc_x, desc_maxx, desc, FALSE);
 	if (cgear.Type == "Hands")
 		mvprintw(14, 58, "(W)ield this item");
 	else
@@ -508,7 +1087,6 @@ void InputBoard::inventoryLoopWhole(Character &guy, Deck &deck) {
 		inventoryLoopWhole(guy, deck);
 	}
 }
-
 //getch loop for looking at one piece of gear
 void InputBoard::inventoryLoopItem(Gear &item, Character &guy, Deck &deck) {
 	char w = getch();
@@ -555,6 +1133,7 @@ void InputBoard::inventoryLoopItem(Gear &item, Character &guy, Deck &deck) {
 	}
 }
 
+//shows traits, allows you to select and look at them individually
 void InputBoard::showTraits() {
 	for (int y = 0; y < 15; y++) {
 		mvprintw(y, 44, "                                  ");
@@ -741,7 +1320,7 @@ void InputBoard::traitsLoopWhole() {
 			int ax = int(strlen(ctrait.GearName) / 2);
 			const char *desc = ctrait.Description;
 			mvprintw(2, x - ax, "%s", ctrait.GearName);
-			mvprintInSize(4, desc_x, desc_maxx, desc);
+			mvprintInSize(4, desc_x, desc_maxx, desc, FALSE);
 			standend();
 			int c = 0;
 			escapeLoop(c);
@@ -800,10 +1379,27 @@ void InputBoard::traitsLoopWhole() {
   and printing the cards that can be chosen*/
 void InputBoard::ShuffleAddPrint() {
 	//mvprintw(17, 63, "Next: ");
+	//push modifier
+	if (pushthisturn) {
+		int limit = 0;
+		while (DecisionCards.size() > limit) {
+			if (DecisionCards.at(limit).StayCard) {
+				limit++;
+				DecisionCards.at(limit).StayCard = FALSE;
+			}
+			else {
+				Discard.push_back(DecisionCards.at(limit));
+				DecisionCards.erase(DecisionCards.begin() + limit);
+			}
+		}
+		pushthisturn = FALSE;
+	}
+	
 
+	
 	//shuffle
 		//if there isn't enough cards in the draw pile, add cards from the discard pile into draw pile in a random order
-		if (Draw.size() == 0) {
+		if (Draw.size() < handSize) {
 			while (Discard.size() > 0) {
 				Card tempCard = Discard.front();
 				Discard.erase(Discard.begin());
@@ -814,21 +1410,42 @@ void InputBoard::ShuffleAddPrint() {
 		}
 		
 	//add
-		//draw for a deck with less than 3 cards
-		if (Draw.size() < 3 && DecisionCards.size() < 2) {
+		//link
+		if (linkdraw != '-' && linkdraw != '0') {
+			if (Draw.size() > 0) {
+				for (int i = 0; i < Draw.size(); i++) {
+					if (Draw.at(i).Link == linkdraw && DecisionCards.size() < handSize) {
+						DecisionCards.push_back(Draw.at(i));
+						Draw.erase(Draw.begin() + i);
+					}
+				}
+			}
+			if (Discard.size() > 0) {
+				for (int i = 0; i < Discard.size(); i++) {
+					if (Discard.at(i).Link == linkdraw && DecisionCards.size() < handSize) {
+						DecisionCards.push_back(Discard.at(i));
+						Discard.erase(Discard.begin() + i);
+					}
+				}
+			}
+			linkdraw = '-';
+		}
+		
+		//draw for a deck with less than 3 cards (handSize = 3)
+		if (Draw.size() < handSize && DecisionCards.size() < handSize-1) {
 			cardThere = Draw.size();
 		}
 
-		if (Draw.size() < 3 && Discard.size() == 0) {
+		if (Draw.size() < handSize && Discard.size() == 0) {
 			while (Draw.size() > 0) {
 				Card innout = Draw.back();
 				Draw.pop_back();
 				DecisionCards.push_back(innout);
 			}
 		}
-		//if there aren't 3 cards to choose from, add cards from the draw pile to here until there are three
+		//if there aren't (handSize) cards to choose from, add cards from the draw pile to here until there are three
 		else {
-			while (DecisionCards.size() < 3) {
+			while (DecisionCards.size() < handSize) {
 				Card innout = Draw.back();
 				Draw.pop_back();
 				DecisionCards.push_back(innout);
@@ -849,8 +1466,9 @@ void InputBoard::ShuffleAddPrint() {
 			clearBoard();
 		}*/
 		//else {
-			for (int i = 0; i < (int)DecisionCards.size(); i++) {
-				DecisionCards.at(i).printCard(i + 1);
+			for (int i = 0; i < handSize; i++) {
+				if(DecisionCards.size() > i)
+					DecisionCards.at(i).printCard(i + 1);
 			}
 		//}
 		
@@ -866,7 +1484,13 @@ void InputBoard::ShuffleAddPrint() {
 
 		//Third Eye trait
 		if (Third_Eye) {
-			mvprintw(16, 62, "Next: ");
+			int y = 16;
+			if (handSize == 4)
+				y += 2;
+			for (int i = y; i < y + 3; i++) {
+				mvprintw(y, 63, "               ");
+			}
+			mvprintw(y, 62, "Next: ");
 			if (Draw.size() > 0) {
 				Card nextCardName = Draw.back();
 				if (nextCardName.CardType == "Attack")
@@ -879,7 +1503,7 @@ void InputBoard::ShuffleAddPrint() {
 					standend();
 				else if (nextCardName.CardType == "Negative")
 					attron(COLOR_PAIR(5));
-				mvprintw(17, 63, "%s     ", nextCardName.CardName);
+				mvprintw(y+1, 63, "%s", nextCardName.CardName);
 			}
 			if (Draw.size() > 1) {
 				Card next2 = Draw.at(Draw.size() - 2);
@@ -893,7 +1517,7 @@ void InputBoard::ShuffleAddPrint() {
 					standend();
 				else if (next2.CardType == "Negative")
 					attron(COLOR_PAIR(5));
-				mvprintw(18, 63, "%s     ", next2.CardName);
+				mvprintw(y+2, 63, "%s", next2.CardName);
 			}
 			standend();
 		}
@@ -906,50 +1530,89 @@ void InputBoard::ShuffleAddPrint() {
 void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &log) {
 	//if your hand is filled with possibly unusable cards, you may reshuffle
 	if (!checkUsable(guy, enemy)) {
-		mvprintInSize(22, 62, 11, "Take a turn to (R)eshuffle");
+		mvprintInSize(15, 18, 0, "#rTake a turn to #o(R)#reshuffle#o", FALSE);
 	}
 	else {
-		mvprintw(22, 62, "              ");
-		mvprintw(23, 62, "              ");
+		manualBox("Decision", 0);
 	}
 	//Wings trait
 	if (guy.Wings && RoomType != "Final Boss") {
-		mvprintInSize(19, 62, 11, "4) Leave");
+		int y = 17;
+		if (handSize == 4)
+			y += 2;
+		if (Third_Eye)
+			y += 3;
+		if (guy.Multi_Tongued)
+			y++;
+		mvprintInSize(y, 62, 11, "4) Leave", FALSE);
+	}
+	if (guy.Multi_Tongued) {
+		int y = 17;
+		if (handSize == 4)
+			y += 2;
+		if (Third_Eye)
+			y += 3;
+		mvprintInSize(y, 62, 11, "5) Negotiate", FALSE);
 	}
 
 
 	char choose = getch();
 	//if you press 1-3, play the corresponding card
+		//if you have the Triple-Jointed trait, you can play a fourth card
 		//checks if you don't have enough mana for spells or enough block for Flee
 	//press d to view your deck
-	//the r is for reshuffling, don't know if i want this yet
+	//the r is for reshuffling
 	//else, keep this screen
-	if (choose == '1') {
-		if (!checkUsable(0, guy, enemy)) {
+	if (choose == '1' || choose == '2' || choose == '3' || (choose == '4' && handSize == 4)) {
+		int in = choose - '0';
+		in--;
+		if (!checkUsable(in, guy, enemy)) {
 			getchCard(guy, enemy, deck, log);
 		}
 		else {
-			DecisionCards.at(0).cardFunction(guy, enemy, log);
-			Discard.push_back(DecisionCards.at(0));
-			DecisionCards.erase(DecisionCards.begin());
-		}
-	}
-	else if (choose == '2') {
-		if (!checkUsable(1, guy, enemy))
-			getchCard(guy, enemy, deck, log);
-		else {
-			DecisionCards.at(1).cardFunction(guy, enemy, log);
-			Discard.push_back(DecisionCards.at(1));
-			DecisionCards.erase(DecisionCards.begin() + 1);
-		}
-	}
-	else if (choose == '3') {
-		if (!checkUsable(2, guy, enemy))
-			getchCard(guy, enemy, deck, log);
-		else {
-			DecisionCards.at(2).cardFunction(guy, enemy, log);
-			Discard.push_back(DecisionCards.at(2));
-			DecisionCards.erase(DecisionCards.begin() + 2);
+			//Burn, Stay, Copy, Flow, and Link mods are taken care of here
+			DecisionCards.at(in).cardFunction(guy, enemy, log);
+			//check link
+			if (DecisionCards.at(in).Link != '0') {
+				int lint = DecisionCards.at(in).Link - '0';
+				lint++;
+				if (lint == 10) {
+					linkdraw = '-';
+				}
+				else {
+					linkdraw = char(lint);
+				}
+			}
+			//check burn, stay
+			if (DecisionCards.at(in).Stay)
+				DecisionCards.at(in).StayCard = TRUE;
+			if (DecisionCards.at(in).Push)
+				pushthisturn = TRUE;
+			if (!DecisionCards.at(in).Burn && !DecisionCards.at(in).naturalBurn && !DecisionCards.at(in).Stay)
+				Discard.push_back(DecisionCards.at(in));
+			//check copy
+			if(DecisionCards.at(in).Copy && (Draw.size() + Discard.size()) < 75)
+				Discard.push_back(DecisionCards.at(in));
+			//check stay
+			if (!DecisionCards.at(in).Stay || DecisionCards.at(in).Burn || DecisionCards.at(in).naturalBurn) {
+				DecisionCards.erase(DecisionCards.begin() + in);
+			}
+			//check flow
+			int limit2 = 0;
+			while (DecisionCards.size() > limit2) {
+				if (DecisionCards.at(limit2).Stay) {
+					if (!DecisionCards.at(limit2).Push)
+						DecisionCards.at(limit2).StayCard = FALSE;
+					limit2++;
+				}
+				else if (DecisionCards.at(limit2).Flow) {
+					Discard.push_back(DecisionCards.at(limit2));
+					DecisionCards.erase(DecisionCards.begin() + limit2);
+				}
+				else {
+					limit2++;
+				}
+			}
 		}
 	}
 	else if (choose == 'r' && !checkUsable(guy, enemy)) {
@@ -988,8 +1651,11 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 		getchCard(guy, enemy, deck, log);
 	}
 	//Wings trait
-	else if (choose == '4' && guy.Wings && RoomType != "Final Boss") {
+	else if (choose == '6' && guy.Wings && RoomType != "Final Boss") {
 		guy.WingsUsed = TRUE;
+	}
+	else if (choose == '5' && guy.Multi_Tongued) {
+		guy.negotiate = TRUE;
 	}
 	else {
 		getchCard(guy, enemy, deck, log);
@@ -998,14 +1664,14 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 
 //checks if you cant use any of the cards in your hand
 bool InputBoard::checkUsable(Character &guy, Enemy &enemy) {
-	int cardsUsable = 3;
+	int cardsUsable = handSize;
 	bool usable = TRUE;
 	if (DecisionCards.size() == 0)
 		return FALSE;
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < handSize; i++) {
 		if (DecisionCards.size() <= i)
 			cardsUsable--;
-		else if ((DecisionCards.at(i).ManaCost > guy.CurrentMana) ||
+		else if ((DecisionCards.at(i).ManaCost > 0 && DecisionCards.at(i).ManaCost > guy.CurrentMana) ||
 			(DecisionCards.at(i).CardName == "Flee" && guy.CurrentBlock <= 0) ||
 			(DecisionCards.at(i).CardName == "Impale" && enemy.CurrentHealth + enemy.CurrentBlock > guy.Strength * 3) ||
 			(DecisionCards.at(i).CardName == "Shoot" && guy.CurrentHealth + guy.CurrentBlock <= 7))
@@ -1020,7 +1686,7 @@ bool InputBoard::checkUsable(int i, Character &guy, Enemy &enemy) {
 	bool usable = TRUE;
 	if (DecisionCards.size() <= i)
 		return FALSE;
-	else if ((DecisionCards.at(i).ManaCost > guy.CurrentMana) ||
+	else if ((DecisionCards.at(i).ManaCost > 0 && DecisionCards.at(i).ManaCost > guy.CurrentMana) ||
 		(DecisionCards.at(i).CardName == "Flee" && guy.CurrentBlock <= 0) ||
 		(DecisionCards.at(i).CardName == "Impale" && enemy.CurrentHealth + enemy.CurrentBlock > guy.Strength * 3))
 		usable = FALSE;
@@ -1040,29 +1706,38 @@ Enemy InputBoard::generateEnemy(Character &guy) {
 			else if (rng > 0 && rng <= 2) {
 				enemy = Enemy("Crab");
 			}
+			else if (rng == 3) {
+				enemy = tierone;
+			}
 			else {
 				enemy = Enemy("Rat");
 			}
 		}
 		else if (guy.getTier() == 'B') {
-			int rng = rand() % 3;
+			int rng = rand() % 4;
 			if (rng == 0)
 				enemy = Enemy("Kobold");
 			else if (rng == 1) {
 				enemy = Enemy("Zombie");
+			}
+			else if (rng == 2) {
+				enemy = tierone;
 			}
 			else {
 				enemy = Enemy("Hound");
 			}
 		}
 		else if (guy.getTier() == 'C' || guy.getTier() == 'D') {
-			int rng = rand() % 4;
+			int rng = rand() % 5;
 			if (rng == 0)
 				enemy = Enemy("Giant Rat");
 			else if (rng == 1)
 				enemy = Enemy("Wild Buffalo");
 			else if (rng == 2)
 				enemy = Enemy("Harpy");
+			else if (rng == 3) {
+				enemy = tiertwo;
+			}
 			else
 				enemy = Enemy("Brown Recluse");
 
@@ -1074,16 +1749,28 @@ Enemy InputBoard::generateEnemy(Character &guy) {
 			else if (rng == 1) {
 				enemy = Enemy("Elemental");
 			}
+			else if (rng == 2) {
+				enemy = tierthree1;
+			}
+			else if (rng == 3) {
+				enemy = tierthree2;
+			}
 			else {
 				enemy = Enemy("Adventurer");
 			}
 		}
 		else if (guy.getTier() == 'F') {
-			int rng = rand() % 6;
-			if (rng == 0)
+			int rng = rand() % 13;
+			if (rng < 2)
 				enemy = Enemy("Troll");
-			else if (rng >= 1 && rng < 3) {
+			else if (rng >= 2 && rng < 4) {
 				enemy = Enemy("Elemental");
+			}
+			else if (rng >= 4 && rng < 7) {
+				enemy = tierthree1;
+			}
+			else if (rng >= 7 && rng < 10) {
+				enemy = tierthree2;
 			}
 			else {
 				enemy = Enemy("Adventurer");
@@ -1097,6 +1784,9 @@ Enemy InputBoard::generateEnemy(Character &guy) {
 
 //generates a battle based on what tile the character is on
 void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
+	handSize = guy.handSize;
+	Third_Eye = guy.Third_Eye;
+
 	updateDeck(deck);
 		Enemy enemy;
 		manualBox("Display", 0);
@@ -1199,22 +1889,31 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 			enemy.updateEnemy(guy);
 
 			//Numb trait
-			if (!guy.Numb) {
-				mvprintw(10, 34, "You");
-				mvprintw(11, 31, "HP: %d/%d  ", guy.CurrentHealth, guy.MaxHealth);
-				mvprintw(12, 31, "MP: %d/%d  ", guy.CurrentMana, guy.MaxMana);
+			bool fuzzy = FALSE;
+			if (guy.Numb)
+				fuzzy = TRUE;
 
-				//if you have any Negation, print the character block a bit more to the left to make room
-				//print character block
-				if (guy.Negate <= 0) {
-					mvprintw(13, 29, "  Block: %d  ", guy.CurrentBlock);
-					mvprintw(13, 41, " ");
-				}
-				else {
-					mvprintw(13, 29, "Block: %d    ", guy.CurrentBlock);
-					mvprintw(13, 39, "(%d)", guy.Negate);
-				}
+			mvprintInSize(10, 34, 0, "You", fuzzy);
+
+			string stat = "HP: " + to_string(guy.CurrentHealth) + "/" + to_string(guy.MaxHealth) + "  ";
+			mvprintInSize(11, 31, 0, stat.c_str(), fuzzy);
+			stat = "MP: " + to_string(guy.CurrentMana) + "/" + to_string(guy.MaxMana) + "  ";
+			mvprintInSize(12, 31, 0, stat.c_str(), fuzzy);
+
+			//if you have any Negation, print the character block a bit more to the left to make room
+			//print character block
+			if (guy.Negate <= 0) {
+				stat = "  Block: " + to_string(guy.CurrentBlock) + "  ";
+				mvprintInSize(13, 29, 0, stat.c_str(), fuzzy);
+				mvprintInSize(13, 41, 0, " ", fuzzy);
 			}
+			else {
+				stat = "Block: " + to_string(guy.CurrentBlock) + "    ";
+				mvprintInSize(13, 29, 0, stat.c_str(), fuzzy);
+				stat = "(" + to_string(guy.Negate) + ")";
+				mvprintInSize(13, 39, 0, stat.c_str(), fuzzy);
+			}
+			
 
 			//check dead
 			if (guy.CurrentHealth <= 0) {
@@ -1232,57 +1931,13 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 				break;
 			}
 			//when the enemy dies, push the line about the enemy dying and restore your stats
-			if (!enemy.Alive) {
-				//if its the final boss, set win varibale to TRUE. The win function will be played out in the main game loop
-				if (RoomType == "Final Boss") {
-					string line = "-The " + string(enemy.Name)
-						+ " dies. ";
-					log.PushPop(line);
-					log.printLog();
+			if (!checkEnemyLife(guy, enemy, deck, log))
+				break;
 
-					//revert in-battle effects
-					restoreAfterBattle(guy, enemy, deck, log);
-
-					for (int i = 0; i < 8; i++)
-						mvprintw(6 + i, 29, "             ");
-					clearBoard();
-
-					guy.Win = TRUE;
-					break;
-				}
-				//if it is a boss or regular combat, push enemy death line, remove negative cards, restore stats
-				else if (RoomType == "Boss" || RoomType == "Combat") {
-					string line = "-The " + string(enemy.Name)
-						+ " dies. ";
-					log.PushPop(line);
-					log.printLog();
-
-					//revert in-battle effects
-					restoreAfterBattle(guy, enemy, deck, log);
-
-					for (int i = 0; i < 8; i++)
-						mvprintw(6 + i, 29, "             ");
-					clearBoard();
-
-					//if its a boss, set the room to addition (not done yet)
-					if (RoomType == "Boss") {
-						RoomType = "Special";
-						printDecision(guy, log);
-						getchDecision(guy, deck, log);
-					}
-					//if its a regular enemy, set the room to stat
-					else if (RoomType == "Combat") {
-						RoomType = "Stat";
-						printDecision(guy, log);
-						getchDecision(guy, deck, log);
-					}
-
-					//get decision for next choice
-					
-					printDecision(guy, log);
-					getchDecision(guy, deck, log);
-					break;
-				}
+			//Inefficient trait
+			if (guy.Inefficient == 0) {
+				guy.extraTurns++;
+				guy.Inefficient = 1;
 			}
 
 			//checks for extra turns
@@ -1314,6 +1969,72 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 				printDecision(guy, log);
 				getchDecision(guy, deck, log);
 				break;
+			}
+			//Multi Tongued trait
+			if (guy.Multi_Tongued && guy.negotiate) {
+				guy.negotiate = FALSE;
+
+				log.PushPop("");
+				Negotiate(guy, enemy, deck, log);
+				if (negotiateStep != -2) {
+					negotiateStep = 0;
+
+					string line = " You leave.";
+					log.PushPop(line);
+					log.printLog();
+
+					for (int i = 0; i < 8; i++)
+						mvprintw(6 + i, 29, "             ");
+					clearBoard();
+
+					//if its the final boss, set win varibale to TRUE. The win function will be played out in the main game loop
+					if (RoomType == "Final Boss") {
+						for (int i = 0; i < 8; i++)
+							mvprintw(6 + i, 29, "             ");
+						clearBoard();
+
+						guy.Win = TRUE;
+					}
+					//if it is a boss or regular combat, push enemy death line, remove negative cards, restore stats
+					else if (RoomType == "Boss" || RoomType == "Combat") {
+						//revert in-battle effects
+						restoreAfterBattle(guy, enemy, deck, log);
+
+						for (int i = 0; i < 8; i++)
+							mvprintw(6 + i, 29, "             ");
+						clearBoard();
+
+						//if its a boss, set the room to addition (not done yet)
+						if (RoomType == "Boss") {
+							//Overconfidence trait
+							if (guy.Overconfidence)
+								RoomType = "Stat";
+							else
+								RoomType = "Special";
+							printDecision(guy, log);
+							getchDecision(guy, deck, log);
+						}
+						//if its a regular enemy, set the room to stat
+						else if (RoomType == "Combat") {
+							//Overconfidence trait
+							if (guy.Overconfidence)
+								RoomType = "Special";
+							else
+								RoomType = "Stat";
+							printDecision(guy, log);
+							getchDecision(guy, deck, log);
+						}
+
+						//get decision for next choice
+						printDecision(guy, log);
+						getchDecision(guy, deck, log);
+					}
+					break;
+				}
+				else {
+					negotiateStep = 0;
+					ShuffleAddPrint();
+				}
 			}
 
 			//checks for extra turns
@@ -1361,72 +2082,25 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 				break;
 			}
 			//check again if enemy is dead
-			if (!enemy.Alive) {
-				//if its the final boss, set win varibale to TRUE. The win function will be played out in the main game loop
-				if (RoomType == "Final Boss") {
-					string line = "-The " + string(enemy.Name)
-						+ " dies. ";
-					log.PushPop(line);
-					log.printLog();
-
-					guy.CurrentHealth = guy.MaxHealth;
-					guy.CurrentMana = guy.MaxMana;
-					guy.CurrentBlock = 0;
-					guy.printStats();
-
-					for (int i = 0; i < 8; i++)
-						mvprintw(6 + i, 29, "             ");
-					clearBoard();
-
-					guy.Win = TRUE;
-					break;
-				}
-				//if it is a boss or regular combat, push enemy death line, remove negative cards, restore stats
-				else if (RoomType == "Boss" || RoomType == "Combat") {
-					string line = "-The " + string(enemy.Name)
-						+ " dies. ";
-					log.PushPop(line);
-					log.printLog();
-
-					//revert in-battle effects
-					restoreAfterBattle(guy, enemy, deck, log);
-
-					for (int i = 0; i < 8; i++)
-						mvprintw(6 + i, 29, "             ");
-					clearBoard();
-
-					//if its a boss, set the room to addition (not done yet)
-					if (RoomType == "Boss") {
-						//Overconfidence trait
-						if (guy.Overconfidence)
-							RoomType = "Stat";
-						else
-							RoomType = "Special";
-						printDecision(guy, log);
-						getchDecision(guy, deck, log);
-					}
-					//if its a regular enemy, set the room to stat
-					else if (RoomType == "Combat") {
-						//Overconfidence trait
-						if (guy.Overconfidence)
-							RoomType = "Special";
-						else
-							RoomType = "Stat";
-						printDecision(guy, log);
-						getchDecision(guy, deck, log);
-					}
-
-					//get decision for next choice
-
-					printDecision(guy, log);
-					getchDecision(guy, deck, log);
-					break;
-				}
-			}
+			if (!checkEnemyLife(guy, enemy, deck, log))
+				break;
 
 			//reprint log
 			log.printLog();
 		}
+}
+
+int InputBoard::gainBlock(int block, Character &guy) {
+	if (block < 0)
+		return 0;
+	else {
+		//Charred Skin trait
+		if (guy.Charred_Skin)
+			guy.TakeDamage(-1 * block);
+		else
+			guy.CurrentBlock += block;
+	}
+	return block;
 }
 
 //call special mechanics on characters if requested
@@ -1454,27 +2128,21 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 		log.PushPop(line);
 		guy.regenerateTurns--;
 	}
-	//smoke
-	if (guy.smoke > 0) {
-		int block = int(guy.Intelligence / 2);
-		guy.CurrentBlock += block;
-
-		string line = "-You gain #c" + to_string(block) + "#o block.";
-		log.PushPop(line);
-		guy.smoke--;
-	}
 	//incense
 	if (guy.incense > 0) {
 		int mana = 3;
 		guy.DrainMana(-1 * mana);
 
-		string line = "#m-You gain " + to_string(mana) + " mana.#o";
+		int block = 5;
+		block = gainBlock(block, guy);
+
+		string line = "-You gain #m" + to_string(mana) + "#o mana and #c" + to_string(block) + "#o block.";
 		log.PushPop(line);
 		guy.incense--;
 	}
 	//refresh
 	if (guy.refresh) {
-		int mana = 1;
+		int mana = 1*guy.refresh;
 		guy.DrainMana(-1*mana);
 
 		string line = "#m-You gain " + to_string(mana) + " mana.#o";
@@ -1498,7 +2166,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	//Exoskeleton
 	if (guy.Exoskeleton) {
 		int block = rtd(1, guy.Skill-1);
-		guy.CurrentBlock += block;
+		block = gainBlock(block, guy);
 		string exo = "-You gain #c" + to_string(block) + "#o block.";
 		//log.PushPop(exo);
 	}
@@ -1512,10 +2180,9 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	//Quick Thinker trait
 	if (guy.Quick_Thinker && guy.CurrentMana <= guy.MaxMana) {
 		if (rand() % 100 < guy.Skill*8) {
-			int mana = 10;
+			int mana = 5;
 			guy.DrainMana(-1*mana);
-
-			string think = "#m-You suddenly gain 10 mana.#o";
+			string think = "#m-You suddenly gain 5 mana.#o";
 			log.PushPop(think);
 		}
 	}
@@ -1645,8 +2312,9 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 			string stick = "#r You lose a turn.#o";
 			log.PushPop(stick);
 		}
-		else
+		else {
 			guy.Sticky_Feet++;
+		}
 	}
 	//Hallucinations trait
 	if (guy.Hallucinations) {
@@ -1672,6 +2340,27 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 			enemylist.push_back(Enemy("Troll"));
 			enemylist.push_back(Enemy("Elemental"));
 
+			enemylist.push_back(Enemy("Hatchling"));
+			enemylist.push_back(Enemy("Molten Jelly"));
+			enemylist.push_back(Enemy("Knight"));
+			enemylist.push_back(Enemy("Drake"));
+			enemylist.push_back(Enemy("Slave"));
+			enemylist.push_back(Enemy("Soldier"));
+			enemylist.push_back(Enemy("Guard"));
+			enemylist.push_back(Enemy("Jester"));
+			enemylist.push_back(Enemy("Eyeball"));
+			enemylist.push_back(Enemy("Apprentice"));
+			enemylist.push_back(Enemy("Monster"));
+			enemylist.push_back(Enemy("Brain"));
+			enemylist.push_back(Enemy("Cultist"));
+			enemylist.push_back(Enemy("Imp"));
+			enemylist.push_back(Enemy("Weeping Soul"));
+			enemylist.push_back(Enemy("Hellhound"));
+			enemylist.push_back(Enemy("Robot"));
+			enemylist.push_back(Enemy("Golem"));
+			enemylist.push_back(Enemy("Merchant"));
+			enemylist.push_back(Enemy("Turret"));
+
 			enemylist.push_back(Enemy("Paladin"));
 			enemylist.push_back(Enemy("Juggernaut"));
 			enemylist.push_back(Enemy("Vampire"));
@@ -1679,6 +2368,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 			enemylist.push_back(Enemy("Demigod"));
 			enemylist.push_back(Enemy("Hunter"));
 			enemylist.push_back(Enemy("Exorcist"));
+			enemylist.push_back(Enemy("Wolf"));
 
 			enemylist.push_back(Enemy("King"));
 			enemylist.push_back(Enemy("Demon"));
@@ -1742,6 +2432,67 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	}
 }
 
+//checks if the enemy is dead, ends the battle if so
+bool InputBoard::checkEnemyLife(Character &guy, Enemy &enemy, Deck &deck, TextLog& log) {
+	bool live = TRUE;
+	if (!enemy.Alive) {
+		live = FALSE;
+		//if its the final boss, set win varibale to TRUE. The win function will be played out in the main game loop
+		if (RoomType == "Final Boss") {
+			string line = "-The " + string(enemy.Name)
+				+ " dies. ";
+			log.PushPop(line);
+			log.printLog();
+
+			for (int i = 0; i < 8; i++)
+				mvprintw(6 + i, 29, "             ");
+			clearBoard();
+
+			guy.Win = TRUE;
+		}
+		//if it is a boss or regular combat, push enemy death line, remove negative cards, restore stats
+		else if (RoomType == "Boss" || RoomType == "Combat") {
+			string line = "-The " + string(enemy.Name)
+				+ " dies. ";
+			log.PushPop(line);
+			log.printLog();
+
+			//revert in-battle effects
+			restoreAfterBattle(guy, enemy, deck, log);
+
+			for (int i = 0; i < 8; i++)
+				mvprintw(6 + i, 29, "             ");
+			clearBoard();
+
+			//if its a boss, set the room to addition (not done yet)
+			if (RoomType == "Boss") {
+				//Overconfidence trait
+				if (guy.Overconfidence)
+					RoomType = "Stat";
+				else
+					RoomType = "Special";
+				printDecision(guy, log);
+				getchDecision(guy, deck, log);
+			}
+			//if its a regular enemy, set the room to stat
+			else if (RoomType == "Combat") {
+				//Overconfidence trait
+				if (guy.Overconfidence)
+					RoomType = "Special";
+				else
+					RoomType = "Stat";
+				printDecision(guy, log);
+				getchDecision(guy, deck, log);
+			}
+
+			//get decision for next choice
+			printDecision(guy, log);
+			getchDecision(guy, deck, log);
+		}
+	}
+	return live;
+}
+
 //restore any in-battle effects
 void InputBoard::restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, TextLog &log) {
 	removeNegatives(deck);
@@ -1761,13 +2512,17 @@ void InputBoard::restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, Te
 	guy.chargeMana = 0;
 	guy.shuffle = FALSE;
 	guy.fillType = " ";
-	guy.drown = FALSE;
-	guy.refresh = FALSE;
+	guy.drown = 0;
+	guy.refresh = 0;
 	if(guy.Volatile != -1)
 		guy.Volatile = 0;
 	if(guy.Jittery != -1)
 		guy.Jittery = 0;
 	guy.SpinyDamage = 0;
+	if(guy.Sticky_Feet != -1)
+		guy.Sticky_Feet = 0;
+	if (guy.Inefficient != -1)
+		guy.Inefficient = 0;
 
 	guy.CurrentHealth = guy.MaxHealth;
 	guy.CurrentMana = guy.MaxMana;
@@ -1789,6 +2544,10 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 	if (guy.Destiny == 1 && RoomType == "Cauldron") {
 		RoomType = "Empty";
 	}
+
+	//Weak Back trait
+	if (guy.Weak_Back && (RoomType == "Gear Hands" || RoomType == "Gear Body" || RoomType == "Gear Head"))
+		RoomType = "Empty";
 
 	//if it is the first room, print choice of movement
 	if (RoomType == "First") {
@@ -1853,6 +2612,9 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 			string car = "#g~You gain 1 Max Health.#o";
 			log.PushPop(car);
 		}
+	}
+	else if (RoomType == "Mod") {
+		
 	}
 	//if the room is empty, get choice of movement
 	else if (RoomType == "Empty") {
@@ -1946,7 +2708,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 			printDecision(guy, log);
 		}
 		else {
-			mvprintInSize(17, 4, 15, "You found some gear: ");
+			mvprintInSize(17, 4, 15, "You found some gear: ", FALSE);
 			generateGear(guy);
 			pickup.printGear(2, guy);
 			/*else if (RoomType == "Gear Body") {
@@ -1968,14 +2730,36 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 			mvprintw(6 + i, 29, "             ");
 		clearBoard();
 
-		mvprintw(8, 33, "CHOOSE A");
-		mvprintw(9, 33, "CARD TO");
-		mvprintw(10, 33, "  ADD");
+		mvprintw(8, 32, "CHOOSE A");
+		mvprintw(9, 32, "CARD TO");
+		mvprintw(10, 32, "  ADD");
 		mvprintw(17, 62, "4) Leave");
 
 		generateSpecial();
 		for (int i = 0; i < 3; i++) {
 			specialDecision.at(i).printCard(i+1);
+		}
+	}
+	else if (RoomType == "Spell") {
+		for (int i = 0; i < 8; i++)
+			mvprintw(6 + i, 29, "             ");
+		clearBoard();
+
+		attron(COLOR_PAIR(3));
+		mvprintw(8, 32, "Choose a");
+		mvprintw(9, 32, "spell to");
+		mvprintw(10, 32, "  add");
+		standend();
+		mvprintw(17, 62, "4) Leave");
+
+		while (spellDecision.size() < 3) {
+			int randspell = rand() % AvailableSpells.size();
+			spellDecision.push_back(AvailableSpells.at(randspell));
+			AvailableSpells.erase(AvailableSpells.begin() + randspell);
+		}
+
+		for (int i = 0; i < 3; i++) {
+			spellDecision.at(i).printCard(i + 1);
 		}
 	}
 	else if (RoomType == "Cauldron") {
@@ -2025,6 +2809,10 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 			TraitsDecision.at(i).printGear(i + 1, guy);
 		}
 	}
+}
+
+void InputBoard::generateMods() {
+	rand
 }
 
 void InputBoard::generateGear(Character &guy) {
@@ -2327,24 +3115,23 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 	if (RoomType != "Combat" && RoomType != "Final Boss" && RoomType != "Boss") {
 		char choose = getch();
 		if (choose == 'd') {
-			deck.deckScreen();
-
-			int c = 0;
-			escapeLoop(c);
-
+			//deck.deckScreen();
+			showDeck(guy, deck);
 			log.printLog();
 			//getchDecision(guy, deck, log);
 		}
 		else if (choose == 'g') {
 			showInventory(guy, deck);
-			//getch();
 			log.printLog();
 		}
 		else if (choose == 't') {
 			showTraits();
-			//getch();
 			log.printLog();
 		}
+		/*else if (choose == 'l') {
+			clearBoard();
+			log.printAllLog(0, 100);
+		}*/
 		if (RoomType == "First") {
 			if (guy.posx == 25) {
 				if (choose == '1') {
@@ -2630,7 +3417,7 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				printDecision(guy, log);
 				getchDecision(guy, deck, log);
 			}
-			else if (choose == 'l') {
+			else if (choose == 'i') {
 				//Scavenger trait
 				if (guy.Scavenger != -1) {
 					if (guy.Scavenger == 1) {
@@ -2655,7 +3442,7 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				printDecision(guy, log);
 				getchDecision(guy, deck, log);
 			}
-			else if (choose != 'p' && choose != 'l'){
+			else if (choose != 'p' && choose != 'i'){
 				getchDecision(guy, deck, log);
 			}
 		}
@@ -2680,7 +3467,7 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					Gear specialPickup(specialDecision.at(2).CardName);
 					specialDecision.erase(specialDecision.begin()+2);
 					specialPickup.CardOnOrOff(TRUE, guy, deck);
-					line = "~You add " + string(specialPickup.GearName) + " to your deck.";
+					line = "#g~You add " + string(specialPickup.GearName) + " to your deck.#o";
 					log.PushPop(line);
 				}
 				else if (choose == '4') {
@@ -2688,6 +3475,44 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				}
 				while (specialDecision.size() > 0) {
 					specialDecision.pop_back();
+				}
+				log.printLog();
+				for (int i = 0; i < 8; i++)
+					mvprintw(6 + i, 29, "             ");
+				mvprintw(17, 62, "         ");
+				guy.printStats();
+				RoomType = "Empty";
+				printDecision(guy, log);
+				//getchDecision(guy, deck, log);
+			}
+			else {
+				getchDecision(guy, deck, log);
+			}
+		}
+		else if (RoomType == "Spell") {
+			if (choose == '1' || choose == '2' || choose == '3' || choose == '4') {
+				string line;
+				if (choose == '1') {
+					deck.addCard(spellDecision.at(0));
+					line = "#m~You add " + string(spellDecision.at(0).CardName) + " to your deck.#o";
+					log.PushPop(line);
+				}
+				else if (choose == '2') {
+					deck.addCard(spellDecision.at(1));
+					line = "#m~You add " + string(spellDecision.at(0).CardName) + " to your deck.#o";
+					log.PushPop(line);
+				}
+				else if (choose == '3') {
+					deck.addCard(spellDecision.at(2));
+					line = "#m~You add " + string(spellDecision.at(0).CardName) + " to your deck.#o";
+					log.PushPop(line);
+				}
+				else if (choose == '4') {
+
+				}
+				while (spellDecision.size() > 0) {
+					AvailableSpells.push_back(spellDecision.back());
+					spellDecision.pop_back();
 				}
 				log.printLog();
 				for (int i = 0; i < 8; i++)
@@ -2790,10 +3615,18 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					guy.printStats();
 					manualBox("Display", 0);
 
-					//Crown trait
-					if (guy.Crown) {
+					//Ego trait
+					if (guy.Ego) {
 						RoomType = "Special";
-						guy.Crown = FALSE;
+						guy.Ego = FALSE;
+						printDecision(guy, log);
+						getchDecision(guy, deck, log);
+					}
+
+					//Genius trait
+					if (guy.Genius) {
+						RoomType = "Spell";
+						guy.Genius = FALSE;
 						printDecision(guy, log);
 						getchDecision(guy, deck, log);
 					}
@@ -2833,33 +3666,40 @@ void InputBoard::addNegative(Character &guy, Deck &deck) {
 	if (guy.negative == "") {
 		return;
 	}
-	else if (guy.negative == "Steam") {
+	else {
 		Card steam("Steam");
-		Draw.push_back(steam);
-	}
-	else if (guy.negative == "Scalding Steam") {
-		Card steam("Scalding Steam");
-		Discard.push_back(steam);
-	}
-	else if (guy.negative == "Webbed") {
+		Card steam2("Scalding Steam");
 		Card webbed("Webbed");
-		Draw.push_back(webbed);
-	}
-	else if (guy.negative == "Tired") {
 		Card tired("Tired");
-		Draw.push_back(tired);
-	}
-	else if (guy.negative == "Drain Str") {
-		Card drain("Drain Str");
-		Draw.push_back(drain);
-	}
-	else if (guy.negative == "Drain Def") {
-		Card drain("Drain Def");
-		Draw.push_back(drain);
-	}
-	else if (guy.negative == "Drain Int") {
-		Card drain("Drain Int");
-		Draw.push_back(drain);
+		Card dstr("Drain Str");
+		Card ddef("Drain Def");
+		Card dint("Drain Int");
+		Card patch("Patch");
+
+		if (guy.negative == "Steam") {
+			Draw.push_back(steam);
+		}
+		else if (guy.negative == "Scalding Steam") {
+			Discard.push_back(steam2);
+		}
+		else if (guy.negative == "Webbed") {
+			Draw.push_back(webbed);
+		}
+		else if (guy.negative == "Tired") {
+			Draw.push_back(tired);
+		}
+		else if (guy.negative == "Drain Str") {
+			Draw.push_back(dstr);
+		}
+		else if (guy.negative == "Drain Def") {
+			Draw.push_back(ddef);
+		}
+		else if (guy.negative == "Drain Int") {
+			Draw.push_back(dint);
+		}
+		else if (guy.negative == "Patch") {
+			Draw.push_back(patch);
+		}
 	}
 	guy.negative = "";
 }
@@ -2868,7 +3708,7 @@ void InputBoard::addNegative(Character &guy, Deck &deck) {
 bool InputBoard::removeNegatives(Deck &deck) {
 	bool removed = FALSE;
 	for (int i = 0; i < deck.size(); i++) {
-		if (deck.at(i).CardType == "Negative") {
+		if (deck.at(i).CardType == "Negative" && deck.at(i).CardName != "Mad") {
 			deck.cardDeck.erase(deck.cardDeck.begin() + i);
 			i--;
 			removed = TRUE;
@@ -2883,6 +3723,10 @@ bool InputBoard::removeNegatives(Deck &deck) {
 
 //any modifiers that were put on the character in battle are reverted
 void InputBoard::restoreStats(Character &guy) {
+	//Purple trait
+	if (guy.Purple)
+		return;
+
 	guy.ModStat(guy.strMod, "Strength");
 	guy.ModStat(guy.defMod, "Defense");
 	guy.ModStat(guy.intMod, "Intelligence");
@@ -2915,6 +3759,7 @@ void InputBoard::AddRemoveTrait(int pm, const char *Name){
 }
 
 //fills hand with a certain type of card based off the player's fillType variable
+//idk how i want this to work yet
 void InputBoard::fillHand(Character &guy) {
 	if (!Tail) {
 		if (guy.fillType != " ") {
@@ -2928,7 +3773,7 @@ void InputBoard::fillHand(Character &guy) {
 			}
 			int counter = 0;
 			for (int i = 0; i < Discard.size(); i++) {
-				if (counter < 3 && Discard.at(i).CardType == guy.fillType) {
+				if (counter < handSize && Discard.at(i).CardType == guy.fillType) {
 					DecisionCards.push_back(Discard.at(i));
 					Discard.erase(Discard.begin() + i);
 					counter++;
@@ -2936,6 +3781,14 @@ void InputBoard::fillHand(Character &guy) {
 				}
 			}
 			ShuffleAddPrint();
+			/*while (DecisionCards.size() < 3) {
+				if (Discard.size() == 0)
+					ShuffleAddPrint();
+				else {
+					DecisionCards.push_back(Discard.front());
+					Discard.erase(Discard.begin());
+				}
+			}*/
 		}
 	}
 	guy.fillType = " ";
@@ -2951,7 +3804,8 @@ void InputBoard::updateDeck(Deck &deck) {
 		DecisionCards.pop_back();
 
 	for (int i = 0; i < deck.size(); i++) {
-		Discard.push_back(deck.at(i));
+		if(!deck.at(i).Void)
+			Discard.push_back(deck.at(i));
 	}
 }
 
@@ -2970,4 +3824,578 @@ void InputBoard::shuffleHand() {
 		}
 		ShuffleAddPrint();
 	}
+}
+
+bool InputBoard::Negotiate(Character &guy, Enemy &enemy, Deck &deck, TextLog &log) {
+	if (negotiateStep < 0) {
+		return FALSE;
+	}
+
+	clearBoardWhole();
+	bool leave = TRUE;
+
+	manualBox("Card 1", 0);
+	manualBox("Card 2", 0);
+	manualBox("Card 3", 0);
+
+	if (negotiateStep == 0) {
+		mvprintInSize(18, 25, 0, "1) \"Hey\"", FALSE);
+		mvprintInSize(19, 25, 0, "2) Nevermind", FALSE);
+	}
+	else if (negotiateStep == 1) {
+		mvprintInSize(18, 25, 10, "1) I don't want to fight", FALSE);
+		mvprintInSize(20, 25, 0, "2) Nevermind", FALSE);
+	}
+	else if (negotiateStep == 2) {
+		mvprintInSize(18, 25, 0, "1) Ok", FALSE);
+		mvprintInSize(19, 25, 0, "2) Nevermind", FALSE);
+	}
+	log.printLog();
+
+	char choose = getch();
+	if (choose == 'd') {
+		deck.deckScreen();
+
+		int c = 0;
+		escapeLoop(c);
+
+		log.printLog();
+	}
+	else if (choose == 't') {
+		showTraits();
+		log.printLog();
+	}
+	else if (choose == '2') {
+		string line = " You: Nevermind";
+		negotiateStep = -2;
+		guy.extraTurns++;
+		log.PushPop(line);
+		return FALSE;
+	}
+	else if (choose == '1') {
+		string line;
+		
+		if (negotiateStep == 0) {
+			line = " You: " + enemy.you1 + " ";
+			log.PushPop(line);
+			line = " " + string(enemy.Name) + ": " + enemy.negotiate1 + " ";
+			log.PushPop(line);
+			negotiateStep++;
+		}
+		else if (negotiateStep == 1) {
+			line = " You: " + enemy.you2 + " ";
+			log.PushPop(line);
+			line = " " + string(enemy.Name) + ": " + enemy.negotiate2 + " ";
+			log.PushPop(line);
+			negotiateStep++;
+		}
+		else if (negotiateStep == 2) {
+			if (!NegotiateGive(guy, enemy, deck, log)) {
+				leave = FALSE;
+				return false;
+			}
+			else
+				return leave;
+		}
+		log.printLog();
+	}
+	else {
+		
+	}
+	if(negotiateStep > -1 && negotiateStep < 3)
+		Negotiate(guy, enemy, deck, log);
+
+	return leave;
+}
+
+bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog &log) {
+	bool given = TRUE;
+	/*
+	1 Gear
+	2 Gear
+	3 Gear
+
+	4 MaxHealth
+	6 MaxHealth
+	8 MaxHealth
+
+	3 MaxMana
+	5 MaxMana
+
+	2 Strength
+	8 Strength
+
+	3 Defense
+	5 Defense
+
+	3 Intelligence
+	7 Intelligence
+
+	1 Skill
+	2 Skill
+	3 Skill
+
+	1 Special
+	5 Special
+
+	Merchant (2 Gear, 1 Skill)
+	Jester
+	*/
+	string price = enemy.price;
+	string line;
+	if (price == "1 Gear") {
+		if (inventory.size() < 1) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			int rngear = rand() % inventory.size();
+			string g1 = inventory.at(rngear).GearName;
+			if (g1 == "No Weapon" || g1 == "No Armor" || g1 == "No Headgear")
+				g1 = g1 + " (sucker)";
+			inventory.erase(inventory.begin() + rngear);
+
+			line = "#g You give the " + string(enemy.Name) + " your #b" + string(g1) + "#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "2 Gear") {
+		if (inventory.size() < 2) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			int rngear = rand() % inventory.size();
+			string g1 = inventory.at(rngear).GearName;
+			if (g1 == "No Weapon" || g1 == "No Armor" || g1 == "No Headgear")
+				g1 = g1 + " (sucker)";
+			inventory.erase(inventory.begin() + rngear);
+
+			rngear = rand() % inventory.size();
+			string g2 = inventory.at(rngear).GearName;
+			if (g2 == "No Weapon" || g2 == "No Armor" || g2 == "No Headgear")
+				g2 = g2 + " (sucker)";
+			inventory.erase(inventory.begin() + rngear);
+
+			line = "#g You give the " + string(enemy.Name) + " your #b" + string(g1) + "#g and #b" + string(g2) + "#g. #o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "3 Gear") {
+		if (inventory.size() < 3) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			int rngear = rand() % inventory.size();
+			string g1 = inventory.at(rngear).GearName;
+			if (g1 == "No Weapon" || g1 == "No Armor" || g1 == "No Headgear")
+				g1 = g1 + " (sucker)";
+			inventory.erase(inventory.begin() + rngear);
+
+			rngear = rand() % inventory.size();
+			string g2 = inventory.at(rngear).GearName;
+			if (g2 == "No Weapon" || g2 == "No Armor" || g2 == "No Headgear")
+				g2 = g2 + " (sucker)";
+			inventory.erase(inventory.begin() + rngear);
+
+			rngear = rand() % inventory.size();
+			string g3 = inventory.at(rngear).GearName;
+			if (g3 == "No Weapon" || g3 == "No Armor" || g3 == "No Headgear")
+				g3 = g3 + " (sucker)";
+			inventory.erase(inventory.begin() + rngear);
+
+			line = "#g You give the " + string(enemy.Name) + " your #b" + string(g1) + "#g, #b" + string(g2) + "#g, and #b" + string(g3) + "#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "3 MaxHealth") {
+		line = " You: " + enemy.you3;
+		log.PushPop(line);
+
+		int maxhp = 3;
+		guy.ModStat(-1*maxhp, "MaxHealth");
+
+		line = "#g You give the " + string(enemy.Name) + " #r" + to_string(maxhp) + " of your Max Health#g.#o";
+		log.PushPop(line);
+	}
+	else if (price == "6 MaxHealth") {
+		line = " You: " + enemy.you3;
+		log.PushPop(line);
+
+		int maxhp = 6;
+		guy.ModStat(-1 * maxhp, "MaxHealth");
+
+		line = "#g You give the " + string(enemy.Name) + " #r" + to_string(maxhp) + " of your Max Health#g.#o";
+		log.PushPop(line);
+	}
+	else if (price == "8 MaxHealth") {
+		line = " You: " + enemy.you3;
+		log.PushPop(line);
+
+		int maxhp = 8;
+		guy.ModStat(-1 * maxhp, "MaxHealth");
+
+		line = "#g You give the " + string(enemy.Name) + " #r" + to_string(maxhp) + " of your Max Health#g.#o";
+		log.PushPop(line);
+	}
+	else if (price == "3 MaxMana") {
+		if (guy.MaxMana < 3) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			int maxmana = 3;
+			guy.ModStat(-1 * maxmana, "MaxMana");
+
+			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(maxmana) + " of your Max Mana#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "5 MaxMana") {
+		if (guy.MaxMana < 5) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			int maxmana = 5;
+			guy.ModStat(-1 * maxmana, "MaxMana");
+
+			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(maxmana) + " of your Max Mana#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "2 Strength") {
+		if (guy.Strength < 2) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			int str = 2;
+			guy.ModStat(-1 * str, "Strength");
+
+			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(str) + " of your Strength#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "8 Strength") {
+		if (guy.Strength < 8) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			int str = 8;
+			guy.ModStat(-1 * str, "Strength");
+
+			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(str) + " of your Strength#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "3 Defense") {
+		if (guy.Defense < 3) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			int def = 3;
+			guy.ModStat(-1 * def, "Defense");
+
+			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(def) + " of your Defense#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "5 Defense") {
+		if (guy.Defense < 5) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			int def = 5;
+			guy.ModStat(-1 * def, "Defense");
+
+			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(def) + " of your Defense#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "3 Intelligence") {
+		if (guy.Intelligence < 3) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			int intt = 3;
+			guy.ModStat(-1 * intt, "Intelligence");
+
+			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(intt) + " of your Intelligence#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "7 Intelligence") {
+		if (guy.Intelligence < 7) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			int intt = 7;
+			guy.ModStat(-1 * intt, "Intelligence");
+
+			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(intt) + " of your Intelligence#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "1 Skill") {
+		if (guy.Skill < 1) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			int skl = 1;
+			guy.ModStat(-1 * skl, "Skill");
+
+			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(skl) + " of your Skill#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "2 Skill") {
+		if (guy.Skill < 2) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			int skl = 2;
+			guy.ModStat(-1 * skl, "Skill");
+
+			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(skl) + " of your Skill#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "3 Skill") {
+		if (guy.Skill < 3) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			int skl = 3;
+			guy.ModStat(-1 * skl, "Skill");
+
+			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(skl) + " of your Skill#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "1 Special") {
+		int sp = 0;
+		for (int i = 0; i < deck.size(); i++) {
+			if (deck.at(i).CardType == "Special")
+				sp++;
+		}
+		if (sp < 1) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			string sp1;
+			for (int i = 0; i < deck.size(); i++) {
+				if (deck.at(i).CardType == "Special") {
+					sp1 = deck.at(i).CardName;
+					deck.removeCard(deck.at(i), guy);
+					break;
+				}
+			}
+			line = "#g You give the " + string(enemy.Name) + " your #o" + string(sp1) + "#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "5 Special") {
+		int sp = 0;
+		for (int i = 0; i < deck.size(); i++) {
+			if (deck.at(i).CardType == "Special")
+				sp++;
+		}
+		if (sp < 5) {
+			log.PushPop(" #rYou don't have enough.#o");
+
+			string bossline;
+			if (enemy.Name == "Dragon") {
+				bossline = " Dragon: That is not enough.";
+			}
+			else if (enemy.Name == "King") {
+				bossline = " King: *flicks wrist*";
+			}
+			else if (enemy.Name == "Witch") {
+				bossline = " Witch: Oho, you think you can trick me?";
+			}
+			else if (enemy.Name == "Demon") {
+				bossline = " Demon: Fool.";
+			}
+			else if (enemy.Name == "Machine") {
+				bossline = " Machine: REQUEST DENIED.";
+			}
+			log.PushPop(bossline);
+
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			string sp1;
+			string sp2;
+			string sp3;
+			string sp4;
+			string sp5;
+			int sptaken = 5;
+			for (int i = 0; i < deck.size(); i++) {
+				if (deck.at(i).CardType == "Special") {
+					switch (sptaken) {
+					case 5:
+						sp1 = deck.at(i).CardName;
+						break;
+					case 4:
+						sp2 = deck.at(i).CardName;
+						break;
+					case 3:
+						sp3 = deck.at(i).CardName;
+						break;
+					case 2:
+						sp4 = deck.at(i).CardName;
+						break;
+					case 1:
+						sp5 = deck.at(i).CardName;
+						break;
+					}
+					deck.removeCard(deck.at(i), guy);
+					sptaken--;
+					i--;
+					if(sptaken <= 0)
+						break;
+				}
+			}
+			line = "#g You give the " + string(enemy.Name) + " your #o"
+				+ string(sp1) + "#g, #o"
+				+ string(sp2) + "#g, #o"
+				+ string(sp3) + "#g, #o"
+				+ string(sp4) + "#g, and #o"
+				+ string(sp5) + "#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "Merchant") {
+		if (inventory.size() < 2 || guy.Skill < 1) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			int skl = 1;
+			guy.ModStat(-1 * skl, "Skill");
+
+			int rngear = rand() % inventory.size();
+			string g1 = inventory.at(rngear).GearName;
+			if (g1 == "No Weapon" || g1 == "No Armor" || g1 == "No Headgear")
+				g1 = g1 + " (sucker)";
+			inventory.erase(inventory.begin() + rngear);
+
+			rngear = rand() % inventory.size();
+			string g2 = inventory.at(rngear).GearName;
+			if (g2 == "No Weapon" || g2 == "No Armor" || g2 == "No Headgear")
+				g2 = g2 + " (sucker)";
+			inventory.erase(inventory.begin() + rngear);
+
+			line = "#g You give the " + string(enemy.Name) + " your #b" + string(g1) + " #g, #b" + string(g2) + "#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "Jester") {
+		line = " You: " + enemy.you3;
+		log.PushPop(line);
+
+		Gear("The Box").SacrificeOnOrOff(TRUE, guy, deck);
+		line = "#g-The Jester #cmesses #mwith #byour #rstats#g.#o";
+		log.PushPop(line);
+	}
+
+	log.printLog();
+	return given;
 }

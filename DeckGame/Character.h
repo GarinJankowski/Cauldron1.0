@@ -31,6 +31,8 @@ public:
 	int CurrentBlock;
 	int Negate;
 
+	int handSize = 3;
+
 	int extraTurns;
 	bool pierce;
 	bool shuffle = FALSE;
@@ -53,8 +55,9 @@ public:
 	int intimidate = 0;
 	int entomb = 0;
 	int pummel = 2;
-	bool drown = FALSE;
-	bool refresh = FALSE;
+	int drown = 0;
+	int refresh = 0;
+	int reagent = 0;
 
 	int strMod;
 	int defMod;
@@ -80,12 +83,18 @@ public:
 	char getTier(int posx, int posy);
 	char getTier();
 
+	//modifier count
+	int Burn = 10;
+	int Stay = 10;
+	int Flow = 10;
+	int Copy = 10;
+	int Push = 10;
+	int Void = 10;
+	int Link = 10;
+
 	//Traits
 	//sacrifice
 		bool Anemia = FALSE;
-		//Dumb bool isn't necessary
-		//Mind Flooded bool isnt necessary
-		//Tunnel Vision bool isnt necessary
 		bool Teleportitis = FALSE;
 		bool Growing_Pains = FALSE;
 		bool Conversion = FALSE;
@@ -112,6 +121,10 @@ public:
 		bool Overconfidence = FALSE;
 		bool Hallucinations = FALSE;
 		bool Tail = FALSE;
+		bool Weak_Back = FALSE;
+		bool Charred_Skin = FALSE;
+		bool Purple = FALSE;
+		int Inefficient = -1;
 	//Reward
 		bool Mending_Flesh = FALSE;
 		bool Gymnast = FALSE;
@@ -129,7 +142,8 @@ public:
 		bool Wings = FALSE;
 		bool WingsUsed = FALSE;
 		bool Exoskeleton = FALSE;
-		bool Crown = FALSE;
+		bool Ego = FALSE;
+		bool Genius = FALSE;
 		bool Quick_Thinker = FALSE;
 		int Foresight = -1;
 		bool Photosynthesis = FALSE;
@@ -140,6 +154,9 @@ public:
 		int Destiny = 0;
 		int Scavenger = -1;
 		bool Horns = FALSE;
+		bool Green_Blood = FALSE;
+		bool Multi_Tongued = FALSE;
+		bool negotiate = FALSE;
 
 	//change stats
 	int TakeDamage(int damageTaken);

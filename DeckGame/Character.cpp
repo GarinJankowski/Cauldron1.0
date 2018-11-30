@@ -2,6 +2,7 @@
 #include "Character.h"
 
 int rtd(int multiplier, int power);
+void mvprintInSize(int starty, int startx, int maxx, const char* toBePrinted, bool Fuzzy);
 
 Character::Character()
 {
@@ -59,16 +60,27 @@ void Character::printDirectory() {
 }
 //print stats
 void Character::printStats() {
-	if (!Numb) {
-		mvprintw(1, 18, "HP: %d/%d  ", CurrentHealth, MaxHealth);
-		mvprintw(1, 31, "MP: %d/%d  ", CurrentMana, MaxMana);
+	bool fuzzy = FALSE;
+	if (Numb)
+		fuzzy = TRUE;
 
-		mvprintw(2, 18, "Str: %d  ", Strength);
-		mvprintw(3, 18, "Def: %d  ", Defense);
-		mvprintw(2, 31, "Int: %d  ", Intelligence);
+	string statline = "HP: " + to_string(CurrentHealth) + "/" + to_string(MaxHealth) + "  ";
+	mvprintInSize(1, 18, 0, statline.c_str(), fuzzy);
 
-		mvprintw(3, 31, "Skl: %d  ", Skill);
-	}
+	statline = "MP: " + to_string(CurrentMana) + "/" + to_string(MaxMana) + "  ";
+	mvprintInSize(1, 31, 0, statline.c_str(), fuzzy);
+
+	statline = "Str: " + to_string(Strength) + "  ";
+	mvprintInSize(2, 18, 0, statline.c_str(), fuzzy);
+
+	statline = "Def: " + to_string(Defense) + "  ";
+	mvprintInSize(3, 18, 0, statline.c_str(), fuzzy);
+
+	statline = "Int: " + to_string(Intelligence) + "  ";
+	mvprintInSize(2, 31, 0, statline.c_str(), fuzzy);
+
+	statline = "Skl: " + to_string(Skill) + "  ";
+	mvprintInSize(3, 31, 0, statline.c_str(), fuzzy);
 }
 
 //get tier of room of character
@@ -341,6 +353,12 @@ int Character::TakeDamage(int damageTaken) {
 	if (damageTaken >= 0 && intimidate > 0) {
 		damageTaken = int(damageTaken / 2);
 	}
+	//Green Blood trait
+	if (Green_Blood && damageTaken > 0) {
+		damageTaken -= int(Skill/2);
+		if (damageTaken < 0)
+			damageTaken = 0;
+	}
 	//pierce
 	if (pierce) {
 		CurrentHealth -= damageTaken;
@@ -396,10 +414,14 @@ int Character::ModStat(int bonus, string stat) {
 	if (stat == "MaxHealth") {
 		MaxHealthBase += bonus;
 		MaxHealth += bonus;
+		if (CurrentHealth > MaxHealth)
+			CurrentHealth = MaxHealth;
 	}
 	else if (stat == "MaxMana") {
 		MaxManaBase += bonus;
 		MaxMana += bonus;
+		if (CurrentMana > MaxMana)
+			CurrentMana = MaxMana;
 	}
 	else if (stat == "Strength")
 		Strength += bonus;

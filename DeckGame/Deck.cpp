@@ -70,10 +70,12 @@ Card Deck::addCard(Card cardToBeAdded) {
 	return cardToBeAdded;
 }
 
-//not implemented yet
-Card Deck::removeCard(Card cardToBeRemoved) {
+//rmeove Card from deck
+Card Deck::removeCard(Card cardToBeRemoved, Character &guy) {
 	for (int i = 0; i < cardDeck.size(); i++) {
 		if (cardDeck.at(i).CardName == cardToBeRemoved.CardName) {
+			//remove mods from card (probably unnecessary)
+			cardDeck.at(i).removeMods(guy);
 			cardDeck.erase(cardDeck.begin() + i);
 			break;
 		}
@@ -87,8 +89,4 @@ int Deck::size() {
 
 Card Deck::at(int i) {
 	return cardDeck.at(i);
-}
-
-//probably not needed
-void Deck::shuffleDeck() {
 }
