@@ -37,7 +37,7 @@ public:
 	bool Copy = FALSE;
 	bool Push = FALSE;
 	bool Void = FALSE;
-	char Link = '0';
+	int Link = 0;
 
 	void setAttack();
 	void setDefend();

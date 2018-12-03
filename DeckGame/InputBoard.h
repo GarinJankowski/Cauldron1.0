@@ -39,6 +39,9 @@ public:
 
 	Gear pickup;
 
+	string pickup1;
+	string pickup2;
+
 	string modpickup1;
 	string modpickup2;
 
@@ -75,7 +78,7 @@ public:
 	Enemy FinalBoss;
 
 	bool pushthisturn = FALSE;
-	char linkdraw = '0';
+	int linkdraw = 0;
 	const char* negative;
 
 	const char *RoomType;
@@ -95,13 +98,15 @@ public:
 	void restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 	bool checkEnemyLife(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 
-	void showDeck(Character &guy, Deck &cardDeck);
+	void showDeck(Character &guy, Deck &cardDeck, bool notbattle);
 	void deckLoopWhole(Character &guy, Deck &cardDeck);
 	void deckLoopCard(Character &guy, Deck &cardDeck, int modindex);
 	void deckLoopMod(Character &guy, Deck &cardDeck, int modindex);
 	void generateMods();
 
-	void showMods(Character &guy, Deck &cardDeck);
+	void showMods(Character &guy, Deck &deck, bool notbattle);
+	void modLoopWhole(Character &guy, Deck &deck, bool notbattle);
+	void modLoopSecond(Character &guy, Deck &deck, bool notbattle);
 
 	void showInventory(Character &guy, Deck &deck);
 	void inventoryLoopWhole(Character &guy, Deck &deck);

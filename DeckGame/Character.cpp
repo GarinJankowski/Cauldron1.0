@@ -35,6 +35,14 @@ Character::Character()
 	mpMod = 0;
 	sklMod = 0;
 
+	Burn = 0;
+	Stay = 0;
+	Flow = 0;
+	Copy = 0;
+	Push = 0;
+	Void = 0;
+	Link = 0;
+
 	posx = 0;
 	posy = 0;
 	posxBefore = 0;
@@ -57,6 +65,7 @@ void Character::printDirectory() {
 	mvprintw(1, 1, "(D)eck");
 	mvprintw(2, 1, "(G)ear");
 	mvprintw(3, 1, "(T)raits");
+	mvprintw(1, 9, "(M)ods");
 }
 //print stats
 void Character::printStats() {
@@ -77,10 +86,12 @@ void Character::printStats() {
 	mvprintInSize(3, 18, 0, statline.c_str(), fuzzy);
 
 	statline = "Int: " + to_string(Intelligence) + "  ";
-	mvprintInSize(2, 31, 0, statline.c_str(), fuzzy);
+	//mvprintInSize(2, 31, 0, statline.c_str(), fuzzy);
+	mvprintInSize(2, 27, 0, statline.c_str(), fuzzy);
 
 	statline = "Skl: " + to_string(Skill) + "  ";
-	mvprintInSize(3, 31, 0, statline.c_str(), fuzzy);
+	//mvprintInSize(3, 31, 0, statline.c_str(), fuzzy);
+	mvprintInSize(3, 27, 0, statline.c_str(), fuzzy);
 }
 
 //get tier of room of character
@@ -394,6 +405,21 @@ int Character::TakeDamage(int damageTaken) {
 	}
 
 	return damageTaken;
+}
+
+//gain block
+int Character::gainBlock(int block) {
+	int b = block;
+	if (b < 0)
+		b = 0;
+	else {
+		//Charred Skin trait
+		if (Charred_Skin)
+			TakeDamage(-1 * b);
+		else
+			CurrentBlock += b;
+	}
+	return b;
 }
 
 //drain/regain mana

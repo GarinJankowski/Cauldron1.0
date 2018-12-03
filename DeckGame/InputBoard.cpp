@@ -27,8 +27,11 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	//pushes all the cards in the deck to the discard pile
 	if (deck.size() > 0) {
 		for (int i = 0; i < deck.size(); i++) {
-			if(!deck.at(i).Void)
+			if (!deck.at(i).Void) {
 				Discard.push_back(deck.at(i));
+				if(deck.at(i).Copy)
+					Discard.push_back(deck.at(i));
+			}
 		}
 	}
 	//create vector for every equipment type for each piece of equipment
@@ -107,6 +110,7 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	headRare.push_back(Gear("Brown Hat"));
 
 	//special cards
+	specialNorm.push_back(Card("Haste"));
 	specialNorm.push_back(Card("Revivify"));
 	specialNorm.push_back(Card("Change Mind"));
 	specialNorm.push_back(Card("Intimidate"));
@@ -123,12 +127,12 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	specialNorm.push_back(Card("Stall"));
 	specialNorm.push_back(Card("Strike"));
 	specialNorm.push_back(Card("Defend"));
+	specialNorm.push_back(Card("Jump"));
+	specialNorm.push_back(Card("Prepare"));
+	specialNorm.push_back(Card("Train"));
 
 	specialRare.push_back(Card("Steroids"));
 	specialRare.push_back(Card("Distract"));
-	specialRare.push_back(Card("Prepare"));
-	specialRare.push_back(Card("Train"));
-	specialRare.push_back(Card("Jump"));
 
 	//spells
 	AvailableSpells.push_back(Card("Channel"));
@@ -195,6 +199,7 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsSacrifice.push_back(Gear("Purple"));
 	AvailableTraitsSacrifice.push_back(Gear("Madness"));
 	AvailableTraitsSacrifice.push_back(Gear("Inefficient"));
+	AvailableTraitsSacrifice.push_back(Gear("Brain Worm"));
 
 	AvailableTraitsReward.push_back(Gear("Mending Flesh"));
 	AvailableTraitsReward.push_back(Gear("Gymnast"));
@@ -225,6 +230,7 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsReward.push_back(Gear("Green Blood"));
 	AvailableTraitsReward.push_back(Gear("Multi-Tongued"));
 	AvailableTraitsReward.push_back(Gear("Triple-Jointed"));
+	AvailableTraitsReward.push_back(Gear("Blacksmith"));
 
 	//vector of bosses
 	bosses.push_back(Enemy("Paladin"));
@@ -307,12 +313,12 @@ void InputBoard::clearBoard() {
 }
 void InputBoard::clearBoardWhole() {
 	for (int y = 16; y < 24; y++) {
-		mvprintw(y, 2, "                                                                           ");
+		mvprintw(y, 1, "                                                                            ");
 	}
 }
 
 //shows your deck in place of the text log, allows you too see cards and choose modifiers
-void InputBoard::showDeck(Character &guy, Deck &cardDeck) {
+void InputBoard::showDeck(Character &guy, Deck &cardDeck, bool notbattle) {
 	standend();
 	for (int y = 0; y < 15; y++) {
 		mvprintw(y, 44, "                                  ");
@@ -419,11 +425,19 @@ void InputBoard::showDeck(Character &guy, Deck &cardDeck) {
 		case 21:
 			ccc = 'v';
 			break;
+		case 22:
+			ccc = 'w';
+			break;
+		case 23:
+			ccc = 'x';
+			break;
 		}
 
-		string option(1, ccc);
-		option += ") ";
-		mvprintInSize(y, x, 0, option.c_str(), FALSE);
+		if (notbattle) {
+			string option(1, ccc);
+			option += ") ";
+			mvprintInSize(y, x, 0, option.c_str(), FALSE);
+		}
 
 		if (cardnow.CardType == "Attack") {
 			attron(COLOR_PAIR(1));
@@ -468,9 +482,13 @@ void InputBoard::showDeck(Character &guy, Deck &cardDeck) {
 		}
 	}
 	standend();
-	deckLoopWhole(guy, cardDeck);
+	if(notbattle)
+		deckLoopWhole(guy, cardDeck);
+	else {
+		int a = 0;
+		escapeLoop(a);
+	}
 }
-
 //gets decision to choose cards to look at individually
 void InputBoard::deckLoopWhole(Character &guy, Deck &cardDeck) {
 	char c = getch();
@@ -560,33 +578,6 @@ void InputBoard::deckLoopWhole(Character &guy, Deck &cardDeck) {
 			for (int y = 1; y < 15; y++) {
 				mvprintw(y, 44, "                                  ");
 			}
-			/*if (kard.CardType == "Attack") {
-				attron(COLOR_PAIR(1));
-			}
-			else if (kard.CardType == "Defend") {
-				attron(COLOR_PAIR(2));
-			}
-			else if (kard.CardType == "Spell") {
-				attron(COLOR_PAIR(3));
-			}
-			else if (kard.CardType == "Special") {
-				standend();
-			}
-			else if (kard.CardType == "Negative") {
-				attron(COLOR_PAIR(5));
-			}
-			int ax = int(strlen(kard.CardName) / 2);
-			const char *desc = kard.Description;
-			mvprintInSize(2, x - ax, 0, kard.CardName, FALSE);
-			mvprintInSize(4, desc_x, desc_maxx, desc, FALSE);
-
-			string mods = kard.modstrings();
-			int modx = 59;
-			modx -= (mods.size() / 4) - 1;
-			mvprintInSize(3, modx, 0, mods.c_str(), FALSE);
-
-			standend();
-			mvprintInSize(14, 59, 0, "(M)odify this card", FALSE);*/
 
 			for (int k = 0; k < cardDeck.size(); k++) {
 				if (cardDeck.at(k).CardName == screendeck.at(i).CardName && cardDeck.at(k).checkSameMods(screendeck.at(i))) {
@@ -604,7 +595,7 @@ void InputBoard::deckLoopWhole(Character &guy, Deck &cardDeck) {
 }
 //checks if you want to apply modifiers
 void InputBoard::deckLoopCard(Character &guy, Deck &cardDeck, int modindex) {
-	for (int y = 1; y < 15; y++) {
+	for (int y = 0; y < 15; y++) {
 		mvprintw(y, 44, "                                  ");
 	}
 
@@ -643,14 +634,14 @@ void InputBoard::deckLoopCard(Character &guy, Deck &cardDeck, int modindex) {
 
 	char m = getch();
 	if (m == 27) {
-		showDeck(guy, cardDeck);
+		showDeck(guy, cardDeck, TRUE);
 	}
 	else if (m == 'm') {
 		deckLoopMod(guy, cardDeck, modindex);
 	}
 	else if (m == 'r') {
 		cardDeck.cardDeck.at(modindex).removeMods(guy);
-		showDeck(guy, cardDeck);
+		showDeck(guy, cardDeck, TRUE);
 	}
 	else {
 		deckLoopCard(guy, cardDeck, modindex);
@@ -662,46 +653,9 @@ void InputBoard::deckLoopMod(Character &guy, Deck &cardDeck, int modindex) {
 		mvprintw(y, 44, "                                  ");
 	}
 
-	/*bool burn = FALSE;
-	bool stay = FALSE;
-	bool flow = FALSE;
-	bool copy = FALSE;
-	bool push = FALSE;
-	bool voidd = FALSE;
-	bool link = FALSE;*/
-
-
 	mvprintInSize(14, 59, 0, "                  ", FALSE);
 	mvprintw(0, 49, "Modifiers (ESC to exit) ");
 	int modcount = 0;
-	/*if (Burn > 0) {
-		modcount++;
-		burn = TRUE;
-	}
-	if (Stay > 0) {
-		modcount++;
-		stay = TRUE;
-	}
-	if (Flow > 0) {
-		modcount++;
-		flow = TRUE;
-	}
-	if (Copy > 0) {
-		modcount++;
-		copy = TRUE;
-	}
-	if (Push > 0) {
-		modcount++;
-		push = TRUE;
-	}
-	if (Void > 0) {
-		modcount++;
-		voidd = TRUE;
-	}
-	if (Link > 0) {
-		modcount++;
-		link = TRUE;
-	}*/
 
 	int y = 2;
 	for (int i = 0; i < 7; i++) {
@@ -771,52 +725,197 @@ void InputBoard::deckLoopMod(Character &guy, Deck &cardDeck, int modindex) {
 		deckLoopCard(guy, cardDeck, modindex);
 	}
 	else {
-	if (mmm == 'a' && guy.Burn > 0) {
-	if (!cardDeck.cardDeck.at(modindex).Burn) {
-		guy.Burn--;
+		if (mmm == 'a' && guy.Burn > 0) {
+			if (!cardDeck.cardDeck.at(modindex).Burn) {
+				guy.Burn--;
+			}
+			cardDeck.cardDeck.at(modindex).setMod("Burn", true, guy);
+			showDeck(guy, cardDeck, TRUE);
+		}
+		else if (mmm == 'b' && guy.Stay > 0) {
+			if (!cardDeck.cardDeck.at(modindex).Stay) {
+				guy.Stay--;
+			}
+			cardDeck.cardDeck.at(modindex).setMod("Stay", true, guy);
+			showDeck(guy, cardDeck, TRUE);
+		}
+		else if (mmm == 'c' && guy.Flow > 0) {
+			if (!cardDeck.cardDeck.at(modindex).Flow) {
+				guy.Flow--;
+			}
+			cardDeck.cardDeck.at(modindex).setMod("Flow", true, guy);
+			showDeck(guy, cardDeck, TRUE);
+		}
+		else if (mmm == 'd' && guy.Copy > 0) {
+			if (!cardDeck.cardDeck.at(modindex).Copy) {
+				guy.Copy--;
+			}
+			cardDeck.cardDeck.at(modindex).setMod("Copy", true, guy);
+			showDeck(guy, cardDeck, TRUE);
+		}
+		else if (mmm == 'e' && guy.Push > 0) {
+			if (!cardDeck.cardDeck.at(modindex).Push) {
+				guy.Push--;
+			}
+			cardDeck.cardDeck.at(modindex).setMod("Push", true, guy);
+			showDeck(guy, cardDeck, TRUE);
+		}
+		else if (mmm == 'f' && guy.Void > 0) {
+			if (!cardDeck.cardDeck.at(modindex).Void) {
+				guy.Void--;
+			}
+			cardDeck.cardDeck.at(modindex).setMod("Void", true, guy);
+			showDeck(guy, cardDeck, TRUE);
+		}
+		else if (mmm == 'g' && guy.Link > 0) {
+			if (cardDeck.cardDeck.at(modindex).Link == '0') {
+				guy.Link--;
+			}
+			cardDeck.cardDeck.at(modindex).setMod("Link", true, guy);
+			showDeck(guy, cardDeck, TRUE);
+		}
+		else {
+			deckLoopMod(guy, cardDeck, modindex);
+		}
 	}
-	cardDeck.cardDeck.at(modindex).setMod("Burn", true, guy);
+}
+
+//show list of mods
+void InputBoard::showMods(Character &guy, Deck &deck, bool notbattle) {
+	for (int y = 1; y < 15; y++) {
+		mvprintw(y, 44, "                                  ");
 	}
-	else if (mmm == 'b' && guy.Stay > 0) {
-	if (!cardDeck.cardDeck.at(modindex).Stay) {
-		guy.Stay--;
+
+	mvprintInSize(14, 59, 0, "                  ", FALSE);
+	mvprintw(0, 49, "Modifiers (ESC to exit) ");
+	int modcount = 0;
+
+	int y = 2;
+	for (int i = 0; i < 7; i++) {
+		char ccc = ' ';
+		string modtype = "";
+		switch (i) {
+		case 0:
+			ccc = 'a';
+			modtype = "#rBurn#o x" + to_string(guy.Burn);
+			break;
+		case 1:
+			ccc = 'b';
+			modtype = "#gStay#o x" + to_string(guy.Stay);
+			break;
+		case 2:
+			ccc = 'c';
+			modtype = "#cFlow#o x" + to_string(guy.Flow);
+			break;
+		case 3:
+			ccc = 'd';
+			modtype = "#mCopy#o x" + to_string(guy.Copy);
+			break;
+		case 4:
+			ccc = 'e';
+			modtype = "#yPush#o x" + to_string(guy.Push);
+			break;
+		case 5:
+			ccc = 'f';
+			modtype = "#oVoid#o x" + to_string(guy.Void);
+			break;
+		case 6:
+			ccc = 'g';
+			modtype = "#bLink#o x" + to_string(guy.Link);
+			break;
+
+		}
+
+		string c(1, ccc);
+		c += ") " + modtype;
+
+		mvprintInSize(y, 45, 0, c.c_str(), FALSE);
+		y++;
 	}
-	cardDeck.cardDeck.at(modindex).setMod("Stay", true, guy);
-	}
-	else if (mmm == 'c' && guy.Flow > 0) {
-	if (!cardDeck.cardDeck.at(modindex).Flow) {
-		guy.Flow--;
-	}
-	cardDeck.cardDeck.at(modindex).setMod("Flow", true, guy);
-	}
-	else if (mmm == 'd' && guy.Copy > 0) {
-	if (!cardDeck.cardDeck.at(modindex).Copy) {
-		guy.Copy--;
-	}
-	cardDeck.cardDeck.at(modindex).setMod("Copy", true, guy);
-	}
-	else if (mmm == 'e' && guy.Push > 0) {
-	if (!cardDeck.cardDeck.at(modindex).Push) {
-		guy.Push--;
-	}
-	cardDeck.cardDeck.at(modindex).setMod("Push", true, guy);
-	}
-	else if (mmm == 'f' && guy.Void > 0) {
-	if (!cardDeck.cardDeck.at(modindex).Void) {
-		guy.Void--;
-	}
-	cardDeck.cardDeck.at(modindex).setMod("Void", true, guy);
-	}
-	else if (mmm == 'g' && guy.Link > 0) {
-	if (cardDeck.cardDeck.at(modindex).Link == '0') {
-		guy.Link--;
-	}
-	cardDeck.cardDeck.at(modindex).setMod("Link", true, guy);
+	modLoopWhole(guy, deck, notbattle);
+}
+//show individual with mods
+void InputBoard::modLoopWhole(Character &guy, Deck &deck, bool notbattle) {
+	char mmm = getch();
+
+	if (mmm == 27) {
+		return;
 	}
 	else {
-	deckLoopMod(guy, cardDeck, modindex);
+		for (int y = 1; y < 15; y++) {
+			mvprintw(y, 44, "                                  ");
+		}
+
+		mvprintInSize(14, 59, 0, "                  ", FALSE);
+		mvprintw(0, 49, "Modifiers (ESC to exit) ");
+
+		for (int i = 0; i < 7; i++) {
+			char m;
+			string name;
+			string desc;
+
+			switch (i) {
+			case 0:
+				m = 'a';
+				name = "#rBurn";
+				desc = "Remove this card for the rest of combat.#o";
+				break;
+			case 1:
+				m = 'b';
+				name = "#gStay";
+				desc = "This card does not discard after use.#o";
+				break;
+			case 2:
+				m = 'c';
+				name = "#cFlow";
+				desc = "This card discards at the end of the turn.#o";
+				break;
+			case 3:
+				m = 'd';
+				name = "#mCopy";
+				desc = "Have one more of this card during combat.#o";
+				break;
+			case 4:
+				m = 'e';
+				name = "#yPush";
+				desc = "Discard entire hand after use.#o";
+				break;
+			case 5:
+				m = 'f';
+				name = "#oVoid";
+				desc = "This card cannot be drawn.#o";
+				break;
+			case 6:
+				m = 'g';
+				name = "#bLink";
+				desc = "Draws the next card in the Link chain.#o";
+				break;
+			}
+			if (mmm == m) {
+				mvprintInSize(2, 57, 0, name.c_str(), FALSE);
+				mvprintInSize(4, 50, 20, desc.c_str(), FALSE);
+				int esc = 0;
+				if (notbattle) {
+					mvprintInSize(12, 50, 20, "Go to your (D)eck to modify a card", FALSE);
+					modLoopSecond(guy, deck, notbattle);
+				}
+				return;
+			}
+		}
 	}
-	showDeck(guy, cardDeck);
+	showMods(guy, deck, notbattle);
+}
+//show a mod, give option to go to deck
+void InputBoard::modLoopSecond(Character &guy, Deck &deck, bool notbattle) {
+	char c = getch();
+	if (c == 27) {
+		showMods(guy, deck, notbattle);
+	}
+	else if (notbattle && c == 'd') {
+		showDeck(guy, deck, notbattle);
+	}
+	else {
+		modLoopSecond(guy, deck, notbattle);
 	}
 }
 
@@ -1227,6 +1326,7 @@ void InputBoard::showTraits() {
 	//calls method to see an individual trait
 	traitsLoopWhole();
 }
+//look at individual traits
 void InputBoard::traitsLoopWhole() {
 	char c = getch();
 	//esc option
@@ -1328,50 +1428,6 @@ void InputBoard::traitsLoopWhole() {
 		}
 	}
 	showTraits();
-
-	/*if (Traits.size() >= 1 && c == 'a') {
-		//clears log from screen
-		for (int y = 1; y < 14; y++) {
-			mvprintw(y, 44, "                                 ");
-		}
-		//sets the gear you look at to the gear selected, print gear info
-		Gear ctrait = Traits.at(0);
-		if (ctrait.Type == "Trait Sacrifice")
-			attron(COLOR_PAIR(5));
-		else if (ctrait.Type == "Trait Reward")
-			attron(COLOR_PAIR(7));
-		int ax = int(strlen(ctrait.GearName) / 2);
-		const char *desc = ctrait.Description;
-		mvprintw(2, x - ax, "%s", ctrait.GearName);
-		mvprintInSize(4, desc_x, desc_maxx, desc);
-		standend();
-		int c = 0;
-		escapeLoop(c);
-		showTraits();
-		return;
-	}
-	else if (Traits.size() >= 2 && c == 'b') {
-		//clears log from screen
-		for (int y = 1; y < 14; y++) {
-			mvprintw(y, 44, "                                 ");
-		}
-		//sets the gear you look at to the gear selected, print gear info
-		Gear ctrait = Traits.at(1);
-		if (ctrait.Type == "Trait Sacrifice")
-			attron(COLOR_PAIR(5));
-		else if (ctrait.Type == "Trait Reward")
-			attron(COLOR_PAIR(7));
-		int ax = int(strlen(ctrait.GearName) / 2);
-		const char *desc = ctrait.Description;
-		mvprintw(2, x - ax, "%s", ctrait.GearName);
-		mvprintInSize(4, desc_x, desc_maxx, desc);
-		standend();
-		int c = 0;
-		escapeLoop(c);
-		showTraits();
-		return;
-	}*/
-	
 }
 
 /*function for shuffling the deck in battle if the draw pile is empty,
@@ -1399,7 +1455,7 @@ void InputBoard::ShuffleAddPrint() {
 	
 	//shuffle
 		//if there isn't enough cards in the draw pile, add cards from the discard pile into draw pile in a random order
-		if (Draw.size() < handSize) {
+		if (Draw.size() < 1) {
 			while (Discard.size() > 0) {
 				Card tempCard = Discard.front();
 				Discard.erase(Discard.begin());
@@ -1411,28 +1467,29 @@ void InputBoard::ShuffleAddPrint() {
 		
 	//add
 		//link
-		if (linkdraw != '-' && linkdraw != '0') {
-			if (Draw.size() > 0) {
-				for (int i = 0; i < Draw.size(); i++) {
-					if (Draw.at(i).Link == linkdraw && DecisionCards.size() < handSize) {
-						DecisionCards.push_back(Draw.at(i));
-						Draw.erase(Draw.begin() + i);
-					}
-				}
-			}
+		if (linkdraw != 0) {
 			if (Discard.size() > 0) {
 				for (int i = 0; i < Discard.size(); i++) {
-					if (Discard.at(i).Link == linkdraw && DecisionCards.size() < handSize) {
-						DecisionCards.push_back(Discard.at(i));
+					//if (Discard.at(i).Link == linkdraw) {
+					if (Discard.at(i).Link == linkdraw) {
+						Draw.push_back(Discard.at(i));
 						Discard.erase(Discard.begin() + i);
 					}
 				}
 			}
-			linkdraw = '-';
+			if (Draw.size() > 0) {
+				for (int i = 0; i < Draw.size(); i++) {
+					//if (Draw.at(i).Link == linkdraw) {
+					if (Draw.at(i).Link == linkdraw) {
+						Draw.push_back(Draw.at(i));
+						Draw.erase(Draw.begin() + i);
+					}
+				}
+			}
 		}
 		
 		//draw for a deck with less than 3 cards (handSize = 3)
-		if (Draw.size() < handSize && DecisionCards.size() < handSize-1) {
+		if (Draw.size() < handSize && DecisionCards.size() < handSize-1 && Discard.size() == 0) {
 			cardThere = Draw.size();
 		}
 
@@ -1446,10 +1503,21 @@ void InputBoard::ShuffleAddPrint() {
 		//if there aren't (handSize) cards to choose from, add cards from the draw pile to here until there are three
 		else {
 			while (DecisionCards.size() < handSize) {
+				if (Draw.size() == 0) {
+					while (Discard.size() > 0) {
+						Card tempCard = Discard.front();
+						Discard.erase(Discard.begin());
+
+						int rng = rand() % (Draw.size() + 1);
+						Draw.insert(Draw.begin() + rng, tempCard);
+					}
+				}
+				
 				Card innout = Draw.back();
 				Draw.pop_back();
 				DecisionCards.push_back(innout);
 			}
+			linkdraw = '-';
 		}
 
 	//print
@@ -1491,6 +1559,8 @@ void InputBoard::ShuffleAddPrint() {
 				mvprintw(y, 63, "               ");
 			}
 			mvprintw(y, 62, "Next: ");
+			mvprintInSize(y + 1, 63, 0, "             ", FALSE);
+			mvprintInSize(y + 2, 63, 0, "             ", FALSE);
 			if (Draw.size() > 0) {
 				Card nextCardName = Draw.back();
 				if (nextCardName.CardType == "Attack")
@@ -1503,7 +1573,10 @@ void InputBoard::ShuffleAddPrint() {
 					standend();
 				else if (nextCardName.CardType == "Negative")
 					attron(COLOR_PAIR(5));
-				mvprintw(y+1, 63, "%s", nextCardName.CardName);
+
+				string te = nextCardName.CardName + nextCardName.modchars();
+				mvprintInSize(y + 1, 63, 0, te.c_str(), FALSE);
+				//mvprintw(y+1, 63, "%s", nextCardName.CardName);
 			}
 			if (Draw.size() > 1) {
 				Card next2 = Draw.at(Draw.size() - 2);
@@ -1517,7 +1590,10 @@ void InputBoard::ShuffleAddPrint() {
 					standend();
 				else if (next2.CardType == "Negative")
 					attron(COLOR_PAIR(5));
-				mvprintw(y+2, 63, "%s", next2.CardName);
+
+				string te = next2.CardName + next2.modchars();
+				mvprintInSize(y + 2, 63, 0, te.c_str(), FALSE);
+				//mvprintw(y+2, 63, "%s", next2.CardName);
 			}
 			standend();
 		}
@@ -1544,7 +1620,7 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 			y += 3;
 		if (guy.Multi_Tongued)
 			y++;
-		mvprintInSize(y, 62, 11, "4) Leave", FALSE);
+		mvprintInSize(y, 62, 11, "6) Leave", FALSE);
 	}
 	if (guy.Multi_Tongued) {
 		int y = 17;
@@ -1570,31 +1646,33 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 			getchCard(guy, enemy, deck, log);
 		}
 		else {
-			//Burn, Stay, Copy, Flow, and Link mods are taken care of here
+			//Burn, Stay, Flow, and Link mods are taken care of here
 			DecisionCards.at(in).cardFunction(guy, enemy, log);
-			//check link
-			if (DecisionCards.at(in).Link != '0') {
-				int lint = DecisionCards.at(in).Link - '0';
+			//check link, drawn in the ShuffleAddPrint function
+			if (DecisionCards.at(in).Link != 0) {
+				int lint = DecisionCards.at(in).Link;
 				lint++;
 				if (lint == 10) {
-					linkdraw = '-';
+					linkdraw = 0;
 				}
 				else {
-					linkdraw = char(lint);
+					linkdraw = lint;
+					//mvprintw(20, 62, "%i", lint);
+					//mvprintw(21, 62, "%i", linkdraw);
 				}
 			}
 			//check burn, stay
-			if (DecisionCards.at(in).Stay)
+			if (DecisionCards.at(in).Stay && rand() % 10 < 7)
 				DecisionCards.at(in).StayCard = TRUE;
 			if (DecisionCards.at(in).Push)
 				pushthisturn = TRUE;
 			if (!DecisionCards.at(in).Burn && !DecisionCards.at(in).naturalBurn && !DecisionCards.at(in).Stay)
 				Discard.push_back(DecisionCards.at(in));
-			//check copy
-			if(DecisionCards.at(in).Copy && (Draw.size() + Discard.size()) < 75)
-				Discard.push_back(DecisionCards.at(in));
 			//check stay
-			if (!DecisionCards.at(in).Stay || DecisionCards.at(in).Burn || DecisionCards.at(in).naturalBurn) {
+			bool dontstay = TRUE;
+			if (DecisionCards.at(in).Stay && rand() % 10 < 7)
+				dontstay = FALSE;
+			if (dontstay || DecisionCards.at(in).Burn || DecisionCards.at(in).naturalBurn) {
 				DecisionCards.erase(DecisionCards.begin() + in);
 			}
 			//check flow
@@ -1634,10 +1712,7 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 		ShuffleAddPrint();
 	}
 	else if (choose == 'd') {
-		deck.deckScreen();
-
-		int c = 0;
-		escapeLoop(c);
+		showDeck(guy, deck, FALSE);
 		
 		log.printLog();
 		ShuffleAddPrint();
@@ -1645,6 +1720,13 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 	}
 	else if (choose == 't') {
 		showTraits();
+
+		log.printLog();
+		ShuffleAddPrint();
+		getchCard(guy, enemy, deck, log);
+	}
+	else if (choose == 'm') {
+		showMods(guy, deck, FALSE);
 
 		log.printLog();
 		ShuffleAddPrint();
@@ -1664,6 +1746,13 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 
 //checks if you cant use any of the cards in your hand
 bool InputBoard::checkUsable(Character &guy, Enemy &enemy) {
+	//int for checking impale damage
+	int impale = guy.Strength * 3;
+	if (guy.steroids)
+		impale *= 2;
+	if (guy.Frenzy)
+		impale *= 2;
+
 	int cardsUsable = handSize;
 	bool usable = TRUE;
 	if (DecisionCards.size() == 0)
@@ -1673,7 +1762,7 @@ bool InputBoard::checkUsable(Character &guy, Enemy &enemy) {
 			cardsUsable--;
 		else if ((DecisionCards.at(i).ManaCost > 0 && DecisionCards.at(i).ManaCost > guy.CurrentMana) ||
 			(DecisionCards.at(i).CardName == "Flee" && guy.CurrentBlock <= 0) ||
-			(DecisionCards.at(i).CardName == "Impale" && enemy.CurrentHealth + enemy.CurrentBlock > guy.Strength * 3) ||
+			(DecisionCards.at(i).CardName == "Impale" && (enemy.CurrentHealth + enemy.CurrentBlock > impale || enemy.enemyNegate > 0)) ||
 			(DecisionCards.at(i).CardName == "Shoot" && guy.CurrentHealth + guy.CurrentBlock <= 7))
 			cardsUsable--;
 	}
@@ -1683,12 +1772,19 @@ bool InputBoard::checkUsable(Character &guy, Enemy &enemy) {
 }
 //checks if you cant use a card in a specific place in your hand
 bool InputBoard::checkUsable(int i, Character &guy, Enemy &enemy) {
+	//int for checking impale damage
+	int impale = guy.Strength * 3;
+	if (guy.steroids)
+		impale *= 2;
+	if (guy.Frenzy)
+		impale *= 2;
+
 	bool usable = TRUE;
 	if (DecisionCards.size() <= i)
 		return FALSE;
 	else if ((DecisionCards.at(i).ManaCost > 0 && DecisionCards.at(i).ManaCost > guy.CurrentMana) ||
 		(DecisionCards.at(i).CardName == "Flee" && guy.CurrentBlock <= 0) ||
-		(DecisionCards.at(i).CardName == "Impale" && enemy.CurrentHealth + enemy.CurrentBlock > guy.Strength * 3))
+		(DecisionCards.at(i).CardName == "Impale" && (enemy.CurrentHealth + enemy.CurrentBlock > impale || enemy.enemyNegate > 0)))
 		usable = FALSE;
 	return usable;
 }
@@ -1806,6 +1902,7 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 				bosses.push_back(Enemy("Hydra"));
 				bosses.push_back(Enemy("Exorcist"));
 				bosses.push_back(Enemy("Demigod"));
+				bosses.push_back(Enemy("Wolf"));
 			}
 			int rng = rand() % bosses.size();
 			enemy = bosses.at(rng);
@@ -2150,8 +2247,8 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	}
 	//metabolise
 	if (guy.metabolise > 0) {
-		int mana = 2;
-		int health = 4;
+		int mana = 3;
+		int health = 6;
 		guy.TakeDamage(-1 * health);
 		guy.DrainMana(-1 * 2);
 
@@ -2523,6 +2620,8 @@ void InputBoard::restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, Te
 		guy.Sticky_Feet = 0;
 	if (guy.Inefficient != -1)
 		guy.Inefficient = 0;
+	pushthisturn = FALSE;
+	linkdraw = 0;
 
 	guy.CurrentHealth = guy.MaxHealth;
 	guy.CurrentMana = guy.MaxMana;
@@ -2565,8 +2664,10 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		mvprintw(19, 4, "^");
 		mvprintw(20, 4, "#");
 		mvprintw(21, 4, "/");
+		attron(COLOR_PAIR(1));
+		mvprintw(22, 4, "*");
 		attron(COLOR_PAIR(3));
-		mvprintw(22, 4, "+");
+		mvprintw(23, 4, "+");
 		standend();
 
 		mvprintw(16, 6, "= Combat");
@@ -2576,7 +2677,8 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		mvprintw(19, 6, "= Headgear");
 		mvprintw(20, 6, "= Armor");
 		mvprintw(21, 6, "= Weapon");
-		mvprintw(22, 6, "= Cauldron");
+		mvprintw(22, 6, "= Forge");
+		mvprintw(23, 6, "= Cauldron");
 
 		mvprintw(17, 26, "Which way?");
 		if (guy.posx == 25) {
@@ -2614,7 +2716,9 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		}
 	}
 	else if (RoomType == "Mod") {
-		
+		generateMods();
+		mvprintInSize(17, 4, 15, "You found some card modifiers: ", FALSE);
+		mvprintInSize(22, 37, 0, "(P)ickup", FALSE);
 	}
 	//if the room is empty, get choice of movement
 	else if (RoomType == "Empty") {
@@ -2649,6 +2753,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		manualBox("Card 2", 0);
 
 		//print legend
+
 		attron(COLOR_PAIR(5));
 		mvprintw(16, 4, "!");
 		attron(COLOR_PAIR(7));
@@ -2658,8 +2763,10 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		mvprintw(19, 4, "^");
 		mvprintw(20, 4, "#");
 		mvprintw(21, 4, "/");
+		attron(COLOR_PAIR(1));
+		mvprintw(22, 4, "*");
 		attron(COLOR_PAIR(3));
-		mvprintw(22, 4, "+");
+		mvprintw(23, 4, "+");
 		standend();
 
 		mvprintw(16, 6, "= Combat");
@@ -2669,7 +2776,8 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		mvprintw(19, 6, "= Headgear");
 		mvprintw(20, 6, "= Armor");
 		mvprintw(21, 6, "= Weapon");
-		mvprintw(22, 6, "= Cauldron");
+		mvprintw(22, 6, "= Forge");
+		mvprintw(23, 6, "= Cauldron");
 
 		mvprintw(17, 26, "Which way?");
 		//print available options
@@ -2812,7 +2920,79 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 }
 
 void InputBoard::generateMods() {
-	rand
+	string Description;
+	string Description2;
+	int rng = rand() % 23;
+	if (rng == 0){
+		pickup1 = "#gStay";
+		Description = "This card does not discard after use.#o";
+	}
+	else if (rng == 1) {
+		pickup1 = "#oVoid";
+		Description = "This card cannot be drawn.#o";
+	}
+	else if (rng > 1 && rng <= 6) {
+		pickup1 = "#rBurn";
+		Description = "Remove this card for the rest of combat.#o";
+	}
+	else if (rng > 6 && rng <= 11) {
+		pickup1 = "#cFlow";
+		Description = "This card discards at the end of the turn.#o";
+	}
+	else if (rng > 11 && rng <= 13) {
+		pickup1 = "#mCopy";
+		Description = "Duplicate this card for the rest of combat.#o";
+	}
+	else if (rng > 13 && rng <= 18) {
+		pickup1 = "#yPush";
+		Description = "Discard entire hand after use.#o";
+	}
+	else if (rng > 18 && rng <= 22) {
+		pickup1 = "#bLink";
+		Description = "Draws the next card in the Link chain.#o";
+	}
+
+	rng = rand() % 23;
+	if (pickup1 == "#bLink")
+		rng = 22;
+	if (rng == 0) {
+		pickup2 = "#gStay";
+		Description2 = "This card does not discard after use.#o";
+	}
+	else if (rng == 1) {
+		pickup2 = "#oVoid";
+		Description2 = "This card cannot be drawn.#o";
+	}
+	else if (rng > 1 && rng <= 6) {
+		pickup2 = "#rBurn";
+		Description2 = "Remove this card for the rest of combat.#o";
+	}
+	else if (rng > 6 && rng <= 11) {
+		pickup2 = "#cFlow";
+		Description2 = "This card discards at the end of the turn.#o";
+	}
+	else if (rng > 11 && rng <= 16) {
+		pickup2 = "#mCopy";
+		Description2 = "Duplicate this card for the rest of combat.#o";
+	}
+	else if (rng > 16 && rng <= 21) {
+		pickup2 = "#yPush";
+		Description2 = "Discard entire hand after use.#o";
+	}
+	else if (rng > 21 && rng <= 22) {
+		pickup2 = "#bLink";
+		Description2 = "Draws the next card in the Link chain.#o";
+	}
+
+	clearBoardWhole();
+	mvprintInSize(17, 29, 0, pickup1.c_str(), FALSE);
+	manualBox("Card 2", 0);
+	mvprintInSize(19, 24, 15, Description.c_str(), FALSE);
+
+	mvprintInSize(17, 49, 0, pickup2.c_str(), FALSE);
+	manualBox("Card 3", 0);
+	mvprintInSize(19, 44, 15, Description2.c_str(), FALSE);
+
 }
 
 void InputBoard::generateGear(Character &guy) {
@@ -2896,7 +3076,7 @@ void InputBoard::generateGear(Character &guy) {
 				}
 			}
 			else if (guy.getTier(guy.posx, guy.posy) == 'C' || guy.getTier(guy.posx, guy.posy) == 'D') {
-				int normrare = rand() % 5;
+				int normrare = rand() % 6;
 				if (normrare < 2 || handsNorm.size() == 0) {
 					int rng = rand() % handsLate.size();
 					pickup = handsLate.at(rng);
@@ -3116,7 +3296,7 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 		char choose = getch();
 		if (choose == 'd') {
 			//deck.deckScreen();
-			showDeck(guy, deck);
+			showDeck(guy, deck, TRUE);
 			log.printLog();
 			//getchDecision(guy, deck, log);
 		}
@@ -3126,6 +3306,10 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 		}
 		else if (choose == 't') {
 			showTraits();
+			log.printLog();
+		}
+		else if (choose == 'm') {
+			showMods(guy, deck, TRUE);
 			log.printLog();
 		}
 		/*else if (choose == 'l') {
@@ -3249,6 +3433,64 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 			}
 
 			guy.printStats();
+		}
+		else if (RoomType == "Mod") {
+			if (choose == 'p') {
+				if (pickup1 == "#rBurn") {
+					guy.Burn++;
+				}
+				else if (pickup1 == "#gStay") {
+					guy.Stay++;
+				}
+				else if (pickup1 == "#cFlow") {
+					guy.Flow++;
+				}
+				else if (pickup1 == "#mCopy") {
+					guy.Copy++;
+				}
+				else if (pickup1 == "#yPush") {
+					guy.Push++;
+				}
+				else if (pickup1 == "#oVoid") {
+					guy.Void++;
+				}
+				else if (pickup1 == "#bLink") {
+					guy.Link++;
+				}
+				if (pickup2 == "#rBurn") {
+					guy.Burn++;
+				}
+				else if (pickup2 == "#gStay") {
+					guy.Stay++;
+				}
+				else if (pickup2 == "#cFlow") {
+					guy.Flow++;
+				}
+				else if (pickup2 == "#mCopy") {
+					guy.Copy++;
+				}
+				else if (pickup2 == "#yPush") {
+					guy.Push++;
+				}
+				else if (pickup2 == "#oVoid") {
+					guy.Void++;
+				}
+				else if (pickup2 == "#bLink") {
+					guy.Link++;
+				}
+			
+				//Blacksmith trait
+				if (guy.Blacksmith > 0) {
+					RoomType = "Mod";
+					guy.Blacksmith--;
+				}
+				else
+					RoomType = "Empty";
+				printDecision(guy, log);
+				getchDecision(guy, deck, log);
+			}
+			else
+				getchDecision(guy, deck, log);
 		}
 		else if (RoomType == "Empty") {
 			//char choose = getch();
@@ -3499,12 +3741,12 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				}
 				else if (choose == '2') {
 					deck.addCard(spellDecision.at(1));
-					line = "#m~You add " + string(spellDecision.at(0).CardName) + " to your deck.#o";
+					line = "#m~You add " + string(spellDecision.at(1).CardName) + " to your deck.#o";
 					log.PushPop(line);
 				}
 				else if (choose == '3') {
 					deck.addCard(spellDecision.at(2));
-					line = "#m~You add " + string(spellDecision.at(0).CardName) + " to your deck.#o";
+					line = "#m~You add " + string(spellDecision.at(2).CardName) + " to your deck.#o";
 					log.PushPop(line);
 				}
 				else if (choose == '4') {
@@ -3631,15 +3873,20 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 						getchDecision(guy, deck, log);
 					}
 
+					//Blacksmith trait
+					if (guy.Blacksmith > 0) {
+						RoomType = "Mod";
+						guy.Blacksmith--;
+					}
 					//Destiny trait
-					if (guy.Destiny > 1) {
+					else if (guy.Destiny > 1) {
 						RoomType = "Cauldron";
 						guy.Destiny--;
-						//printDecision(guy, log);
-						//getchDecision(guy, deck, log);
 					}
-					else
+					else {
 						RoomType = "Empty";
+					}
+
 					printDecision(guy, log);
 					getchDecision(guy, deck, log);
 				}
@@ -3804,8 +4051,11 @@ void InputBoard::updateDeck(Deck &deck) {
 		DecisionCards.pop_back();
 
 	for (int i = 0; i < deck.size(); i++) {
-		if(!deck.at(i).Void)
+		if (!deck.at(i).Void) {
 			Discard.push_back(deck.at(i));
+			if (deck.at(i).Copy)
+				Discard.push_back(deck.at(i));
+		}
 	}
 }
 

@@ -25,7 +25,7 @@ Map::Map()
 				int rng;
 				if(getTier(x, y) == 'A'){
 					//combat, hands, body
-					rng = rand() % 8;
+					rng = rand() % 14;
 					Room a;
 					if (rng == 0 || rng == 1) {
 						a = Room("Gear Hands", x, y);
@@ -33,8 +33,15 @@ Map::Map()
 					else if (rng == 2 || rng == 3) {
 						a = Room("Gear Body", x, y);
 					}
-					else if (rng == 4) {
+					else if (rng == 4 || rng == 5) {
 						a = Room("Gear Head", x, y);
+					}
+					else if (rng == 6) {
+						a = Room("Cauldron", x, y);
+					}
+					else if (rng > 7 && rng <= 8) {
+						a = Room("Mod", x, y);
+						cauldronCounter++;
 					}
 					else {
 						a = Room("Combat", x, y);
@@ -52,11 +59,14 @@ Map::Map()
 						bcd = Room("Cauldron", x, y);
 						cauldronCounter++;
 					}
-					else if (rng > 4 && rng <= 11) {
+					else if (rng > 4 && rng <= 8) {
 						bcd = Room("Gear Body", x, y);
 					}
-					else if (rng > 11 && rng <= 17) {
+					else if (rng > 9 && rng <= 13) {
 						bcd = Room("Gear Hands", x, y);
+					}
+					else if (rng > 14 && rng <= 16) {
+						bcd = Room("Mod", x, y);
 					}
 					else if (rng == 25) {
 						bcd = Room("Boss", x, y);
@@ -70,15 +80,18 @@ Map::Map()
 					//combat, hands, body, head, cauldron, boss
 					rng = rand() % 22;
 					Room e;
-					if (cauldronCounter < 12 && (rng == 0 || rng == 21 || rng == 22)) {
+					if (cauldronCounter < 18 && (rng == 0 || rng == 21 || rng == 22)) {
 						e = Room("Cauldron", x, y);
 						cauldronCounter++;
 					}
-					else if (rng > 0 && rng <= 4) {
+					else if (rng > 0 && rng <= 3) {
 						e = Room("Gear Hands", x, y);
 					}
-					else if (rng > 4 && rng <= 10) {
+					else if (rng > 3 && rng <= 6) {
 						e = Room("Gear Body", x, y);
+					}
+					else if (rng > 6 && rng <= 7) {
+						e = Room("Mod", x, y);
 					}
 					else if (rng > 16 && rng <= 18) {
 						e = Room("Boss", x, y);
@@ -90,9 +103,13 @@ Map::Map()
 				}
 				else if (getTier(x, y) == 'F') {
 					//combat, boss
-					rng = rand() % 4;
+					rng = rand() % 21;
 					Room f;
-					if (rng == 0) {
+					if (rng == 0 && cauldronCounter < 22) {
+						f = Room("Cauldron", x, y);
+						cauldronCounter++;
+					}
+					else if (rng > 0 && rng <= 4) {
 						f = Room("Boss", x, y);
 					}
 					else {

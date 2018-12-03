@@ -131,6 +131,7 @@ Card::Card(const char *name):CardName(name)
 		CardName == "Jump" ||
 		CardName == "Combo" ||
 		CardName == "Slam" ||
+		CardName == "Stall" ||
 		CardName == "Strike" ||
 		CardName == "Defend") {
 		CardType = "Special";
@@ -194,7 +195,7 @@ void Card::setAttack() {
 		Description = "Deal 3d(Str) damage.";
 	}
 	else if (CardName == "Demolish") {
-		Description = "Deal 3x(Str) damage. Lose 2 Str for the battle.";
+		Description = "Deal 3x(Str) damage. Lose 5 Str for the battle.";
 	}
 	else if (CardName == "Bleed") {
 		Description = "Deal 2d(Str/2) damage for 4 rounds.";
@@ -433,8 +434,9 @@ void Card::setSpell() {
 }
 void Card::setSpecial() {
 	if (CardName == "Haste") {
-		//take (Skl)+1 extra turns
-		Description = "Take (Skl)+1 extra turns.";
+		//2 extra turns
+		Description = "2 extra turns. Burn this card.";
+		naturalBurn = TRUE;
 	}
 	else if (CardName == "Transfusion") {
 		//switch current hp with enemy
@@ -442,7 +444,8 @@ void Card::setSpecial() {
 	}
 
 	else if (CardName == "Revivify") {
-		Description = "Heal 4 health and 2 mana for 5 turns.";
+		Description = "Heal 6 health and 3 mana for 6 turns. Burn this card.";
+		naturalBurn = TRUE;
 	}
 	else if (CardName == "Steroids") {
 		Description = "Your next attack deals double damage.";
@@ -451,43 +454,54 @@ void Card::setSpecial() {
 		Description = "Shuffle your hand. Gain 5 block.";
 	}
 	else if (CardName == "Intimidate") {
-		Description = "Take half damage for 2 turns.";
+		Description = "Take half damage for 3 turns. Burn this card.";
+		naturalBurn = TRUE;
 	}
 	else if (CardName == "Cripple") {
-		Description = "Deal 25% of the enemy's health as damage.";
+		Description = "Deal 50% of the enemy's health as damage. Burn this card.";
+		naturalBurn = TRUE;
 	}
 	else if (CardName == "Merge") {
-		Description = "Take 15 damage. Deal 6x(Skl) damage.";
+		Description = "Deal 7x(Skl) damage. Burn this card.";
+		naturalBurn = TRUE;
 	}
 	else if (CardName == "Entomb") {
-		Description = "Enemy cannot take or deal damage for 2 turns.";
+		Description = "Enemy can't take/deal damage for 4 turns. Burn this card.";
+		naturalBurn = TRUE;
 	}
 	else if (CardName == "Distract") {
-		Description = "Remove enemy block. Gain an extra turn.";
+		Description = "Remove enemy block. Extra turn.";
 	}
 	else if (CardName == "Prepare") {
-		Description = "Fill your hand with spells. Gain 5 mana and 1 turn.";
+		Description = "Fill hand with spells. Full mana. Extra turn. Burn this card.";
+		naturalBurn = TRUE;
 	}
 	else if (CardName == "Grow") {
-		Description = "Gain 1 Str for the battle.";
+		Description = "Gain 4 Str for the battle. Burn this card.";
+		naturalBurn = TRUE;
 	}
 	else if (CardName == "Solidify") {
-		Description = "Gain 1 Def for the battle.";
+		Description = "Gain 4 Def for the battle. Burn this card.";
+		naturalBurn = TRUE;
 	}
 	else if (CardName == "Learn") {
-		Description = "Gain 1 Int for the battle.";
+		Description = "Gain 4 Int for the battle. Burn this card.";
+		naturalBurn = TRUE;
 	}
 	else if (CardName == "Train") {
-		Description = "Gain 1 Skl for the battle.";
+		Description = "Gain 2 Skl for the battle. Burn this card.";
+		naturalBurn = TRUE;
 	}
 	else if (CardName == "Boost") {
 		Description = "Gain 5 mana. Extra turn.";
 	}
 	else if (CardName == "Vitalise") {
-		Description = "Gain 15 health.";
+		Description = "Full health. Burn this card.";
+		naturalBurn = TRUE;
 	}
 	else if (CardName == "Jump") {
-		Description = "Fill your hand with attacks. Negate 1 attack.";
+		Description = "Fill hand with attacks. Negate 1 attack. Extra turn. Burn this card.";
+		naturalBurn = TRUE;
 	}
 	else if (CardName == "Combo") {
 		Description = "Fill your hand with specials.";
@@ -605,8 +619,8 @@ void Card::printCard(int position) {
 		mods += "#oVoid#o";
 		modcounter++;
 	}
-	if (Link != '0') {
-		string s(1, Link);
+	if (Link != 0) {
+		string s = to_string(Link);
 		mods += "#bLink-" + s + "#o";
 		modcounter++;
 	}
@@ -810,8 +824,8 @@ void Card::attackFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	else if (CardName == "Demolish") {
 		//do 3*(Str) dmg, lose 2 str
 		int damage = dealDamage(3 * guy.Strength, guy, enemy, log);
-		guy.ModStat(-2, "Strength");
-		guy.strMod += 2;
+		guy.ModStat(-5, "Strength");
+		guy.strMod += 5;
 
 		string line = "-You demolish the " + string(enemy.Name)
 			+ " for #y" + to_string(damage)
@@ -1474,16 +1488,10 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 }
 void Card::specialFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	if (CardName == "Haste") {
-		//take (Skl)+1 extra turns
-		int turns = guy.Skill + 1;
-		guy.extraTurns += turns;
+		//2 extra turns
+		guy.extraTurns += 2;
 
-		string line = " " + to_string(turns)
-			+ "#g EXTRA TURN(S)#o";
-		if (turns == 1) {
-			string line = " " + to_string(turns)
-				+ "#g EXTRA TURN#o";
-		}
+		string line = "#g 2 EXTRA TURNS#o";
 		log.PushPop(line);
 	}
 	else if (CardName == "Transfusion") {
@@ -1494,9 +1502,9 @@ void Card::specialFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	}
 
 	else if (CardName == "Revivify") {
-		//Heal 4 health and 2 mana for 5 turns
-		guy.metabolise += 5;
-		string line = "#g-You heal for 5 more turns.#o";
+		//Heal 6 health and 3 mana for 6 turns. Burn
+		guy.metabolise += 6;
+		string line = "#g-You heal for 6 turns.#o";
 		log.PushPop(line);
 	}
 	else if (CardName == "Steroids") {
@@ -1513,14 +1521,14 @@ void Card::specialFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Intimidate") {
-		//Take half damage for 2 turns
-		guy.intimidate += 2;
+		//Take half damage for 3 turns. Burn
+		guy.intimidate += 3;
 		string line = "#cYou intimidate the " + string(enemy.Name) + ".#o";
 		log.PushPop(line);
 	}
 	else if (CardName == "Cripple") {
-		//Deal 25% of the enemy's health as damage
-		int damage = int(enemy.CurrentHealth / 4);
+		//Deal 50% of the enemy's health as damage. Burn
+		int damage = int(enemy.CurrentHealth / 2);
 		damage = dealDamage(damage, guy, enemy, log);
 		string line = "-You cripple the " + string(enemy.Name)
 			+ " for #y" + to_string(damage)
@@ -1528,17 +1536,16 @@ void Card::specialFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Merge") {
-		//Take 15 damage. Deal 6x(Skl) damage
-		guy.TakeDamage(15);
-		int damage = guy.Skill * 6;
+		//Deal 7x(Skl) damage. Burn
+		int damage = guy.Skill * 7;
 		damage = dealDamage(damage, guy, enemy, log);
 
-		string line = "-You take #r15#o damage and deal #y" + to_string(damage) + "#o damage.";
+		string line = "-You merge with the " + string(enemy.Name) + " for #y" + to_string(damage) + "#o damage.";
 		log.PushPop(line);
 	}
 	else if (CardName == "Entomb") {
-		//Enemy cannot take or deal damage for 2 turns
-		guy.entomb += 2;
+		//Enemy cannot take or deal damage for 4 turns. Burn
+		guy.entomb += 4;
 		string line = "#c-You entomb the " + string(enemy.Name) + ".#m";
 		log.PushPop(line);
 	}
@@ -1553,49 +1560,47 @@ void Card::specialFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line2);
 	}
 	else if (CardName == "Prepare") {
-		//Fill your hand with spells. Gain 5 mana and 1 turn
+		//Fill hand with spells. Full mana. Extra turn. Burn this card
 		guy.fillType = "Spell";
-		guy.DrainMana(-5);
+		guy.CurrentMana = guy.MaxMana;
 		guy.extraTurns++;
-		string line = "#m-You gain 5 mana.#o";
 		string line2 = "#g EXTRA TURN#o";
-		log.PushPop(line);
 		log.PushPop(line2);
 	}
 	else if (CardName == "Grow") {
-		//Gain 1 Str for the battle
-		guy.ModStat(1, "Strength");
-		guy.strMod--;
+		//Gain 4 Str for the battle. Burn
+		guy.ModStat(4, "Strength");
+		guy.strMod-=4;
 
-		string line = "#g-You gain 1 Strength.#o";
+		string line = "#g-You gain 3 Strength.#o";
 		log.PushPop(line);
 	}
 	else if (CardName == "Solidify") {
-		//Gain 1 Def for the battle
-		guy.ModStat(1, "Defense");
-		guy.defMod--;
+		//Gain 4 Def for the battle. Burn
+		guy.ModStat(4, "Defense");
+		guy.defMod-=4;
 
-		string line = "#g-You gain 1 Defense.#o";
+		string line = "#g-You gain 3 Defense.#o";
 		log.PushPop(line);
 	}
 	else if (CardName == "Learn") {
-		//Gain 1 Int for the battle
-		guy.ModStat(1, "Intelligence");
-		guy.intMod--;
+		//Gain 4 Int for the battle. Burn
+		guy.ModStat(4, "Intelligence");
+		guy.intMod-=4;
 
-		string line = "#g-You gain 1 Intelligence.#o";
+		string line = "#g-You gain 3 Intelligence.#o";
 		log.PushPop(line);
 	}
 	else if (CardName == "Train") {
-		//Gain 1 Skl for the battle
-		guy.ModStat(1, "Skill");
-		guy.sklMod--;
+		//Gain 2 Skl for the battle. Burn
+		guy.ModStat(2, "Skill");
+		guy.sklMod-=2;
 
-		string line = "#g-You gain 1 Skill.#o";
+		string line = "#g-You gain 2 Skill.#o";
 		log.PushPop(line);
 	}
 	else if (CardName == "Boost") {
-		//Gain 6 mana. Can overcharge
+		//Gain 5 mana. extra turn
 		guy.DrainMana(-5);
 		guy.extraTurns++;
 
@@ -1605,19 +1610,22 @@ void Card::specialFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line2);
 	}
 	else if (CardName == "Vitalise") {
-		//Gain 15 health
-		guy.TakeDamage(-15);
+		//Full health. Burn this card.
+		guy.CurrentHealth = guy.MaxHealth;
 
-		string line = "You heal #g15#o health.";
+		string line = "#gYou heal to full health.#o";
 		log.PushPop(line);
 	}
 	else if (CardName == "Jump") {
-		//Fill your hand with attacks. Negate 1 attack
+		//Fill hand with attacks. Negate 1 attack. Extra turn. Burn this card.
 		guy.fillType = "Attack";
 		guy.Negate++;
+		guy.extraTurns++;
 
 		string line = "#c-You negate the next attack.#o";
 		log.PushPop(line);
+		string line2 = "#g EXTRA TURN#o";
+		log.PushPop(line2);
 	}
 	else if (CardName == "Combo") {
 		//Fill your hand with specials. Gain 1 turn
@@ -1918,10 +1926,11 @@ void Card::setMod(string Mod, bool On, Character &guy) {
 
 			char chain = getch();
 			if (chain == 27) {
+				guy.Link++;
 				return;
 			}
 			else if (chain == '0') {
-				Link = '0';
+				Link = 0;
 				guy.Link++;
 			}
 			else if (chain == '1' ||
@@ -1933,14 +1942,14 @@ void Card::setMod(string Mod, bool On, Character &guy) {
 				chain == '7' ||
 				chain == '8' ||
 				chain == '9') {
-				Link = chain;
+				Link = chain - '0';
 			}
 			else {
 				setMod(Mod, On, guy);
 			}
 		}
 		else {
-			Link = '0';
+			Link = 0;
 			guy.Link++;
 		}
 	}
@@ -1966,8 +1975,8 @@ string Card::modchars() {
 	if (Void) {
 		charline += "#oV#o";
 	}
-	if (Link != '0') {
-		string s(1, Link);
+	if (Link != 0) {
+		string s = to_string(Link);
 		charline += "#bL" + s + "#o";
 	}
 	return charline;
@@ -1993,8 +2002,8 @@ string Card::modstrings() {
 	if (Void) {
 		mods += "#oVoid#o";
 	}
-	if (Link != '0') {
-		string s(1, Link);
+	if (Link != 0) {
+		string s = to_string(Link);
 		mods += "#bLink-" + s + "#o";
 	}
 	return mods;
@@ -2013,7 +2022,7 @@ void Card::removeMods(Character &guy) {
 		guy.Push++;
 	if (Void)
 		guy.Void++;
-	if (Link != '0')
+	if (Link != 0)
 		guy.Link++;
 
 	Burn = FALSE;
@@ -2022,7 +2031,7 @@ void Card::removeMods(Character &guy) {
 	Copy = FALSE;
 	Push = FALSE;
 	Void = FALSE;
-	Link = '0';
+	Link = 0;
 }
 
 bool Card::checkSameMods(Card kard) {

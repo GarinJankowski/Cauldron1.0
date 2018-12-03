@@ -83,14 +83,14 @@ public:
 	char getTier(int posx, int posy);
 	char getTier();
 
-	//modifier count
-	int Burn = 10;
-	int Stay = 10;
-	int Flow = 10;
-	int Copy = 10;
-	int Push = 10;
-	int Void = 10;
-	int Link = 10;
+	//modifiers
+	int Burn;
+	int Stay;
+	int Flow;
+	int Copy;
+	int Push;
+	int Void;
+	int Link;
 
 	//Traits
 	//sacrifice
@@ -157,9 +157,11 @@ public:
 		bool Green_Blood = FALSE;
 		bool Multi_Tongued = FALSE;
 		bool negotiate = FALSE;
+		int Blacksmith = 0;
 
 	//change stats
 	int TakeDamage(int damageTaken);
+	int gainBlock(int block);
 	int DrainMana(int manaDrained);
 	int ModStat(int bonus, string stat);
 

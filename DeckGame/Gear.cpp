@@ -214,7 +214,7 @@ Gear::Gear(const char *name):GearName(name)
 	}
 	else if (GearName == "Tiny") {
 		Type = "Trait Sacrifice";
-		Description = "Reduce max hp by 39. +10 defense.";
+		Description = "Reduce max hp by 38. +10 defense.";
 	}
 	else if (GearName == "Succumb") {
 		Type = "Trait Sacrifice";
@@ -259,6 +259,10 @@ Gear::Gear(const char *name):GearName(name)
 	else if (GearName == "Inefficient") {
 		Type = "Trait Sacrifice";
 		Description = "Everyone takes 2 turns instead of 1.";
+	}
+	else if (GearName == "Brain Worm") {
+		Type = "Trait Sacrifice";
+		Description = "Lose half your max hp. Double your current max mana.";
 	}
 	
 	//Trait Reward
@@ -389,6 +393,10 @@ Gear::Gear(const char *name):GearName(name)
 	else if (GearName == "Triple-Jointed") {
 		Type = "Trait Reward";
 		Description = "Draw 1 more card every turn.";
+	}
+	else if (GearName == "Blacksmith") {
+		Type = "Trait Reward";
+		Description = "Recieve 12 card modifiers.";
 	}
 	
 	else {
@@ -612,13 +620,13 @@ void Gear::ModDescription() {
 		Description = "Remove this card for the rest of combat.";
 	}
 	else if (GearName == "Stay") {
-		Description = "This card does not discard after use.";
+		Description = "This card has a 70% chance to not discard after use.";
 	}
 	else if (GearName == "Flow") {
 		Description = "This card discards at the end of the turn.";
 	}
 	else if (GearName == "Copy") {
-		Description = "Duplicate this card for the rest of combat.";
+		Description = "Have one more of this card during combat.";
 	}
 	else if (GearName == "Push") {
 		Description = "Discard entire hand after use.";
@@ -1889,12 +1897,12 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 
 	else if (GearName == "Tiny") {
 		if (On) {
-			guy.ModStat(-39, "MaxHealth");
+			guy.ModStat(-38, "MaxHealth");
 			guy.ModStat(10, "Defense");
 			guy.CurrentHealth = guy.MaxHealth;
 		}
 		else {
-			guy.ModStat(39, "MaxHealth");
+			guy.ModStat(38, "MaxHealth");
 			guy.ModStat(-8, "Defense");
 			guy.CurrentHealth = guy.MaxHealth;
 		}
@@ -1990,6 +1998,18 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 		}
 		else {
 			guy.Inefficient = -1;
+		}
+	}
+	else if (GearName == "Brain Worm") {
+		if (On) {
+			int hp = int(guy.MaxHealthBase / 2);
+			guy.ModStat(-1 * hp, "MaxHealth");
+			guy.ModStat(guy.MaxManaBase, "MaxMana");
+		}
+		else {
+			int mana = int(guy.MaxManaBase / 2);
+			guy.ModStat(-1 * mana, "MaxMana");
+			guy.ModStat(guy.MaxHealthBase, "MaxHealth");
 		}
 	}
 }
@@ -2252,6 +2272,14 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 		}
 		else {
 			guy.handSize = 3;
+		}
+	}
+	else if (GearName == "Blacksmith") {
+		if (On) {
+			guy.Blacksmith = 6;
+		}
+		else {
+			guy.Blacksmith = 0;
 		}
 	}
 

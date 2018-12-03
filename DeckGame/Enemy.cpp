@@ -377,9 +377,11 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					CurrentBlock += block;
 					line = "-The Kobold gains #b" + to_string(block) + "#o block.";
 				}
-				else if (rng == 1) {
+				else if (rng == 1 && guy.CurrentHealth > 1) {
 					guy.pierce = TRUE;
 					int damage = rtd(6, 2);
+					if (guy.CurrentHealth < 12)
+						damage = guy.CurrentHealth - 1;
 					damage = guy.TakeDamage(damage);
 					line = "-The Kobold #rpierces your armor#o and stabs you for #r" + to_string(damage) + "#o damage.";
 				}
@@ -2003,7 +2005,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					guy.fillType = "Negative";
 					line = "#r-The Witch curses you.#o";
 				}
-				else if (rng == 0 || (type < 3 && CurrentHealth < 30)) {
+				else if (rng == 0 || (type < 3 && CurrentHealth < 50)) {
 					invisible += rtd(1, 3) + 2;
 					line = "#b-The Witch turns invisible and becomes immune to direct damage.#o";
 					type++;
