@@ -15,6 +15,7 @@
 class Card
 {
 public:
+	Card();
 	Card(const char *name);
 	~Card();
 

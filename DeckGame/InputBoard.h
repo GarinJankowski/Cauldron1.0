@@ -46,29 +46,36 @@ public:
 	string modpickup2;
 
 	vector<Gear> handsNorm;
+	vector<Gear> handsNormREFILL;
 	vector<Gear> handsLate;
+	vector<Gear> handsLateREFILL;
 	vector<Gear> handsRare;
 
 	vector<Gear> bodyNorm;
+	vector<Gear> bodyNormREFILL;
 	vector<Gear> bodyLate;
+	vector<Gear> bodyLateREFILL;
 	vector<Gear> bodyRare;
 
 	vector<Gear> headNorm;
 	vector<Gear> headRare;
 
 	vector<Card> specialNorm;
-	vector<Card> specialRare;
+	vector<Card> specialNormREFILL;
 	vector<Card> specialDecision;
 
 	vector<Card> AvailableSpells;
 	vector<Card> spellDecision;
 
 	vector<Gear> AvailableTraitsSacrifice;
+	vector<Gear> AvailableTraitsSacrificeREFILL;
 	vector<Gear> AvailableTraitsReward;
+	vector<Gear> AvailableTraitsRewardREFILL;
 	vector<Gear> Traits;
 	vector<Gear> TraitsDecision;
 
 	vector<Enemy> bosses;
+	vector<Enemy> bossesREFILL;
 
 	Enemy tierone;
 	Enemy tiertwo;
@@ -76,6 +83,38 @@ public:
 	Enemy tierthree2;
 
 	Enemy FinalBoss;
+
+	vector<Card> shopAttacks;
+	vector<Card> shopAttacksREFILL;
+	vector<Card> shopDefends;
+	vector<Card> shopDefendsREFILL;
+	//shop items
+		//attacks $12
+	Card shopA;
+	Card shopB;
+	Card shopC;
+		//defends $12
+	Card shopD;
+	Card shopE;
+	Card shopF;
+		//spells $15
+	Card shopG;
+	Card shopH;
+	Card shopI;
+		//specials $18
+	Card shopJ;
+	Card shopK;
+	Card shopL;
+		//gear $20
+	Gear shopM;
+	Gear shopN;
+	Gear shopO;
+		//mods $15
+	string shopP;
+	string shopQ;
+	string shopR;
+		//positive trait $50
+	bool shopS;
 
 	bool pushthisturn = FALSE;
 	int linkdraw = 0;
@@ -130,6 +169,11 @@ public:
 	void updateDeck(Deck &deck);
 	void clearBoard();
 	void clearBoardWhole();
+
+	int generateGold(Enemy &enemy);
+	void generateShop();
+	void printShop(Character &guy);
+	void getchShop(Character &guy, Deck &deck, TextLog &log);
 
 	//special other stuff
 	int negotiateStep;

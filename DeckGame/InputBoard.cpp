@@ -53,6 +53,8 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	handsNorm.push_back(Gear("Dirk"));
 	handsNorm.push_back(Gear("Cutlass"));
 
+	handsNormREFILL = handsNorm;
+
 	handsLate.push_back(Gear("Metal Staff"));
 	handsLate.push_back(Gear("Rapier"));
 	handsLate.push_back(Gear("Sickle"));
@@ -68,6 +70,8 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	handsLate.push_back(Gear("Crystal Ball"));
 	handsLate.push_back(Gear("Arbalest"));
 
+	handsLateREFILL = handsLate;
+
 	handsRare.push_back(Gear("Shield"));
 	handsRare.push_back(Gear("Wand"));
 	handsRare.push_back(Gear("Hand Cannon"));
@@ -81,6 +85,8 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	bodyNorm.push_back(Gear("Feathered Cloak"));
 	bodyNorm.push_back(Gear("Buffalo Hide"));
 
+	bodyNormREFILL = bodyNorm;
+
 	bodyLate.push_back(Gear("Riveted Chainmail"));
 	bodyLate.push_back(Gear("Glitter Robes"));
 	bodyLate.push_back(Gear("Spiked Mail"));
@@ -88,6 +94,8 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	bodyLate.push_back(Gear("Twilight Robes"));
 	bodyLate.push_back(Gear("Crystal Breastplate"));
 	bodyLate.push_back(Gear("Amulet of Aura"));
+
+	bodyLateREFILL = bodyLate;
 
 	bodyRare.push_back(Gear("Turtle Shell"));
 	bodyRare.push_back(Gear("Mage Armor"));
@@ -130,12 +138,13 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	specialNorm.push_back(Card("Jump"));
 	specialNorm.push_back(Card("Prepare"));
 	specialNorm.push_back(Card("Train"));
+	specialNorm.push_back(Card("Steroids"));
+	specialNorm.push_back(Card("Distract"));
 
-	specialRare.push_back(Card("Steroids"));
-	specialRare.push_back(Card("Distract"));
+	specialNormREFILL = specialNorm;
 
 	//spells
-	AvailableSpells.push_back(Card("Channel"));
+	//AvailableSpells.push_back(Card("Channel"));
 	AvailableSpells.push_back(Card("Blast"));
 	AvailableSpells.push_back(Card("Leech"));
 	AvailableSpells.push_back(Card("Transmute"));
@@ -201,6 +210,8 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsSacrifice.push_back(Gear("Inefficient"));
 	AvailableTraitsSacrifice.push_back(Gear("Brain Worm"));
 
+	AvailableTraitsSacrificeREFILL = AvailableTraitsSacrifice;
+
 	AvailableTraitsReward.push_back(Gear("Mending Flesh"));
 	AvailableTraitsReward.push_back(Gear("Gymnast"));
 	AvailableTraitsReward.push_back(Gear("Third Eye"));
@@ -227,10 +238,12 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsReward.push_back(Gear("Scavenger"));
 	AvailableTraitsReward.push_back(Gear("Horns"));
 	AvailableTraitsReward.push_back(Gear("Genius"));
-	AvailableTraitsReward.push_back(Gear("Green Blood"));
+	AvailableTraitsReward.push_back(Gear("Green Scales"));
 	AvailableTraitsReward.push_back(Gear("Multi-Tongued"));
 	AvailableTraitsReward.push_back(Gear("Triple-Jointed"));
 	AvailableTraitsReward.push_back(Gear("Blacksmith"));
+
+	AvailableTraitsRewardREFILL = AvailableTraitsReward;
 
 	//vector of bosses
 	bosses.push_back(Enemy("Paladin"));
@@ -241,6 +254,8 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	bosses.push_back(Enemy("Exorcist"));
 	bosses.push_back(Enemy("Demigod"));
 	bosses.push_back(Enemy("Wolf"));
+
+	bossesREFILL = bosses;
 
 	//decide final boss and themed enemies
 	int rngboss = rand() % 5;
@@ -284,6 +299,37 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 		tierthree1 = Enemy("Weeping Soul");
 		tierthree2 = Enemy("Hellhound");
 	}
+
+	shopAttacks.push_back(Card("Shoot"));
+	shopAttacks.push_back(Card("Throw"));
+	shopAttacks.push_back(Card("Impale"));
+	shopAttacks.push_back(Card("Parry"));
+	shopAttacks.push_back(Card("Feint"));
+	shopAttacks.push_back(Card("Crush"));
+	shopAttacks.push_back(Card("Demolish"));
+	shopAttacks.push_back(Card("Bleed"));
+	shopAttacks.push_back(Card("Stab"));
+	shopAttacks.push_back(Card("Zap"));
+	shopAttacks.push_back(Card("Flay"));
+	shopAttacks.push_back(Card("Slash"));
+	shopAttacks.push_back(Card("Lash"));
+	shopAttacks.push_back(Card("Pummel"));
+
+	shopAttacksREFILL = shopAttacks;
+
+	shopDefends.push_back(Card("Force Field"));
+	shopDefends.push_back(Card("Obstruct"));
+	shopDefends.push_back(Card("Disrupt"));
+	shopDefends.push_back(Card("Dodge"));
+	shopDefends.push_back(Card("Dash"));
+	shopDefends.push_back(Card("Brace"));
+	shopDefends.push_back(Card("Counter"));
+	shopDefends.push_back(Card("Predict"));
+	shopDefends.push_back(Card("Flee"));
+	shopDefends.push_back(Card("Spikes"));
+	shopDefends.push_back(Card("Repulse"));
+
+	shopDefendsREFILL = shopDefends;
 
 	//Multi-Tongued trait
 	negotiateStep = 0;
@@ -768,7 +814,7 @@ void InputBoard::deckLoopMod(Character &guy, Deck &cardDeck, int modindex) {
 			showDeck(guy, cardDeck, TRUE);
 		}
 		else if (mmm == 'g' && guy.Link > 0) {
-			if (cardDeck.cardDeck.at(modindex).Link == '0') {
+			if (cardDeck.cardDeck.at(modindex).Link == 0) {
 				guy.Link--;
 			}
 			cardDeck.cardDeck.at(modindex).setMod("Link", true, guy);
@@ -1440,8 +1486,8 @@ void InputBoard::ShuffleAddPrint() {
 		int limit = 0;
 		while (DecisionCards.size() > limit) {
 			if (DecisionCards.at(limit).StayCard) {
-				limit++;
 				DecisionCards.at(limit).StayCard = FALSE;
+				limit++;
 			}
 			else {
 				Discard.push_back(DecisionCards.at(limit));
@@ -1554,7 +1600,7 @@ void InputBoard::ShuffleAddPrint() {
 		if (Third_Eye) {
 			int y = 16;
 			if (handSize == 4)
-				y += 2;
+				y += 3;
 			for (int i = y; i < y + 3; i++) {
 				mvprintw(y, 63, "               ");
 			}
@@ -1885,6 +1931,8 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 
 	updateDeck(deck);
 		Enemy enemy;
+		for (int i = 0; i < 8; i++)
+			mvprintw(6 + i, 29, "             ");
 		manualBox("Display", 0);
 
 		//gets the final boss
@@ -1895,14 +1943,7 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 		else if (RoomType == "Boss") {
 			//check if boss array is empty
 			if (bosses.size() < 1) {
-				bosses.push_back(Enemy("Paladin"));
-				bosses.push_back(Enemy("Hunter"));
-				bosses.push_back(Enemy("Juggernaut"));
-				bosses.push_back(Enemy("Vampire"));
-				bosses.push_back(Enemy("Hydra"));
-				bosses.push_back(Enemy("Exorcist"));
-				bosses.push_back(Enemy("Demigod"));
-				bosses.push_back(Enemy("Wolf"));
+				bosses = bossesREFILL;
 			}
 			int rng = rand() % bosses.size();
 			enemy = bosses.at(rng);
@@ -2552,6 +2593,12 @@ bool InputBoard::checkEnemyLife(Character &guy, Enemy &enemy, Deck &deck, TextLo
 			string line = "-The " + string(enemy.Name)
 				+ " dies. ";
 			log.PushPop(line);
+
+			int gold = generateGold(enemy);
+			guy.Gold += gold;
+			string goldline = "#y~You gain " + to_string(gold) + " gold.#o";
+			log.PushPop(goldline);
+
 			log.printLog();
 
 			//revert in-battle effects
@@ -2653,32 +2700,37 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		for (int y = 16; y < 24; y++) {
 			mvprintw(y, 1, "                                                                      ");
 		}
+		for (int i = 5; i < 15; i++)
+			mvprintw(i, 28, "               ");
+
 		manualBox("Card 2", 0);
 		//print legend
 		attron(COLOR_PAIR(5));
-		mvprintw(16, 4, "!");
+		mvprintw(5, 29, "!");
 		attron(COLOR_PAIR(7));
-		mvprintw(17, 4, "o");
-		mvprintw(18, 4, "&");
+		mvprintw(6, 29, "o");
+		mvprintw(7, 29, "&");
 		attron(COLOR_PAIR(2));
-		mvprintw(19, 4, "^");
-		mvprintw(20, 4, "#");
-		mvprintw(21, 4, "/");
-		attron(COLOR_PAIR(1));
-		mvprintw(22, 4, "*");
+		mvprintw(9, 29, "^");
+		mvprintw(10, 29, "#");
+		mvprintw(11, 29, "/");
+		attron(COLOR_PAIR(6));
+		mvprintw(12, 29, "=");
 		attron(COLOR_PAIR(3));
-		mvprintw(23, 4, "+");
+		mvprintw(13, 29, "+");
+		attron(COLOR_PAIR(1));
+		mvprintw(14, 29, "$");
 		standend();
 
-		mvprintw(16, 6, "= Combat");
-		mvprintw(17, 6, "= Boss");
-		mvprintw(18, 6, "= Final Boss");
-
-		mvprintw(19, 6, "= Headgear");
-		mvprintw(20, 6, "= Armor");
-		mvprintw(21, 6, "= Weapon");
-		mvprintw(22, 6, "= Forge");
-		mvprintw(23, 6, "= Cauldron");
+		mvprintw(5, 31, "= Combat");
+		mvprintw(6, 31, "= Boss");
+		mvprintw(7, 31, "= Final Boss");
+		mvprintw(9, 31, "= Headgear");
+		mvprintw(10, 31, "= Armor");
+		mvprintw(11, 31, "= Weapon");
+		mvprintw(12, 31, "= Forge");
+		mvprintw(13, 31, "= Cauldron");
+		mvprintw(14, 31, "= Shop");
 
 		mvprintw(17, 26, "Which way?");
 		if (guy.posx == 25) {
@@ -2699,6 +2751,36 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		for (int y = 16; y < 24; y++) {
 			mvprintw(y, 1, "                                                                            ");
 		}
+		for (int i = 5; i < 15; i++)
+			mvprintw(i, 28, "               ");
+		//print legend
+		attron(COLOR_PAIR(5));
+		mvprintw(5, 29, "!");
+		attron(COLOR_PAIR(7));
+		mvprintw(6, 29, "o");
+		mvprintw(7, 29, "&");
+		attron(COLOR_PAIR(2));
+		mvprintw(9, 29, "^");
+		mvprintw(10, 29, "#");
+		mvprintw(11, 29, "/");
+		attron(COLOR_PAIR(6));
+		mvprintw(12, 29, "=");
+		attron(COLOR_PAIR(3));
+		mvprintw(13, 29, "+");
+		attron(COLOR_PAIR(1));
+		mvprintw(14, 29, "$");
+		standend();
+
+		mvprintw(5, 31, "= Combat");
+		mvprintw(6, 31, "= Boss");
+		mvprintw(7, 31, "= Final Boss");
+		mvprintw(9, 31, "= Headgear");
+		mvprintw(10, 31, "= Armor");
+		mvprintw(11, 31, "= Weapon");
+		mvprintw(12, 31, "= Forge");
+		mvprintw(13, 31, "= Cauldron");
+		mvprintw(14, 31, "= Shop");
+
 		manualBox("Card 1", 0);
 		manualBox("Card 2", 0);
 		manualBox("Card 3", 0);
@@ -2725,6 +2807,9 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		for (int y = 16; y < 24; y++) {
 			mvprintw(y, 1, "                                                                            ");
 		}
+		for (int i = 5; i < 15; i++)
+			mvprintw(i, 28, "               ");
+
 		//Teleportitis trait
 		if (guy.Teleportitis && rand() % 4 == 0) {
 			int tiles = (rand() % 4)-2;
@@ -2755,29 +2840,31 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		//print legend
 
 		attron(COLOR_PAIR(5));
-		mvprintw(16, 4, "!");
+		mvprintw(5, 29, "!");
 		attron(COLOR_PAIR(7));
-		mvprintw(17, 4, "o");
-		mvprintw(18, 4, "&");
+		mvprintw(6, 29, "o");
+		mvprintw(7, 29, "&");
 		attron(COLOR_PAIR(2));
-		mvprintw(19, 4, "^");
-		mvprintw(20, 4, "#");
-		mvprintw(21, 4, "/");
-		attron(COLOR_PAIR(1));
-		mvprintw(22, 4, "*");
+		mvprintw(9, 29, "^");
+		mvprintw(10, 29, "#");
+		mvprintw(11, 29, "/");
+		attron(COLOR_PAIR(6));
+		mvprintw(12, 29, "=");
 		attron(COLOR_PAIR(3));
-		mvprintw(23, 4, "+");
+		mvprintw(13, 29, "+");
+		attron(COLOR_PAIR(1));
+		mvprintw(14, 29, "$");
 		standend();
 
-		mvprintw(16, 6, "= Combat");
-		mvprintw(17, 6, "= Boss");
-		mvprintw(18, 6, "= Final Boss");
-
-		mvprintw(19, 6, "= Headgear");
-		mvprintw(20, 6, "= Armor");
-		mvprintw(21, 6, "= Weapon");
-		mvprintw(22, 6, "= Forge");
-		mvprintw(23, 6, "= Cauldron");
+		mvprintw(5, 31, "= Combat");
+		mvprintw(6, 31, "= Boss");
+		mvprintw(7, 31, "= Final Boss");
+		mvprintw(9, 31, "= Headgear");
+		mvprintw(10, 31, "= Armor");
+		mvprintw(11, 31, "= Weapon");
+		mvprintw(12, 31, "= Forge");
+		mvprintw(13, 31, "= Cauldron");
+		mvprintw(14, 31, "= Shop");
 
 		mvprintw(17, 26, "Which way?");
 		//print available options
@@ -2917,6 +3004,10 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 			TraitsDecision.at(i).printGear(i + 1, guy);
 		}
 	}
+	else if (RoomType == "Shop") {
+		generateShop();
+		printShop(guy);
+	}
 }
 
 void InputBoard::generateMods() {
@@ -2998,53 +3089,19 @@ void InputBoard::generateMods() {
 void InputBoard::generateGear(Character &guy) {
 	//refill any arrays if needed
 	if (handsNorm.size() == 0) {
-		handsNorm.push_back(Gear("Long Sword"));
-		handsNorm.push_back(Gear("Falchion"));
-		handsNorm.push_back(Gear("Staff"));
-		handsNorm.push_back(Gear("Steel Spear"));
-		handsNorm.push_back(Gear("Halberd"));
-		handsNorm.push_back(Gear("Rapier"));
-		handsNorm.push_back(Gear("Battle Axe"));
-		handsNorm.push_back(Gear("Shiv"));
-		handsNorm.push_back(Gear("Serrated Dagger"));
-		handsNorm.push_back(Gear("Simple Bow"));
-		handsNorm.push_back(Gear("Sickle"));
+		handsNorm = handsNormREFILL;
 	}
 	if (handsLate.size() == 0) {
-		handsLate.push_back(Gear("Obsidian Spear"));
-		handsLate.push_back(Gear("Lance"));
-		handsLate.push_back(Gear("War Hammer"));
-		handsLate.push_back(Gear("Morning Star"));
-		handsLate.push_back(Gear("Double Axe"));
-		handsLate.push_back(Gear("Throwing Stars"));
-		handsLate.push_back(Gear("Recurve Bow"));
+		handsLate = handsLateREFILL;
 	}
 	if (bodyNorm.size() == 0) {
-		bodyNorm.push_back(Gear("Leather Hauberk"));
-		bodyNorm.push_back(Gear("Reinforced Mail"));
-		bodyNorm.push_back(Gear("Full Plate Armor"));
-		bodyNorm.push_back(Gear("Cape"));
-		bodyNorm.push_back(Gear("Steel Breastplate"));
-		bodyNorm.push_back(Gear("Feathered Cloak"));
-		bodyLate.push_back(Gear("Buffalo Hide"));
+		bodyNorm = bodyNormREFILL;
 	}
 	if (bodyLate.size() == 0) {
-		bodyLate.push_back(Gear("Riveted Chainmail"));
-		bodyLate.push_back(Gear("Glitter Robes"));
-		bodyLate.push_back(Gear("Spiked Mail"));
-		bodyLate.push_back(Gear("Dragon Scales"));
-		bodyLate.push_back(Gear("Twilight Robes"));
-		bodyLate.push_back(Gear("Crystal Breastplate"));
+		bodyLate = bodyLateREFILL;
 	}
 	if (headNorm.size() == 0) {
-		headNorm.push_back(Gear("Vampire Fangs"));
-		headNorm.push_back(Gear("Warp Goggles"));
-		headNorm.push_back(Gear("Tundra Cap"));
-		headNorm.push_back(Gear("Plague Mask"));
-		headNorm.push_back(Gear("Dragonskin Hood"));
-		headNorm.push_back(Gear("Shifting Veil"));
-		headNorm.push_back(Gear("Copper Cage"));
-		headNorm.push_back(Gear("Bedstone Helmet"));
+		headNorm.push_back(Gear("Brown Hat"));
 	}
 
 	bool rare = FALSE;
@@ -3182,26 +3239,8 @@ void InputBoard::generateGear(Character &guy) {
 
 void InputBoard::generateSpecial() {
 	if (specialNorm.size() < 3) {
-		specialNorm.push_back(Card("Metabolise"));
-		specialNorm.push_back(Card("Change Mind"));
-		specialNorm.push_back(Card("Intimidate"));
-		specialNorm.push_back(Card("Cripple"));
-		specialNorm.push_back(Card("Merge"));
-		specialNorm.push_back(Card("Entomb"));
-		specialNorm.push_back(Card("Grow"));
-		specialNorm.push_back(Card("Solidify"));
-		specialNorm.push_back(Card("Learn"));
-		specialNorm.push_back(Card("Boost"));
-		specialNorm.push_back(Card("Vitalise"));
-		specialNorm.push_back(Card("Combo"));
-		specialNorm.push_back(Card("Slam"));
+		specialNorm = specialNormREFILL;
 		
-	}
-
-	if (rand() % 12 == 0 && specialRare.size() > 0) {
-		int rareng = rand() % specialRare.size();
-		specialDecision.push_back(specialRare.at(rareng));
-		specialRare.erase(specialRare.begin()+rareng);
 	}
 	while (specialDecision.size() < 3) {
 		int rng = rand() % specialNorm.size();
@@ -3213,43 +3252,10 @@ void InputBoard::generateSpecial() {
 void InputBoard::generateTraits() {
 	if (AvailableTraitsSacrifice.size() < 3) {
 		//traits
-		AvailableTraitsSacrifice.push_back(Gear("Anemia"));
-		AvailableTraitsSacrifice.push_back(Gear("Dumb"));
-		AvailableTraitsSacrifice.push_back(Gear("Mind Flooded"));
-		AvailableTraitsSacrifice.push_back(Gear("Tunnel Vision"));
-		AvailableTraitsSacrifice.push_back(Gear("Teleportitis"));
-		AvailableTraitsSacrifice.push_back(Gear("Growing Pains"));
-		AvailableTraitsSacrifice.push_back(Gear("Conversion"));
-		AvailableTraitsSacrifice.push_back(Gear("Inversion"));
-		AvailableTraitsSacrifice.push_back(Gear("Jittery"));
-		AvailableTraitsSacrifice.push_back(Gear("Tumors"));
-		//AvailableTraitsSacrifice.push_back(Gear("Devolve")); not yet
-		AvailableTraitsSacrifice.push_back(Gear("Volatile"));
-		AvailableTraitsSacrifice.push_back(Gear("Melting"));
-		AvailableTraitsSacrifice.push_back(Gear("Amnesia"));
-		AvailableTraitsSacrifice.push_back(Gear("Oblivious"));
-		AvailableTraitsSacrifice.push_back(Gear("Numb"));
-		AvailableTraitsSacrifice.push_back(Gear("Blind"));
-		AvailableTraitsSacrifice.push_back(Gear("Sensitive"));
-		AvailableTraitsSacrifice.push_back(Gear("Frenzy"));
+		AvailableTraitsSacrifice = AvailableTraitsSacrificeREFILL;
 	}
 	if (AvailableTraitsReward.size() < 3) {
-		AvailableTraitsReward.push_back(Gear("Mending Flesh"));
-		AvailableTraitsReward.push_back(Gear("Gymnast"));
-		AvailableTraitsReward.push_back(Gear("Third Eye"));
-		AvailableTraitsReward.push_back(Gear("Warper"));
-		AvailableTraitsReward.push_back(Gear("Growth Spurt"));
-		AvailableTraitsReward.push_back(Gear("Mind"));
-		AvailableTraitsReward.push_back(Gear("Matter"));
-		AvailableTraitsReward.push_back(Gear("Sharp Claws"));
-		//AvailableTraitsReward.push_back(Gear("Gift")); not yet
-		AvailableTraitsReward.push_back(Gear("Unseen"));
-		AvailableTraitsReward.push_back(Gear("Spiny Skin"));
-		//AvailableTraitsReward.push_back(Gear("Adapt")); not yet
-		AvailableTraitsReward.push_back(Gear("Wings"));
-		AvailableTraitsReward.push_back(Gear("Exoskeleton"));
-		AvailableTraitsReward.push_back(Gear("Unpredictable"));
-		AvailableTraitsReward.push_back(Gear("Ego"));
+		AvailableTraitsReward = AvailableTraitsRewardREFILL;
 	}
 
 	if (RoomType == "Cauldron") {
@@ -3292,7 +3298,7 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 		return;
 	}
 
-	if (RoomType != "Combat" && RoomType != "Final Boss" && RoomType != "Boss") {
+	if (RoomType != "Combat" && RoomType != "Final Boss" && RoomType != "Boss" && RoomType != "Shop") {
 		char choose = getch();
 		if (choose == 'd') {
 			//deck.deckScreen();
@@ -3484,10 +3490,26 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					RoomType = "Mod";
 					guy.Blacksmith--;
 				}
+				else if (guy.Destiny > 1) {
+					RoomType = "Cauldron";
+					guy.Destiny--;
+				}
 				else
 					RoomType = "Empty";
-				printDecision(guy, log);
-				getchDecision(guy, deck, log);
+
+
+				//getting a trait in shop
+				if (shopS && guy.Blacksmith == 0) {
+					shopS = FALSE;
+					printShop(guy);
+					RoomType = "Shop";
+					//getchShop(guy, deck, log);
+				}
+
+				if (RoomType != "Shop") {
+					printDecision(guy, log);
+					getchDecision(guy, deck, log);
+				}
 			}
 			else
 				getchDecision(guy, deck, log);
@@ -3723,8 +3745,16 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					mvprintw(6 + i, 29, "             ");
 				mvprintw(17, 62, "         ");
 				guy.printStats();
-				RoomType = "Empty";
-				printDecision(guy, log);
+				//getting a trait in shop
+				if (shopS) {
+					printShop(guy);
+					RoomType = "Shop";
+					//getchShop(guy, deck, log);
+				}
+				else {
+					RoomType = "Empty";
+					printDecision(guy, log);
+				}
 				//getchDecision(guy, deck, log);
 			}
 			else {
@@ -3761,8 +3791,16 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					mvprintw(6 + i, 29, "             ");
 				mvprintw(17, 62, "         ");
 				guy.printStats();
-				RoomType = "Empty";
-				printDecision(guy, log);
+				//getting a trait in shop
+				if (shopS) {
+					printShop(guy);
+					RoomType = "Shop";
+					//getchShop(guy, deck, log);
+				}
+				else {
+					RoomType = "Empty";
+					printDecision(guy, log);
+				}
 				//getchDecision(guy, deck, log);
 			}
 			else {
@@ -3876,7 +3914,8 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					//Blacksmith trait
 					if (guy.Blacksmith > 0) {
 						RoomType = "Mod";
-						guy.Blacksmith--;
+						if(!shopS)
+							guy.Blacksmith--;
 					}
 					//Destiny trait
 					else if (guy.Destiny > 1) {
@@ -3887,8 +3926,18 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 						RoomType = "Empty";
 					}
 
-					printDecision(guy, log);
-					getchDecision(guy, deck, log);
+					//getting a trait in shop
+					if (shopS && guy.Destiny <= 1 && guy.Blacksmith == 0) {
+						shopS = FALSE;
+						printShop(guy);
+						RoomType = "Shop";
+					}
+
+
+					if (RoomType != "Shop") {
+						printDecision(guy, log);
+						getchDecision(guy, deck, log);
+					}
 				}
 			}
 			else {
@@ -3905,6 +3954,9 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 	else if (RoomType == "Final Boss") {
 		startBattle(guy, deck, log);
 	}
+	else if (RoomType == "Shop") {
+		getchShop(guy, deck, log);
+	}	
 	
 }
 
@@ -4073,6 +4125,536 @@ void InputBoard::shuffleHand() {
 			Draw.pop_back();
 		}
 		ShuffleAddPrint();
+	}
+}
+
+//generate gold based on enemy
+int InputBoard::generateGold(Enemy &enemy) {
+	int gold = 0;
+	if (enemy.Name == "Rat") {
+		gold = 2;
+	}
+	else if (enemy.Name == "Crab" ||
+		enemy.Name == "Kobold" ||
+		enemy.Name == "Hound" ||
+		enemy.Name == "Zombie" ||
+		enemy.Name == "Hatchling" ||
+		enemy.Name == "Slave" ||
+		enemy.Name == "Eyeball" ||
+		enemy.Name == "Cultist" ||
+		enemy.Name == "Robot") {
+		gold = 3;
+	}
+	else if (enemy.Name == "Giant Rat" ||
+		enemy.Name == "Wild Buffalo" ||
+		enemy.Name == "Harpy" ||
+		enemy.Name == "Fairy" ||
+		enemy.Name == "Brown Recluse" ||
+		enemy.Name == "Molten Jelly" ||
+		enemy.Name == "Soldier" ||
+		enemy.Name == "Apprentice" ||
+		enemy.Name == "Imp" ||
+		enemy.Name == "Golem") {
+		gold = 5;
+	}
+	else if (enemy.Name == "Adventurer" ||
+		enemy.Name == "Troll" ||
+		enemy.Name == "Elemental" ||
+		enemy.Name == "Drake" ||
+		enemy.Name == "Knight" ||
+		enemy.Name == "Guard" ||
+		enemy.Name == "Jester" ||
+		enemy.Name == "Monster" ||
+		enemy.Name == "Brain" ||
+		enemy.Name == "Weeping Soul" ||
+		enemy.Name == "Hellhound" ||
+		enemy.Name == "Turret") {
+		gold = 7;
+	}
+	else if (enemy.Name == "Merchnat") {
+		gold = 15;
+	}
+	else if (enemy.Name == "Paladin" ||
+		enemy.Name == "Hunter" ||
+		enemy.Name == "Juggernaut" ||
+		enemy.Name == "Vampire" ||
+		enemy.Name == "Hydra" ||
+		enemy.Name == "Wolf" ||
+		enemy.Name == "Exorcist" ||
+		enemy.Name == "Demigod") {
+		gold = 20;
+	}
+	return gold;
+}
+
+//generate shop items
+void InputBoard::generateShop() {
+	//generate attacks
+	int rng = rand() % shopAttacks.size();
+	shopA = shopAttacks.at(rng);
+	shopAttacks.erase(shopAttacks.begin() + rng);
+
+	rng = rand() % shopAttacks.size();
+	shopB = shopAttacks.at(rng);
+	shopAttacks.erase(shopAttacks.begin() + rng);
+
+	rng = rand() % shopAttacks.size();
+	shopC = shopAttacks.at(rng);
+	shopAttacks.erase(shopAttacks.begin() + rng);
+
+	//generate defends
+	rng = rand() % shopDefends.size();
+	shopD = shopDefends.at(rng);
+	shopDefends.erase(shopDefends.begin() + rng);
+
+	rng = rand() % shopDefends.size();
+	shopE = shopDefends.at(rng);
+	shopDefends.erase(shopDefends.begin() + rng);
+
+	rng = rand() % shopDefends.size();
+	shopF = shopDefends.at(rng);
+	shopDefends.erase(shopDefends.begin() + rng);
+
+	//generate spells
+	rng = rand() % AvailableSpells.size();
+	shopG = AvailableSpells.at(rng);
+
+	int rng2 = rand() % AvailableSpells.size();
+	if (rng2 == rng)
+		rng2++;
+	if (rng2 == AvailableSpells.size())
+		rng2 -= 2;
+	shopH = AvailableSpells.at(rng2);
+
+	rng = rand() % AvailableSpells.size();
+	if (rng2 == rng)
+		rng++;
+	if (rng == AvailableSpells.size())
+		rng -= 2;
+	shopI = AvailableSpells.at(rng);
+
+	//generate specials
+	rng = rand() % specialNormREFILL.size();
+	shopJ = specialNormREFILL.at(rng);
+
+	rng2 = rand() % specialNormREFILL.size();
+	if (rng2 == rng)
+		rng2++;
+	if (rng2 == specialNormREFILL.size())
+		rng2 -= 2;
+	shopK = specialNormREFILL.at(rng2);
+
+	rng = rand() % specialNormREFILL.size();
+	if (rng2 == rng)
+		rng++;
+	if (rng == AvailableSpells.size())
+		rng -= 2;
+	shopL = specialNormREFILL.at(rng);
+
+	//generate gear
+	if (handsLate.size() == 0)
+		handsLate = handsLateREFILL;
+	rng = rand() % handsLate.size();
+	shopM = handsLate.at(rng);
+
+	if (bodyLate.size() == 0)
+		bodyLate = bodyLateREFILL;
+	rng = rand() % bodyLate.size();
+	shopN = bodyLate.at(rng);
+
+	if (headNorm.size() == 0)
+		headNorm.push_back(Gear("Brown Hat"));
+	rng = rand() % headNorm.size();
+	shopO = headNorm.at(rng);
+
+	//generate mods
+	vector<string> modchoice;
+	modchoice.push_back("#rBurn#o");
+	modchoice.push_back("#gStay#o");
+	modchoice.push_back("#cFlow#o");
+	modchoice.push_back("#mCopy#o");
+	modchoice.push_back("#yPush#o");
+	modchoice.push_back("#oVoid#o");
+	modchoice.push_back("#bLink x2#o");
+
+	rng = rand() % modchoice.size();
+	shopP = modchoice.at(rng);
+	modchoice.erase(modchoice.begin() + rng);
+
+	rng = rand() % modchoice.size();
+	shopQ = modchoice.at(rng);
+	modchoice.erase(modchoice.begin() + rng);
+
+	rng = rand() % modchoice.size();
+	shopR = modchoice.at(rng);
+	modchoice.erase(modchoice.begin() + rng);
+
+	//positive trait
+	shopS = FALSE;
+}
+
+//print the shop in the Decision area
+void InputBoard::printShop(Character &guy) {
+	/*
+
+						  -------------
+						  |	  Shop    |
+	a)$13 smack			  -------------         m)$20 battle axe
+	b)$13 smack           g)$15 blast           n)$20 leather hauberk
+	c)$13 smack           h)$15 blast           o)$20 warp goggles
+	d)$10 endure          i)$15 blast           p)$15 copy
+	e)$10 endure          j)$18 haste           q)$15 flow
+	f)$10 endure          k)$18 haste           r)$15 link x2
+						  l)$18 haste			s)$80 Positive Trait
+
+				   ^not actually how its formatted^
+	*/
+	clearBoardWhole();
+
+	mvprintInSize(18, 6, 0, "a)#y12g#o", FALSE);
+	mvprintInSize(19, 6, 0, "b)#y12g#o", FALSE);
+	mvprintInSize(20, 6, 0, "c)#y12g#o", FALSE);
+	mvprintInSize(21, 6, 0, "d)#y12g#o", FALSE);
+	mvprintInSize(22, 6, 0, "e)#y12g#o", FALSE);
+	mvprintInSize(23, 6, 0, "f)#y12g#o", FALSE);
+	attron(COLOR_PAIR(1));
+	mvprintInSize(18, 12, 0, shopA.CardName, FALSE);
+	mvprintInSize(19, 12, 0, shopB.CardName, FALSE);
+	mvprintInSize(20, 12, 0, shopC.CardName, FALSE);
+	attron(COLOR_PAIR(2));
+	mvprintInSize(21, 12, 0, shopD.CardName, FALSE);
+	mvprintInSize(22, 12, 0, shopE.CardName, FALSE);
+	mvprintInSize(23, 12, 0, shopF.CardName, FALSE);
+	standend();
+
+	mvprintInSize(18, 28, 0, "g)#y15g#o", FALSE);
+	mvprintInSize(19, 28, 0, "h)#y15g#o", FALSE);
+	mvprintInSize(20, 28, 0, "i)#y15g#o", FALSE);
+	mvprintInSize(21, 28, 0, "j)#y18g#o", FALSE);
+	mvprintInSize(22, 28, 0, "k)#y18g#o", FALSE);
+	mvprintInSize(23, 28, 0, "l)#y18g#o", FALSE);
+	attron(COLOR_PAIR(3));
+	mvprintInSize(18, 34, 0, shopG.CardName, FALSE);
+	mvprintInSize(19, 34, 0, shopH.CardName, FALSE);
+	mvprintInSize(20, 34, 0, shopI.CardName, FALSE);
+	standend();
+	mvprintInSize(21, 34, 0, shopJ.CardName, FALSE);
+	mvprintInSize(22, 34, 0, shopK.CardName, FALSE);
+	mvprintInSize(23, 34, 0, shopL.CardName, FALSE);
+
+	mvprintInSize(17, 50, 0, "m)#y20g#o", FALSE);
+	mvprintInSize(18, 50, 0, "n)#y20g#o", FALSE);
+	mvprintInSize(19, 50, 0, "o)#y20g#o", FALSE);
+	mvprintInSize(20, 50, 0, "p)#y15g#o", FALSE);
+	mvprintInSize(21, 50, 0, "q)#y15g#o", FALSE);
+	mvprintInSize(22, 50, 0, "r)#y15g#o", FALSE);
+	mvprintInSize(23, 50, 0, "s)#y50g#o #gPositive Trait#o", FALSE);
+	attron(COLOR_PAIR(6));
+	mvprintInSize(17, 56, 0, shopM.GearName, FALSE);
+	mvprintInSize(18, 56, 0, shopN.GearName, FALSE);
+	mvprintInSize(19, 56, 0, shopO.GearName, FALSE);
+	standend();
+	mvprintInSize(20, 56, 0, shopP.c_str(), FALSE);
+	mvprintInSize(21, 56, 0, shopQ.c_str(), FALSE);
+	mvprintInSize(22, 56, 0, shopR.c_str(), FALSE);
+
+	attron(COLOR_PAIR(1));
+	mvprintw(15, 27, "\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD");
+	mvprintInSize(16, 34, 0, "Shop", FALSE);
+	mvprintw(17, 27, "\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD");
+	mvprintw(15, 26, "\u00C9");
+	mvprintw(15, 45, "\u00BB");
+	mvprintw(17, 26, "\u00C8");
+	mvprintw(17, 45, "\u00BC");
+	mvprintw(16, 26, "\u00BA");
+	mvprintw(16, 45, "\u00BA");
+
+	string yg = "Your gold: " + to_string(guy.Gold);
+	mvprintInSize(16, 7, 0, yg.c_str(), FALSE);
+	standend();
+
+	mvprintInSize(24, 30, 0, "(ESC to exit)", FALSE);
+	for (int i = 5; i < 15; i++)
+		mvprintw(i, 28, "               ");
+	manualBox("Display", 0);
+	mvprintInSize(8, 32, 0, "Welcome!", FALSE);
+}
+
+void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
+	guy.printStats();
+	attron(COLOR_PAIR(1));
+	string yg = "Your gold: " + to_string(guy.Gold) + "   ";
+	mvprintInSize(16, 7, 0, yg.c_str(), FALSE);
+	standend();
+	log.printLog();
+	char c = getch();
+
+	if (c == 27) {
+		for (int i = 0; i < 8; i++)
+			mvprintw(6 + i, 29, "             ");
+		clearBoardWhole();
+		manualBox("Decision", 0);
+		RoomType = "Empty";
+		printDecision(guy, log);
+		getchDecision(guy, deck, log);
+	}
+
+	else if (c == 'a' && guy.Gold >= 12 && shopA.CardName != "") {
+		guy.Gold -= 12;
+		Card kard(shopA.CardName);
+		deck.addCard(kard);
+		string line = "#y-You add " + string(shopA.CardName) + " to your deck.#o";
+		log.PushPop(line);
+		shopA.CardName = "";
+		mvprintInSize(18, 11, 0, "                ", FALSE);
+		getchShop(guy, deck, log);
+	}
+	else if (c == 'b' && guy.Gold >= 12 && shopB.CardName != "") {
+		guy.Gold -= 12;
+		Card kard(shopB.CardName);
+		deck.addCard(kard);
+		string line = "#y-You add " + string(shopB.CardName) + " to your deck.#o";
+		log.PushPop(line);
+		shopB.CardName = "";
+		mvprintInSize(19, 11, 0, "                ", FALSE);
+		getchShop(guy, deck, log);
+	}
+	else if (c == 'c' && guy.Gold >= 12 && shopC.CardName != "") {
+		guy.Gold -= 12;
+		Card kard(shopC.CardName);
+		deck.addCard(kard);
+		string line = "#y-You add " + string(shopC.CardName) + " to your deck.#o";
+		log.PushPop(line);
+		shopC.CardName = "";
+		mvprintInSize(20, 11, 0, "                ", FALSE);
+		getchShop(guy, deck, log);
+	}
+	else if (c == 'd' && guy.Gold >= 12 && shopD.CardName != "") {
+		guy.Gold -= 12;
+		Card kard(shopD.CardName);
+		deck.addCard(kard);
+		string line = "#y-You add #c" + string(shopD.CardName) + "#y to your deck.#o";
+		log.PushPop(line);
+		shopD.CardName = "";
+		mvprintInSize(21, 11, 0, "                ", FALSE);
+		getchShop(guy, deck, log);
+	}
+	else if (c == 'e' && guy.Gold >= 12 && shopE.CardName != "") {
+		guy.Gold -= 12;
+		Card kard(shopE.CardName);
+		deck.addCard(kard);
+		string line = "#y-You add #c" + string(shopE.CardName) + "#y to your deck.#o";
+		log.PushPop(line);
+		shopE.CardName = "";
+		mvprintInSize(22, 11, 0, "                ", FALSE);
+		getchShop(guy, deck, log);
+	}
+	else if (c == 'f' && guy.Gold >= 12 && shopF.CardName != "") {
+		guy.Gold -= 12;
+		Card kard(shopF.CardName);
+		deck.addCard(kard);
+		string line = "#y-You add #c" + string(shopF.CardName) + "#y to your deck.#o";
+		log.PushPop(line);
+		shopF.CardName = "";
+		mvprintInSize(23, 11, 0, "                ", FALSE);
+		getchShop(guy, deck, log);
+	}
+	else if (c == 'g' && guy.Gold >= 15 && shopG.CardName != "") {
+		guy.Gold -= 15;
+		Card kard(shopG.CardName);
+		deck.addCard(kard);
+		string line = "#y-You add #m" + string(shopG.CardName) + "#y to your deck.#o";
+		log.PushPop(line);
+		shopG.CardName = "";
+		mvprintInSize(18, 33, 0, "                ", FALSE);
+		getchShop(guy, deck, log);
+	}
+	else if (c == 'h' && guy.Gold >= 15 && shopH.CardName != "") {
+		guy.Gold -= 15;
+		Card kard(shopH.CardName);
+		deck.addCard(kard);
+		string line = "#y-You add #m" + string(shopH.CardName) + "#y to your deck.#o";
+		log.PushPop(line);
+		shopH.CardName = "";
+		mvprintInSize(19, 33, 0, "                 ", FALSE);
+		getchShop(guy, deck, log);
+	}
+	else if (c == 'i' && guy.Gold >= 15 && shopI.CardName != "") {
+		guy.Gold -= 15;
+		Card kard(shopI.CardName);
+		deck.addCard(kard);
+		string line = "#y-You add #m" + string(shopI.CardName) + "#y to your deck.#o";
+		log.PushPop(line);
+		shopI.CardName = "";
+		mvprintInSize(20, 33, 0, "                 ", FALSE);
+		getchShop(guy, deck, log);
+	}
+	else if (c == 'j' && guy.Gold >= 18 && shopJ.CardName != "") {
+		guy.Gold -= 18;
+		Card kard(shopJ.CardName);
+		deck.addCard(kard);
+		string line = "#y-You add #o" + string(shopJ.CardName) + "#y to your deck.#o";
+		log.PushPop(line);
+		shopJ.CardName = "";
+		mvprintInSize(21, 33, 0, "                 ", FALSE);
+		getchShop(guy, deck, log);
+	}
+	else if (c == 'k' && guy.Gold >= 18 && shopK.CardName != "") {
+		guy.Gold -= 18;
+		Card kard(shopK.CardName);
+		deck.addCard(kard);
+		string line = "#y-You add #o" + string(shopK.CardName) + "#y to your deck.#o";
+		log.PushPop(line);
+		shopK.CardName = "";
+		mvprintInSize(22, 33, 0, "                 ", FALSE);
+		getchShop(guy, deck, log);
+	}
+	else if (c == 'l' && guy.Gold >= 18 && shopL.CardName != "") {
+		guy.Gold -= 18;
+		Card kard(shopL.CardName);
+		deck.addCard(kard);
+		string line = "#y-You add #o" + string(shopL.CardName) + "#y to your deck.#o";
+		log.PushPop(line);
+		shopL.CardName = "";
+		mvprintInSize(23, 33, 0, "                 ", FALSE);
+		getchShop(guy, deck, log);
+	}
+	else if (c == 'm' && guy.Gold >= 20 && shopM.GearName != "") {
+		guy.Gold -= 20;
+		Gear gea = shopM;
+		inventory.push_back(gea);
+		string line = "#y-You recieve the #b" + string(shopM.GearName) + "#y.#o";
+		log.PushPop(line);
+		shopM.GearName = "";
+		mvprintInSize(17, 55, 0, "                     ", FALSE);
+		getchShop(guy, deck, log);
+	}
+	else if (c == 'n' && guy.Gold >= 20 && shopN.GearName != "") {
+		guy.Gold -= 20;
+		Gear gea = shopN;
+		inventory.push_back(gea);
+		string line = "#y-You recieve the #b" + string(shopN.GearName) + "#y.#o";
+		log.PushPop(line);
+		shopN.GearName = "";
+		mvprintInSize(18, 55, 0, "                     ", FALSE);
+		getchShop(guy, deck, log);
+	}
+	else if (c == 'o' && guy.Gold >= 20 && shopO.GearName != "") {
+		guy.Gold -= 20;
+		Gear gea = shopO;
+		inventory.push_back(gea);
+		string line = "#y-You recieve the #b" + string(shopO.GearName) + "#y.#o";
+		log.PushPop(line);
+		shopO.GearName = "";
+		mvprintInSize(19, 55, 0, "                     ", FALSE);
+		getchShop(guy, deck, log);
+	}
+	else if (c == 'p' && guy.Gold >= 15 && shopP != "") {
+		guy.Gold -= 15;
+
+		if (shopP == "#rBurn#o") {
+			guy.Burn++;
+		}
+		else if (shopP == "#gStay#o") {
+			guy.Stay++;
+		}
+		else if (shopP == "#cFlow#o") {
+			guy.Flow++;
+		}
+		else if (shopP == "#mCopy#o") {
+			guy.Copy++;
+		}
+		else if (shopP == "#yPush#o") {
+			guy.Push++;
+		}
+		else if (shopP == "#oVoid#o") {
+			guy.Void++;
+		}
+		else if (shopP == "#bLink x2#o") {
+			guy.Link+=2;
+		}
+
+		string line = "#y-You recieve a " + shopP + "#y modifier.#o";
+		log.PushPop(line);
+		shopP = "";
+		mvprintInSize(20, 55, 0, "                     ", FALSE);
+		getchShop(guy, deck, log);
+	}
+	else if (c == 'q' && guy.Gold >= 15 && shopQ != "") {
+		guy.Gold -= 15;
+
+		if (shopQ == "#rBurn#o") {
+			guy.Burn++;
+		}
+		else if (shopQ == "#gStay#o") {
+			guy.Stay++;
+		}
+		else if (shopQ == "#cFlow#o") {
+			guy.Flow++;
+		}
+		else if (shopQ == "#mCopy#o") {
+			guy.Copy++;
+		}
+		else if (shopQ == "#yPush#o") {
+			guy.Push++;
+		}
+		else if (shopQ == "#oVoid#o") {
+			guy.Void++;
+		}
+		else if (shopQ == "#bLink x2#o") {
+			guy.Link += 2;
+		}
+
+		string line = "#y-You recieve a " + shopQ + "#y modifier.#o";
+		log.PushPop(line);
+		shopQ = "";
+		mvprintInSize(21, 55, 0, "                     ", FALSE);
+		getchShop(guy, deck, log);
+	}
+	else if (c == 'r' && guy.Gold >= 15 && shopR != "") {
+		guy.Gold -= 15;
+
+		if (shopR == "#rBurn#o") {
+			guy.Burn++;
+		}
+		else if (shopR == "#gStay#o") {
+			guy.Stay++;
+		}
+		else if (shopR == "#cFlow#o") {
+			guy.Flow++;
+		}
+		else if (shopR == "#mCopy#o") {
+			guy.Copy++;
+		}
+		else if (shopR == "#yPush#o") {
+			guy.Push++;
+		}
+		else if (shopR == "#oVoid#o") {
+			guy.Void++;
+		}
+		else if (shopR == "#bLink x2#o") {
+			guy.Link += 2;
+		}
+
+		string line = "#y-You recieve a " + shopR + "#y modifier.#o";
+		log.PushPop(line);
+		shopR = "";
+		mvprintInSize(22, 55, 0, "                     ", FALSE);
+		getchShop(guy, deck, log);
+	}
+	else if (c == 's' && guy.Gold >= 50) {
+		guy.Gold -= 50;
+
+		shopS = TRUE;
+		RoomType = "Cauldron 2";
+		printDecision(guy, log);
+		getchDecision(guy, deck, log);
+
+		getchShop(guy, deck, log);
+		//mvprintInSize(23, 53, 0, "                        ", FALSE);
+	}
+	else {
+		getchShop(guy, deck, log);
 	}
 }
 

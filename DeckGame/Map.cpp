@@ -11,9 +11,11 @@ Map::Map()
 	int boss = 10;
 
 	int cauldronCounter = 0;
+	int shopCounter = 0;
 	for (int x = 0; x < 26; x++) {
 		for (int y = 0; y < 8; y++) {
 			if (x == 0 && y == 0) {
+				//Room start("First", 0, 0);
 				Room start("First", 0, 0);
 				roomList.push_back(start);
 			}
@@ -68,6 +70,10 @@ Map::Map()
 					else if (rng > 14 && rng <= 16) {
 						bcd = Room("Mod", x, y);
 					}
+					else if (rng == 24 && shopCounter < 1) {
+						bcd = Room("Shop", x, y);
+						shopCounter++;
+					}
 					else if (rng == 25) {
 						bcd = Room("Boss", x, y);
 					}
@@ -80,7 +86,7 @@ Map::Map()
 					//combat, hands, body, head, cauldron, boss
 					rng = rand() % 22;
 					Room e;
-					if (cauldronCounter < 18 && (rng == 0 || rng == 21 || rng == 22)) {
+					if (cauldronCounter < 18 && (rng == 0 || rng == 21)) {
 						e = Room("Cauldron", x, y);
 						cauldronCounter++;
 					}
@@ -95,6 +101,10 @@ Map::Map()
 					}
 					else if (rng > 16 && rng <= 18) {
 						e = Room("Boss", x, y);
+					}
+					else if (rng == 19 && shopCounter < 3) {
+						e = Room("Shop", x, y);
+						shopCounter++;
 					}
 					else {
 						e = Room("Combat", x, y);
@@ -111,6 +121,10 @@ Map::Map()
 					}
 					else if (rng > 0 && rng <= 4) {
 						f = Room("Boss", x, y);
+					}
+					else if (rng == 5 && shopCounter < 4) {
+						f = Room("Shop", x, y);
+						shopCounter++;
 					}
 					else {
 						f = Room("Combat", x, y);

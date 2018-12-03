@@ -30,6 +30,7 @@ public:
 	int Skill;
 	int CurrentBlock;
 	int Negate;
+	int Gold;
 
 	int handSize = 3;
 
@@ -154,7 +155,7 @@ public:
 		int Destiny = 0;
 		int Scavenger = -1;
 		bool Horns = FALSE;
-		bool Green_Blood = FALSE;
+		bool Green_Scales = FALSE;
 		bool Multi_Tongued = FALSE;
 		bool negotiate = FALSE;
 		int Blacksmith = 0;

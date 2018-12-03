@@ -92,8 +92,15 @@ void Room::PrintRoom(bool gray) {
 		if (gray)
 			attron(COLOR_PAIR(8));
 		else
+			attron(COLOR_PAIR(6));
+		mvprintw(13 - posy, 1 + posx, "=");
+	}
+	else if (RoomType == "Shop") {
+		if (gray)
+			attron(COLOR_PAIR(8));
+		else
 			attron(COLOR_PAIR(1));
-		mvprintw(13 - posy, 1 + posx, "*");
+		mvprintw(13 - posy, 1 + posx, "$");
 	}
 	else if (RoomType == "Cauldron") {
 		if (gray)

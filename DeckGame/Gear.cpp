@@ -382,7 +382,7 @@ Gear::Gear(const char *name):GearName(name)
 		Type = "Trait Reward";
 		Description = "+2 Int. Choose a spell.";
 	}
-	else if (GearName == "Green Blood") {
+	else if (GearName == "Green Scales") {
 		Type = "Trait Reward";
 		Description = "All damage taken is reduced by (Skl/2).";
 	}
@@ -1183,12 +1183,8 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 		Card forcefield("Force Field");
 		if (On) {
 			deck.addCard(forcefield);
-			deck.addCard(forcefield);
-			deck.addCard(forcefield);
 		}
 		else {
-			deck.removeCard(forcefield, guy);
-			deck.removeCard(forcefield, guy);
 			deck.removeCard(forcefield, guy);
 		}
 	}
@@ -1356,18 +1352,15 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Amulet of Aura") {
 		Card forcefield("Force Field");
-		Card absorb("Absorb");
 		Card predict("Predict");
 		Card repulse("Repulse");
 		if (On) {
 			deck.addCard(forcefield);
-			deck.addCard(absorb);
 			deck.addCard(predict);
 			deck.addCard(repulse);
 		}
 		else {
 			deck.removeCard(forcefield, guy);
-			deck.removeCard(absorb, guy);
 			deck.removeCard(predict, guy);
 			deck.removeCard(repulse, guy);
 		}
@@ -1376,10 +1369,8 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 		Card block("Block");
 		if (On) {
 			deck.addCard(block);
-			deck.addCard(block);
 		}
 		else {
-			deck.removeCard(block, guy);
 			deck.removeCard(block, guy);
 		}
 	}
@@ -2250,12 +2241,12 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 			guy.Horns = FALSE;
 		}
 	}
-	else if (GearName == "Green Blood") {
+	else if (GearName == "Green Scales") {
 		if (On) {
-			guy.Green_Blood = TRUE;
+			guy.Green_Scales = TRUE;
 		}
 		else {
-			guy.Green_Blood = FALSE;
+			guy.Green_Scales = FALSE;
 		}
 	}
 	else if (GearName == "Multi-Tongued") {

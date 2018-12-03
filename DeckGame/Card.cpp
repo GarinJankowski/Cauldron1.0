@@ -20,6 +20,10 @@ WINDOW *cardWindow;
 //manually draw boxes
 void manualBox(string typebox, int colorpair);
 
+Card::Card() {
+	CardName = "";
+}
+
 Card::Card(const char *name):CardName(name)
 {
 	CardName = name;
@@ -235,7 +239,7 @@ void Card::setDefend() {
 		Description = "Block for (Int)d2.";
 	}
 	else if (CardName == "Block") {
-		Description = "Gain (Def)/2 block. Negate the next hit taken.";
+		Description = "Negate the next 2 hits taken.";
 	}
 	else if (CardName == "Obstruct") {
 		Description = "Gain (Def)d2 block.";
@@ -500,7 +504,7 @@ void Card::setSpecial() {
 		naturalBurn = TRUE;
 	}
 	else if (CardName == "Jump") {
-		Description = "Fill hand with attacks. Negate 1 attack. Extra turn. Burn this card.";
+		Description = "Fill hand with attacks. Negate 1 attack. Burn this card.";
 		naturalBurn = TRUE;
 	}
 	else if (CardName == "Combo") {
@@ -672,6 +676,8 @@ void Card::printCard(int position) {
 	case 4:
 		mvprintInSize(17, 64, 15, CardName, FALSE);
 		manualBox("Card 4", 0);
+		mods = modchars();
+		mvprintInSize(mody, modx + 1, 0, mods.c_str(), FALSE);
 		break;
 
 
@@ -991,11 +997,10 @@ void Card::defendFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Block") {
-		//lose all block, negate one attack
-		int block = gainBlock(int(guy.Defense / 2), guy, enemy);
-		guy.Negate++;
+		//negate 2 attacks
+		guy.Negate+=2;
 
-		string line = "-You gain #c" + to_string(block) + "#o block and #cnegate the next attack.#o";
+		string line = "-You #cnegate the next 2 attacks.#o";
 		log.PushPop(line);
 	}
 	else if (CardName == "Obstruct") {
@@ -1617,15 +1622,12 @@ void Card::specialFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Jump") {
-		//Fill hand with attacks. Negate 1 attack. Extra turn. Burn this card.
+		//Fill hand with attacks. Negate 1 attack. Burn this card.
 		guy.fillType = "Attack";
 		guy.Negate++;
-		guy.extraTurns++;
 
 		string line = "#c-You negate the next attack.#o";
 		log.PushPop(line);
-		string line2 = "#g EXTRA TURN#o";
-		log.PushPop(line2);
 	}
 	else if (CardName == "Combo") {
 		//Fill your hand with specials. Gain 1 turn

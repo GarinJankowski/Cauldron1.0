@@ -3,6 +3,7 @@
 
 int rtd(int multiplier, int power);
 void mvprintInSize(int starty, int startx, int maxx, const char* toBePrinted, bool Fuzzy);
+void manualBox(string typebox, int colorpair);
 
 Character::Character()
 {
@@ -21,6 +22,7 @@ Character::Character()
 	Skill = 0;
 	CurrentBlock = 0;
 	Negate = 0;
+	Gold = 0;
 
 	extraTurns = 0;
 	pierce = FALSE;
@@ -92,6 +94,11 @@ void Character::printStats() {
 	statline = "Skl: " + to_string(Skill) + "  ";
 	//mvprintInSize(3, 31, 0, statline.c_str(), fuzzy);
 	mvprintInSize(3, 27, 0, statline.c_str(), fuzzy);
+
+	statline = "#y" + to_string(Gold) + "g  #o";
+	mvprintInSize(3, 36, 0, statline.c_str(), fuzzy);
+
+	manualBox("Stats", 0);
 }
 
 //get tier of room of character
@@ -364,8 +371,8 @@ int Character::TakeDamage(int damageTaken) {
 	if (damageTaken >= 0 && intimidate > 0) {
 		damageTaken = int(damageTaken / 2);
 	}
-	//Green Blood trait
-	if (Green_Blood && damageTaken > 0) {
+	//Green Scales trait
+	if (Green_Scales && damageTaken > 0) {
 		damageTaken -= int(Skill/2);
 		if (damageTaken < 0)
 			damageTaken = 0;
