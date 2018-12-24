@@ -12,15 +12,20 @@ Map::Map()
 
 	int cauldronCounter = 0;
 	int shopCounter = 0;
+
+	generateTerrain();
+
 	for (int x = 0; x < 26; x++) {
 		for (int y = 0; y < 8; y++) {
 			if (x == 0 && y == 0) {
 				//Room start("First", 0, 0);
 				Room start("First", 0, 0);
+				start.Terrain = "";
 				roomList.push_back(start);
 			}
 			else if (x == 25 && y == 7) {
 				Room fboss("Final Boss", 25, 7);
+				fboss.Terrain = "";
 				roomList.push_back(fboss);
 			}
 			else {
@@ -48,6 +53,7 @@ Map::Map()
 					else {
 						a = Room("Combat", x, y);
 					}
+					a.Terrain = terrainGrid[x][y];
 					roomList.push_back(a);
 				}
 				else if (getTier(x, y) == 'B' || getTier(x, y) == 'C' || getTier(x, y) == 'D') {
@@ -80,6 +86,7 @@ Map::Map()
 					else {
 						bcd = Room("Combat", x, y);
 					}
+					bcd.Terrain = terrainGrid[x][y];
 					roomList.push_back(bcd);
 				}
 				else if (getTier(x, y) == 'E') {
@@ -109,6 +116,7 @@ Map::Map()
 					else {
 						e = Room("Combat", x, y);
 					}
+					e.Terrain = terrainGrid[x][y];
 					roomList.push_back(e);
 				}
 				else if (getTier(x, y) == 'F') {
@@ -129,6 +137,7 @@ Map::Map()
 					else {
 						f = Room("Combat", x, y);
 					}
+					f.Terrain = terrainGrid[x][y];
 					roomList.push_back(f);
 				}
 			}
@@ -149,6 +158,7 @@ void Map::checkPosition(Character &guy, InputBoard &board) {
 	for (int i = 0; i < roomList.size(); i++) {
 		if (roomList.at(i).checkXY(guy.posx, guy.posy)) {
 			board.RoomType = roomList.at(i).RoomType;
+			board.Terrain = roomList.at(i).Terrain;
 		}
 	}
 }
@@ -158,11 +168,27 @@ void Map::PrintWholeMap(Character &guy, InputBoard &board) {
 	guy.RoomUp = FALSE;
 	guy.RoomRight = FALSE;
 
-	//put procgen here
 	for (int x = 0; x < 26; x++) {
 		for (int y = 0; y < 8; y++) {
 			for (int i = 0; i < roomList.size(); i++) {
 				if (roomList.at(i).checkXY(x, y)) {
+					//TERRAIN: Fog
+					if (roomList.at(i).Terrain == "Fog") {
+						if ((roomList.at(i).posx == guy.posx + 1 && roomList.at(i).posy == guy.posy + 1) ||
+							(roomList.at(i).posx == guy.posx + 1 && roomList.at(i).posy == guy.posy - 1) || 
+							(roomList.at(i).posx == guy.posx - 1 && roomList.at(i).posy == guy.posy - 1) || 
+							(roomList.at(i).posx == guy.posx + 1 && roomList.at(i).posy == guy.posy + 1) || 
+							(roomList.at(i).posx == guy.posx + 1 && roomList.at(i).posy == guy.posy) || 
+							(roomList.at(i).posx == guy.posx && roomList.at(i).posy == guy.posy + 1) || 
+							(roomList.at(i).posx == guy.posx - 1 && roomList.at(i).posy == guy.posy) || 
+							(roomList.at(i).posx == guy.posx && roomList.at(i).posy == guy.posy - 1) ||
+							(roomList.at(i).posx == guy.posx && roomList.at(i).posy == guy.posy)) {
+							roomList.at(i).fogged = FALSE;
+						}
+						else {
+							roomList.at(i).fogged = TRUE;
+						}
+					}
 					roomList.at(i).PrintRoom(FALSE);
 				}
 				if (roomList.at(i).posx == guy.posx && roomList.at(i).posy == guy.posy)
@@ -183,6 +209,198 @@ void Map::PrintWholeMap(Character &guy, InputBoard &board) {
 	mvprintw(13 - guy.posy, 1 + guy.posx, "@");
 	attroff(COLOR_PAIR(9));
 	standend();
+}
+
+void Map::generateTerrain() {
+	
+	for (int x = 0; x < 26; x++) {
+		for (int y = 0; y < 8; y++) {
+			terrainGrid[x][y] = "Fog";
+		}
+	}
+
+	for (int i = 0; i < 3; i++) {
+		if (rand() % 2 == 0)
+			generateCity();
+	}
+
+	for (int i = 0; i < 6; i++) {
+		if (rand() % 3 > 1) {
+			generateSingleTerrain("Ice");
+		}
+		if (rand() % 3 > 1) {
+			generateSingleTerrain("Forest");
+		}
+		if (rand() % 7 > 3) {
+			generateSingleTerrain("Magma");
+		}
+		if (rand() % 7 > 4) {
+			generateSingleTerrain("Wasteland");
+		}
+	}
+
+	generateSingleTerrain("Ice");
+	generateSingleTerrain("Forest");
+	generateSingleTerrain("Magma");
+	generateSingleTerrain("Wasteland");
+
+	for (int i = 0; i < 6; i++) {
+		for (int x = 0; x < 26; x++) {
+			for (int y = 0; y < 8; y++) {
+				generateSurroundingTerrain(x, y);
+			}
+		}
+	}
+
+	for (int i = 0; i < 6; i++) {
+		if (rand() % 2 > 0)
+			generateCity();
+	}
+
+	for (int x = 0; x < 26; x++) {
+		for (int y = 0; y < 8; y++) {
+			if (rand() % 10 == 0 && !(x == 0 && y == 0) && !(x == 25 && y == 7)) {
+				terrainGrid[x][y] = "Fog";
+			}
+		}
+	}
+
+	int treasurecount = 0;
+	while (treasurecount < 4) {
+		for (int x = 0; x < 26; x++) {
+			for (int y = 0; y < 8; y++) {
+				if (rand() % 80 == 0 && !(x == 0 && y == 0) && !(x == 25 && y == 7)) {
+					terrainGrid[x][y] = "Treasure";
+					treasurecount++;
+					if (treasurecount > 4)
+						break;
+				}
+				if (treasurecount > 4)
+					break;
+			}
+			if (treasurecount > 4)
+				break;
+		}
+	}
+
+	terrainGrid[0][0] = " ";
+	terrainGrid[25][7] = " ";
+}
+
+void Map::generateSingleTerrain(const char* terrain) {
+	int randx = rand() % 26;
+	int randy = rand() % 8;
+
+	if (terrainGrid[randx][randy] != "Fog" ||
+		(randx == 0 && randy == 0) ||
+		(randx == 25 && randy == 7) ||
+		(terrain == "Forest" && randx < 12 && randy < 4)){
+		return;
+		generateSingleTerrain(terrain);
+	}
+	else {
+		terrainGrid[randx][randy] = terrain;
+	}
+}
+
+int Map::generateSurroundingTerrain(int x, int y) {
+	int num = 0;
+	const char* terr = " ";
+	if(terrainGrid[x][y] != "Fog" && terrainGrid[x][y] != "City")
+		 terr = terrainGrid[x][y];
+	if (terrainGrid[x][y] == terr && terr != " ") {
+		if (y > 0 && rand() % 25 > 17) {
+			terrainGrid[x][y - 1] = terr;
+			num++;
+		}
+		if (x > 0 && rand() % 25 > 17) {
+			terrainGrid[x - 1][y] = terr;
+			num++;
+		}
+		if (y < 7 && rand() % 25 > 17) {
+			terrainGrid[x][y + 1] = terr;
+			num++;
+		}
+		if (x < 25 && rand() % 25 > 17) {
+			terrainGrid[x + 1][y] = terr;
+			num++;
+		}
+		//numIce += num;
+	}
+	return num;
+}
+
+void Map::generateCity() {
+	int sizex = rand() % 4 + 2;
+	int sizey = rand() % 1 + 3;
+
+	if (rand() % 40 == 0)
+		sizex = 6;
+	else if (rand() % 60 == 0)
+		sizex = 7;
+
+	if (rand() % 40 == 0)
+		sizey = 5;
+	else if (rand() % 60 == 0)
+		sizey = 6;
+	else if (rand() % 80 == 0)
+		sizey = 7;
+
+	int posx = rand() % 26;
+	int posy = rand() % 8;
+
+	if (posx + sizex > 25) {
+		posx = 25 - sizex;
+	}
+	if (posy + sizey > 7) {
+		posy = 7 - sizey;
+	}
+
+	for (int x = posx; x < sizex+posx; x++) {
+		for (int y = posy; y < sizey+posy; y++) {
+			terrainGrid[x][y] = "City";
+		}
+	}
+
+	if (rand() % 2 == 0) {
+		int px = rand() % sizex + posx + 1;
+		int py = rand() % sizey + posy + 1;
+
+		generateCity(px, py);
+	}
+}
+
+void Map::generateCity(int px, int py) {
+	int sizex = rand() % 4 + 2;
+	int sizey = rand() % 1 + 3;
+
+	if (rand() % 40 == 0)
+		sizex = 6;
+	else if (rand() % 60 == 0)
+		sizex = 7;
+
+	if (rand() % 40 == 0)
+		sizey = 5;
+	else if (rand() % 60 == 0)
+		sizey = 6;
+	else if (rand() % 80 == 0)
+		sizey = 7;
+
+	int posx = px;
+	int posy = py;
+
+	if (posx + sizex > 25) {
+		posx = 25 - sizex;
+	}
+	if (posy + sizey > 7) {
+		posy = 7 - sizey;
+	}
+
+	for (int x = posx; x < sizex + posx; x++) {
+		for (int y = posy; y < sizey + posy; y++) {
+			terrainGrid[x][y] = "City";
+		}
+	}
 }
 
 char Map::getTier(int posx, int posy) {
@@ -307,9 +525,27 @@ void Map::UpdateMap(Character &guy, InputBoard &board) {
 
 	for (int i = 0; i < roomList.size(); i++) {
 		if (roomList.at(i).checkXY(guy.posxBefore, guy.posyBefore)) {
+			roomList.at(i).clear = TRUE;
 			roomList.at(i).PrintRoom(TRUE);
 			//mvprintw(5, 60, "%i, %i", guy.posxBefore, guy.posyBefore);
 			//mvprintw(6, 60, "%i, %i", guy.posx, guy.posy);
+		}
+		//TERRAIN: Fog
+		else if (!roomList.at(i).clear && roomList.at(i).Terrain == "Fog" && (roomList.at(i).posx != guy.posx || roomList.at(i).posy != guy.posy)) {
+			if ((roomList.at(i).posx == guy.posx + 1 && roomList.at(i).posy == guy.posy + 1) ||
+				(roomList.at(i).posx == guy.posx + 1 && roomList.at(i).posy == guy.posy - 1) ||
+				(roomList.at(i).posx == guy.posx - 1 && roomList.at(i).posy == guy.posy - 1) ||
+				(roomList.at(i).posx == guy.posx - 1 && roomList.at(i).posy == guy.posy + 1) ||
+				(roomList.at(i).posx == guy.posx + 1 && roomList.at(i).posy == guy.posy) ||
+				(roomList.at(i).posx == guy.posx && roomList.at(i).posy == guy.posy + 1) ||
+				(roomList.at(i).posx == guy.posx - 1 && roomList.at(i).posy == guy.posy) ||
+				(roomList.at(i).posx == guy.posx && roomList.at(i).posy == guy.posy - 1)) {
+				roomList.at(i).fogged = FALSE;
+			}
+			else {
+				roomList.at(i).fogged = TRUE;
+			}
+			roomList.at(i).PrintRoom(FALSE);
 		}
 	}
 	standend();
@@ -374,5 +610,15 @@ themed (high)
 bosses
 
 final bosses
+
+
+Terrain:
+lightblue- Ice: when you enter ice you have to keep going in a straight line
+yellow- Treasure: gain 25 gold here
+green- Forest: you cant go the same direction you went before
+orange- Magma: get two combat for each tile, cauldrons are empty
+purple- Wasteland: get double cauldrons for each tile, everything else is empty
+gray- Fog: cant see these tiles, if inside fog you see a 1 radius circle around you
+dark gray- City: ?
 
 */

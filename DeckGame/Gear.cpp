@@ -27,6 +27,7 @@ Gear::Gear(const char *name):GearName(name)
 	//Hands
 	if (GearName == "No Weapon" ||
 		GearName == "Crystal Ball" ||
+		GearName == "Buckler" ||
 		GearName == "Shield" ||
 		GearName == "Long Sword" ||
 		GearName == "Falchion" ||
@@ -79,7 +80,8 @@ Gear::Gear(const char *name):GearName(name)
 		GearName == "Steel Breastplate" ||
 		GearName == "Amulet of Aura" ||
 		GearName == "Turtle Shell" ||
-		GearName == "Crystal Breastplate") {
+		GearName == "Crystal Breastplate" ||
+		GearName == "Padded Tunic") {
 		Type = "Body";
 		BodyDescription();
 	}
@@ -98,7 +100,9 @@ Gear::Gear(const char *name):GearName(name)
 		GearName == "Laurel Wreath" ||
 		GearName == "Diving Gear" ||
 		GearName == "Makeup Set" ||
-		GearName == "Safety Glasses") {
+		GearName == "Safety Glasses" ||
+		GearName == "Golden Monocle" ||
+		GearName == "Desert Wrappings") {
 		Type = "Head";
 		HeadDescription();
 
@@ -214,7 +218,7 @@ Gear::Gear(const char *name):GearName(name)
 	}
 	else if (GearName == "Tiny") {
 		Type = "Trait Sacrifice";
-		Description = "Reduce max hp by 38. +10 defense.";
+		Description = "Reduce max hp by 35. +10 defense.";
 	}
 	else if (GearName == "Succumb") {
 		Type = "Trait Sacrifice";
@@ -263,6 +267,10 @@ Gear::Gear(const char *name):GearName(name)
 	else if (GearName == "Brain Worm") {
 		Type = "Trait Sacrifice";
 		Description = "Lose half your max hp. Double your current max mana.";
+	}
+	else if (GearName == "Gold Flesh") {
+		Type = "Trait Sacrifice";
+		Description = "Lose 1 gold every time you lose health.";
 	}
 	
 	//Trait Reward
@@ -328,7 +336,7 @@ Gear::Gear(const char *name):GearName(name)
 	}
 	else if (GearName == "Ego") {
 		Type = "Trait Reward";
-		Description = "Choose a boss card.";
+		Description = "Choose a Special card.";
 	}
 	else if (GearName == "The Juice") {
 		Type = "Trait Reward";
@@ -398,7 +406,23 @@ Gear::Gear(const char *name):GearName(name)
 		Type = "Trait Reward";
 		Description = "Recieve 12 card modifiers.";
 	}
-	
+	else if (GearName == "Gold Blood") {
+		Type = "Trait Reward";
+		Description = "You gain twice as much gold.";
+	}
+	else if (GearName == "Iron Scabs") {
+		Type = "Trait Reward";
+		Description = "Whenever you lose health, gain half of that as block.";
+	}
+	else if (GearName == "Gelatinous") {
+		Type = "Trait Reward";
+		Description = "Gain (Skl)d2 block at the start of each combat.";
+	}
+	else if (GearName == "Evolve") {
+		Type = "Trait Reward";
+		Description = "All stats +1.";
+	}
+
 	else {
 		Type = "";
 		Description = "";
@@ -540,7 +564,7 @@ void Gear::BodyDescription() {
 		Description = "This cloak is composed of feathers, specifically made to increase your swiftness as you run.";
 	}
 	else if (GearName == "Leather Hauberk") {
-		Description = "Although leather may not be as strong as steel, this tunic provides great versatility in combat.";
+		Description = "Although leather may not be as strong as steel, this armor provides great versatility in combat.";
 	}
 	else if (GearName == "Twilight Robes") {
 		Description = "Dash through the darkness, concealing your exact position even in combat.";
@@ -565,6 +589,9 @@ void Gear::BodyDescription() {
 	}
 	else if (GearName == "Crystal Breastplate") {
 		Description = "Made from the hardest materials one can manage to find, this mesmerizingly iridescent plate also connects with the wearer's mind.";
+	}
+	else if (GearName == "Padded Tunic") {
+		Description = "An everyday garment with a bit of protection, but not enough to slow you down.";
 	}
 }
 void Gear::HeadDescription() {
@@ -611,7 +638,13 @@ void Gear::HeadDescription() {
 		Description = "These glimmering cosmetics could make even the most hideous beast attract another.";
 	}
 	else if (GearName == "Safety Glasses") {
-		Description = "A good Alchemist always wears protection from harmful ingredients.";
+		Description = "A good alchemist always wears protection from harmful ingredients.";
+	}
+	else if (GearName == "Golden Monocle") {
+		Description = "An extravagant tool, more for show than anything else.";
+	}
+	else if (GearName == "Desert Wrappings") {
+		Description = "Protect your self from the sand, it hits harder than you think.";
 	}
 }
 
@@ -685,20 +718,26 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			//nothing
 		}
 	}
+	else if (GearName == "Buckler") {
+		Card ram("Ram");
+		if (On) {
+			deck.addCard(ram);
+		}
+		else {
+			deck.removeCard(ram, guy);
+		}
+	}
 	else if (GearName == "Shield") {
 		Card ram("Ram");
-		Card block("Block");
 		if (On) {
 			deck.addCard(ram);
 			deck.addCard(ram);
 			deck.addCard(ram);
-			deck.addCard(block);
 		}
 		else {
 			deck.removeCard(ram, guy);
 			deck.removeCard(ram, guy);
 			deck.removeCard(ram, guy);
-			deck.removeCard(block, guy);
 		}
 	}
 	else if (GearName == "Long Sword") {
@@ -707,11 +746,9 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 		if (On) {
 			deck.addCard(slice);
 			deck.addCard(slice);
-			deck.addCard(slice);
 			deck.addCard(crush);
 		}
 		else {
-			deck.removeCard(slice, guy);
 			deck.removeCard(slice, guy);
 			deck.removeCard(slice, guy);
 			deck.removeCard(crush, guy);
@@ -755,21 +792,16 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Javelin") {
 		Card pierce("Pierce");
-		Card slice("Slice");
 		Card throww("Throw");
 		if (On) {
 			deck.addCard(pierce);
 			deck.addCard(pierce);
-			deck.addCard(slice);
-			deck.addCard(slice);
 			deck.addCard(throww);
 			deck.addCard(throww);
 		}
 		else {
 			deck.removeCard(pierce, guy);
 			deck.removeCard(pierce, guy);
-			deck.removeCard(slice, guy);
-			deck.removeCard(slice, guy);
 			deck.removeCard(throww, guy);
 			deck.removeCard(throww, guy);
 		}
@@ -799,14 +831,12 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(hack);
 			deck.addCard(pierce);
 			deck.addCard(slice);
-			deck.addCard(slice);
 			deck.addCard(parry);
 		}
 		else {
 			deck.removeCard(charge, guy);
 			deck.removeCard(hack, guy);
 			deck.removeCard(pierce, guy);
-			deck.removeCard(slice, guy);
 			deck.removeCard(slice, guy);
 			deck.removeCard(parry, guy);
 		}
@@ -885,12 +915,10 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 		if (On) {
 			deck.addCard(hack);
 			deck.addCard(hack);
-			deck.addCard(hack);
 			deck.addCard(crush);
 			deck.addCard(bleed);
 		}
 		else {
-			deck.removeCard(hack, guy);
 			deck.removeCard(hack, guy);
 			deck.removeCard(hack, guy);
 			deck.removeCard(crush, guy);
@@ -951,13 +979,11 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(shoot);
 			deck.addCard(shoot);
 			deck.addCard(slice);
-			deck.addCard(slice);
 			deck.addCard(pierce);
 		}
 		else {
 			deck.removeCard(shoot, guy);
 			deck.removeCard(shoot, guy);
-			deck.removeCard(slice, guy);
 			deck.removeCard(slice, guy);
 			deck.removeCard(pierce, guy);
 		}
@@ -991,36 +1017,30 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Wand") {
 		Card zap("Zap");
-		Card stab("Stab");
 		if (On) {
 			deck.addCard(zap);
 			deck.addCard(zap);
-			deck.addCard(stab);
 		}
 		else {
 			deck.removeCard(zap, guy);
 			deck.removeCard(zap, guy);
-			deck.removeCard(stab, guy);
 		}
 	}
 	else if (GearName == "Sickle") {
 		Card bleed("Bleed");
 		Card hack("Hack");
 		Card parry("Parry");
-		Card pierce("Pierce");
 		Card impale("Impale");
 		if (On) {
 			deck.addCard(bleed);
 			deck.addCard(hack);
 			deck.addCard(parry);
-			deck.addCard(pierce);
 			deck.addCard(impale);
 		}
 		else {
 			deck.removeCard(bleed, guy);
 			deck.removeCard(hack, guy);
 			deck.removeCard(parry, guy);
-			deck.removeCard(pierce, guy);
 			deck.removeCard(impale, guy);
 		}
 	}
@@ -1189,7 +1209,6 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 		}
 	}
 	else if (GearName == "Glitter Robes") {
-		Card absorb("Absorb");
 		Card predict("Predict");
 		if (On) {
 			deck.addCard(predict);
@@ -1203,39 +1222,39 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 	else if (GearName == "Riveted Chainmail") {
 		Card counter("Counter");
 		Card dash("Dash");
-		Card reinforce("Reinforce");
+		Card obstruct("Obstruct");
 		if (On) {
 			deck.addCard(counter);
 			deck.addCard(dash);
-			deck.addCard(reinforce);
+			deck.addCard(obstruct);
 		}
 		else {
 			deck.removeCard(counter, guy);
 			deck.removeCard(dash, guy);
-			deck.removeCard(reinforce, guy);
+			deck.removeCard(obstruct, guy);
 		}
 	}
 	else if (GearName == "Reinforced Mail") {
-		Card brace("Brace");
-		Card obstruct("Obstruct");
+		Card toughen("Toughen");
 		if (On) {
-			deck.addCard(brace);
+			deck.addCard(toughen);
 		}
 		else {
-			deck.removeCard(brace, guy);
+			deck.removeCard(toughen, guy);
 		}
 	}
 	else if (GearName == "Full Plate Armor") {
 		Card obstruct("Obstruct");
+		Card absorb("Absorb");
 		if (On) {
 			deck.addCard(obstruct);
 			deck.addCard(obstruct);
-			deck.addCard(obstruct);
+			deck.addCard(absorb);
 		}
 		else {
 			deck.removeCard(obstruct, guy);
 			deck.removeCard(obstruct, guy);
-			deck.removeCard(obstruct, guy);
+			deck.removeCard(absorb, guy);
 		}
 	}
 	else if (GearName == "Cape") {
@@ -1264,16 +1283,13 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Leather Hauberk") {
 		Card counter("Counter");
-		Card brace("Brace");
 		Card predict("Predict");
 		if (On) {
 			deck.addCard(counter);
-			deck.addCard(brace);
 			deck.addCard(predict);
 		}
 		else {
 			deck.removeCard(counter, guy);
-			deck.removeCard(brace, guy);
 			deck.removeCard(predict, guy);
 		}
 	}
@@ -1284,47 +1300,39 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 		if (On) {
 			deck.addCard(dash);
 			deck.addCard(dodge);
-			deck.addCard(dodge);
 			deck.addCard(flee);
 		}
 		else {
 			deck.removeCard(dash, guy);
-			deck.removeCard(dodge, guy);
 			deck.removeCard(dodge, guy);
 			deck.removeCard(flee, guy);
 		}
 	}
 	else if (GearName == "Dragon Scales") {
 		Card spikes("Spikes");
-		Card counter("Counter");
 		Card predict("Predict");
 		if (On) {
 			deck.addCard(spikes);
 			deck.addCard(spikes);
-			deck.addCard(counter);
 			deck.addCard(predict);
 		}
 		else {
 			deck.removeCard(spikes, guy);
 			deck.removeCard(spikes, guy);
-			deck.removeCard(counter, guy);
 			deck.removeCard(predict, guy);
 		}
 	}
 	else if (GearName == "Spiked Mail") {
 		Card spikes("Spikes");
-		Card counter("Counter");
 		if (On) {
 			deck.addCard(spikes);
 			deck.addCard(spikes);
 			deck.addCard(spikes);
-			deck.addCard(counter);
 		}
 		else {
 			deck.removeCard(spikes, guy);
 			deck.removeCard(spikes, guy);
 			deck.removeCard(spikes, guy);
-			deck.removeCard(counter, guy);
 		}
 	}
 	else if (GearName == "Buffalo Hide") {
@@ -1339,14 +1347,11 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 		}
 	}
 	else if (GearName == "Steel Breastplate") {
-		Card endure("Endure");
 		Card obstruct("Obstruct");
 		if (On) {
-			deck.addCard(endure);
 			deck.addCard(obstruct);
 		}
 		else {
-			deck.removeCard(endure, guy);
 			deck.removeCard(obstruct, guy);
 		}
 	}
@@ -1375,22 +1380,29 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 		}
 	}
 	else if (GearName == "Crystal Breastplate") {
-		Card absorb("Absorb");
 		Card obstruct("Obstruct");
 		Card repulse("Repulse");
+		Card predict("Predict");
 		if (On) {
-			deck.addCard(absorb);
-			deck.addCard(absorb);
 			deck.addCard(obstruct);
 			deck.addCard(obstruct);
 			deck.addCard(repulse);
+			deck.addCard(predict);
 		}
 		else {
-			deck.removeCard(absorb, guy);
-			deck.removeCard(absorb, guy);
 			deck.removeCard(obstruct, guy);
 			deck.removeCard(obstruct, guy);
 			deck.removeCard(repulse, guy);
+			deck.removeCard(predict, guy);
+		}
+	}
+	else if (GearName == "Padded Tunic") {
+		Card dash("Dash");
+		if (On) {
+			deck.addCard(dash);
+		}
+		else {
+			deck.removeCard(dash, guy);
 		}
 	}
 }
@@ -1507,9 +1519,11 @@ void Gear::HeadOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.addCard(lightning);
 			deck.addCard(shock);
 			deck.addCard(shock);
+			deck.addCard(shock);
 		}
 		else {
 			deck.removeCard(lightning, guy);
+			deck.removeCard(shock, guy);
 			deck.removeCard(shock, guy);
 			deck.removeCard(shock, guy);
 		}
@@ -1590,6 +1604,34 @@ void Gear::HeadOnOrOff(bool On, Character &guy, Deck &deck) {
 		else {
 			deck.removeCard(reag, guy);
 			deck.removeCard(react, guy);
+		}
+	}
+	else if (GearName == "Golden Monocle") {
+		Card mog("Transmogrify");
+		Card liquidate("Liquidate");
+		if (On) {
+			deck.addCard(mog);
+			deck.addCard(liquidate);
+			//deck.addCard(liquidate);
+		}
+		else {
+			deck.removeCard(mog, guy);
+			deck.removeCard(liquidate, guy);
+			//deck.removeCard(liquidate, guy);
+		}
+	}
+	else if (GearName == "Desert Wrappings") {
+		Card storm("Sandstorm");
+		Card screen("Screen");
+		if (On) {
+			deck.addCard(storm);
+			deck.addCard(screen);
+			deck.addCard(screen);
+		}
+		else {
+			deck.removeCard(storm, guy);
+			deck.removeCard(screen, guy);
+			deck.removeCard(screen, guy);
 		}
 	}
 }
@@ -1878,6 +1920,7 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 	else if (GearName == "Forgetful") {
 		if (On) {
 			guy.ModStat(2, "MaxMana");
+			guy.CurrentMana = guy.MaxMana;
 			guy.Forgetful = TRUE;
 		}
 		else {
@@ -1888,13 +1931,13 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 
 	else if (GearName == "Tiny") {
 		if (On) {
-			guy.ModStat(-38, "MaxHealth");
+			guy.ModStat(-35, "MaxHealth");
 			guy.ModStat(10, "Defense");
 			guy.CurrentHealth = guy.MaxHealth;
 		}
 		else {
-			guy.ModStat(38, "MaxHealth");
-			guy.ModStat(-8, "Defense");
+			guy.ModStat(35, "MaxHealth");
+			guy.ModStat(-10, "Defense");
 			guy.CurrentHealth = guy.MaxHealth;
 		}
 	}
@@ -1996,11 +2039,21 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 			int hp = int(guy.MaxHealthBase / 2);
 			guy.ModStat(-1 * hp, "MaxHealth");
 			guy.ModStat(guy.MaxManaBase, "MaxMana");
+			guy.CurrentMana = guy.MaxMana;
 		}
 		else {
 			int mana = int(guy.MaxManaBase / 2);
 			guy.ModStat(-1 * mana, "MaxMana");
 			guy.ModStat(guy.MaxHealthBase, "MaxHealth");
+			guy.CurrentHealth = guy.MaxHealth;
+		}
+	}
+	else if (GearName == "Gold Flesh") {
+		if (On) {
+			guy.Gold_Flesh = TRUE;
+		}
+		else {
+			guy.Gold_Flesh = FALSE;
 		}
 	}
 }
@@ -2270,10 +2323,53 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 			guy.Blacksmith = 6;
 		}
 		else {
-			guy.Blacksmith = 0;
+			guy.Blacksmith = -1;
 		}
 	}
-
+	else if (GearName == "Gold Blood") {
+		if (On) {
+			guy.Gold_Blood = TRUE;
+		}
+		else {
+			guy.Gold_Blood = FALSE;
+		}
+	}
+	else if (GearName == "Iron Scabs") {
+		if (On) {
+			guy.Iron_Scabs = TRUE;
+		}
+		else {
+			guy.Iron_Scabs = FALSE;
+		}
+	}
+	else if (GearName == "Gelatinous") {
+		if (On) {
+			guy.Gelatinous = TRUE;
+		}
+		else {
+			guy.Gelatinous = FALSE;
+		}
+	}
+	else if (GearName == "Evolve") {
+		if (On) {
+			guy.ModStat(1, "Strength");
+			guy.ModStat(1, "Defense");
+			guy.ModStat(1, "Intelligence");
+			guy.ModStat(1, "Skill");
+			guy.ModStat(1, "MaxHealth");
+			guy.CurrentHealth = guy.MaxHealth;
+			guy.ModStat(1, "MaxMana");
+			guy.CurrentMana = guy.MaxMana;
+		}
+		else {
+			guy.ModStat(-1, "Strength");
+			guy.ModStat(-1, "Defense");
+			guy.ModStat(-1, "Intelligence");
+			guy.ModStat(-1, "Skill");
+			guy.ModStat(-1, "MaxHealth");
+			guy.ModStat(-1, "MaxMana");
+		}
+	}
 }
 
 void Gear::CardOnOrOff(bool On, Character &guy, Deck &deck) {
@@ -2515,9 +2611,9 @@ void Gear::printGear(int position, Character &guy) {
 			mvprintw(17, 42, "3)");
 		break;
 	}
-	init_pair(10, COLOR_BLUE, COLOR_BLACK);
+	//init_pair(10, COLOR_BLUE, COLOR_BLACK);
 	init_color(COLOR_BLUE, 200, 400, 1000);
-	attron(COLOR_PAIR(10));
+	attron(COLOR_PAIR(6));
 	if (Type == "Trait Sacrifice")
 		attron(COLOR_PAIR(5));
 	else if (Type == "Trait Reward")

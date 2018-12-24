@@ -23,6 +23,7 @@ Enemy::Enemy(const char *name):Name(name)
 	stepOne = FALSE;
 	stepTwo = FALSE;
 
+	sandstorm = 0;
 	bleeding = 0;
 	fumes = 0;
 	flay = 0;
@@ -283,7 +284,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 	//non final boss enemy's basic attacks deal more damage as the fight goes on
 	int td = int(TurnCount / 25);
 
-	//check if the enemy is bleeding
+	//check if the enemy is DOT
 	if (bleeding > 0 || flay > 0) {
 		int damage = 0;
 		if (bleeding > 0) {
@@ -326,6 +327,17 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 		string drown = "-You drown the " + string(Name) + " for #y"
 					+ to_string(damage) + "#o damage.";
 		log.PushPop(drown);
+	}
+	if (sandstorm > 0) {
+		int damage = rtd(3, guy.Intelligence);
+		int damage2 = guy.TakeDamage(damage);
+		damage = takeDamage(damage, guy, log);
+		sandstorm--;
+
+		string storm1 = " #mThe storm rages.#o It hits the " + string(Name) + " for #y" + to_string(damage) + "#o damage.";
+		string storm2 = "-The storm hits you for #r" + to_string(damage2) + "#o damage.";
+		log.PushPop(storm1);
+		log.PushPop(storm2);
 	}
 	
 
@@ -1802,11 +1814,12 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					}
 					else {
 						charge = TRUE;
-						type = rtd(17, 2);
+						//type = rtd(17, 2);
 					}
 				}
 				if (charge) {
-					int damage = guy.TakeDamage(type);
+					int damage = rtd(1, 16) + 24;
+					damage = guy.TakeDamage(damage);
 					line = "-The Dragon blasts flames at you for #r" + to_string(damage) + "#o damage.";
 					dot--;
 					if (dot == 0)
@@ -1835,12 +1848,12 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					line = "#r-The Dragon scorches you, causing you to burn.#o";
 				}
 				else if (rng > 3 && rng <= 7) {
-					int block = rtd(3, 10);
+					int block = rtd(5, 6);
 					CurrentBlock += block;
 					line = "-The Dragon gains #b" + to_string(block) + "#o block.";
 				}
 				else {
-					int damage = rtd(3, 9);
+					int damage = rtd(7, 3);
 					damage = guy.TakeDamage(damage);
 					line = "-The Dragon claws you for #r" + to_string(damage) + "#o damage.";
 				}
@@ -1905,12 +1918,13 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			if (invisible > 0) {
 				invisible--;
 				int health = rtd(1, 6) + 9;
+				heal(health);
 				line = "-The Witch regenerates #b" + to_string(health) + "#o health.";
 			}
 			else {
 				int rng = rand() % 9;
 				if (TurnCount < 3) {
-					int block = (12, 2);
+					int block = rtd(12, 2);
 					CurrentBlock += block;
 
 					if (guy.Strength > guy.Defense && guy.Strength > guy.Intelligence)
@@ -2065,7 +2079,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					int damage = rtd(8, 2);
 					damage = guy.TakeDamage(damage);
 
-					line = "The Witch stabs you for #r" + to_string(damage) + "#o damage.";
+					line = "-The Witch stabs you for #r" + to_string(damage) + "#o damage.";
 				}
 			}
 
@@ -2089,8 +2103,8 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 		else if (Name == "Demon") {
 			if (stepOne) {
 				stepOne = FALSE;
-				guy.Defense += 8;
 				guy.defMod -= 8;
+				guy.Defense += 8;
 				string line = "-You regain your composure.";
 				log.PushPop(line);
 			}
@@ -2143,7 +2157,8 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					string line2 = "#b The Demon stares into your eyes.#o";
 					log.PushPop(line2);
 					line = "#b-You panic, #rlosing 8 Defense#b and filling your hand with Defends.#o";
-					stepOne = TRUE;
+					if(!guy.Purple)
+						stepOne = TRUE;
 				}
 				else if (rng == 5) {
 					int block = rtd(12, 2);
@@ -2307,10 +2322,14 @@ void Enemy::ActivateDOT(Character &guy, TextLog &log) {
 int Enemy::takeDamage(int damage, Character &guy, TextLog &log) {
 	int damage2 = damage;
 	if (damage > 0 && guy.Frenzy) {
-		damage *= 2;
+		damage2 *= 2;
 	}
 	if (damage < 0) {
 		damage2 = 0;
+	}
+	if (enemyNegate > 0) {
+		damage2 = 0;
+		enemyNegate--;
 	}
 	if (guy.pierce) {
 		CurrentHealth -= damage2;
@@ -2393,9 +2412,9 @@ void Enemy::initNegotiateLines() {
 	else if (Name == "Kobold") {
 		negotiate1 = "What";
 		you2 = "I don't want to fight you";
-		negotiate2 = "Then give me #b1 piece of Gear#o";
+		negotiate2 = "Then give me #$5 gold#o";
 		you3 = "Ok sure";
-		price = "1 Gear";
+		price = "5 gold";
 		negotiate2b = "Take this";
 	}
 	else if (Name == "Zombie") {
@@ -2442,9 +2461,9 @@ void Enemy::initNegotiateLines() {
 	else if (Name == "Brown Recluse") {
 		negotiate1 = "Hsss";
 		you2 = "I don't want to fight";
-		negotiate2 = "Give me #b2 pieces of Gear#o and I won't kill you";
+		negotiate2 = "Give me #$10 gold#o and I won't kill you";
 		you3 = "Ok sure";
-		price = "2 Gear";
+		price = "10 gold";
 		negotiate2b = "I'll be sure to kill you slowly.";
 	}
 	else if (Name == "Fairy") {
@@ -2467,9 +2486,9 @@ void Enemy::initNegotiateLines() {
 	else if (Name == "Adventurer") {
 		negotiate1 = "Yea?";
 		you2 = "I don't want to fight you";
-		negotiate2 = "Can I have #b3 pieces of Gear#o then?";
+		negotiate2 = "Can I have #$15 gold#o then?";
 		you3 = "Sure";
-		price = "3 Gear";
+		price = "15 gold";
 		negotiate2b = "Screw you too!";
 	}
 	else if (Name == "Troll") {
@@ -2506,9 +2525,9 @@ void Enemy::initNegotiateLines() {
 	else if (Name == "Drake") {
 		negotiate1 = "What is it?";
 		you2 = "I don't want to fight";
-		negotiate2 = "Hmm, then give me #r8 of your Strength#o.";
+		negotiate2 = "Hmm, then give me #$15 gold#o.";
 		you3 = "Ok";
-		price = "8 Strength";
+		price = "15 gold";
 	}
 	//------King:
 	else if (Name == "Slave") {
@@ -2521,9 +2540,9 @@ void Enemy::initNegotiateLines() {
 	else if (Name == "Soldier") {
 		negotiate1 = "What";
 		you2 = "I don't want to fight";
-		negotiate2 = "Give me #r5 of your Defense#o, then.";
+		negotiate2 = "Give me #$10 gold#o, then.";
 		you3 = "Ok";
-		price = "5 Defense";
+		price = "10 gold";
 	}
 	else if (Name == "Guard") {
 		negotiate1 = "What do you want?";
@@ -2579,9 +2598,9 @@ void Enemy::initNegotiateLines() {
 	else if (Name == "Imp") {
 		negotiate1 = "What? what?";
 		you2 = "I don't want to fight";
-		negotiate2 = "Ha, then give me #r1 of your Skill#o!";
+		negotiate2 = "Ha, then give me #$10 gold#o!";
 		you3 = "Sure";
-		price = "1 Skill";
+		price = "10 gold";
 	}
 	else if (Name == "Weeping Soul") {
 		negotiate1 = "*sobs*";
@@ -2615,7 +2634,7 @@ void Enemy::initNegotiateLines() {
 	else if (Name == "Merchant") {
 		negotiate1 = "What do you want?";
 		you2 = "I don't want to fight";
-		negotiate2 = "Hm. #b2 pieces of Gear#o and #r1 Skill#o. Lowest offer.";
+		negotiate2 = "Hm. #b2 pieces of Gear#o and #$15 gold#o. Lowest offer.";
 		you3 = "Fine";
 		price = "Merchant";
 	}

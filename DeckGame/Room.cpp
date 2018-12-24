@@ -16,6 +16,61 @@
 //Boss
 	//last room
 
+//color stuff
+int combat_ice = 30;
+int boss_ice = 31;
+int gear_ice = 32;
+int cauldron_ice = 33;
+int shop_ice = 34;
+
+int combat_treasure = 35;
+int boss_treasure = 36;
+int gear_treasure = 37;
+int cauldron_treasure = 38;
+int shop_treasure = 39;
+
+int combat_forest = 40;
+int boss_forest = 41;
+int gear_forest = 42;
+int cauldron_forest = 43;
+int shop_forest = 44;
+
+int combat_magma = 45;
+int boss_magma = 46;
+int gear_magma = 47;
+int cauldron_magma = 48;
+int shop_magma = 49;
+
+int combat_wasteland = 50;
+int boss_wasteland = 51;
+int gear_wasteland = 52;
+int cauldron_wasteland = 53;
+int shop_wasteland = 54;
+
+int combat_fog = 55;
+int boss_fog = 56;
+int gear_fog = 57;
+int cauldron_fog = 58;
+int shop_fog = 59;
+
+int forge_ice = 60;
+int forge_treasure = 61;
+int forge_forest = 62;
+int forge_magma = 63;
+int forge_wasteland = 64;
+int forge_fog = 65;
+
+int magma = 66;
+int wasteland = 67;
+int fog = 68;
+
+int combat_city = 76;
+int boss_city = 77;
+int gear_city = 78;
+int cauldron_city = 79;
+int shop_city = 80;
+int forge_city = 81;
+
 Room::Room() {
 	RoomType = "";
 	clear = FALSE;
@@ -35,8 +90,12 @@ Room::~Room()
 {
 }
 
+void Room::getTileColor() {
+
+}
+
 void Room::PrintRoom(bool gray) {
-	init_pair(1, COLOR_YELLOW, COLOR_BLACK);
+	/*init_pair(1, COLOR_YELLOW, COLOR_BLACK);
 
 	init_color(COLOR_RED, 800, 0, 0);
 	init_pair(5, COLOR_RED, COLOR_BLACK);
@@ -53,8 +112,7 @@ void Room::PrintRoom(bool gray) {
 	init_pair(8, COLOR_BLACK, COLOR_WHITE);
 
 	init_color(COLOR_BLUE, 200, 400, 1000);
-	init_pair(6, COLOR_BLUE, COLOR_BLACK);
-
+	init_pair(6, COLOR_BLUE, COLOR_BLACK);*/
 	if (RoomType == "First") {
 		if (gray)
 			attron(COLOR_PAIR(8));
@@ -63,57 +121,265 @@ void Room::PrintRoom(bool gray) {
 	else if (RoomType == "Combat") {
 		if (gray)
 			attron(COLOR_PAIR(8));
-		else
-			attron(COLOR_PAIR(5));
+		else {
+			if (Terrain == "Ice") {
+				attron(COLOR_PAIR(combat_ice));
+			}
+			else if (Terrain == "Treasure") {
+				attron(COLOR_PAIR(combat_treasure));
+			}
+			else if (Terrain == "Forest") {
+				attron(COLOR_PAIR(combat_forest));
+			}
+			else if (Terrain == "Magma") {
+				attron(COLOR_PAIR(combat_magma));
+			}
+			else if (Terrain == "Wasteland") {
+				attron(COLOR_PAIR(combat_wasteland));
+			}
+			else if (Terrain == "City") {
+				attron(COLOR_PAIR(combat_city));
+			}
+			else if (Terrain == "Fog") {
+				if (fogged)
+					attron(COLOR_PAIR(fog));
+				else
+					attron(COLOR_PAIR(combat_fog));
+			}
+			else
+				attron(COLOR_PAIR(5));
+		}
 		mvprintw(13 - posy, 1 + posx, "!");
 	}
 	else if (RoomType == "Gear Head") {
 		if (gray)
 			attron(COLOR_PAIR(8));
-		else
-			attron(COLOR_PAIR(2));
+		else {
+			if (Terrain == "Ice") {
+				attron(COLOR_PAIR(gear_ice));
+			}
+			else if (Terrain == "Treasure") {
+				attron(COLOR_PAIR(gear_treasure));
+			}
+			else if (Terrain == "Forest") {
+				attron(COLOR_PAIR(gear_forest));
+			}
+			else if (Terrain == "Magma") {
+				attron(COLOR_PAIR(gear_magma));
+			}
+			else if (Terrain == "Wasteland") {
+				attron(COLOR_PAIR(gear_wasteland));
+			}
+			else if (Terrain == "City") {
+				attron(COLOR_PAIR(gear_city));
+			}
+			else if (Terrain == "Fog") {
+				if (fogged)
+					attron(COLOR_PAIR(fog));
+				else
+					attron(COLOR_PAIR(gear_fog));
+			}
+			else
+				attron(COLOR_PAIR(2));
+		}
 		mvprintw(13 - posy, 1 + posx, "^");
 	}
 	else if (RoomType == "Gear Body") {
 		if (gray)
 			attron(COLOR_PAIR(8));
-		else
-			attron(COLOR_PAIR(2));
+		else {
+			if (Terrain == "Ice") {
+				attron(COLOR_PAIR(gear_ice));
+			}
+			else if (Terrain == "Treasure") {
+				attron(COLOR_PAIR(gear_treasure));
+			}
+			else if (Terrain == "Forest") {
+				attron(COLOR_PAIR(gear_forest));
+			}
+			else if (Terrain == "Magma") {
+				attron(COLOR_PAIR(gear_magma));
+			}
+			else if (Terrain == "Wasteland") {
+				attron(COLOR_PAIR(gear_wasteland));
+			}
+			else if (Terrain == "City") {
+				attron(COLOR_PAIR(gear_city));
+			}
+			else if (Terrain == "Fog") {
+				if(fogged)
+					attron(COLOR_PAIR(fog));
+				else
+					attron(COLOR_PAIR(gear_fog));
+			}
+			else
+				attron(COLOR_PAIR(2));
+		}
 		mvprintw(13 - posy, 1 + posx, "#");
 	}
 	else if (RoomType == "Gear Hands") {
 		if (gray)
 			attron(COLOR_PAIR(8));
-		else
-			attron(COLOR_PAIR(2));
+		else {
+			if (Terrain == "Ice") {
+				attron(COLOR_PAIR(gear_ice));
+			}
+			else if (Terrain == "Treasure") {
+				attron(COLOR_PAIR(gear_treasure));
+			}
+			else if (Terrain == "Forest") {
+				attron(COLOR_PAIR(gear_forest));
+			}
+			else if (Terrain == "Magma") {
+				attron(COLOR_PAIR(gear_magma));
+			}
+			else if (Terrain == "Wasteland") {
+				attron(COLOR_PAIR(gear_wasteland));
+			}
+			else if (Terrain == "City") {
+				attron(COLOR_PAIR(gear_city));
+			}
+			else if (Terrain == "Fog") {
+				if (fogged)
+					attron(COLOR_PAIR(fog));
+				else
+					attron(COLOR_PAIR(gear_fog));
+			}
+			else
+				attron(COLOR_PAIR(2));
+		}
 		mvprintw(13 - posy, 1 + posx, "/");
 	}
 	else if (RoomType == "Mod") {
 		if (gray)
 			attron(COLOR_PAIR(8));
-		else
-			attron(COLOR_PAIR(6));
+		else {
+			if (Terrain == "Ice") {
+				attron(COLOR_PAIR(forge_ice));
+			}
+			else if (Terrain == "Treasure") {
+				attron(COLOR_PAIR(forge_treasure));
+			}
+			else if (Terrain == "Forest") {
+				attron(COLOR_PAIR(forge_forest));
+			}
+			else if (Terrain == "Magma") {
+				attron(COLOR_PAIR(forge_magma));
+			}
+			else if (Terrain == "Wasteland") {
+				attron(COLOR_PAIR(forge_wasteland));
+			}
+			else if (Terrain == "City") {
+				attron(COLOR_PAIR(forge_city));
+			}
+			else if (Terrain == "Fog") {
+				if (fogged)
+					attron(COLOR_PAIR(fog));
+				else
+					attron(COLOR_PAIR(forge_fog));
+			}
+			else
+				attron(COLOR_PAIR(6));
+		}
 		mvprintw(13 - posy, 1 + posx, "=");
 	}
 	else if (RoomType == "Shop") {
 		if (gray)
 			attron(COLOR_PAIR(8));
-		else
-			attron(COLOR_PAIR(1));
+		else {
+			if (Terrain == "Ice") {
+				attron(COLOR_PAIR(shop_ice));
+			}
+			else if (Terrain == "Treasure") {
+				attron(COLOR_PAIR(shop_treasure));
+			}
+			else if (Terrain == "Forest") {
+				attron(COLOR_PAIR(shop_forest));
+			}
+			else if (Terrain == "Magma") {
+				attron(COLOR_PAIR(shop_magma));
+			}
+			else if (Terrain == "Wasteland") {
+				attron(COLOR_PAIR(shop_wasteland));
+			}
+			else if (Terrain == "City") {
+				attron(COLOR_PAIR(shop_city));
+			}
+			else if (Terrain == "Fog") {
+				if (fogged)
+					attron(COLOR_PAIR(fog));
+				else
+					attron(COLOR_PAIR(shop_fog));
+			}
+			else
+				attron(COLOR_PAIR(10));
+		}
 		mvprintw(13 - posy, 1 + posx, "$");
 	}
 	else if (RoomType == "Cauldron") {
 		if (gray)
 			attron(COLOR_PAIR(8));
-		else
-			attron(COLOR_PAIR(3));
+		else {
+			if (Terrain == "Ice") {
+				attron(COLOR_PAIR(cauldron_ice));
+			}
+			else if (Terrain == "Treasure") {
+				attron(COLOR_PAIR(cauldron_treasure));
+			}
+			else if (Terrain == "Forest") {
+				attron(COLOR_PAIR(cauldron_forest));
+			}
+			else if (Terrain == "Magma") {
+				attron(COLOR_PAIR(cauldron_magma));
+			}
+			else if (Terrain == "Wasteland") {
+				attron(COLOR_PAIR(cauldron_wasteland));
+			}
+			else if (Terrain == "City") {
+				attron(COLOR_PAIR(cauldron_city));
+			}
+			else if (Terrain == "Fog") {
+				if(fogged)
+					attron(COLOR_PAIR(fog));
+				else
+					attron(COLOR_PAIR(cauldron_fog));
+			}
+			else
+				attron(COLOR_PAIR(3));
+		}
 		mvprintw(13 - posy, 1 + posx, "+");
 	}
 	else if (RoomType == "Boss") {
 		if (gray)
 			attron(COLOR_PAIR(8));
-		else
-			attron(COLOR_PAIR(7));
+		else {
+			if (Terrain == "Ice") {
+				attron(COLOR_PAIR(boss_ice));
+			}
+			else if (Terrain == "Treasure") {
+				attron(COLOR_PAIR(boss_treasure));
+			}
+			else if (Terrain == "Forest") {
+				attron(COLOR_PAIR(boss_forest));
+			}
+			else if (Terrain == "Magma") {
+				attron(COLOR_PAIR(boss_magma));
+			}
+			else if (Terrain == "Wasteland") {
+				attron(COLOR_PAIR(boss_wasteland));
+			}
+			else if (Terrain == "City") {
+				attron(COLOR_PAIR(boss_city));
+			}
+			else if (Terrain == "Fog") {
+				if (fogged)
+					attron(COLOR_PAIR(fog));
+				else
+					attron(COLOR_PAIR(boss_fog));
+			}
+			else
+				attron(COLOR_PAIR(7));
+		}
 		mvprintw(13 - posy, 1 + posx, "o");
 	}
 	else if (RoomType == "Final Boss") {

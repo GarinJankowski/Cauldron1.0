@@ -72,8 +72,8 @@ Card::Card(const char *name):CardName(name)
 		CardName == "Flee" ||
 		CardName == "Spikes" ||
 		CardName == "Repulse" ||
-		CardName == "Toughen" ||
-		CardName == "Resolve") {
+		CardName == "Wall" ||
+		CardName == "Toughen") {
 		CardType = "Defend";
 		setDefend();
 	}
@@ -110,6 +110,10 @@ Card::Card(const char *name):CardName(name)
 		CardName == "Refresh" ||
 		CardName == "Reagent" ||
 		CardName == "Reactant" ||
+		CardName == "Transmogrify" ||
+		CardName == "Liquidate" ||
+		CardName == "Sandstorm" ||
+		CardName == "Screen" ||
 		CardName == "Laser") {
 		CardType = "Spell";
 		setSpell();
@@ -137,7 +141,8 @@ Card::Card(const char *name):CardName(name)
 		CardName == "Slam" ||
 		CardName == "Stall" ||
 		CardName == "Strike" ||
-		CardName == "Defend") {
+		CardName == "Defend" ||
+		CardName == "Shimmer") {
 		CardType = "Special";
 		setSpecial();
 	}
@@ -214,7 +219,7 @@ void Card::setAttack() {
 		Description = "Deal 1d(Int/2), gain an extra turn.";
 	}
 	else if (CardName == "Ram") {
-		Description = "Deal (Def)d2 damage.";
+		Description = "Deal (Def/2)d2 damage.";
 	}
 	else if (CardName == "Flay") {
 		Description = "Deal 2d(Str) damage. Deal (Str/2) damage for 3 turns.";
@@ -263,7 +268,7 @@ void Card::setDefend() {
 		Description = "Gain (Def) block. Fill your hand with Spells.";
 	}
 	else if (CardName == "Absorb") {
-		Description = "Gain (Def)+2 block. Gain 5 mana.";
+		Description = "Gain (Def)x3 block. Lose a turn.";
 	}
 	else if (CardName == "Reinforce") {
 		Description = "Gain 50% of your block.";
@@ -277,12 +282,13 @@ void Card::setDefend() {
 	else if (CardName == "Repulse") {
 		Description = "Take 7 damage, negate the next hit. Extra turn.";
 	}
-	//not implemented
-	else if (CardName == "Toughen") {
-		Description = "Gain (Def) block. Add your Def to Str for a turn.";
+	else if (CardName == "Wall") {
+		Description = "Gain (Def)x3 block. Burn this card.";
+		naturalBurn = TRUE;
 	}
-	else if (CardName == "Resolve") {
-		Description = "Gain (Def) block. Add your Def to Int for a turn.";
+	else if (CardName == "Toughen") {
+		Description = "Gain 22 block. Burn this card.";
+		naturalBurn = TRUE;
 	}
 }
 void Card::setSpell() {
@@ -340,8 +346,8 @@ void Card::setSpell() {
 	}
 
 	else if (CardName == "Fumes") {
-		ManaCost = 5;
-		Description = "Costs 5 mana. Deal (Int/2)d2 damage for 3 turns.";
+		ManaCost = 8;
+		Description = "Costs 8 mana. Deal (Int/2)d2 damage for (Int) turns.";
 	}
 	else if (CardName == "Incense") {
 		ManaCost = 0;
@@ -383,7 +389,7 @@ void Card::setSpell() {
 	}
 	else if (CardName == "Shock") {
 		ManaCost = 0;
-		Description = "Gain 2 mana. Take 5 damage. Extra turn.";
+		Description = "Gain 2 mana. Take 4 damage. Extra turn.";
 	}
 
 	else if (CardName == "Destroy") {
@@ -431,6 +437,24 @@ void Card::setSpell() {
 		Description = "Deal all Reagent damage at once. Gain (Int) mana.";
 	}
 
+	else if (CardName == "Transmogrify") {
+		ManaCost = 5;
+		Description = "Cost 5 mana. Gain (Int)d2 gold.";
+	}
+	else if (CardName == "Liquidate") {
+		ManaCost = 0;
+		Description = "Cost 10 gold. Deal 3d(Int) damage. Extra turn.";
+	}
+
+	else if (CardName == "Sandstorm") {
+		ManaCost = 10;
+		Description = "Cost 10 mana. Everybody takes 3d(Int) damage for 3 turns.";
+	}
+	else if (CardName == "Screen") {
+		ManaCost = 0;
+		Description = "Gain 4 mana. Negate the next 2 attacks.";
+	}
+
 	else if (CardName == "Laser") {
 		ManaCost = 0;
 		Description = "Deal (Skl)d2 damage to health and block. Extra turn.";
@@ -462,11 +486,11 @@ void Card::setSpecial() {
 		naturalBurn = TRUE;
 	}
 	else if (CardName == "Cripple") {
-		Description = "Deal 50% of the enemy's health as damage. Burn this card.";
+		Description = "Deal 40% of the enemy's health as damage. Burn this card.";
 		naturalBurn = TRUE;
 	}
 	else if (CardName == "Merge") {
-		Description = "Deal 7x(Skl) damage. Burn this card.";
+		Description = "Deal 5x(Skl) damage. Burn this card.";
 		naturalBurn = TRUE;
 	}
 	else if (CardName == "Entomb") {
@@ -508,7 +532,8 @@ void Card::setSpecial() {
 		naturalBurn = TRUE;
 	}
 	else if (CardName == "Combo") {
-		Description = "Fill your hand with specials.";
+		Description = "Fill your hand with Special cards. Extra turn. Burn this card.";
+		naturalBurn = TRUE;
 	}
 	else if (CardName == "Slam") {
 		Description = "Deal your block as damage.";
@@ -521,6 +546,9 @@ void Card::setSpecial() {
 	}
 	else if (CardName == "Defend") {
 		Description = "Gain (Def)d3 block.";
+	}
+	else if (CardName == "Shimmer") {
+		Description = "Deal damage equal to your gold.";
 	}
 }
 void Card::setNegative() {
@@ -558,7 +586,8 @@ void Card::printCard(int position) {
 
 	init_pair(2, COLOR_CYAN, COLOR_BLACK);
 
-	init_color(COLOR_MAGENTA, 800, 0, 800);
+	
+	(COLOR_MAGENTA, 800, 0, 800);
 	init_pair(3, COLOR_MAGENTA, COLOR_BLACK);
 
 	init_color(COLOR_BLACK, 700, 700, 700);
@@ -674,6 +703,7 @@ void Card::printCard(int position) {
 		manualBox("Card 3", 0);
 		break;
 	case 4:
+		mvprintw(17, 64, "            ");
 		mvprintInSize(17, 64, 15, CardName, FALSE);
 		manualBox("Card 4", 0);
 		mods = modchars();
@@ -912,8 +942,8 @@ void Card::attackFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line2);
 	}
 	else if (CardName == "Ram") {
-		//Deal(Def)d2 damage
-		int damage = rtd(guy.Defense, 2);
+		//Deal (Def/2)d2 damage
+		int damage = rtd(int(guy.Defense/2), 2);
 		damage = dealDamage(damage, guy, enemy, log);
 
 		string line = "-You ram the " + string(enemy.Name)
@@ -1065,11 +1095,11 @@ void Card::defendFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Absorb") {
-		//gain (Def)+2 block, gain 5 mana
-		int block = gainBlock(guy.Defense + 2, guy, enemy);
-		guy.DrainMana(-5);
+		//Gain (Def)x3 block. Lose a turn.
+		int block = gainBlock(guy.Defense*3, guy, enemy);
+		guy.extraTurns--;
 
-		string line = "-You gain #c" + to_string(block) + "#o block and #m5 mana.#o";
+		string line = "-You gain #c" + to_string(block) + ".#o";
 		log.PushPop(line);
 	}
 	else if (CardName == "Reinforce") {
@@ -1099,23 +1129,39 @@ void Card::defendFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	}
 	else if (CardName == "Repulse") {
 		//Take 7 damage, negate the next hit. Gain an extra turn
-		guy.TakeDamage(7);
+		int damage = guy.TakeDamage(7);
 		guy.Negate++;
 		guy.extraTurns++;
 
-		string line = "-You take #r7#o damage and #cnegate the next hit taken.#o";
+		string line = "-You take #r" + to_string(damage) + "#o damage and #cnegate the next hit taken.#o";
 		string line2 = "#g EXTRA TURN#o";
 		log.PushPop(line);
 		log.PushPop(line2);
 	}
+	else if (CardName == "Wall") {
+		//Gain (Def)x3 block. Burn this card
+		int block = guy.Defense * 3;
+		gainBlock(block, guy, enemy);
+
+		string line = "-You gain #c" + to_string(block) + "#o block.";
+		log.PushPop(line);
+	}
 	else if (CardName == "Toughen") {
-		//Gain (Def) block. Add your Def to Str for a turn
-		int block = guy.Defense;
+		//Gain 22 block. Burn this card
+		int block = 22;
 		block = gainBlock(block, guy, enemy);
 
+		string line = "-You gain #c" + to_string(block) + "#o block.";
+		log.PushPop(line);
 	}
-	else if (CardName == "Resolve") {
-		//Gain (Def) block. Add your Def to Int for a turn
+	else if (CardName == "Mend") {
+		//If you have block, increase it to (Def)x2
+		int block = 0;
+		if (guy.CurrentBlock > 0 && guy.CurrentBlock < guy.Defense * 2)
+			guy.CurrentBlock = guy.Defense * 2;
+
+		string line = "#c-Your armor mends itself.";
+		log.PushPop(line);
 	}
 
 	//Dexterous trait
@@ -1204,9 +1250,8 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		int damage = dealDamage(rtd(2, guy.Intelligence), guy, enemy, log);
 		guy.extraTurns += 1;
 
-		string line = "-You force the " + string(enemy.Name)
-			+ " back for #y" + to_string(damage)
-			+ "#o damage.";
+		string line = "-You blink and deal #y" + to_string(damage)
+			+ "#o damage to the " + string(enemy.Name) + ".";
 		string line2 = "#g EXTRA TURN#o";
 		log.PushPop(line);
 		log.PushPop(line2);
@@ -1249,9 +1294,10 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	}
 
 	else if (CardName == "Fumes") {
-		//Costs 5 mana. Deal (Int/2)d2 damage for 3 turns
-		enemy.fumes += 3;
-		string line = "#m-You release toxic fumes#o for 4 more turns.#o";
+		//Costs 8 mana. Deal (Int/2)d2 damage for (Int) turns
+		int turns = guy.Intelligence;
+		enemy.fumes += turns;
+		string line = "#m-You release toxic fumes#o for " + to_string(turns) + " more turns.#o";
 		log.PushPop(line);
 	}
 	else if (CardName == "Incense") {
@@ -1343,10 +1389,10 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		guy.CurrentMana = 0;
 	}
 	else if (CardName == "Shock") {
-		//Gain 2 mana. Take 5 damage. Extra turn
+		//Gain 2 mana. Take 4 damage. Extra turn
 		guy.DrainMana(-2);
 		guy.extraTurns++;
-		int damage = guy.TakeDamage(5);
+		int damage = guy.TakeDamage(4);
 
 		string line = "-You #mgain 2 mana#o and take #r" + to_string(damage) + "#o damage.";
 		log.PushPop(line);
@@ -1462,6 +1508,49 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line2);
 		log.PushPop(line3);
 	}
+	else if (CardName == "Transmogrify") {
+		//Cost 5 mana. gain (Int)d2 gold
+		int gold = rtd(guy.Intelligence, 2);
+		if (guy.Gold_Blood)
+			gold *= 2;
+		guy.Gold += gold;
+
+		string line = "#y-You gain " + to_string(gold) + " gold.";
+		log.PushPop(line);
+	}
+	else if (CardName == "Liquidate") {
+		//Cost 10 gold. Deal 3d(Int) damage. Extra turn.
+		if (guy.Gold >= 10)
+			guy.Gold -= 10;
+		else
+			guy.Gold = 0;
+
+		int damage = rtd(3, guy.Intelligence);
+		damage = dealDamage(damage, guy, enemy, log);
+		guy.extraTurns++;
+		
+		string line = "-You #rlose 10 gold#o to deal #y" + to_string(damage) + "#o damage.";
+		string line2 = "#g EXTRA TURN#o";
+		log.PushPop(line);
+		log.PushPop(line2);
+	}
+
+	else if (CardName == "Sandstorm") {
+		//Cost 10 mana. Everybody takes 3d(Int) damage for 3 turns
+		enemy.sandstorm += 3;
+
+		string line = "#m-You stir up a sandstorm.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Screen") {
+		//Gain 4 mana. Negate the next 2 attacks
+		int mana = 4;
+		guy.DrainMana(-1 * mana);
+		guy.Negate+=2;
+
+		string line = "-You #mgain " + to_string(mana) + " mana#o and #cnegate the next 2 hits taken#o.";
+		log.PushPop(line);
+	}
 
 	else if (CardName == "Laser") {
 		//Deal (Skl)d2 damage to health and block. Extra turn.
@@ -1532,8 +1621,8 @@ void Card::specialFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Cripple") {
-		//Deal 50% of the enemy's health as damage. Burn
-		int damage = int(enemy.CurrentHealth / 2);
+		//Deal 40% of the enemy's health as damage. Burn
+		int damage = int(enemy.CurrentHealth*2/5);
 		damage = dealDamage(damage, guy, enemy, log);
 		string line = "-You cripple the " + string(enemy.Name)
 			+ " for #y" + to_string(damage)
@@ -1542,7 +1631,7 @@ void Card::specialFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	}
 	else if (CardName == "Merge") {
 		//Deal 7x(Skl) damage. Burn
-		int damage = guy.Skill * 7;
+		int damage = guy.Skill * 5;
 		damage = dealDamage(damage, guy, enemy, log);
 
 		string line = "-You merge with the " + string(enemy.Name) + " for #y" + to_string(damage) + "#o damage.";
@@ -1630,8 +1719,11 @@ void Card::specialFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Combo") {
-		//Fill your hand with specials. Gain 1 turn
+		//Fill your hand with boss cards. Extra turn. Burn this card.
 		guy.fillType = "Special";
+		guy.extraTurns++;
+		string line = "#g EXTRA TURN#o";
+		log.PushPop(line);
 	}
 	else if (CardName == "Slam") {
 		//Deal your block as damage
@@ -1663,6 +1755,14 @@ void Card::specialFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		int block = gainBlock(rtd(guy.Defense, 3), guy, enemy);
 
 		string line = "You gain #c" + to_string(block) + "#o block.";
+		log.PushPop(line);
+	}
+	else if (CardName == "Shimmer") {
+		//deal gold damage
+		int damage = guy.Gold;
+		damage = dealDamage(damage, guy, enemy, log);
+
+		string line = "-You deal #y" + to_string(damage) + "#o damage.";
 		log.PushPop(line);
 	}
 }

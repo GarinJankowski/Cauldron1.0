@@ -126,6 +126,7 @@ public:
 		bool Charred_Skin = FALSE;
 		bool Purple = FALSE;
 		int Inefficient = -1;
+		bool Gold_Flesh = FALSE;
 	//Reward
 		bool Mending_Flesh = FALSE;
 		bool Gymnast = FALSE;
@@ -158,7 +159,10 @@ public:
 		bool Green_Scales = FALSE;
 		bool Multi_Tongued = FALSE;
 		bool negotiate = FALSE;
-		int Blacksmith = 0;
+		int Blacksmith = -1;
+		bool Gold_Blood = FALSE;
+		bool Iron_Scabs = FALSE;
+		bool Gelatinous = FALSE;
 
 	//change stats
 	int TakeDamage(int damageTaken);

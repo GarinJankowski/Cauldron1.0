@@ -116,13 +116,21 @@ public:
 		//positive trait $50
 	bool shopS;
 
+	bool up = TRUE;
+	bool right = TRUE;
+	bool down = FALSE;
+
 	bool pushthisturn = FALSE;
 	int linkdraw = 0;
 	const char* negative;
 
 	const char *RoomType;
+	const char *Terrain;
+	bool extraCombat = TRUE;
+	bool extraCauldron = TRUE;
+	bool extraForge = TRUE;
 
-	void setRoom(const char *type);
+	void setRoom(const char *type, const char *terrain);
 	void ShuffleAddPrint();
 	Card removeCard();
 	void getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
@@ -158,6 +166,9 @@ public:
 	void traitsLoopWhole();
 	void generateTraits();
 
+	void showTerrain();
+	void terrainLoopWhole();
+
 	void addNegative(Character &guy, Deck &deck);
 	bool removeNegatives(Deck &deck);
 	void restoreStats(Character &guy);
@@ -180,7 +191,7 @@ public:
 	bool Negotiate(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 	bool NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 	bool Third_Eye = FALSE;
-	bool Tail;
+	bool Tail = FALSE;
 };
 
 #endif //INPUTBOARD_H

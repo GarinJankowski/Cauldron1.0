@@ -68,6 +68,7 @@ void Character::printDirectory() {
 	mvprintw(2, 1, "(G)ear");
 	mvprintw(3, 1, "(T)raits");
 	mvprintw(1, 9, "(M)ods");
+	mvprintw(2, 9, "(L)and");
 }
 //print stats
 void Character::printStats() {
@@ -95,7 +96,7 @@ void Character::printStats() {
 	//mvprintInSize(3, 31, 0, statline.c_str(), fuzzy);
 	mvprintInSize(3, 27, 0, statline.c_str(), fuzzy);
 
-	statline = "#y" + to_string(Gold) + "g  #o";
+	statline = "#$" + to_string(Gold) + "g  #o";
 	mvprintInSize(3, 36, 0, statline.c_str(), fuzzy);
 
 	manualBox("Stats", 0);
@@ -409,6 +410,13 @@ int Character::TakeDamage(int damageTaken) {
 	//Spiny Skin trait
 	if (Spiny_Skin && damageTaken > 0) {
 		SpinyDamage = Skill + 3;
+	}
+	if (Iron_Scabs && CurrentHealth < healthBefore) {
+		int block = int((healthBefore - CurrentHealth) / 2);
+		block = gainBlock(block);
+	}
+	if (Gold_Flesh && CurrentHealth < healthBefore && Gold > 0) {
+		Gold--;
 	}
 
 	return damageTaken;

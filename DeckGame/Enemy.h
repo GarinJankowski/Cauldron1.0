@@ -39,6 +39,7 @@ public:
 	bool stepOne;
 	bool stepTwo;
 
+	int sandstorm;
 	int bleeding;
 	int fumes;
 	int flay;

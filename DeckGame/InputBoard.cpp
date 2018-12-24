@@ -9,6 +9,14 @@ int rtd(int multiplier, int power);
 //manually draw boxes
 void manualBox(string typebox, int colorpair);
 
+int icetext = 70;
+int treasuretext = 71;
+int foresttext = 72;
+int magmatext = 73;
+int wastelandtext = 74;
+int fogtext = 75;
+int citytext = 82;
+
 InputBoard::InputBoard(Deck &deck, Character &guy)
 {
 	//no negative cards added yet
@@ -69,24 +77,24 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	handsLate.push_back(Gear("Spiked Gauntlets"));
 	handsLate.push_back(Gear("Crystal Ball"));
 	handsLate.push_back(Gear("Arbalest"));
+	handsLate.push_back(Gear("Shield"));
+	handsLate.push_back(Gear("Wand"));
+	handsLate.push_back(Gear("Hand Cannon"));
 
 	handsLateREFILL = handsLate;
-
-	handsRare.push_back(Gear("Shield"));
-	handsRare.push_back(Gear("Wand"));
-	handsRare.push_back(Gear("Hand Cannon"));
 
 	//body
 	bodyNorm.push_back(Gear("Leather Hauberk"));
 	bodyNorm.push_back(Gear("Reinforced Mail"));
-	bodyNorm.push_back(Gear("Full Plate Armor"));
 	bodyNorm.push_back(Gear("Cape"));
 	bodyNorm.push_back(Gear("Steel Breastplate"));
 	bodyNorm.push_back(Gear("Feathered Cloak"));
-	bodyNorm.push_back(Gear("Buffalo Hide"));
+	bodyNorm.push_back(Gear("Padded Tunic"));
 
 	bodyNormREFILL = bodyNorm;
 
+	bodyLate.push_back(Gear("Buffalo Hide"));
+	bodyLate.push_back(Gear("Full Plate Armor"));
 	bodyLate.push_back(Gear("Riveted Chainmail"));
 	bodyLate.push_back(Gear("Glitter Robes"));
 	bodyLate.push_back(Gear("Spiked Mail"));
@@ -94,11 +102,11 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	bodyLate.push_back(Gear("Twilight Robes"));
 	bodyLate.push_back(Gear("Crystal Breastplate"));
 	bodyLate.push_back(Gear("Amulet of Aura"));
+	bodyLate.push_back(Gear("Turtle Shell"));
+	bodyLate.push_back(Gear("Mage Armor"));
 
 	bodyLateREFILL = bodyLate;
 
-	bodyRare.push_back(Gear("Turtle Shell"));
-	bodyRare.push_back(Gear("Mage Armor"));
 
 	//head
 	headNorm.push_back(Gear("Vampire Fangs"));
@@ -114,6 +122,8 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	headNorm.push_back(Gear("Diving Gear"));
 	headNorm.push_back(Gear("Makeup Set"));
 	headNorm.push_back(Gear("Safety Glasses"));
+	headNorm.push_back(Gear("Golden Monocle"));
+	headNorm.push_back(Gear("Desert Wrappings"));
 
 	headRare.push_back(Gear("Brown Hat"));
 
@@ -140,6 +150,7 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	specialNorm.push_back(Card("Train"));
 	specialNorm.push_back(Card("Steroids"));
 	specialNorm.push_back(Card("Distract"));
+	specialNorm.push_back(Card("Shimmer"));
 
 	specialNormREFILL = specialNorm;
 
@@ -172,6 +183,10 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableSpells.push_back(Card("Refresh"));
 	AvailableSpells.push_back(Card("Reagent"));
 	AvailableSpells.push_back(Card("Reactant"));
+	AvailableSpells.push_back(Card("Transmogrify"));
+	AvailableSpells.push_back(Card("Liquidate"));
+	AvailableSpells.push_back(Card("Sandstorm"));
+	AvailableSpells.push_back(Card("Screen"));
 
 	//traits
 	AvailableTraitsSacrifice.push_back(Gear("Anemia"));
@@ -209,6 +224,7 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsSacrifice.push_back(Gear("Madness"));
 	AvailableTraitsSacrifice.push_back(Gear("Inefficient"));
 	AvailableTraitsSacrifice.push_back(Gear("Brain Worm"));
+	AvailableTraitsSacrifice.push_back(Gear("Gold Flesh"));
 
 	AvailableTraitsSacrificeREFILL = AvailableTraitsSacrifice;
 
@@ -241,6 +257,28 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsReward.push_back(Gear("Green Scales"));
 	AvailableTraitsReward.push_back(Gear("Multi-Tongued"));
 	AvailableTraitsReward.push_back(Gear("Triple-Jointed"));
+	AvailableTraitsReward.push_back(Gear("Blacksmith"));
+	AvailableTraitsReward.push_back(Gear("Gold Blood"));
+	AvailableTraitsReward.push_back(Gear("Iron Scabs"));
+	AvailableTraitsReward.push_back(Gear("Gelatinous"));
+	AvailableTraitsReward.push_back(Gear("Evolve"));
+
+	AvailableTraitsReward.push_back(Gear("Destiny"));
+	AvailableTraitsReward.push_back(Gear("Destiny"));
+	AvailableTraitsReward.push_back(Gear("Destiny"));
+	AvailableTraitsReward.push_back(Gear("Destiny"));
+	AvailableTraitsReward.push_back(Gear("Destiny"));
+	AvailableTraitsReward.push_back(Gear("Destiny"));
+	AvailableTraitsReward.push_back(Gear("Destiny"));
+
+	AvailableTraitsReward.push_back(Gear("Blacksmith"));
+	AvailableTraitsReward.push_back(Gear("Blacksmith"));
+	AvailableTraitsReward.push_back(Gear("Blacksmith"));
+	AvailableTraitsReward.push_back(Gear("Blacksmith"));
+	AvailableTraitsReward.push_back(Gear("Blacksmith"));
+	AvailableTraitsReward.push_back(Gear("Blacksmith"));
+	AvailableTraitsReward.push_back(Gear("Blacksmith"));
+	AvailableTraitsReward.push_back(Gear("Blacksmith"));
 	AvailableTraitsReward.push_back(Gear("Blacksmith"));
 
 	AvailableTraitsRewardREFILL = AvailableTraitsReward;
@@ -340,9 +378,9 @@ InputBoard::~InputBoard()
 {
 }
 
-void InputBoard::setRoom(const char *type) {
-	//First, Combat, Boss, Final Boss, Stat, Addition, Cauldron, Empty
+void InputBoard::setRoom(const char *type, const char *terrain) {
 	RoomType = type;
+	Terrain = terrain;
 }
 
 //clears the decision board (the three card screen)
@@ -909,7 +947,7 @@ void InputBoard::modLoopWhole(Character &guy, Deck &deck, bool notbattle) {
 			case 1:
 				m = 'b';
 				name = "#gStay";
-				desc = "This card does not discard after use.#o";
+				desc = "This card has a 70% chance to not discard after use.#o";
 				break;
 			case 2:
 				m = 'c';
@@ -975,7 +1013,7 @@ void InputBoard::showInventory(Character &guy, Deck &deck) {
 	mvprintw(2, 50, "Head:");
 	mvprintw(3, 50, "Body:");
 	mvprintw(4, 50, "Hands:");
-	attron(COLOR_PAIR(10));
+	attron(COLOR_PAIR(6));
 	mvprintw(2, 56, "%s", head.GearName);
 	mvprintw(3, 56, "%s", body.GearName);
 	mvprintw(4, 57, "%s", hands.GearName);
@@ -1368,7 +1406,7 @@ void InputBoard::showTraits() {
 			x += 16;
 		}
 	}
-	mvprintw(0, 48, "Traits (ESC to exit page)");
+	mvprintw(0, 49, "Traits (ESC to exit page)");
 	//calls method to see an individual trait
 	traitsLoopWhole();
 }
@@ -1476,6 +1514,119 @@ void InputBoard::traitsLoopWhole() {
 	showTraits();
 }
 
+//show the types of terrain, allows you to select and look at them individually
+void InputBoard::showTerrain() {
+	for (int y = 0; y < 15; y++) {
+		mvprintw(y, 44, "                                  ");
+	}
+	mvprintInSize(2, 45, 0, "a)", FALSE);
+	mvprintInSize(3, 45, 0, "b)", FALSE);
+	mvprintInSize(4, 45, 0, "c)", FALSE);
+	mvprintInSize(5, 45, 0, "d)", FALSE);
+	mvprintInSize(6, 45, 0, "e)", FALSE);
+	mvprintInSize(7, 45, 0, "f)", FALSE);
+	mvprintInSize(8, 45, 0, "g)", FALSE);
+
+	attron(COLOR_PAIR(fogtext));
+	mvprintInSize(2, 48, 0, "Fog", FALSE);
+	attron(COLOR_PAIR(icetext));
+	mvprintInSize(3, 48, 0, "Ice", FALSE);
+	attron(COLOR_PAIR(foresttext));
+	mvprintInSize(4, 48, 0, "Forest", FALSE);
+	attron(COLOR_PAIR(magmatext));
+	mvprintInSize(5, 48, 0, "Magma", FALSE);
+	attron(COLOR_PAIR(wastelandtext));
+	mvprintInSize(6, 48, 0, "Wasteland", FALSE);
+	attron(COLOR_PAIR(citytext));
+	mvprintInSize(7, 48, 0, "City", FALSE);
+	attron(COLOR_PAIR(treasuretext));
+	mvprintInSize(8, 48, 0, "Treasure", FALSE);
+	standend();
+
+	mvprintw(0, 50, "Land (ESC to exit page)");
+
+	terrainLoopWhole();
+}
+//look at individual terrain types
+void InputBoard::terrainLoopWhole() {
+	char c = getch();
+
+	for (int y = 0; y < 15; y++) {
+		mvprintw(y, 44, "                                  ");
+	}
+	mvprintw(0, 50, "Land (ESC to exit page)");
+
+	if (c == 27) {
+		return;
+	}
+	else if (c == 'a') {
+		attron(COLOR_PAIR(fogtext));
+		mvprintInSize(2, 58, 0, "Fog", FALSE);
+
+		const char* desc = "In fog, tiles cannot be seen except in a 1 tile radius around you.";
+		mvprintInSize(4, 50, 22, desc, FALSE);
+
+		escapeLoop(0);
+	}
+	else if (c == 'b') {
+		attron(COLOR_PAIR(icetext));
+		mvprintInSize(2, 58, 0, "Ice", FALSE);
+
+		const char* desc = "As long as you are on ice, use must move in the same direction you moved last.";
+		mvprintInSize(4, 50, 22, desc, FALSE);
+
+		escapeLoop(0);
+	}
+	else if (c == 'c') {
+		attron(COLOR_PAIR(foresttext));
+		mvprintInSize(2, 57, 0, "Forest", FALSE);
+
+		const char* desc = "As long as you are in the forest, use cannot move in the same direction you moved last.";
+		mvprintInSize(4, 50, 22, desc, FALSE);
+
+		escapeLoop(0);
+	}
+	else if (c == 'd') {
+		attron(COLOR_PAIR(magmatext));
+		mvprintInSize(2, 57, 0, "Magma", FALSE);
+
+		const char* desc = "Magma contains two encounters for each combat tile and Cauldrons are empty.";
+		mvprintInSize(4, 50, 22, desc, FALSE);
+
+		escapeLoop(0);
+	}
+	else if (c == 'e') {
+		attron(COLOR_PAIR(wastelandtext));
+		mvprintInSize(2, 55, 0, "Wasteland", FALSE);
+
+		const char* desc = "The Wasteland contains two Cauldrons for each Cauldron tile, but all other tiles are empty.";
+		mvprintInSize(4, 50, 22, desc, FALSE);
+
+		escapeLoop(0);
+	}
+	else if (c == 'f') {
+		attron(COLOR_PAIR(citytext));
+		mvprintInSize(2, 57, 0, "City", FALSE);
+
+		const char* desc = "The City only contains themed enemies, which are enemies that appear based on the final boss. Different final bosses have different themed enemies. Also, Forges are doubled.";
+		mvprintInSize(4, 48, 24, desc, FALSE);
+
+		escapeLoop(0);
+	}
+	else if (c == 'g') {
+		attron(COLOR_PAIR(treasuretext));
+		mvprintInSize(2, 56, 0, "Treasure", FALSE);
+
+		const char* desc = "Treasure contains 25 gold.";
+		mvprintInSize(4, 50, 22, desc, FALSE);
+
+		escapeLoop(0);
+	}
+
+	standend();
+	showTerrain();
+}
+
 /*function for shuffling the deck in battle if the draw pile is empty,
   pushing forward cards from the draw pile into the cards that can be chosen,
   and printing the cards that can be chosen*/
@@ -1496,8 +1647,6 @@ void InputBoard::ShuffleAddPrint() {
 		}
 		pushthisturn = FALSE;
 	}
-	
-
 	
 	//shuffle
 		//if there isn't enough cards in the draw pile, add cards from the discard pile into draw pile in a random order
@@ -1567,34 +1716,12 @@ void InputBoard::ShuffleAddPrint() {
 		}
 
 	//print
-		//prints the boxes
-		//if (cardThere > 0)
-		//manualBox("Card 1", 0);
-		//if (cardThere > 1)
-		//manualBox("Card 2", 0);
-		//if (cardThere > 2)
-		//manualBox("Card 3", 0);
 		standend();
 		//prints the cards to choose from
-		/*if (DecisionCards.size() == 0) {
-			clearBoard();
-		}*/
-		//else {
-			for (int i = 0; i < handSize; i++) {
-				if(DecisionCards.size() > i)
-					DecisionCards.at(i).printCard(i + 1);
-			}
-		//}
-		
-
-		/*for (int i = 0; i < (int)Draw.size(); i++) {
-			mvprintw(5 + i, 45, "%s   ", Draw.at(i).CardName);
-		}*/
-		//mvprintw(5, 70, "%s    ", Draw.back().CardName);
-		
-		
-		//makeWindow(4, 15, 16, 61);
-
+		for (int i = 0; i < handSize; i++) {
+			if(DecisionCards.size() > i)
+				DecisionCards.at(i).printCard(i + 1);
+		}
 
 		//Third Eye trait
 		if (Third_Eye) {
@@ -1778,6 +1905,13 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 		ShuffleAddPrint();
 		getchCard(guy, enemy, deck, log);
 	}
+	else if (choose == 'l') {
+		showTerrain();
+
+		log.printLog();
+		ShuffleAddPrint();
+		getchCard(guy, enemy, deck, log);
+	}
 	//Wings trait
 	else if (choose == '6' && guy.Wings && RoomType != "Final Boss") {
 		guy.WingsUsed = TRUE;
@@ -1809,7 +1943,8 @@ bool InputBoard::checkUsable(Character &guy, Enemy &enemy) {
 		else if ((DecisionCards.at(i).ManaCost > 0 && DecisionCards.at(i).ManaCost > guy.CurrentMana) ||
 			(DecisionCards.at(i).CardName == "Flee" && guy.CurrentBlock <= 0) ||
 			(DecisionCards.at(i).CardName == "Impale" && (enemy.CurrentHealth + enemy.CurrentBlock > impale || enemy.enemyNegate > 0)) ||
-			(DecisionCards.at(i).CardName == "Shoot" && guy.CurrentHealth + guy.CurrentBlock <= 7))
+			(DecisionCards.at(i).CardName == "Shoot" && guy.CurrentHealth + guy.CurrentBlock <= 7) ||
+			(DecisionCards.at(i).CardName == "Liquidate" && guy.Gold < 10))
 			cardsUsable--;
 	}
 	if (cardsUsable == 0)
@@ -1830,7 +1965,8 @@ bool InputBoard::checkUsable(int i, Character &guy, Enemy &enemy) {
 		return FALSE;
 	else if ((DecisionCards.at(i).ManaCost > 0 && DecisionCards.at(i).ManaCost > guy.CurrentMana) ||
 		(DecisionCards.at(i).CardName == "Flee" && guy.CurrentBlock <= 0) ||
-		(DecisionCards.at(i).CardName == "Impale" && (enemy.CurrentHealth + enemy.CurrentBlock > impale || enemy.enemyNegate > 0)))
+		(DecisionCards.at(i).CardName == "Impale" && (enemy.CurrentHealth + enemy.CurrentBlock > impale || enemy.enemyNegate > 0)) ||
+		(DecisionCards.at(i).CardName == "Liquidate" && guy.Gold < 10))
 		usable = FALSE;
 	return usable;
 }
@@ -1854,6 +1990,9 @@ Enemy InputBoard::generateEnemy(Character &guy) {
 			else {
 				enemy = Enemy("Rat");
 			}
+
+			if (Terrain == "City")
+				enemy = tierone;
 		}
 		else if (guy.getTier() == 'B') {
 			int rng = rand() % 4;
@@ -1868,6 +2007,9 @@ Enemy InputBoard::generateEnemy(Character &guy) {
 			else {
 				enemy = Enemy("Hound");
 			}
+
+			if (Terrain == "City")
+				enemy = tierone;
 		}
 		else if (guy.getTier() == 'C' || guy.getTier() == 'D') {
 			int rng = rand() % 5;
@@ -1883,6 +2025,8 @@ Enemy InputBoard::generateEnemy(Character &guy) {
 			else
 				enemy = Enemy("Brown Recluse");
 
+			if (Terrain == "City")
+				enemy = tiertwo;
 		}
 		else if (guy.getTier() == 'E') {
 			int rng = rand() % 7;
@@ -1900,6 +2044,14 @@ Enemy InputBoard::generateEnemy(Character &guy) {
 			else {
 				enemy = Enemy("Adventurer");
 			}
+
+			if (Terrain == "City") {
+				int cityr = rand() % 2;
+				if (cityr == 0)
+					enemy = tierthree1;
+				else
+					enemy = tierthree2;
+			}
 		}
 		else if (guy.getTier() == 'F') {
 			int rng = rand() % 13;
@@ -1916,6 +2068,14 @@ Enemy InputBoard::generateEnemy(Character &guy) {
 			}
 			else {
 				enemy = Enemy("Adventurer");
+			}
+
+			if (Terrain == "City") {
+				int cityr = rand() % 2;
+				if (cityr == 0)
+					enemy = tierthree1;
+				else
+					enemy = tierthree2;
 			}
 		}
 	}
@@ -1973,6 +2133,13 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 		if (guy.Slow) {
 			enemy.enemyNegate++;
 		}
+		//Gelatinous trait
+		if (guy.Gelatinous && guy.Skill > 0) {
+			int block = rtd(guy.Skill, 2);
+			block = guy.gainBlock(block);
+			string gel = "-You gain #b" + to_string(block) + "#o block.";
+			log.PushPop(gel);
+		}
 		//Growing Pains trait
 		if (guy.Growing_Pains) {
 			int damage = 10;
@@ -1983,7 +2150,7 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 		//Forgetful trait
 		if (guy.Forgetful) {
 			guy.CurrentMana = 0;
-			string forget = "#f-You lose all of your mana.#o";
+			string forget = "#r-You lose all of your mana.#o";
 			log.PushPop(forget);
 		}
 		//Unseen trait
@@ -2066,6 +2233,7 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 					guy.Alive = FALSE;
 			}
 			if (!guy.Alive) {
+				guy.printStats();
 				break;
 			}
 			//when the enemy dies, push the line about the enemy dying and restore your stats
@@ -2217,6 +2385,7 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 					guy.Alive = FALSE;
 			}
 			if (!guy.Alive) {
+				guy.printStats();
 				break;
 			}
 			//check again if enemy is dead
@@ -2334,8 +2503,10 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	//Anemia trait
 	if (guy.Anemia && guy.CurrentHealth > 5) {
 		if (rand() % 4 == 0) {
-			guy.CurrentHealth -= 5;
-			string line = "-You #rlose 5 health.#o";
+			int damage = 5;
+			guy.pierce = TRUE;
+			damage = guy.TakeDamage(damage);
+			string line = "-You lose #r" + to_string(damage) + "#o health.";
 			log.PushPop(line);
 		}
 	}
@@ -2373,7 +2544,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 		if (guy.CurrentBlock == 0 && guy.Negate == 0) {
 			guy.Jittery = 0;
 		}
-		if (guy.Jittery == 4) {
+		if (guy.Jittery == 3) {
 			guy.CurrentBlock = 0;
 			guy.Negate = 0;
 			guy.Jittery = 0;
@@ -2390,10 +2561,10 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 		if (guy.Volatile == 3) {
 			int damage = 15;
 			damage = guy.TakeDamage(15);
-			enemy.takeDamage(15, guy, log);
+			int damage2 = enemy.takeDamage(15, guy, log);
 			guy.Volatile = 0;
 
-			string erupt = "#r-You erupt, taking and dealing " + to_string(damage) + " damage.#o";
+			string erupt = "#r-You erupt, taking " + to_string(damage) + " and dealing #y" + to_string(damage2) + "#r damage.#o";
 			log.PushPop(erupt);
 		}
 		else{
@@ -2595,8 +2766,11 @@ bool InputBoard::checkEnemyLife(Character &guy, Enemy &enemy, Deck &deck, TextLo
 			log.PushPop(line);
 
 			int gold = generateGold(enemy);
+			//gold blood trait
+			if (guy.Gold_Blood)
+				gold *= 2;
 			guy.Gold += gold;
-			string goldline = "#y~You gain " + to_string(gold) + " gold.#o";
+			string goldline = "#$~You gain " + to_string(gold) + " gold.#o";
 			log.PushPop(goldline);
 
 			log.printLog();
@@ -2658,6 +2832,7 @@ void InputBoard::restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, Te
 	guy.fillType = " ";
 	guy.drown = 0;
 	guy.refresh = 0;
+	guy.reagent = 0;
 	if(guy.Volatile != -1)
 		guy.Volatile = 0;
 	if(guy.Jittery != -1)
@@ -2685,6 +2860,61 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 	manualBox("Card 1", 0);
 	manualBox("Card 2", 0);
 	manualBox("Card 3", 0);
+
+	//print terrain type
+	mvprintInSize(14, 1, 0, "Land: ", FALSE);
+	string terrainString = string(Terrain);
+
+	if (Terrain == "Ice") {
+		attron(COLOR_PAIR(icetext));
+	}
+	else if (Terrain == "Treasure") {
+		attron(COLOR_PAIR(treasuretext));
+	}
+	else if (Terrain == "Forest") {
+		attron(COLOR_PAIR(foresttext));
+	}
+	else if (Terrain == "Magma") {
+		attron(COLOR_PAIR(magmatext));
+	}
+	else if (Terrain == "Wasteland") {
+		attron(COLOR_PAIR(wastelandtext));
+	}
+	else if (Terrain == "City") {
+		attron(COLOR_PAIR(citytext));
+	}
+	else if (Terrain == "Fog") {
+		attron(COLOR_PAIR(fogtext));
+	}
+	else {
+		terrainString = "None";
+	}
+
+	terrainString += "#o\u00c4\u00c4\u00c4\u00c4\u00c4\u00c4";
+	mvprintInSize(14, 7, 0, terrainString.c_str(), FALSE);
+
+	//TERRAIN: Treasure
+	if (Terrain == "Treasure" && RoomType != "Empty" && RoomType != "Stat" &&
+		RoomType != "Special" && RoomType != "Spell" && RoomType != "Cauldron 2" &&
+		!shopS && guy.Blacksmith < 1) {
+		int g = 25;
+		if (guy.Gold_Blood)
+			g *= 2;
+
+		guy.Gold += g;
+		string gline = "#$~You gain " + to_string(g) + " gold.#o";
+		log.PushPop(gline);
+		guy.printStats();
+		log.printLog();
+	}
+	//TERRAIN: Wasteland
+	if (Terrain == "Wasteland" && RoomType != "Cauldron" && RoomType != "Cauldron 2" && !guy.Genius && !guy.Ego && guy.Blacksmith < 0) {
+		RoomType = "Empty";
+	}
+	//TERRAIN: Magma
+	if (Terrain == "Magma" && RoomType == "Cauldron") {
+		RoomType = "Empty";
+	}
 
 	//Destiny trait
 	if (guy.Destiny == 1 && RoomType == "Cauldron") {
@@ -2718,7 +2948,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		mvprintw(12, 29, "=");
 		attron(COLOR_PAIR(3));
 		mvprintw(13, 29, "+");
-		attron(COLOR_PAIR(1));
+		attron(COLOR_PAIR(10));
 		mvprintw(14, 29, "$");
 		standend();
 
@@ -2767,7 +2997,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		mvprintw(12, 29, "=");
 		attron(COLOR_PAIR(3));
 		mvprintw(13, 29, "+");
-		attron(COLOR_PAIR(1));
+		attron(COLOR_PAIR(10));
 		mvprintw(14, 29, "$");
 		standend();
 
@@ -2800,7 +3030,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 	else if (RoomType == "Mod") {
 		generateMods();
 		mvprintInSize(17, 4, 15, "You found some card modifiers: ", FALSE);
-		mvprintInSize(22, 37, 0, "(P)ickup", FALSE);
+		mvprintInSize(23, 37, 0, "(P)ickup", FALSE);
 	}
 	//if the room is empty, get choice of movement
 	else if (RoomType == "Empty") {
@@ -2869,6 +3099,45 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		mvprintw(17, 26, "Which way?");
 		//print available options
 		//check for Warper trait
+		//also handle TERRAIN: Ice and TERRAIN: Forest
+		if (guy.Warper > 0) {
+			if (guy.posy != 0 &&
+				guy.posyBefore != guy.posy + 1 &&
+				(Terrain == "Ice" && guy.posy < guy.posyBefore && guy.posx) &&
+				(Terrain == "Forest" && guy.posy >= guy.posyBefore)) {
+				down = TRUE;
+			}
+		}
+		else
+			down = FALSE;
+		if (guy.posy == 7 ||
+			(Terrain == "Ice" && guy.posy <= guy.posyBefore && guy.posx != guy.posxBefore && guy.posx != 25) ||
+			(Terrain == "Ice" && guy.posy < guy.posyBefore && guy.posx == guy.posxBefore && guy.Warper > 0 && guy.posx != 25) ||
+			(Terrain == "Forest" && guy.posy > guy.posyBefore && guy.posx != 25)) {
+			up = FALSE;
+		}
+		else
+			up = TRUE;
+		if (guy.posy == 25 ||
+			(Terrain == "Ice" && guy.posx <= guy.posxBefore && guy.posy != guy.posyBefore && guy.posy != 7) ||
+			(Terrain == "Ice" && guy.posy < guy.posyBefore && guy.posx == guy.posxBefore && guy.Warper > 0 && guy.posy != 0) ||
+			(Terrain == "Forest" && guy.posx > guy.posxBefore && guy.posy != 7)) {
+			right = FALSE;
+		}
+		else
+			right = TRUE;
+
+		if (up) {
+			mvprintInSize(19, 25, 0, "1) Up", FALSE);
+		}
+		if (right) {
+			mvprintInSize(20, 25, 0, "2) Right", FALSE);
+		}
+		if (down) {
+			mvprintInSize(21, 25, 0, "3) Down", FALSE);
+		}
+
+		/*
 		if (guy.posx == 25) {
 			mvprintw(19, 25, "1) Up");
 			if (guy.Warper > 0 && guy.posy > 0 && guy.posyBefore != guy.posy - 1) {
@@ -2887,7 +3156,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 			if (guy.Warper > 0&& guy.posy > 0 && guy.posyBefore != guy.posy - 1) {
 				mvprintw(21, 25, "3) Down");
 			}
-		}
+		}*/
 	}
 	//if the room is any type of gear, print the gear there
 	else if (RoomType == "Gear Hands" || RoomType == "Gear Body" || RoomType == "Gear Head") {
@@ -3016,7 +3285,7 @@ void InputBoard::generateMods() {
 	int rng = rand() % 23;
 	if (rng == 0){
 		pickup1 = "#gStay";
-		Description = "This card does not discard after use.#o";
+		Description = "This card has a 70% chance to not discard after use.#o";
 	}
 	else if (rng == 1) {
 		pickup1 = "#oVoid";
@@ -3048,7 +3317,7 @@ void InputBoard::generateMods() {
 		rng = 22;
 	if (rng == 0) {
 		pickup2 = "#gStay";
-		Description2 = "This card does not discard after use.#o";
+		Description2 = "This card has a 70% chance to not discard after use.#o";
 	}
 	else if (rng == 1) {
 		pickup2 = "#oVoid";
@@ -3108,6 +3377,7 @@ void InputBoard::generateGear(Character &guy) {
 	if (rand() % 50 == 0)
 		rare = TRUE;
 	if (RoomType == "Gear Hands") {
+		//rare is obsolete
 		if (rare && handsRare.size() > 0) {
 			int rareng = rand() % handsRare.size();
 			pickup = handsRare.at(rareng);
@@ -3166,6 +3436,7 @@ void InputBoard::generateGear(Character &guy) {
 		}
 	}
 	else if (RoomType == "Gear Body") {
+		//rare is obsolete
 		if (rare && bodyRare.size() > 0) {
 			int rareng = rand() % bodyRare.size();
 			pickup = bodyRare.at(rareng);
@@ -3318,6 +3589,10 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 			showMods(guy, deck, TRUE);
 			log.printLog();
 		}
+		else if (choose == 'l') {
+			showTerrain();
+			log.printLog();
+		}
 		/*else if (choose == 'l') {
 			clearBoard();
 			log.printAllLog(0, 100);
@@ -3358,26 +3633,40 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 		}
 		else if (RoomType == "Stat") {
 			//char choose = getch();
-			if (choose == '1') {
-				guy.ModStat(1, "Strength");
-				string gain = "#g~You gain 1 Strength.#o";
-				log.PushPop(gain);
-				log.printLog();
-				RoomType = "Empty";
-			}
-			else if (choose == '2') {
-				guy.ModStat(1, "Defense");
-				string gain = "#g~You gain 1 Defense.#o";
-				log.PushPop(gain);
-				log.printLog();
-				RoomType = "Empty";
-			}
-			else if (choose == '3') {
-				guy.ModStat(1, "Intelligence");
-				string gain = "#g~You gain 1 Intelligence.#o";
-				log.PushPop(gain);
-				log.printLog();
-				RoomType = "Empty";
+			if (choose == '1' || choose == '2' || choose == '3') {
+				if (choose == '1') {
+					guy.ModStat(1, "Strength");
+					string gain = "#g~You gain 1 Strength.#o";
+					log.PushPop(gain);
+					log.printLog();
+				}
+				else if (choose == '2') {
+					guy.ModStat(1, "Defense");
+					string gain = "#g~You gain 1 Defense.#o";
+					log.PushPop(gain);
+					log.printLog();
+				}
+				else if (choose == '3') {
+					guy.ModStat(1, "Intelligence");
+					string gain = "#g~You gain 1 Intelligence.#o";
+					log.PushPop(gain);
+					log.printLog();
+				}
+				if (Terrain == "Magma") {
+					if (extraCombat) {
+						if (guy.Overconfidence)
+							RoomType = "Boss";
+						else
+							RoomType = "Combat";
+						extraCombat = FALSE;
+					}
+					else {
+						RoomType = "Empty";
+						extraCombat = TRUE;
+					}
+				}
+				else
+					RoomType = "Empty";
 			}
 			else
 				getchDecision(guy, deck, log);
@@ -3395,31 +3684,31 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				if (rand() % 8 < 3) {
 					int grow = rand() % 86;
 					string gain2;
-					if (grow < 20) {
+					if (grow < 78) {
 						guy.ModStat(1, "Strength");
-						gain2 = "#g~You grow +1 Strength.#o";
+						gain2 = "#g~You grow 1 Strength.#o";
 					}
-					else if (grow <= 20 && grow < 40) {
+					else if (grow <= 15 && grow < 30) {
 						guy.ModStat(1, "Defense");
-						gain2 = "#g~You grow +1 Defense.#o";
+						gain2 = "#g~You grow 1 Defense.#o";
 					}
-					else if (grow <= 40 && grow < 60) {
+					else if (grow <= 30 && grow < 45) {
 						guy.ModStat(1, "Intelligence");
-						gain2 = "#g~You grow +1 Intelligence.#o";
+						gain2 = "#g~You grow 1 Intelligence.#o";
 					}
-					else if (grow <= 60 && grow < 80) {
+					else if (grow <= 45 && grow < 60) {
 						guy.ModStat(1, "MaxHealth");
-						gain2 = "#g~You grow +1 Maximum Health.#o";
+						gain2 = "#g~You grow 1 Maximum Health.#o";
 						guy.CurrentHealth = guy.MaxHealth;
 					}
-					else if (grow >= 80 && grow < 85) {
+					else if (grow >= 60 && grow < 75) {
 						guy.ModStat(1, "MaxMana");
-						gain2 = "#g~You grow +1 Maximum Mana.#o";
+						gain2 = "#g~You grow 1 Maximum Mana.#o";
 						guy.CurrentMana = guy.MaxMana;
 					}
 					else {
 						guy.ModStat(1, "Skill");
-						gain2 = "#g~You grow +1 Skill.#o";
+						gain2 = "#g~You grow 1 Skill.#o";
 					}
 					log.PushPop(gain2);
 					log.printLog();
@@ -3486,6 +3775,8 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				}
 			
 				//Blacksmith trait
+				if (guy.Blacksmith == 0)
+					guy.Blacksmith--;
 				if (guy.Blacksmith > 0) {
 					RoomType = "Mod";
 					guy.Blacksmith--;
@@ -3494,12 +3785,31 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					RoomType = "Cauldron";
 					guy.Destiny--;
 				}
+				else if (Terrain == "Wasteland" && guy.Destiny == 0) {
+					if (extraCauldron) {
+						extraCauldron = FALSE;
+						RoomType = "Cauldron";
+					}
+					else {
+						extraCauldron = TRUE;
+						RoomType = "Empty";
+					}
+				}
+				else if (Terrain == "City" && guy.Blacksmith < 0) {
+					if (extraForge) {
+						RoomType = "Mod";
+						extraForge = FALSE;
+					}
+					else {
+						RoomType = "Empty";
+						extraForge = TRUE;
+					}
+				}
 				else
 					RoomType = "Empty";
 
-
 				//getting a trait in shop
-				if (shopS && guy.Blacksmith == 0) {
+				if (shopS && guy.Blacksmith <= 0) {
 					shopS = FALSE;
 					printShop(guy);
 					RoomType = "Shop";
@@ -3517,6 +3827,67 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 		else if (RoomType == "Empty") {
 			//char choose = getch();
 			int space = 1;
+
+			//check for Warper trait
+			//also handle TERRAIN: Ice and TERRAIN: Forest
+			/*if (guy.Warper > 0) {
+				if (guy.posy != 0 &&
+					guy.posyBefore != guy.posy + 1 &&
+					(Terrain == "Ice" && guy.posy < guy.posyBefore && guy.posx) &&
+					(Terrain == "Forest" && guy.posy >= guy.posyBefore)) {
+					down = TRUE;
+				}
+			}
+			if (guy.posy == 7 ||
+				(Terrain == "Ice" && guy.posy <= guy.posyBefore && guy.posx != guy.posxBefore && guy.posx != 25) ||
+				(Terrain == "Forest" && guy.posy > guy.posyBefore && guy.posx != 25)) {
+				up = FALSE;
+			}
+			if (guy.posy == 25 ||
+				(Terrain == "Ice" && guy.posx <= guy.posxBefore && guy.posy != guy.posyBefore && guy.posy != 7) ||
+				(Terrain == "Forest" && guy.posx > guy.posxBefore && guy.posx != 7)) {
+				right = FALSE;
+			}*/
+
+			if (up && choose == '1') {
+				//Long Legs trait
+				if (guy.Long_Legs > 0 && guy.posy < 6) {
+					space *= 2;
+					guy.Long_Legs--;
+				}
+
+				guy.changePosBefore('y', guy.posy);
+				guy.changePosBefore('x', guy.posx);
+				guy.posy += space;
+			}
+			else if (right && choose == '2') {
+				//Long Legs trait
+				if (guy.Long_Legs > 0 && guy.posx < 24) {
+					space *= 2;
+					guy.Long_Legs--;
+				}
+
+				guy.changePosBefore('y', guy.posy);
+				guy.changePosBefore('x', guy.posx);
+				guy.posx += space;
+			}
+			else if (down && choose == '3') {
+				//Long Legs trait
+				if (guy.Long_Legs > 0 && guy.posy > 1) {
+					space *= 2;
+					guy.Long_Legs--;
+				}
+
+				guy.changePosBefore('y', guy.posy);
+				guy.changePosBefore('x', guy.posx);
+				guy.posy -= space;
+				guy.Warper--;
+			}
+			else {
+				getchDecision(guy, deck, log);
+			}
+			
+			/*
 			if (guy.posx == 25) {
 				if (choose == '1') {
 					//Long Legs trait
@@ -3540,16 +3911,6 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					guy.changePosBefore('x', guy.posx);
 					guy.posy -= space;
 					guy.Warper--;
-				}
-				else if (choose == '\033') {
-					getch();
-					switch (getch()) {
-					case 'A':
-						guy.changePosBefore('y', guy.posy);
-						guy.changePosBefore('x', guy.posx);
-						guy.posy += space;
-						break;
-					}
 				}
 				else
 					getchDecision(guy, deck, log);
@@ -3577,16 +3938,6 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					guy.changePosBefore('x', guy.posx);
 					guy.posy -= space;
 					guy.Warper--;
-				}
-				else if (choose == '\033') {
-					getch();
-					switch (getch()) {
-					case 'C':
-						guy.changePosBefore('y', guy.posy);
-						guy.changePosBefore('x', guy.posx);
-						guy.posx += space;
-						break;
-					}
 				}
 				else
 					getchDecision(guy, deck, log);
@@ -3626,19 +3977,9 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					guy.posy -= space;
 					guy.Warper--;
 				}
-				else if (choose == '72') {
-					guy.changePosBefore('y', guy.posy);
-					guy.changePosBefore('x', guy.posx);
-					guy.posy += space;
-				}
-				else if (choose == '77') {
-					guy.changePosBefore('y', guy.posy);
-					guy.changePosBefore('x', guy.posx);
-					guy.posx += space;
-				}
 				else
 					getchDecision(guy, deck, log);
-			}
+			}*/
 			
 		}
 		else if (RoomType == "Gear Head" || RoomType == "Gear Body" || RoomType == "Gear Hands") {
@@ -3711,7 +4052,7 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 			}
 		}
 		else if (RoomType == "Special") {
-			if (choose == '1' || choose == '2' || choose == '3' || choose == '4') {
+			if (choose == '1' || choose == '2' || choose == '3') {
 				string line;
 				if (choose == '1') {
 					Gear specialPickup(specialDecision.at(0).CardName);
@@ -3752,7 +4093,36 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					//getchShop(guy, deck, log);
 				}
 				else {
-					RoomType = "Empty";
+					//TERRAIN: Magma
+					if (Terrain == "Magma") {
+						if (extraCombat) {
+							if (guy.Overconfidence)
+								RoomType = "Combat";
+							else
+								RoomType = "Boss";
+							extraCombat = FALSE;
+						}
+						else {
+							RoomType = "Empty";
+							extraCombat = TRUE;
+						}
+					}
+					else if (Terrain == "Wasteland" && guy.Destiny == 0) {
+						if (extraCauldron) {
+							extraCauldron = FALSE;
+							RoomType = "Cauldron";
+						}
+						else {
+							extraCauldron = TRUE;
+							RoomType = "Empty";
+						}
+					}
+					else
+						RoomType = "Empty";
+
+
+					if (guy.Ego)
+						guy.Ego = FALSE;
 					printDecision(guy, log);
 				}
 				//getchDecision(guy, deck, log);
@@ -3791,11 +4161,23 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					mvprintw(6 + i, 29, "             ");
 				mvprintw(17, 62, "         ");
 				guy.printStats();
+				if (guy.Genius)
+					guy.Genius = FALSE;
 				//getting a trait in shop
 				if (shopS) {
 					printShop(guy);
 					RoomType = "Shop";
 					//getchShop(guy, deck, log);
+				}
+				else if (Terrain == "Wasteland" && guy.Destiny == 0) {
+					if (extraCauldron) {
+						extraCauldron = FALSE;
+						RoomType = "Cauldron";
+					}
+					else {
+						extraCauldron = TRUE;
+						RoomType = "Empty";
+					}
 				}
 				else {
 					RoomType = "Empty";
@@ -3898,21 +4280,17 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					//Ego trait
 					if (guy.Ego) {
 						RoomType = "Special";
-						guy.Ego = FALSE;
 						printDecision(guy, log);
 						getchDecision(guy, deck, log);
 					}
-
 					//Genius trait
-					if (guy.Genius) {
+					else if (guy.Genius) {
 						RoomType = "Spell";
-						guy.Genius = FALSE;
 						printDecision(guy, log);
 						getchDecision(guy, deck, log);
 					}
-
 					//Blacksmith trait
-					if (guy.Blacksmith > 0) {
+					else if (guy.Blacksmith > 0) {
 						RoomType = "Mod";
 						if(!shopS)
 							guy.Blacksmith--;
@@ -3922,9 +4300,22 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 						RoomType = "Cauldron";
 						guy.Destiny--;
 					}
+					//TERRAIN: Wasteland
+					else if (Terrain == "Wasteland" && guy.Destiny == 0) {
+						if (extraCauldron) {
+							RoomType = "Cauldron";
+							extraCauldron = FALSE;
+						}
+						else {
+							RoomType = "Empty";
+							extraCauldron = TRUE;
+						}
+					}
 					else {
 						RoomType = "Empty";
 					}
+
+					
 
 					//getting a trait in shop
 					if (shopS && guy.Destiny <= 1 && guy.Blacksmith == 0) {
@@ -4171,7 +4562,7 @@ int InputBoard::generateGold(Enemy &enemy) {
 		enemy.Name == "Turret") {
 		gold = 7;
 	}
-	else if (enemy.Name == "Merchnat") {
+	else if (enemy.Name == "Merchant") {
 		gold = 15;
 	}
 	else if (enemy.Name == "Paladin" ||
@@ -4183,6 +4574,13 @@ int InputBoard::generateGold(Enemy &enemy) {
 		enemy.Name == "Exorcist" ||
 		enemy.Name == "Demigod") {
 		gold = 20;
+	}
+	else if (enemy.Name == "Dragon" ||
+		enemy.Name == "King" ||
+		enemy.Name == "Witch" ||
+		enemy.Name == "Demon" ||
+		enemy.Name == "Machine") {
+		gold = 50;
 	}
 	return gold;
 }
@@ -4311,12 +4709,12 @@ void InputBoard::printShop(Character &guy) {
 	*/
 	clearBoardWhole();
 
-	mvprintInSize(18, 6, 0, "a)#y12g#o", FALSE);
-	mvprintInSize(19, 6, 0, "b)#y12g#o", FALSE);
-	mvprintInSize(20, 6, 0, "c)#y12g#o", FALSE);
-	mvprintInSize(21, 6, 0, "d)#y12g#o", FALSE);
-	mvprintInSize(22, 6, 0, "e)#y12g#o", FALSE);
-	mvprintInSize(23, 6, 0, "f)#y12g#o", FALSE);
+	mvprintInSize(18, 6, 0, "a)#$12g#o", FALSE);
+	mvprintInSize(19, 6, 0, "b)#$12g#o", FALSE);
+	mvprintInSize(20, 6, 0, "c)#$12g#o", FALSE);
+	mvprintInSize(21, 6, 0, "d)#$12g#o", FALSE);
+	mvprintInSize(22, 6, 0, "e)#$12g#o", FALSE);
+	mvprintInSize(23, 6, 0, "f)#$12g#o", FALSE);
 	attron(COLOR_PAIR(1));
 	mvprintInSize(18, 12, 0, shopA.CardName, FALSE);
 	mvprintInSize(19, 12, 0, shopB.CardName, FALSE);
@@ -4327,12 +4725,12 @@ void InputBoard::printShop(Character &guy) {
 	mvprintInSize(23, 12, 0, shopF.CardName, FALSE);
 	standend();
 
-	mvprintInSize(18, 28, 0, "g)#y15g#o", FALSE);
-	mvprintInSize(19, 28, 0, "h)#y15g#o", FALSE);
-	mvprintInSize(20, 28, 0, "i)#y15g#o", FALSE);
-	mvprintInSize(21, 28, 0, "j)#y18g#o", FALSE);
-	mvprintInSize(22, 28, 0, "k)#y18g#o", FALSE);
-	mvprintInSize(23, 28, 0, "l)#y18g#o", FALSE);
+	mvprintInSize(18, 28, 0, "g)#$15g#o", FALSE);
+	mvprintInSize(19, 28, 0, "h)#$15g#o", FALSE);
+	mvprintInSize(20, 28, 0, "i)#$15g#o", FALSE);
+	mvprintInSize(21, 28, 0, "j)#$18g#o", FALSE);
+	mvprintInSize(22, 28, 0, "k)#$18g#o", FALSE);
+	mvprintInSize(23, 28, 0, "l)#$18g#o", FALSE);
 	attron(COLOR_PAIR(3));
 	mvprintInSize(18, 34, 0, shopG.CardName, FALSE);
 	mvprintInSize(19, 34, 0, shopH.CardName, FALSE);
@@ -4342,13 +4740,13 @@ void InputBoard::printShop(Character &guy) {
 	mvprintInSize(22, 34, 0, shopK.CardName, FALSE);
 	mvprintInSize(23, 34, 0, shopL.CardName, FALSE);
 
-	mvprintInSize(17, 50, 0, "m)#y20g#o", FALSE);
-	mvprintInSize(18, 50, 0, "n)#y20g#o", FALSE);
-	mvprintInSize(19, 50, 0, "o)#y20g#o", FALSE);
-	mvprintInSize(20, 50, 0, "p)#y15g#o", FALSE);
-	mvprintInSize(21, 50, 0, "q)#y15g#o", FALSE);
-	mvprintInSize(22, 50, 0, "r)#y15g#o", FALSE);
-	mvprintInSize(23, 50, 0, "s)#y50g#o #gPositive Trait#o", FALSE);
+	mvprintInSize(17, 50, 0, "m)#$20g#o", FALSE);
+	mvprintInSize(18, 50, 0, "n)#$20g#o", FALSE);
+	mvprintInSize(19, 50, 0, "o)#$20g#o", FALSE);
+	mvprintInSize(20, 50, 0, "p)#$15g#o", FALSE);
+	mvprintInSize(21, 50, 0, "q)#$15g#o", FALSE);
+	mvprintInSize(22, 50, 0, "r)#$15g#o", FALSE);
+	mvprintInSize(23, 50, 0, "s)#$50g#o #gPositive Trait#o", FALSE);
 	attron(COLOR_PAIR(6));
 	mvprintInSize(17, 56, 0, shopM.GearName, FALSE);
 	mvprintInSize(18, 56, 0, shopN.GearName, FALSE);
@@ -4358,7 +4756,7 @@ void InputBoard::printShop(Character &guy) {
 	mvprintInSize(21, 56, 0, shopQ.c_str(), FALSE);
 	mvprintInSize(22, 56, 0, shopR.c_str(), FALSE);
 
-	attron(COLOR_PAIR(1));
+	attron(COLOR_PAIR(10));
 	mvprintw(15, 27, "\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD");
 	mvprintInSize(16, 34, 0, "Shop", FALSE);
 	mvprintw(17, 27, "\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD");
@@ -4382,7 +4780,7 @@ void InputBoard::printShop(Character &guy) {
 
 void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 	guy.printStats();
-	attron(COLOR_PAIR(1));
+	attron(COLOR_PAIR(10));
 	string yg = "Your gold: " + to_string(guy.Gold) + "   ";
 	mvprintInSize(16, 7, 0, yg.c_str(), FALSE);
 	standend();
@@ -4747,6 +5145,10 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 	2 Gear
 	3 Gear
 
+	5 gold
+	10 gold
+	15 gold
+
 	4 MaxHealth
 	6 MaxHealth
 	8 MaxHealth
@@ -4853,6 +5255,54 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 			inventory.erase(inventory.begin() + rngear);
 
 			line = "#g You give the " + string(enemy.Name) + " your #b" + string(g1) + "#g, #b" + string(g2) + "#g, and #b" + string(g3) + "#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "5 gold") {
+		if (guy.Gold < 5) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			guy.Gold -= 5;
+			line = "#g You give the " + string(enemy.Name) + " #$5 gold#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "10 gold") {
+		if (guy.Gold < 10) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			guy.Gold -= 10;
+			line = "#g You give the " + string(enemy.Name) + " #$10 gold#g.#o";
+			log.PushPop(line);
+		}
+	}
+	else if (price == "15 gold") {
+		if (guy.Gold < 15) {
+			log.PushPop(" #rYou don't have enough.#o");
+			negotiateStep = -2;
+			given = FALSE;
+			return false;
+		}
+		else {
+			line = " You: " + enemy.you3;
+			log.PushPop(line);
+
+			guy.Gold -= 15;
+			line = "#g You give the " + string(enemy.Name) + " #$15 gold#g.#o";
 			log.PushPop(line);
 		}
 	}
@@ -5190,7 +5640,7 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 		}
 	}
 	else if (price == "Merchant") {
-		if (inventory.size() < 2 || guy.Skill < 1) {
+		if (inventory.size() < 2 || guy.Gold < 15) {
 			log.PushPop(" #rYou don't have enough.#o");
 			negotiateStep = -2;
 			given = FALSE;
@@ -5200,8 +5650,7 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 			line = " You: " + enemy.you3;
 			log.PushPop(line);
 
-			int skl = 1;
-			guy.ModStat(-1 * skl, "Skill");
+			guy.Gold -= 15;
 
 			int rngear = rand() % inventory.size();
 			string g1 = inventory.at(rngear).GearName;
@@ -5215,7 +5664,7 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 				g2 = g2 + " (sucker)";
 			inventory.erase(inventory.begin() + rngear);
 
-			line = "#g You give the " + string(enemy.Name) + " your #b" + string(g1) + " #g, #b" + string(g2) + "#g.#o";
+			line = "#g You give the " + string(enemy.Name) + " your #b" + string(g1) + " #g, #b" + string(g2) + "#g, and #$15 gold#g.#o";
 			log.PushPop(line);
 		}
 	}
