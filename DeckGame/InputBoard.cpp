@@ -1818,17 +1818,20 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 				}
 			}
 			//check burn, stay
-			if (DecisionCards.at(in).Stay && rand() % 10 < 7)
+			int randstay = rand() % 10;
+			if (DecisionCards.at(in).Stay && randstay < 7)
 				DecisionCards.at(in).StayCard = TRUE;
 			if (DecisionCards.at(in).Push)
 				pushthisturn = TRUE;
-			if (!DecisionCards.at(in).Burn && !DecisionCards.at(in).naturalBurn && !DecisionCards.at(in).Stay)
+			if (!DecisionCards.at(in).Burn && !DecisionCards.at(in).naturalBurn && !DecisionCards.at(in).StayCard)
 				Discard.push_back(DecisionCards.at(in));
 			//check stay
 			bool dontstay = TRUE;
-			if (DecisionCards.at(in).Stay && rand() % 10 < 7)
+			if (DecisionCards.at(in).Stay && randstay < 7)
 				dontstay = FALSE;
 			if (dontstay || DecisionCards.at(in).Burn || DecisionCards.at(in).naturalBurn) {
+				/*if (!DecisionCards.at(in).Burn && !DecisionCards.at(in).naturalBurn)
+					Discard.push_back(DecisionCards.at(in));*/
 				DecisionCards.erase(DecisionCards.begin() + in);
 			}
 			//check flow
