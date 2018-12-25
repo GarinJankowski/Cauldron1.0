@@ -272,6 +272,11 @@ Gear::Gear(const char *name):GearName(name)
 		Type = "Trait Sacrifice";
 		Description = "Lose 1 gold every time you lose health.";
 	}
+	else if (GearName == "Terraform") {
+		Type = "Trait Sacrifice";
+		Description = "Chance to transform the land every tile.";
+	}
+	
 	
 	//Trait Reward
 	else if (GearName == "Mending Flesh") {
@@ -2054,6 +2059,14 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 		}
 		else {
 			guy.Gold_Flesh = FALSE;
+		}
+	}
+	else if (GearName == "Terraform") {
+		if (On) {
+			guy.Terraform = TRUE;
+		}
+		else {
+			guy.Terraform = FALSE;
 		}
 	}
 }

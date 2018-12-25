@@ -523,6 +523,21 @@ void Map::UpdateMap(Character &guy, InputBoard &board) {
 	mvprintw(13 - guy.posy, 1 + guy.posx, "@");
 	attroff(COLOR_PAIR(9));
 
+	//Terraform trait
+	if (guy.Terraform && rand() % 6 == 0) {
+		generateTerrain();
+
+		int i = 0;
+		for (int x = 0; x < 26; x++) {
+			for (int y = 0; y < 8; y++) {
+				roomList.at(i).Terrain = terrainGrid[x][y];
+				i++;
+			}
+		}
+
+		PrintWholeMap(guy, board);
+	}
+
 	for (int i = 0; i < roomList.size(); i++) {
 		if (roomList.at(i).checkXY(guy.posxBefore, guy.posyBefore)) {
 			roomList.at(i).clear = TRUE;

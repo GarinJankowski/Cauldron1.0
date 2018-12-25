@@ -127,6 +127,7 @@ public:
 		bool Purple = FALSE;
 		int Inefficient = -1;
 		bool Gold_Flesh = FALSE;
+		bool Terraform = FALSE;
 	//Reward
 		bool Mending_Flesh = FALSE;
 		bool Gymnast = FALSE;

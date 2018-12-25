@@ -181,6 +181,8 @@ public:
 	void clearBoard();
 	void clearBoardWhole();
 
+	int shopnum = 0;
+	int shopnum2 = 1;
 	int generateGold(Enemy &enemy);
 	void generateShop();
 	void printShop(Character &guy);

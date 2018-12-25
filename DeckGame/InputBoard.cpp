@@ -225,6 +225,7 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsSacrifice.push_back(Gear("Inefficient"));
 	AvailableTraitsSacrifice.push_back(Gear("Brain Worm"));
 	AvailableTraitsSacrifice.push_back(Gear("Gold Flesh"));
+	AvailableTraitsSacrifice.push_back(Gear("Terraform"));
 
 	AvailableTraitsSacrificeREFILL = AvailableTraitsSacrifice;
 
@@ -262,24 +263,6 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsReward.push_back(Gear("Iron Scabs"));
 	AvailableTraitsReward.push_back(Gear("Gelatinous"));
 	AvailableTraitsReward.push_back(Gear("Evolve"));
-
-	AvailableTraitsReward.push_back(Gear("Destiny"));
-	AvailableTraitsReward.push_back(Gear("Destiny"));
-	AvailableTraitsReward.push_back(Gear("Destiny"));
-	AvailableTraitsReward.push_back(Gear("Destiny"));
-	AvailableTraitsReward.push_back(Gear("Destiny"));
-	AvailableTraitsReward.push_back(Gear("Destiny"));
-	AvailableTraitsReward.push_back(Gear("Destiny"));
-
-	AvailableTraitsReward.push_back(Gear("Blacksmith"));
-	AvailableTraitsReward.push_back(Gear("Blacksmith"));
-	AvailableTraitsReward.push_back(Gear("Blacksmith"));
-	AvailableTraitsReward.push_back(Gear("Blacksmith"));
-	AvailableTraitsReward.push_back(Gear("Blacksmith"));
-	AvailableTraitsReward.push_back(Gear("Blacksmith"));
-	AvailableTraitsReward.push_back(Gear("Blacksmith"));
-	AvailableTraitsReward.push_back(Gear("Blacksmith"));
-	AvailableTraitsReward.push_back(Gear("Blacksmith"));
 
 	AvailableTraitsRewardREFILL = AvailableTraitsReward;
 
@@ -1572,7 +1555,7 @@ void InputBoard::terrainLoopWhole() {
 		attron(COLOR_PAIR(icetext));
 		mvprintInSize(2, 58, 0, "Ice", FALSE);
 
-		const char* desc = "As long as you are on ice, use must move in the same direction you moved last.";
+		const char* desc = "As long as you are on ice, you must move in the same direction you moved last.";
 		mvprintInSize(4, 50, 22, desc, FALSE);
 
 		escapeLoop(0);
@@ -1581,7 +1564,7 @@ void InputBoard::terrainLoopWhole() {
 		attron(COLOR_PAIR(foresttext));
 		mvprintInSize(2, 57, 0, "Forest", FALSE);
 
-		const char* desc = "As long as you are in the forest, use cannot move in the same direction you moved last.";
+		const char* desc = "As long as you are in the forest, you cannot move in the same direction you moved last.";
 		mvprintInSize(4, 50, 22, desc, FALSE);
 
 		escapeLoop(0);
@@ -3274,8 +3257,11 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		}
 	}
 	else if (RoomType == "Shop") {
-		generateShop();
-		printShop(guy);
+		//if (shopnum != shopnum2) {
+			generateShop();
+			printShop(guy);
+			shopnum++;
+		//}
 	}
 }
 
@@ -4052,7 +4038,7 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 			}
 		}
 		else if (RoomType == "Special") {
-			if (choose == '1' || choose == '2' || choose == '3') {
+			if (choose == '1' || choose == '2' || choose == '3' || choose == '4') {
 				string line;
 				if (choose == '1') {
 					Gear specialPickup(specialDecision.at(0).CardName);
@@ -4311,18 +4297,19 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 							extraCauldron = TRUE;
 						}
 					}
+					//getting a trait in shop
+					else if (shopS && guy.Destiny <= 1 && guy.Blacksmith == 0) {
+						shopS = FALSE;
+						printShop(guy);
+						RoomType = "Shop";
+					}
 					else {
 						RoomType = "Empty";
 					}
 
 					
 
-					//getting a trait in shop
-					if (shopS && guy.Destiny <= 1 && guy.Blacksmith == 0) {
-						shopS = FALSE;
-						printShop(guy);
-						RoomType = "Shop";
-					}
+					
 
 
 					if (RoomType != "Shop") {
@@ -4709,12 +4696,12 @@ void InputBoard::printShop(Character &guy) {
 	*/
 	clearBoardWhole();
 
-	mvprintInSize(18, 6, 0, "a)#$12g#o", FALSE);
-	mvprintInSize(19, 6, 0, "b)#$12g#o", FALSE);
-	mvprintInSize(20, 6, 0, "c)#$12g#o", FALSE);
-	mvprintInSize(21, 6, 0, "d)#$12g#o", FALSE);
-	mvprintInSize(22, 6, 0, "e)#$12g#o", FALSE);
-	mvprintInSize(23, 6, 0, "f)#$12g#o", FALSE);
+	mvprintInSize(18, 6, 0, "A)#$12g#o", FALSE);
+	mvprintInSize(19, 6, 0, "B)#$12g#o", FALSE);
+	mvprintInSize(20, 6, 0, "C)#$12g#o", FALSE);
+	mvprintInSize(21, 6, 0, "D)#$12g#o", FALSE);
+	mvprintInSize(22, 6, 0, "E)#$12g#o", FALSE);
+	mvprintInSize(23, 6, 0, "F)#$12g#o", FALSE);
 	attron(COLOR_PAIR(1));
 	mvprintInSize(18, 12, 0, shopA.CardName, FALSE);
 	mvprintInSize(19, 12, 0, shopB.CardName, FALSE);
@@ -4725,12 +4712,12 @@ void InputBoard::printShop(Character &guy) {
 	mvprintInSize(23, 12, 0, shopF.CardName, FALSE);
 	standend();
 
-	mvprintInSize(18, 28, 0, "g)#$15g#o", FALSE);
-	mvprintInSize(19, 28, 0, "h)#$15g#o", FALSE);
-	mvprintInSize(20, 28, 0, "i)#$15g#o", FALSE);
-	mvprintInSize(21, 28, 0, "j)#$18g#o", FALSE);
-	mvprintInSize(22, 28, 0, "k)#$18g#o", FALSE);
-	mvprintInSize(23, 28, 0, "l)#$18g#o", FALSE);
+	mvprintInSize(18, 28, 0, "G)#$15g#o", FALSE);
+	mvprintInSize(19, 28, 0, "H)#$15g#o", FALSE);
+	mvprintInSize(20, 28, 0, "I)#$15g#o", FALSE);
+	mvprintInSize(21, 28, 0, "J)#$18g#o", FALSE);
+	mvprintInSize(22, 28, 0, "K)#$18g#o", FALSE);
+	mvprintInSize(23, 28, 0, "L)#$18g#o", FALSE);
 	attron(COLOR_PAIR(3));
 	mvprintInSize(18, 34, 0, shopG.CardName, FALSE);
 	mvprintInSize(19, 34, 0, shopH.CardName, FALSE);
@@ -4740,13 +4727,13 @@ void InputBoard::printShop(Character &guy) {
 	mvprintInSize(22, 34, 0, shopK.CardName, FALSE);
 	mvprintInSize(23, 34, 0, shopL.CardName, FALSE);
 
-	mvprintInSize(17, 50, 0, "m)#$20g#o", FALSE);
-	mvprintInSize(18, 50, 0, "n)#$20g#o", FALSE);
-	mvprintInSize(19, 50, 0, "o)#$20g#o", FALSE);
-	mvprintInSize(20, 50, 0, "p)#$15g#o", FALSE);
-	mvprintInSize(21, 50, 0, "q)#$15g#o", FALSE);
-	mvprintInSize(22, 50, 0, "r)#$15g#o", FALSE);
-	mvprintInSize(23, 50, 0, "s)#$50g#o #gPositive Trait#o", FALSE);
+	mvprintInSize(17, 50, 0, "M)#$20g#o", FALSE);
+	mvprintInSize(18, 50, 0, "N)#$20g#o", FALSE);
+	mvprintInSize(19, 50, 0, "O)#$20g#o", FALSE);
+	mvprintInSize(20, 50, 0, "P)#$15g#o", FALSE);
+	mvprintInSize(21, 50, 0, "Q)#$15g#o", FALSE);
+	mvprintInSize(22, 50, 0, "R)#$15g#o", FALSE);
+	mvprintInSize(23, 50, 0, "S)#$50g#o #gPositive Trait#o", FALSE);
 	attron(COLOR_PAIR(6));
 	mvprintInSize(17, 56, 0, shopM.GearName, FALSE);
 	mvprintInSize(18, 56, 0, shopN.GearName, FALSE);
@@ -4790,6 +4777,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 	if (c == 27) {
 		for (int i = 0; i < 8; i++)
 			mvprintw(6 + i, 29, "             ");
+		shopnum2++;
 		clearBoardWhole();
 		manualBox("Decision", 0);
 		RoomType = "Empty";
@@ -4797,7 +4785,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		getchDecision(guy, deck, log);
 	}
 
-	else if (c == 'a' && guy.Gold >= 12 && shopA.CardName != "") {
+	else if (c == 'A' && guy.Gold >= 12 && shopA.CardName != "") {
 		guy.Gold -= 12;
 		Card kard(shopA.CardName);
 		deck.addCard(kard);
@@ -4807,7 +4795,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(18, 11, 0, "                ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 'b' && guy.Gold >= 12 && shopB.CardName != "") {
+	else if (c == 'B' && guy.Gold >= 12 && shopB.CardName != "") {
 		guy.Gold -= 12;
 		Card kard(shopB.CardName);
 		deck.addCard(kard);
@@ -4817,7 +4805,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(19, 11, 0, "                ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 'c' && guy.Gold >= 12 && shopC.CardName != "") {
+	else if (c == 'C' && guy.Gold >= 12 && shopC.CardName != "") {
 		guy.Gold -= 12;
 		Card kard(shopC.CardName);
 		deck.addCard(kard);
@@ -4827,7 +4815,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(20, 11, 0, "                ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 'd' && guy.Gold >= 12 && shopD.CardName != "") {
+	else if (c == 'D' && guy.Gold >= 12 && shopD.CardName != "") {
 		guy.Gold -= 12;
 		Card kard(shopD.CardName);
 		deck.addCard(kard);
@@ -4837,7 +4825,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(21, 11, 0, "                ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 'e' && guy.Gold >= 12 && shopE.CardName != "") {
+	else if (c == 'E' && guy.Gold >= 12 && shopE.CardName != "") {
 		guy.Gold -= 12;
 		Card kard(shopE.CardName);
 		deck.addCard(kard);
@@ -4847,7 +4835,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(22, 11, 0, "                ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 'f' && guy.Gold >= 12 && shopF.CardName != "") {
+	else if (c == 'F' && guy.Gold >= 12 && shopF.CardName != "") {
 		guy.Gold -= 12;
 		Card kard(shopF.CardName);
 		deck.addCard(kard);
@@ -4857,7 +4845,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(23, 11, 0, "                ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 'g' && guy.Gold >= 15 && shopG.CardName != "") {
+	else if (c == 'G' && guy.Gold >= 15 && shopG.CardName != "") {
 		guy.Gold -= 15;
 		Card kard(shopG.CardName);
 		deck.addCard(kard);
@@ -4867,7 +4855,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(18, 33, 0, "                ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 'h' && guy.Gold >= 15 && shopH.CardName != "") {
+	else if (c == 'H' && guy.Gold >= 15 && shopH.CardName != "") {
 		guy.Gold -= 15;
 		Card kard(shopH.CardName);
 		deck.addCard(kard);
@@ -4877,7 +4865,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(19, 33, 0, "                 ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 'i' && guy.Gold >= 15 && shopI.CardName != "") {
+	else if (c == 'I' && guy.Gold >= 15 && shopI.CardName != "") {
 		guy.Gold -= 15;
 		Card kard(shopI.CardName);
 		deck.addCard(kard);
@@ -4887,7 +4875,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(20, 33, 0, "                 ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 'j' && guy.Gold >= 18 && shopJ.CardName != "") {
+	else if (c == 'J' && guy.Gold >= 18 && shopJ.CardName != "") {
 		guy.Gold -= 18;
 		Card kard(shopJ.CardName);
 		deck.addCard(kard);
@@ -4897,7 +4885,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(21, 33, 0, "                 ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 'k' && guy.Gold >= 18 && shopK.CardName != "") {
+	else if (c == 'K' && guy.Gold >= 18 && shopK.CardName != "") {
 		guy.Gold -= 18;
 		Card kard(shopK.CardName);
 		deck.addCard(kard);
@@ -4907,7 +4895,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(22, 33, 0, "                 ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 'l' && guy.Gold >= 18 && shopL.CardName != "") {
+	else if (c == 'L' && guy.Gold >= 18 && shopL.CardName != "") {
 		guy.Gold -= 18;
 		Card kard(shopL.CardName);
 		deck.addCard(kard);
@@ -4917,7 +4905,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(23, 33, 0, "                 ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 'm' && guy.Gold >= 20 && shopM.GearName != "") {
+	else if (c == 'M' && guy.Gold >= 20 && shopM.GearName != "") {
 		guy.Gold -= 20;
 		Gear gea = shopM;
 		inventory.push_back(gea);
@@ -4927,7 +4915,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(17, 55, 0, "                     ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 'n' && guy.Gold >= 20 && shopN.GearName != "") {
+	else if (c == 'N' && guy.Gold >= 20 && shopN.GearName != "") {
 		guy.Gold -= 20;
 		Gear gea = shopN;
 		inventory.push_back(gea);
@@ -4937,7 +4925,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(18, 55, 0, "                     ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 'o' && guy.Gold >= 20 && shopO.GearName != "") {
+	else if (c == 'O' && guy.Gold >= 20 && shopO.GearName != "") {
 		guy.Gold -= 20;
 		Gear gea = shopO;
 		inventory.push_back(gea);
@@ -4947,7 +4935,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(19, 55, 0, "                     ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 'p' && guy.Gold >= 15 && shopP != "") {
+	else if (c == 'P' && guy.Gold >= 15 && shopP != "") {
 		guy.Gold -= 15;
 
 		if (shopP == "#rBurn#o") {
@@ -4978,7 +4966,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(20, 55, 0, "                     ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 'q' && guy.Gold >= 15 && shopQ != "") {
+	else if (c == 'Q' && guy.Gold >= 15 && shopQ != "") {
 		guy.Gold -= 15;
 
 		if (shopQ == "#rBurn#o") {
@@ -5009,7 +4997,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(21, 55, 0, "                     ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 'r' && guy.Gold >= 15 && shopR != "") {
+	else if (c == 'R' && guy.Gold >= 15 && shopR != "") {
 		guy.Gold -= 15;
 
 		if (shopR == "#rBurn#o") {
@@ -5040,7 +5028,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(22, 55, 0, "                     ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 's' && guy.Gold >= 50) {
+	else if (c == 'S' && guy.Gold >= 50) {
 		guy.Gold -= 50;
 
 		shopS = TRUE;
