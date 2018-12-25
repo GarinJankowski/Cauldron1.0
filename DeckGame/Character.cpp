@@ -16,13 +16,13 @@ Character::Character()
 	CurrentHealth = MaxHealth;
 	MaxMana = 10;
 	CurrentMana = MaxMana;
-	Strength = 50;
-	Defense = 30;
-	Intelligence = 40;
+	Strength = 5;
+	Defense = 3;
+	Intelligence = 4;
 	Skill = 0;
 	CurrentBlock = 0;
 	Negate = 0;
-	Gold = 100;
+	Gold = 0;
 
 	extraTurns = 0;
 	pierce = FALSE;
@@ -64,11 +64,11 @@ Character::~Character()
 //print stuff for screen
 //print directory
 void Character::printDirectory() {
-	mvprintw(1, 1, "(D)eck");
-	mvprintw(2, 1, "(G)ear");
-	mvprintw(3, 1, "(T)raits");
-	mvprintw(1, 9, "(M)ods");
-	mvprintw(2, 9, "(L)and");
+	mvprintw(1, 1, "(d)eck");
+	mvprintw(2, 1, "(g)ear");
+	mvprintw(3, 1, "(t)raits");
+	mvprintw(1, 9, "(m)ods");
+	mvprintw(2, 9, "(l)and");
 }
 //print stats
 void Character::printStats() {

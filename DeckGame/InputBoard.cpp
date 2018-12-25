@@ -3257,11 +3257,11 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		}
 	}
 	else if (RoomType == "Shop") {
-		//if (shopnum != shopnum2) {
+		if (shopnum != shopnum2) {
 			generateShop();
-			printShop(guy);
 			shopnum++;
-		//}
+		}
+		printShop(guy);
 	}
 }
 
@@ -3555,7 +3555,7 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 		return;
 	}
 
-	if (RoomType != "Combat" && RoomType != "Final Boss" && RoomType != "Boss" && RoomType != "Shop") {
+	if (RoomType != "Combat" && RoomType != "Final Boss" && RoomType != "Boss" ) {
 		char choose = getch();
 		if (choose == 'd') {
 			//deck.deckScreen();
@@ -4298,7 +4298,7 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 						}
 					}
 					//getting a trait in shop
-					else if (shopS && guy.Destiny <= 1 && guy.Blacksmith == 0) {
+					else if (shopS && guy.Destiny <= 1 && guy.Blacksmith <= 0) {
 						shopS = FALSE;
 						printShop(guy);
 						RoomType = "Shop";
@@ -4306,11 +4306,6 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					else {
 						RoomType = "Empty";
 					}
-
-					
-
-					
-
 
 					if (RoomType != "Shop") {
 						printDecision(guy, log);
@@ -4322,6 +4317,9 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				getchDecision(guy, deck, log);
 			}
 		}
+		else if (RoomType == "Shop") {
+			getchShop(guy, deck, log);
+		}
 	}
 	else if (RoomType == "Combat"){
 		startBattle(guy, deck, log);
@@ -4332,9 +4330,6 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 	else if (RoomType == "Final Boss") {
 		startBattle(guy, deck, log);
 	}
-	else if (RoomType == "Shop") {
-		getchShop(guy, deck, log);
-	}	
 	
 }
 
@@ -4784,7 +4779,28 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		printDecision(guy, log);
 		getchDecision(guy, deck, log);
 	}
-
+	else if (c == 'd') {
+		//deck.deckScreen();
+		showDeck(guy, deck, TRUE);
+		log.printLog();
+		//getchDecision(guy, deck, log);
+	}
+	else if (c == 'g') {
+		showInventory(guy, deck);
+		log.printLog();
+	}
+	else if (c == 't') {
+		showTraits();
+		log.printLog();
+	}
+	else if (c == 'm') {
+		showMods(guy, deck, TRUE);
+		log.printLog();
+	}
+	else if (c == 'l') {
+		showTerrain();
+		log.printLog();
+	}
 	else if (c == 'A' && guy.Gold >= 12 && shopA.CardName != "") {
 		guy.Gold -= 12;
 		Card kard(shopA.CardName);
