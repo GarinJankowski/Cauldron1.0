@@ -266,7 +266,7 @@ void Map::generateTerrain() {
 	}
 
 	int treasurecount = 0;
-	while (treasurecount < 4) {
+	while (treasurecount < 5) {
 		for (int x = 0; x < 26; x++) {
 			for (int y = 0; y < 8; y++) {
 				if (rand() % 80 == 0 && !(x == 0 && y == 0) && !(x == 25 && y == 7)) {

@@ -3088,10 +3088,14 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		//also handle TERRAIN: Ice and TERRAIN: Forest
 		if (guy.Warper > 0) {
 			if (guy.posy != 0 &&
-				guy.posyBefore != guy.posy + 1 &&
-				(Terrain == "Ice" && guy.posy < guy.posyBefore && guy.posx) &&
-				(Terrain == "Forest" && guy.posy >= guy.posyBefore)) {
+				guy.posyBefore != guy.posy - 1) {
 				down = TRUE;
+
+				if ((Terrain == "Ice" && guy.posy >= guy.posyBefore) || (Terrain == "Forest" && guy.posy < guy.posyBefore))
+					down = FALSE;
+			}
+			else {
+				down = FALSE;
 			}
 		}
 		else
