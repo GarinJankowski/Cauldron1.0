@@ -16,13 +16,13 @@ Character::Character()
 	CurrentHealth = MaxHealth;
 	MaxMana = 10;
 	CurrentMana = MaxMana;
-	Strength = 50;
-	Defense = 30;
-	Intelligence = 40;
+	Strength = 5;
+	Defense = 3;
+	Intelligence = 4;
 	Skill = 0;
 	CurrentBlock = 0;
 	Negate = 0;
-	Gold = 1000;
+	Gold = 0;
 
 	extraTurns = 0;
 	pierce = FALSE;
