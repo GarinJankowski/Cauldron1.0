@@ -266,18 +266,6 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsReward.push_back(Gear("Evolve"));
 	AvailableTraitsReward.push_back(Gear("Eight Legs"));
 
-
-	AvailableTraitsReward.push_back(Gear("Destiny"));
-	AvailableTraitsReward.push_back(Gear("Destiny"));
-	AvailableTraitsReward.push_back(Gear("Destiny"));
-	AvailableTraitsReward.push_back(Gear("Destiny"));
-	AvailableTraitsReward.push_back(Gear("Destiny"));
-	AvailableTraitsReward.push_back(Gear("Blacksmith"));
-	AvailableTraitsReward.push_back(Gear("Blacksmith"));
-	AvailableTraitsReward.push_back(Gear("Blacksmith"));
-	AvailableTraitsReward.push_back(Gear("Blacksmith"));
-	AvailableTraitsReward.push_back(Gear("Blacksmith"));
-
 	AvailableTraitsRewardREFILL = AvailableTraitsReward;
 
 	//vector of bosses
