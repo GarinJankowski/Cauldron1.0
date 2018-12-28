@@ -2088,14 +2088,14 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				int damage = rtd(4, 2);
 				damage = guy.TakeDamage(damage);
 
-				string line3 = "The Witch zaps you for #r" + to_string(damage) + "#o damage.";
+				string line3 = "-The Witch zaps you for #r" + to_string(damage) + "#o damage.";
 				log.PushPop(line3);
 			}
 			if (TurnCount > 2 && rand() % 3 == 0) {
 				int damage = rtd(4, 2);
 				damage = guy.TakeDamage(damage);
 
-				string line3 = "The Witch zaps you for #r" + to_string(damage) + "#o damage.";
+				string line3 = "-The Witch zaps you for #r" + to_string(damage) + "#o damage.";
 				log.PushPop(line3);
 			}
 		}

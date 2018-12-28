@@ -151,6 +151,7 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	specialNorm.push_back(Card("Steroids"));
 	specialNorm.push_back(Card("Distract"));
 	specialNorm.push_back(Card("Shimmer"));
+	specialNorm.push_back(Card("Repel"));
 
 	specialNormREFILL = specialNorm;
 
@@ -263,6 +264,19 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsReward.push_back(Gear("Iron Scabs"));
 	AvailableTraitsReward.push_back(Gear("Gelatinous"));
 	AvailableTraitsReward.push_back(Gear("Evolve"));
+	AvailableTraitsReward.push_back(Gear("Eight Legs"));
+
+
+	AvailableTraitsReward.push_back(Gear("Destiny"));
+	AvailableTraitsReward.push_back(Gear("Destiny"));
+	AvailableTraitsReward.push_back(Gear("Destiny"));
+	AvailableTraitsReward.push_back(Gear("Destiny"));
+	AvailableTraitsReward.push_back(Gear("Destiny"));
+	AvailableTraitsReward.push_back(Gear("Blacksmith"));
+	AvailableTraitsReward.push_back(Gear("Blacksmith"));
+	AvailableTraitsReward.push_back(Gear("Blacksmith"));
+	AvailableTraitsReward.push_back(Gear("Blacksmith"));
+	AvailableTraitsReward.push_back(Gear("Blacksmith"));
 
 	AvailableTraitsRewardREFILL = AvailableTraitsReward;
 
@@ -2894,11 +2908,14 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		log.printLog();
 	}
 	//TERRAIN: Wasteland
-	if (Terrain == "Wasteland" && RoomType != "Cauldron" && RoomType != "Cauldron 2" && !guy.Genius && !guy.Ego && guy.Blacksmith < 0) {
+	//Eight Legs Trait
+	if (Terrain == "Wasteland" && RoomType != "Cauldron" && RoomType != "Cauldron 2" &&
+		!guy.Genius && !guy.Ego && guy.Blacksmith < 0 && !guy.Eight_Legs) {
 		RoomType = "Empty";
 	}
 	//TERRAIN: Magma
-	if (Terrain == "Magma" && RoomType == "Cauldron") {
+	//Eight Legs Trait
+	if (Terrain == "Magma" && RoomType == "Cauldron" && !guy.Eight_Legs && !shopS) {
 		RoomType = "Empty";
 	}
 
@@ -3085,13 +3102,14 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		mvprintw(17, 26, "Which way?");
 		//print available options
 		//check for Warper trait
-		//also handle TERRAIN: Ice and TERRAIN: Forest
+		//also handles TERRAIN: Ice and TERRAIN: Forest
+		//also handles Eight Legs Trait
 		if (guy.Warper > 0) {
 			if (guy.posy != 0 &&
 				guy.posyBefore != guy.posy - 1) {
 				down = TRUE;
 
-				if ((Terrain == "Ice" && guy.posy >= guy.posyBefore) || (Terrain == "Forest" && guy.posy < guy.posyBefore))
+				if ((Terrain == "Ice" && guy.posy >= guy.posyBefore && !guy.Eight_Legs) || (Terrain == "Forest" && guy.posy < guy.posyBefore && !guy.Eight_Legs))
 					down = FALSE;
 			}
 			else {
@@ -3101,17 +3119,17 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		else
 			down = FALSE;
 		if (guy.posy == 7 ||
-			(Terrain == "Ice" && guy.posy <= guy.posyBefore && guy.posx != guy.posxBefore && guy.posx != 25) ||
-			(Terrain == "Ice" && guy.posy < guy.posyBefore && guy.posx == guy.posxBefore && guy.Warper > 0 && guy.posx != 25) ||
-			(Terrain == "Forest" && guy.posy > guy.posyBefore && guy.posx != 25)) {
+			(Terrain == "Ice" && guy.posy <= guy.posyBefore && guy.posx != guy.posxBefore && guy.posx != 25 && !guy.Eight_Legs) ||
+			(Terrain == "Ice" && guy.posy < guy.posyBefore && guy.posx == guy.posxBefore && guy.Warper > 0 && guy.posx != 25 && !guy.Eight_Legs) ||
+			(Terrain == "Forest" && guy.posy > guy.posyBefore && guy.posx != 25 && !guy.Eight_Legs)) {
 			up = FALSE;
 		}
 		else
 			up = TRUE;
 		if (guy.posy == 25 ||
-			(Terrain == "Ice" && guy.posx <= guy.posxBefore && guy.posy != guy.posyBefore && guy.posy != 7) ||
-			(Terrain == "Ice" && guy.posy < guy.posyBefore && guy.posx == guy.posxBefore && guy.Warper > 0 && guy.posy != 0) ||
-			(Terrain == "Forest" && guy.posx > guy.posxBefore && guy.posy != 7)) {
+			(Terrain == "Ice" && guy.posx <= guy.posxBefore && guy.posy != guy.posyBefore && guy.posy != 7 && !guy.Eight_Legs) ||
+			(Terrain == "Ice" && guy.posy < guy.posyBefore && guy.posx == guy.posxBefore && guy.Warper > 0 && guy.posy != 0 && !guy.Eight_Legs) ||
+			(Terrain == "Forest" && guy.posx > guy.posxBefore && guy.posy != 7 && !guy.Eight_Legs)) {
 			right = FALSE;
 		}
 		else
@@ -3562,7 +3580,7 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 		return;
 	}
 
-	if (RoomType != "Combat" && RoomType != "Final Boss" && RoomType != "Boss" ) {
+	if (RoomType != "Combat" && RoomType != "Final Boss" && RoomType != "Boss" && RoomType != "Shop") {
 		char choose = getch();
 		if (choose == 'd') {
 			//deck.deckScreen();
@@ -3778,7 +3796,7 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					RoomType = "Cauldron";
 					guy.Destiny--;
 				}
-				else if (Terrain == "Wasteland" && guy.Destiny == 0) {
+				else if (Terrain == "Wasteland" && guy.Destiny == 0 && guy.Blacksmith == 0) {
 					if (extraCauldron) {
 						extraCauldron = FALSE;
 						RoomType = "Cauldron";
@@ -3788,8 +3806,8 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 						RoomType = "Empty";
 					}
 				}
-				else if (Terrain == "City" && guy.Blacksmith < 0) {
-					if (extraForge) {
+				else if (Terrain == "City" && guy.Blacksmith < 0 && guy.Destiny <= 1) {
+					if (extraForge && guy.Blacksmith < 0) {
 						RoomType = "Mod";
 						extraForge = FALSE;
 					}
@@ -3802,7 +3820,7 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					RoomType = "Empty";
 
 				//getting a trait in shop
-				if (shopS && guy.Blacksmith <= 0) {
+				if (shopS && guy.Blacksmith <= 0 && guy.Destiny <= 1) {
 					shopS = FALSE;
 					printShop(guy);
 					RoomType = "Shop";
@@ -4285,8 +4303,7 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					//Blacksmith trait
 					else if (guy.Blacksmith > 0) {
 						RoomType = "Mod";
-						if(!shopS)
-							guy.Blacksmith--;
+						guy.Blacksmith--;
 					}
 					//Destiny trait
 					else if (guy.Destiny > 1) {
@@ -4307,8 +4324,8 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					//getting a trait in shop
 					else if (shopS && guy.Destiny <= 1 && guy.Blacksmith <= 0) {
 						shopS = FALSE;
-						printShop(guy);
 						RoomType = "Shop";
+						printShop(guy);
 					}
 					else {
 						RoomType = "Empty";
@@ -4324,9 +4341,6 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				getchDecision(guy, deck, log);
 			}
 		}
-		else if (RoomType == "Shop") {
-			getchShop(guy, deck, log);
-		}
 	}
 	else if (RoomType == "Combat"){
 		startBattle(guy, deck, log);
@@ -4336,6 +4350,9 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 	}
 	else if (RoomType == "Final Boss") {
 		startBattle(guy, deck, log);
+	}
+	else if (RoomType == "Shop") {
+		getchShop(guy, deck, log);
 	}
 	
 }
@@ -4579,28 +4596,28 @@ void InputBoard::generateShop() {
 	//generate attacks
 	int rng = rand() % shopAttacks.size();
 	shopA = shopAttacks.at(rng);
-	shopAttacks.erase(shopAttacks.begin() + rng);
+	//shopAttacks.erase(shopAttacks.begin() + rng);
 
 	rng = rand() % shopAttacks.size();
 	shopB = shopAttacks.at(rng);
-	shopAttacks.erase(shopAttacks.begin() + rng);
+	//shopAttacks.erase(shopAttacks.begin() + rng);
 
 	rng = rand() % shopAttacks.size();
 	shopC = shopAttacks.at(rng);
-	shopAttacks.erase(shopAttacks.begin() + rng);
+	//shopAttacks.erase(shopAttacks.begin() + rng);
 
 	//generate defends
 	rng = rand() % shopDefends.size();
 	shopD = shopDefends.at(rng);
-	shopDefends.erase(shopDefends.begin() + rng);
+	//shopDefends.erase(shopDefends.begin() + rng);
 
 	rng = rand() % shopDefends.size();
 	shopE = shopDefends.at(rng);
-	shopDefends.erase(shopDefends.begin() + rng);
+	//shopDefends.erase(shopDefends.begin() + rng);
 
 	rng = rand() % shopDefends.size();
 	shopF = shopDefends.at(rng);
-	shopDefends.erase(shopDefends.begin() + rng);
+	//shopDefends.erase(shopDefends.begin() + rng);
 
 	//generate spells
 	rng = rand() % AvailableSpells.size();
@@ -4694,7 +4711,7 @@ void InputBoard::printShop(Character &guy) {
 	f)$10 endure          k)$18 haste           r)$15 link x2
 						  l)$18 haste			s)$80 Positive Trait
 
-				   ^not actually how its formatted^
+					   ^something like this^
 	*/
 	clearBoardWhole();
 
@@ -4765,6 +4782,7 @@ void InputBoard::printShop(Character &guy) {
 		mvprintw(i, 28, "               ");
 	manualBox("Display", 0);
 	mvprintInSize(8, 32, 0, "Welcome!", FALSE);
+	mvprintInSize(10, 30, 11, "(Use capital letters to buy things) ", FALSE);
 }
 
 void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
@@ -5059,7 +5077,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		printDecision(guy, log);
 		getchDecision(guy, deck, log);
 
-		getchShop(guy, deck, log);
+		//getchShop(guy, deck, log);
 		//mvprintInSize(23, 53, 0, "                        ", FALSE);
 	}
 	else {

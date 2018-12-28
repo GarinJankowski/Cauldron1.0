@@ -183,6 +183,11 @@ void Map::PrintWholeMap(Character &guy, InputBoard &board) {
 							(roomList.at(i).posx == guy.posx - 1 && roomList.at(i).posy == guy.posy) || 
 							(roomList.at(i).posx == guy.posx && roomList.at(i).posy == guy.posy - 1) ||
 							(roomList.at(i).posx == guy.posx && roomList.at(i).posy == guy.posy)) {
+
+							roomList.at(i).fogged = FALSE;
+						}
+						//Eight Legs Trait
+						else if (guy.Eight_Legs) {
 							roomList.at(i).fogged = FALSE;
 						}
 						else {
@@ -203,6 +208,7 @@ void Map::PrintWholeMap(Character &guy, InputBoard &board) {
 			}
 		}
 	}
+
 	checkPosition(guy, board);
 
 	attron(COLOR_PAIR(9));
@@ -519,9 +525,6 @@ char Map::getTier(int posx, int posy) {
 
 void Map::UpdateMap(Character &guy, InputBoard &board) {
 	checkPosition(guy, board);
-	attron(COLOR_PAIR(9));
-	mvprintw(13 - guy.posy, 1 + guy.posx, "@");
-	attroff(COLOR_PAIR(9));
 
 	//Terraform trait
 	if (guy.Terraform && rand() % 6 == 0) {
@@ -557,12 +560,21 @@ void Map::UpdateMap(Character &guy, InputBoard &board) {
 				(roomList.at(i).posx == guy.posx && roomList.at(i).posy == guy.posy - 1)) {
 				roomList.at(i).fogged = FALSE;
 			}
+			//Eight Legs Trait
+			else if (guy.Eight_Legs) {
+				roomList.at(i).fogged = FALSE;
+			}
 			else {
 				roomList.at(i).fogged = TRUE;
 			}
 			roomList.at(i).PrintRoom(FALSE);
 		}
 	}
+
+	attron(COLOR_PAIR(9));
+	mvprintw(13 - guy.posy, 1 + guy.posx, "@");
+	attroff(COLOR_PAIR(9));
+
 	standend();
 }
 
@@ -592,14 +604,14 @@ aabbbbccccddddeeeeefffffgg
 
 
 CURRENT GRID
- bbbbb cccc ddddd eeeee fffffff
+ bbbbb cccc ddddd eeeee ffffff&
 a bbbbb cccc ddddd eeeee ffffff
 aa bbbbb cccc ddddd eeeee fffff
 aaa bbbbb cccc ddddd eeeee ffff
 aaaa bbbbb cccc ddddd eeeee fff
 aaaaa bbbbb cccc ddddd eeeee ff
 aaaaaa bbbbb cccc ddddd eeeee f
-aaaaaaa bbbbb cccc ddddd eeeee
+@aaaaaa bbbbb cccc ddddd eeeee
 
 ---enemy general difficulty order---
 rat
@@ -627,13 +639,14 @@ bosses
 final bosses
 
 
-Terrain:
+---Terrain---
+
 lightblue- Ice: when you enter ice you have to keep going in a straight line
 yellow- Treasure: gain 25 gold here
 green- Forest: you cant go the same direction you went before
 orange- Magma: get two combat for each tile, cauldrons are empty
 purple- Wasteland: get double cauldrons for each tile, everything else is empty
 gray- Fog: cant see these tiles, if inside fog you see a 1 radius circle around you
-dark gray- City: ?
+dark gray- City: only themed enemies. double forges
 
 */

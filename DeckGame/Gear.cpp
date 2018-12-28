@@ -427,6 +427,10 @@ Gear::Gear(const char *name):GearName(name)
 		Type = "Trait Reward";
 		Description = "All stats +1.";
 	}
+	else if (GearName == "Eight Legs") {
+		Type = "Trait Reward";
+		Description = "Land no longer affects you negatively.";
+	}
 
 	else {
 		Type = "";
@@ -2383,6 +2387,14 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 			guy.ModStat(-1, "MaxMana");
 		}
 	}
+	else if (GearName == "Eight Legs") {
+		if (On) {
+			guy.Eight_Legs = TRUE;
+		}
+		else {
+			guy.Eight_Legs = FALSE;
+		}
+	}
 }
 
 void Gear::CardOnOrOff(bool On, Character &guy, Deck &deck) {
@@ -2408,6 +2420,8 @@ void Gear::CardOnOrOff(bool On, Character &guy, Deck &deck) {
 	specials.push_back(Card("Prepare"));
 	specials.push_back(Card("Train"));
 	specials.push_back(Card("Jump"));
+	specials.push_back(Card("Shimmer"));
+	specials.push_back(Card("Repel"));
 
 	int index = 0;
 	for (int i = 0; i < specials.size(); i++) {

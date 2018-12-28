@@ -142,7 +142,8 @@ Card::Card(const char *name):CardName(name)
 		CardName == "Stall" ||
 		CardName == "Strike" ||
 		CardName == "Defend" ||
-		CardName == "Shimmer") {
+		CardName == "Shimmer" ||
+		CardName == "Repel") {
 		CardType = "Special";
 		setSpecial();
 	}
@@ -549,6 +550,10 @@ void Card::setSpecial() {
 	}
 	else if (CardName == "Shimmer") {
 		Description = "Deal damage equal to your gold.";
+	}
+	else if (CardName == "Repel") {
+		Description = "Negate the next 2 attacks taken. Burn this card.";
+		naturalBurn = TRUE;
 	}
 }
 void Card::setNegative() {
@@ -1763,6 +1768,13 @@ void Card::specialFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		damage = dealDamage(damage, guy, enemy, log);
 
 		string line = "-You deal #y" + to_string(damage) + "#o damage.";
+		log.PushPop(line);
+	}
+	else if (CardName == "Repel") {
+		//gain 2 negate. burn
+		guy.Negate += 2;
+
+		string line = "-You #cnegate the next 2 attacks#o.";
 		log.PushPop(line);
 	}
 }

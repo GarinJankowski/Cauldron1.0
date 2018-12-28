@@ -164,6 +164,7 @@ public:
 		bool Gold_Blood = FALSE;
 		bool Iron_Scabs = FALSE;
 		bool Gelatinous = FALSE;
+		bool Eight_Legs = FALSE;
 
 	//change stats
 	int TakeDamage(int damageTaken);
