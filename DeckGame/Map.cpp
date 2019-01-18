@@ -364,7 +364,8 @@ void Map::generateCity() {
 
 	for (int x = posx; x < sizex+posx; x++) {
 		for (int y = posy; y < sizey+posy; y++) {
-			terrainGrid[x][y] = "City";
+			if(!(x == 0 && (y == 0 || y == 1)) && !(x == 1 && y == 0))
+				terrainGrid[x][y] = "City";
 		}
 	}
 
@@ -404,7 +405,8 @@ void Map::generateCity(int px, int py) {
 
 	for (int x = posx; x < sizex + posx; x++) {
 		for (int y = posy; y < sizey + posy; y++) {
-			terrainGrid[x][y] = "City";
+			if (!(x == 0 && (y == 0 || y == 1)) && !(x == 1 && y == 0))
+				terrainGrid[x][y] = "City";
 		}
 	}
 }

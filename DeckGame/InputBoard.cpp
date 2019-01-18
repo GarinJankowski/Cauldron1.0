@@ -1616,6 +1616,11 @@ void InputBoard::terrainLoopWhole() {
   pushing forward cards from the draw pile into the cards that can be chosen,
   and printing the cards that can be chosen*/
 void InputBoard::ShuffleAddPrint() {
+	clearBoardWhole();
+	manualBox("Card 1", 0);
+	manualBox("Card 2", 0);
+	manualBox("Card 3", 0);
+
 	//mvprintw(17, 63, "Next: ");
 	//push modifier
 	if (pushthisturn) {
@@ -2598,7 +2603,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 			drink = "#g You reshape.#o";
 			break;
 		}
-		log.PushPop(drink);
+		//log.PushPop(drink);
 		guy.printStats();
 	}
 	//Sticky Feet trait
@@ -2801,12 +2806,9 @@ bool InputBoard::checkEnemyLife(Character &guy, Enemy &enemy, Deck &deck, TextLo
 
 //restore any in-battle effects
 void InputBoard::restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, TextLog &log) {
-	removeNegatives(deck);
-	restoreStats(guy);
 	guy.dotDamage = 0;
 	enemy.bleeding = 0;
 	enemy.fumes = 0;
-	guy.Negate = 0;
 	guy.regenerateTurns = 0;
 	guy.smoke = 0;
 	guy.incense = 0;
@@ -2821,6 +2823,7 @@ void InputBoard::restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, Te
 	guy.drown = 0;
 	guy.refresh = 0;
 	guy.reagent = 0;
+	guy.metabolise = 0;
 	if(guy.Volatile != -1)
 		guy.Volatile = 0;
 	if(guy.Jittery != -1)
@@ -2833,9 +2836,12 @@ void InputBoard::restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, Te
 	pushthisturn = FALSE;
 	linkdraw = 0;
 
+	removeNegatives(deck);
+	restoreStats(guy);
 	guy.CurrentHealth = guy.MaxHealth;
 	guy.CurrentMana = guy.MaxMana;
 	guy.CurrentBlock = 0;
+	guy.Negate = 0;
 	guy.printStats();
 }
 
@@ -3107,7 +3113,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		else
 			down = FALSE;
 		if (guy.posy == 7 ||
-			(Terrain == "Ice" && guy.posy <= guy.posyBefore && guy.posx != guy.posxBefore && guy.posx != 25 && !guy.Eight_Legs) ||
+			(Terrain == "Ice" && guy.posy <= guy.posyBefore && guy.posx > guy.posxBefore && guy.posx != 25 && !guy.Eight_Legs) ||
 			(Terrain == "Ice" && guy.posy < guy.posyBefore && guy.posx == guy.posxBefore && guy.Warper > 0 && guy.posx != 25 && !guy.Eight_Legs) ||
 			(Terrain == "Forest" && guy.posy > guy.posyBefore && guy.posx != 25 && !guy.Eight_Legs)) {
 			up = FALSE;
@@ -3115,7 +3121,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		else
 			up = TRUE;
 		if (guy.posy == 25 ||
-			(Terrain == "Ice" && guy.posx <= guy.posxBefore && guy.posy != guy.posyBefore && guy.posy != 7 && !guy.Eight_Legs) ||
+			(Terrain == "Ice" && guy.posx <= guy.posxBefore && guy.posy > guy.posyBefore && guy.posy != 7 && !guy.Eight_Legs) ||
 			(Terrain == "Ice" && guy.posy < guy.posyBefore && guy.posx == guy.posxBefore && guy.Warper > 0 && guy.posy != 0 && !guy.Eight_Legs) ||
 			(Terrain == "Forest" && guy.posx > guy.posxBefore && guy.posy != 7 && !guy.Eight_Legs)) {
 			right = FALSE;
@@ -3300,7 +3306,7 @@ void InputBoard::generateMods() {
 	}
 	else if (rng > 11 && rng <= 13) {
 		pickup1 = "#mCopy";
-		Description = "Duplicate this card for the rest of combat.#o";
+		Description = "Have one more of this card during combat.#o";
 	}
 	else if (rng > 13 && rng <= 18) {
 		pickup1 = "#yPush";
@@ -4084,6 +4090,10 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				for (int i = 0; i < 8; i++)
 					mvprintw(6 + i, 29, "             ");
 				mvprintw(17, 62, "         ");
+
+				if (guy.Ego)
+					guy.Ego = FALSE;
+
 				guy.printStats();
 				//getting a trait in shop
 				if (shopS) {
@@ -4119,9 +4129,6 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					else
 						RoomType = "Empty";
 
-
-					if (guy.Ego)
-						guy.Ego = FALSE;
 					printDecision(guy, log);
 				}
 				//getchDecision(guy, deck, log);
@@ -4163,7 +4170,11 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				if (guy.Genius)
 					guy.Genius = FALSE;
 				//getting a trait in shop
-				if (shopS) {
+				if (guy.Destiny > 1) {
+					RoomType = "Cauldron";
+					printDecision(guy, log);
+				}
+				else if (shopS) {
 					printShop(guy);
 					RoomType = "Shop";
 					//getchShop(guy, deck, log);
@@ -5070,6 +5081,71 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 	}
 	else {
 		getchShop(guy, deck, log);
+	}
+}
+
+//win
+void InputBoard::win(Character &guy, Deck &deck, TextLog &log, bool gamewin) {
+	clearBoard();
+	standend();
+
+	if (gamewin) {
+		manualBox("Card 1", 0);
+		manualBox("Card 3", 0);
+		attron(COLOR_PAIR(7));
+		manualBox("Card 2", 0);
+		mvprintw(18, 27, "VICTORY");
+	}
+	else {
+		attron(COLOR_PAIR(5));
+		mvprintw(18, 29, "DEAD");
+		manualBox("Directory", 0);
+		manualBox("Display", 0);
+		manualBox("Map", 0);
+		manualBox("Stats", 0);
+		manualBox("Decision", 0);
+		manualBox("Card 1", 0);
+		manualBox("Card 2", 0);
+		manualBox("Card 3", 0);
+	}
+	standend();
+	mvprintInSize(20, 23, 18, "(ENTER) Restart", FALSE);
+	mvprintInSize(21, 23, 18, "(ESC)   Exit", FALSE);
+
+	char go = getch();
+	if (go == 10) {
+		restart = TRUE;
+	}
+	else if (go == 27) {
+		quit = TRUE;
+	}
+	else if (go == 'd') {
+		showDeck(guy, deck, TRUE);
+		log.printLog();
+		win(guy, deck, log, gamewin);
+	}
+	else if (go == 'g') {
+		showInventory(guy, deck);
+		log.printLog();
+		win(guy, deck, log, gamewin);
+	}
+	else if (go == 't') {
+		showTraits();
+		log.printLog();
+		win(guy, deck, log, gamewin);
+	}
+	else if (go == 'm') {
+		showMods(guy, deck, TRUE);
+		log.printLog();
+		win(guy, deck, log, gamewin);
+	}
+	else if (go == 'l') {
+		showTerrain();
+		log.printLog();
+		win(guy, deck, log, gamewin);
+	}
+	else {
+		win(guy, deck, log, gamewin);
 	}
 }
 

@@ -205,7 +205,7 @@ void Card::setAttack() {
 		Description = "Deal 3d(Str) damage.";
 	}
 	else if (CardName == "Demolish") {
-		Description = "Deal 3x(Str) damage. Lose 5 Str for the battle.";
+		Description = "Deal 3x(Str) damage. Lose 3 Str for the battle.";
 	}
 	else if (CardName == "Bleed") {
 		Description = "Deal 2d(Str/2) damage for 4 rounds.";
@@ -863,10 +863,10 @@ void Card::attackFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Demolish") {
-		//do 3*(Str) dmg, lose 2 str
+		//do 3*(Str) dmg, lose 3 str
 		int damage = dealDamage(3 * guy.Strength, guy, enemy, log);
-		guy.ModStat(-5, "Strength");
-		guy.strMod += 5;
+		guy.ModStat(-3, "Strength");
+		guy.strMod += 3;
 
 		string line = "-You demolish the " + string(enemy.Name)
 			+ " for #y" + to_string(damage)
@@ -942,7 +942,7 @@ void Card::attackFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		guy.extraTurns++;
 
 		string line = "-You zap the " + string(enemy.Name) + " for #y" + to_string(damage) + "#o damage.";
-		string line2 = " EXTRA TURN";
+		string line2 = "#g EXTRA TURN#o";
 		log.PushPop(line);
 		log.PushPop(line2);
 	}
@@ -1423,7 +1423,7 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		gainBlock(block, guy, enemy);
 		guy.DrainMana(-1 * mana);
 
-		string line = "-You #mgain " + to_string(guy.Intelligence)
+		string line = "-You #mgain " + to_string(mana)
 			+ " mana#o and #c" + to_string(block)
 			+ "#o block.";
 		log.PushPop(line);
@@ -2035,7 +2035,7 @@ void Card::setMod(string Mod, bool On, Character &guy) {
 			for (int y = 0; y < 15; y++) {
 				mvprintw(y, 44, "                                  ");
 			}
-			string m = "Choose a position in the chain (1-9). 1 draws 2, 2 draws 3, and so on. The chain stops at the last number. 0 removes the Link from the card.";
+			string m = "Choose a position in the chain (1-9). 1 draws 2, 2 draws 3, and so on. The chain stops at the last number. 0 removes the Link mod from the card.";
 			mvprintInSize(2, 47, 25, m.c_str(), FALSE);
 
 			char chain = getch();

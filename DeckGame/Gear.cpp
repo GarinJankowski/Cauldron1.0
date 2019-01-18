@@ -206,7 +206,7 @@ Gear::Gear(const char *name):GearName(name)
 	}
 	else if (GearName == "Corpse") {
 		Type = "Trait Sacrifice";
-		Description = "You can no longer heal. +5 max hp.";
+		Description = "You can no longer heal during combat. +5 max hp.";
 	}
 	else if (GearName == "Radioactive") {
 		Type = "Trait Sacrifice";
@@ -2329,10 +2329,10 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Triple-Jointed") {
 		if (On) {
-			guy.handSize = 4;
+			guy.handSize++;
 		}
 		else {
-			guy.handSize = 3;
+			guy.handSize--;
 		}
 	}
 	else if (GearName == "Blacksmith") {

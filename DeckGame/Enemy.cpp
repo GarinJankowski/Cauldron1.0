@@ -258,6 +258,7 @@ Final Boss:
 	Machine
 */
 
+//not using this template anymore
 /*          TEMPLATE
 ------------------------------------
 Kobold::Kobold() {
@@ -823,7 +824,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			int rng = rand() % 3;
 			if (guy.dotDamage == 0 || (rng < 2 && guy.dotDamage < 8+2*td)) {
 				guy.dotDamage += 2;
-				line = "#r-The Molten Jelly sprays you embers.#o";
+				line = "#r-The Molten Jelly sprays you with embers.#o";
 			}
 			else {
 				guy.CurrentBlock = 0;
@@ -1839,9 +1840,15 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					line = "#r-The Dragon inhales...#o";
 				}
 				else if (rng == 2 && guy.CurrentBlock > 0) {
-					guy.CurrentBlock = 0;
-					CurrentBlock = 0;
-					line = "#b-The Dragon incinerates all the block on the field.#o";
+					if (rand() % 2 == 0) {
+						guy.CurrentBlock = 0;
+						CurrentBlock = 0;
+						line = "#b-The Dragon incinerates all the block on the field.#o";
+					}
+					else {
+						dot++;
+						line = "#r-The Dragon inhales...#o";
+					}
 				}
 				else if (rng == 3 && guy.dotDamage < 6) {
 					guy.dotDamage += 2;
@@ -2297,7 +2304,7 @@ void Enemy::ActivateDOT(Character &guy, TextLog &log) {
 		else if (Name == "Demon" || Name == "Imp" || Name == "Brain" || Name == "Hellhound") {
 			if (charge) {
 				heal(guy.dotDamage);
-				line = "-The " + string(Name) + " #rsiphons your soul#o for #r" + to_string(guy.dotDamage) + "#o damage.";
+				line = "-The " + string(Name) + " #rsteals " + to_string(guy.dotDamage) + " of your health#o.";
 			}
 			else
 				line = "-You waste for #r" + to_string(guy.dotDamage) + "#o damage.";

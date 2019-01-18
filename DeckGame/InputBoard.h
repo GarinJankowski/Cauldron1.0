@@ -188,6 +188,10 @@ public:
 	void printShop(Character &guy);
 	void getchShop(Character &guy, Deck &deck, TextLog &log);
 
+	bool restart = FALSE;
+	bool quit = FALSE;
+	void win(Character &guy, Deck &deck, TextLog &log, bool gamewin);
+
 	//special other stuff
 	int negotiateStep;
 	bool Negotiate(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
