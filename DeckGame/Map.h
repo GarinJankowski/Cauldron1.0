@@ -13,7 +13,7 @@ public:
 	int numIce = 0;
 	int numTreasure = 0;
 	int numForest = 0;
-	int numMagma = 0;
+	int numLava = 0;
 	int numWasteland = 0;
 	int numFog = 0;
 

@@ -31,6 +31,8 @@ public:
 	int CurrentBlock;
 	int Negate;
 	int Gold;
+	int Energy;
+	int MaxEnergy;
 
 	int handSize = 3;
 
@@ -39,6 +41,10 @@ public:
 	bool shuffle = FALSE;
 	const char* fillType = " ";
 	bool cannotUse;
+
+	//roomtype and terrain reference for functions that are not in the input board
+	const char *RoomType;
+	const char *Terrain;
 
 	//card specific mechanics
 	int dotDamage = 0;
@@ -59,6 +65,10 @@ public:
 	int drown = 0;
 	int refresh = 0;
 	int reagent = 0;
+	int catalyze = 0;
+	int ghost = 0;
+	bool ghostPlayed = FALSE;
+	bool cleanse = FALSE;
 
 	int strMod;
 	int defMod;
@@ -113,7 +123,7 @@ public:
 		bool Fast_Metabolism = FALSE;
 		bool Frenzy = FALSE;
 		bool Undead = FALSE;
-		bool The_Juice = FALSE;
+		//bool The_Juice = FALSE;
 		bool Radioactive = FALSE;
 		bool Forgetful = FALSE;
 		bool Succumb = FALSE;
@@ -128,6 +138,22 @@ public:
 		int Inefficient = -1;
 		bool Gold_Flesh = FALSE;
 		bool Terraform = FALSE;
+		int Psychosis = -1;
+		bool Dazed = FALSE;
+		bool Strategy = FALSE;
+		bool Doomed = FALSE;
+		bool The_Floor_is_Lava = FALSE;
+		bool Slippery = FALSE;
+		int Scented = -1;
+		bool Timer = FALSE;
+		bool Sacrificial = FALSE;
+		bool Membrane = FALSE;
+		bool Addiction = FALSE;
+		bool Paranoia = FALSE;
+		bool Sticky_Skin = FALSE;
+		bool Flat_Feet = FALSE;
+		int Muscle_Mass = -1;
+		int Muscle_MassDamage = 0;
 	//Reward
 		bool Mending_Flesh = FALSE;
 		bool Gymnast = FALSE;
@@ -147,7 +173,7 @@ public:
 		bool Exoskeleton = FALSE;
 		bool Ego = FALSE;
 		bool Genius = FALSE;
-		bool Quick_Thinker = FALSE;
+		int Quick_Thinker = -1;
 		int Foresight = -1;
 		bool Photosynthesis = FALSE;
 		bool Dexterous = FALSE;
@@ -165,6 +191,20 @@ public:
 		bool Iron_Scabs = FALSE;
 		bool Gelatinous = FALSE;
 		bool Eight_Legs = FALSE;
+		bool Heat_Walker = FALSE;
+		int Metamorphosis = 0;
+		bool Thick_Hide = FALSE;
+		bool Gold_Bones = FALSE;
+		int Absorption = -1;
+		int Adrenaline = -1;
+		bool Reaper = FALSE;
+		bool Toxic_Release = FALSE;
+		int Recycling = -1;
+		bool Blue_Scales = FALSE;
+		bool Red_Scales = FALSE;
+		bool Curved_Tusks = FALSE;
+		int Early_Riser = -1;
+		bool Outer_Shell = FALSE;
 
 	//change stats
 	int TakeDamage(int damageTaken);

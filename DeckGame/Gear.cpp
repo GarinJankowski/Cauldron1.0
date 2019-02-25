@@ -81,7 +81,8 @@ Gear::Gear(const char *name):GearName(name)
 		GearName == "Amulet of Aura" ||
 		GearName == "Turtle Shell" ||
 		GearName == "Crystal Breastplate" ||
-		GearName == "Padded Tunic") {
+		GearName == "Padded Tunic" ||
+		GearName == "Chain Mail") {
 		Type = "Body";
 		BodyDescription();
 	}
@@ -120,316 +121,123 @@ Gear::Gear(const char *name):GearName(name)
 	}
 	
 	//Trait Sacrifice
-	else if (GearName == "Anemia") {
+	else if (GearName == "Anemia" ||
+		GearName == "Dumb" ||
+		GearName == "Mind Flooded" ||
+		GearName == "Tunnel Vision" ||
+		GearName == "Teleportitis" ||
+		GearName == "Growing Pains" ||
+		GearName == "Conversion" ||
+		GearName == "Inversion" ||
+		GearName == "Jittery" ||
+		GearName == "Tumors" ||
+		GearName == "Volatile" ||
+		GearName == "Melting" ||
+		GearName == "The Box" ||
+		GearName == "Amnesia" ||
+		GearName == "Long Legs" ||
+		GearName == "Oblivious" ||
+		GearName == "Blind" ||
+		GearName == "Numb" ||
+		GearName == "Sensitive" ||
+		GearName == "Frenzy" ||
+		GearName == "Corpse" ||
+		GearName == "Radioactive" ||
+		GearName == "Forgetful" ||
+		GearName == "Tiny" ||
+		GearName == "Succumb" ||
+		GearName == "Slow" ||
+		GearName == "Sticky Feet" ||
+		GearName == "Overconfidence" || //not in pool
+		GearName == "Hallucinations" ||
+		GearName == "Tail" ||
+		GearName == "Weak Back" ||
+		GearName == "Charred Skin" ||
+		GearName == "Purple" ||
+		GearName == "Madness" ||
+		GearName == "Inefficient" ||
+		GearName == "Brain Worm" ||
+		GearName == "Gold Flesh" ||
+		GearName == "Terraform" ||
+		GearName == "Psychosis" ||
+		GearName == "Dazed" ||
+		GearName == "Strategy" ||
+		GearName == "Doomed" ||
+		GearName == "The Floor is Lava" || //not in pool
+		GearName == "Slippery" || //not in pool
+		GearName == "Scented" ||
+		GearName == "Colossus" ||
+		GearName == "Timer" ||
+		GearName == "Sacrificial" ||
+		GearName == "Heavy" || //not implemented
+		GearName == "Membrane" ||
+		GearName == "Addiction" ||
+		GearName == "Paranoia" ||
+		GearName == "Sticky Skin" ||
+		GearName == "Asthma" ||
+		GearName == "Flat Feet" ||
+		GearName == "Muscle Mass" ||
+		GearName == "Chaos#") {
 		Type = "Trait Sacrifice";
-		Description = "Every turn, 25% chance to lose 5 health.";
-	}
-	else if (GearName == "Dumb") {
-		Type = "Trait Sacrifice";
-		Description = "-4 Int, +1 Def.";
-	}
-	else if (GearName == "Mind Flooded") {
-		Type = "Trait Sacrifice";
-		Description = "Add one Ponder (+2 mana) card to your deck.";
-	}
-	else if (GearName == "Tunnel Vision") {
-		Type = "Trait Sacrifice";
-		Description = "-2 Str, -2 Def, +1 Skl.";
-	}
-	else if (GearName == "Teleportitis") {
-		Type = "Trait Sacrifice";
-		Description = "Chance to move 1-2 rooms in any direction.";
-	}
-	else if (GearName == "Growing Pains") {
-		Type = "Trait Sacrifice";
-		Description = "Start each battle with 10 health lost.";
-	}
-	else if (GearName == "Conversion") {
-		Type = "Trait Sacrifice";
-		Description = "Each turn lose 2 mana and heal 1 health.";
-	}
-	else if (GearName == "Inversion") {
-		Type = "Trait Sacrifice";
-		Description = "Each turn take 3 damage and gain 1 mana.";
-	}
-	else if (GearName == "Jittery") {
-		Type = "Trait Sacrifice";
-		Description = "Lose block if kept for 4 turns.";
-	}
-	else if (GearName == "Tumors") {
-		Type = "Trait Sacrifice";
-		Description = "Lose 1 max health in battle every time you heal.";
-	}
-	else if (GearName == "Devolve") {
-		Type = "Trait Sacrifice";
-		Description = "Remove 1 positive trait. +1 Skl.";
-	}
-	else if (GearName == "Volatile") {
-		Type = "Trait Sacrifice";
-		Description = "Every 4 turns, everybody takes 15 damage.";
-	}
-	else if (GearName == "Melting") {
-		Type = "Trait Sacrifice";
-		Description = "Lose 2 block and take 1 damage every turn.";
-	}
-	else if (GearName == "The Box") {
-		Type = "Trait Sacrifice";
-		Description = "Reroll all stats.";
-	}
-	else if (GearName == "Amnesia") {
-		Type = "Trait Sacrifice";
-		Description = "Remove half of the map icons.";
-	}
-	else if (GearName == "Long Legs") {
-		Type = "Trait Sacrifice";
-		Description = "Skip a space for the next 3 steps.";
-	}
-	else if (GearName == "Oblivious") {
-		Type = "Trait Sacrifice";
-		Description = "You no longer see the text log.";
-	}
-	else if (GearName == "Blind") {
-		Type = "Trait Sacrifice";
-		Description = "You no longer see the enemy's stats.";
-	}
-	else if (GearName == "Numb") {
-		Type = "Trait Sacrifice";
-		Description = "You no longer see your stats.";
-	}
-	else if (GearName == "Sensitive") {
-		Type = "Trait Sacrifice";
-		Description = "All of your over time effects occur twice every turn.";
-	}
-	else if (GearName == "Frenzy") {
-		Type = "Trait Sacrifice";
-		Description = "Take and deal double damage.";
-	}
-	else if (GearName == "Corpse") {
-		Type = "Trait Sacrifice";
-		Description = "You can no longer heal during combat. +5 max hp.";
-	}
-	else if (GearName == "Radioactive") {
-		Type = "Trait Sacrifice";
-		Description = "Everybody takes (Skl/2) damage every turn.";
-	}
-	else if (GearName == "Forgetful") {
-		Type = "Trait Sacrifice";
-		Description = "You start combat with zero mana. +2 max mana.";
-	}
-	else if (GearName == "Tiny") {
-		Type = "Trait Sacrifice";
-		Description = "Reduce max hp by 35. +10 defense.";
-	}
-	else if (GearName == "Succumb") {
-		Type = "Trait Sacrifice";
-		Description = "Your traits are now randomly chosen. +2 Skill.";
-	}
-	else if (GearName == "Slow") {
-		Type = "Trait Sacrifice";
-		Description = "Every enemy starts battle with one negate.";
-	}
-	else if (GearName == "Sticky Feet") {
-		Type = "Trait Sacrifice";
-		Description = "Every 10 turns, lose a turn.";
-	}
-	else if (GearName == "Overconfidence") {
-		Type = "Trait Sacrifice";
-		Description = "Combat and Boss rewards are swapped.";
-	}
-	else if (GearName == "Hallucinations") {
-		Type = "Trait Sacrifice";
-		Description = "Enemies have a chance of changing form.";
-	}
-	else if (GearName == "Tail") {
-		Type = "Trait Sacrifice";
-		Description = "Your hand can neither be shuffled nor filled.";
-	}
-	else if (GearName == "Weak Back") {
-		Type = "Trait Sacrifice";
-		Description = "You can no longer pick up gear.";
-	}
-	else if (GearName == "Charred Skin") {
-		Type = "Trait Sacrifice";
-		Description = "You heal instead of gaining block.";
-	}
-	else if (GearName == "Purple") {
-		Type = "Trait Sacrifice";
-		Description = "All stat changes are now permanent.";
-	}
-	else if (GearName == "Madness") {
-		Type = "Trait Sacrifice";
-		Description = "Add a Mad card to your deck.";
-	}
-	else if (GearName == "Inefficient") {
-		Type = "Trait Sacrifice";
-		Description = "Everyone takes 2 turns instead of 1.";
-	}
-	else if (GearName == "Brain Worm") {
-		Type = "Trait Sacrifice";
-		Description = "Lose half your max hp. Double your current max mana.";
-	}
-	else if (GearName == "Gold Flesh") {
-		Type = "Trait Sacrifice";
-		Description = "Lose 1 gold every time you lose health.";
-	}
-	else if (GearName == "Terraform") {
-		Type = "Trait Sacrifice";
-		Description = "Chance to transform the land every tile.";
+		TraitSDescription();
 	}
 	
 	
 	//Trait Reward
-	else if (GearName == "Mending Flesh") {
+	else if (GearName == "Mending Flesh" ||
+	GearName == "Gymnast" ||
+	GearName == "Third Eye" ||
+	GearName == "Warper" ||
+	GearName == "Growth Spurt" ||
+	GearName == "Mind" ||
+	GearName == "Matter" ||
+	GearName == "Sharp Claws" ||
+	GearName == "Unseen" ||
+	GearName == "Spiny Skin" ||
+	GearName == "Wings" ||
+	GearName == "Exoskeleton" ||
+	GearName == "Unpredictable" ||
+	GearName == "Ego" ||
+	GearName == "The Box#" ||
+	GearName == "Quick Thinker" ||
+	GearName == "Foresight" ||
+	GearName == "Photosynthesis" ||
+	GearName == "Dexterous" ||
+	GearName == "Reconstruction" ||
+	GearName == "Laser Vision" ||
+	GearName == "Carnivore" ||
+	GearName == "Hemoglobin" ||
+	GearName == "Destiny" ||
+	GearName == "Scavenger" ||
+	GearName == "Horns" ||
+	GearName == "Genius" ||
+	GearName == "Green Scales" ||
+	GearName == "Multi-Tongued" ||
+	GearName == "Triple-Jointed" ||
+	GearName == "Blacksmith" ||
+	GearName == "Gold Blood" ||
+	GearName == "Iron Scabs" ||
+	GearName == "Gelatinous" ||
+	GearName == "Evolve" ||
+	GearName == "Eight Legs" ||
+	GearName == "Refine" ||
+	GearName == "Relentless" ||
+	GearName == "Heat Walker" ||
+	GearName == "Metamorphosis" ||
+	GearName == "Thick Hide" ||
+	GearName == "Gold Bones" ||
+	GearName == "Absorption" ||
+	GearName == "Adrenaline" ||
+	GearName == "Reaper" ||
+	GearName == "Toxic Release" ||
+	GearName == "Recycling" ||
+	GearName == "Blue Scales" ||
+	GearName == "Red Scales" ||
+	GearName == "Curved Tusks" ||
+	GearName == "Early Riser" ||
+	GearName == "Outer Shell") {
 		Type = "Trait Reward";
-		Description = "Heal 1d(Skl) health each turn.";
-	}
-	else if (GearName == "Gymnast") {
-		Type = "Trait Reward";
-		Description = "4x(Skl)% chance to get an extra turn in battle.";
-	}
-	else if (GearName == "Third Eye") {
-		Type = "Trait Reward";
-		Description = "See the next 2 cards to be drawn.";
-	}
-	else if (GearName == "Warper") {
-		Type = "Trait Reward";
-		Description = "You can travel downwards up to 5 times.";
-	}
-	else if (GearName == "Growth Spurt") {
-		Type = "Trait Reward";
-		Description = "Chance to gain +1 in a random stat after battle.";
-	}
-	else if (GearName == "Mind") {
-		Type = "Trait Reward";
-		Description = "+(Skl) max mana.";
-	}
-	else if (GearName == "Matter") {
-		Type = "Trait Reward";
-		Description = "+2x(Skl) max hp.";
-	}
-	else if (GearName == "Sharp Claws") {
-		Type = "Trait Reward";
-		Description = "Deal 1d(Skl) extra damage every attack.";
-	}
-	else if (GearName == "Gift") {
-		Type = "Trait Reward";
-		Description = "Choose a spell to add to your deck.";
-	}
-	else if (GearName == "Unseen") {
-		Type = "Trait Reward";
-		Description = "Extra turn at the start of battle.";
-	}
-	else if (GearName == "Spiny Skin") {
-		Type = "Trait Reward";
-		Description = "Deal (Skl)+3 damage when attacked.";
-	}
-	else if (GearName == "Adapt") {
-		Type = "Trait Reward";
-		Description = "Remove 1 negative trait. +1 Skl.";
-	}
-	else if (GearName == "Wings") {
-		Type = "Trait Reward";
-		Description = "Leave non-Final Boss combat at any time.";
-	}
-	else if (GearName == "Exoskeleton") {
-		Type = "Trait Reward";
-		Description = "Gain 1d(Skl-1) block every turn.";
-	}
-	else if (GearName == "Unpredictable") {
-		Type = "Trait Reward";
-		Description = "Shuffle your hand every turn.";
-	}
-	else if (GearName == "Ego") {
-		Type = "Trait Reward";
-		Description = "Choose a Special card.";
-	}
-	else if (GearName == "The Juice") {
-		Type = "Trait Reward";
-		Description = "Get +6 and -5 to random stats every turn.";
-	}
-	else if (GearName == "Quick Thinker") {
-		Type = "Trait Reward";
-		Description = "8x(Skl)% chance to gain 5 mana each turn.";
-	}
-	else if (GearName == "Foresight") {
-		Type = "Trait Reward";
-		Description = "Start your hand with spells.";
-	}
-	else if (GearName == "Photosynthesis") {
-		Type = "Trait Reward";
-		Description = "Heal for (Skl) hp when you use a spell.";
-	}
-	else if (GearName == "Dexterous") {
-		Type = "Trait Reward";
-		Description = "Deal (Skl) damage when you use a defend.";
-	}
-	else if (GearName == "Reconstruction") {
-		Type = "Trait Reward";
-		Description = "If you die, spend 2 Skill to come back to life.";
-	}
-	else if (GearName == "Laser Vision") {
-		Type = "Trait Reward";
-		Description = "Add a Laser card to your deck.";
-	}
-	else if (GearName == "Carnivore") {
-		Type = "Trait Reward";
-		Description = "Gain 1 max health after every battle.";
-	}
-	else if (GearName == "Hemoglobin") {
-		Type = "Trait Reward";
-		Description = "Your heals are increased by 50%.";
-	}
-	else if (GearName == "Destiny") {
-		Type = "Trait Reward";
-		Description = "Get 3 Cauldrons. You cannot recieve any more.";
-	}
-	else if (GearName == "Scavenger") {
-		Type = "Trait Reward";
-		Description = "You find twice as much gear.";
-	}
-	else if (GearName == "Horns") {
-		Type = "Trait Reward";
-		Description = "When you play an Attack, (Skl)+7% chance for a negate.";
-	}
-	else if (GearName == "Genius") {
-		Type = "Trait Reward";
-		Description = "+2 Int. Choose a spell.";
-	}
-	else if (GearName == "Green Scales") {
-		Type = "Trait Reward";
-		Description = "All damage taken is reduced by (Skl/2).";
-	}
-	else if (GearName == "Multi-Tongued") {
-		Type = "Trait Reward";
-		Description = "You can now talk to your enemies.";
-	}
-	else if (GearName == "Triple-Jointed") {
-		Type = "Trait Reward";
-		Description = "Draw 1 more card every turn.";
-	}
-	else if (GearName == "Blacksmith") {
-		Type = "Trait Reward";
-		Description = "Recieve 12 card modifiers.";
-	}
-	else if (GearName == "Gold Blood") {
-		Type = "Trait Reward";
-		Description = "You gain twice as much gold.";
-	}
-	else if (GearName == "Iron Scabs") {
-		Type = "Trait Reward";
-		Description = "Whenever you lose health, gain half of that as block.";
-	}
-	else if (GearName == "Gelatinous") {
-		Type = "Trait Reward";
-		Description = "Gain (Skl)d2 block at the start of each combat.";
-	}
-	else if (GearName == "Evolve") {
-		Type = "Trait Reward";
-		Description = "All stats +1.";
-	}
-	else if (GearName == "Eight Legs") {
-		Type = "Trait Reward";
-		Description = "Land no longer affects you negatively.";
+		TraitRDescription();
 	}
 
 	else {
@@ -602,6 +410,9 @@ void Gear::BodyDescription() {
 	else if (GearName == "Padded Tunic") {
 		Description = "An everyday garment with a bit of protection, but not enough to slow you down.";
 	}
+	else if (GearName == "Chain Mail") {
+		Description = "A simple coat of metal rings linked together.";
+	}
 }
 void Gear::HeadDescription() {
 	if (GearName == "No Headgear") {
@@ -662,7 +473,7 @@ void Gear::ModDescription() {
 		Description = "Remove this card for the rest of combat.";
 	}
 	else if (GearName == "Stay") {
-		Description = "This card has a 70% chance to not discard after use.";
+		Description = "Stays in hand after use, subtracting one Stay.";
 	}
 	else if (GearName == "Flow") {
 		Description = "This card discards at the end of the turn.";
@@ -682,10 +493,458 @@ void Gear::ModDescription() {
 }
 
 void Gear::TraitSDescription() {
-
+	//Trait Sacrifice
+	if (GearName == "Anemia") {
+		Type = "Trait Sacrifice";
+		Description = "Every turn, 25% chance to lose 5 health.";
+	}
+	else if (GearName == "Dumb") {
+		Type = "Trait Sacrifice";
+		Description = "-4 Int, +1 Def.";
+	}
+	else if (GearName == "Mind Flooded") {
+		Type = "Trait Sacrifice";
+		Description = "Add one Ponder (+2 mana) card to your deck.";
+	}
+	else if (GearName == "Tunnel Vision") {
+		Type = "Trait Sacrifice";
+		Description = "-2 Str, -2 Def, +1 Skl.";
+	}
+	else if (GearName == "Teleportitis") {
+		Type = "Trait Sacrifice";
+		Description = "Chance to move 1-2 rooms in any direction.";
+	}
+	else if (GearName == "Growing Pains") {
+		Type = "Trait Sacrifice";
+		Description = "Start each battle with 10 health lost.";
+	}
+	else if (GearName == "Conversion") {
+		Type = "Trait Sacrifice";
+		Description = "Each turn lose 2 mana and heal 1 health.";
+	}
+	else if (GearName == "Inversion") {
+		Type = "Trait Sacrifice";
+		Description = "Each turn take 3 damage and gain 1 mana.";
+	}
+	else if (GearName == "Jittery") {
+		Type = "Trait Sacrifice";
+		Description = "Lose block if kept for 4 turns.";
+	}
+	else if (GearName == "Tumors") {
+		Type = "Trait Sacrifice";
+		Description = "Lose 1 max health in battle every time you heal.";
+	}
+	else if (GearName == "Volatile") {
+		Type = "Trait Sacrifice";
+		Description = "Every 4 turns, everybody takes 15 damage.";
+	}
+	else if (GearName == "Melting") {
+		Type = "Trait Sacrifice";
+		Description = "Lose 2 block and take 1 damage every turn.";
+	}
+	else if (GearName == "The Box") {
+		Type = "Trait Sacrifice";
+		Description = "Reroll all stats.";
+	}
+	else if (GearName == "Amnesia") {
+		Type = "Trait Sacrifice";
+		Description = "Remove half of the map icons.";
+	}
+	else if (GearName == "Long Legs") {
+		Type = "Trait Sacrifice";
+		Description = "Skip a space for the next 3 steps.";
+	}
+	else if (GearName == "Oblivious") {
+		Type = "Trait Sacrifice";
+		Description = "You no longer see the text log.";
+	}
+	else if (GearName == "Blind") {
+		Type = "Trait Sacrifice";
+		Description = "You no longer see the enemy's stats.";
+	}
+	else if (GearName == "Numb") {
+		Type = "Trait Sacrifice";
+		Description = "You no longer see your stats.";
+	}
+	else if (GearName == "Sensitive") {
+		Type = "Trait Sacrifice";
+		Description = "All of your over time effects occur twice every turn.";
+	}
+	else if (GearName == "Frenzy") {
+		Type = "Trait Sacrifice";
+		Description = "Take and deal double damage.";
+	}
+	else if (GearName == "Corpse") {
+		Type = "Trait Sacrifice";
+		Description = "You can no longer heal during combat. +5 max hp.";
+	}
+	else if (GearName == "Radioactive") {
+		Type = "Trait Sacrifice";
+		Description = "Everybody takes (Skl/2) damage every turn.";
+	}
+	else if (GearName == "Forgetful") {
+		Type = "Trait Sacrifice";
+		Description = "You start combat with zero mana. +2 max mana.";
+	}
+	else if (GearName == "Tiny") {
+		Type = "Trait Sacrifice";
+		Description = "Reduce max hp by 35. +10 defense.";
+	}
+	else if (GearName == "Succumb") {
+		Type = "Trait Sacrifice";
+		Description = "Your traits are now randomly chosen. +2 Skill.";
+	}
+	else if (GearName == "Slow") {
+		Type = "Trait Sacrifice";
+		Description = "Every enemy starts battle with one negate.";
+	}
+	else if (GearName == "Sticky Feet") {
+		Type = "Trait Sacrifice";
+		Description = "Every turn, 20% chance to lose 4 Energy.";
+	}
+	//trait not in pool
+	//change this one to the new one
+	else if (GearName == "Overconfidence") {
+		Type = "Trait Sacrifice";
+		Description = "Combat and Boss rewards are swapped.";
+	}
+	else if (GearName == "Hallucinations") {
+		Type = "Trait Sacrifice";
+		Description = "Enemies have a chance of changing form.";
+	}
+	else if (GearName == "Tail") {
+		Type = "Trait Sacrifice";
+		Description = "Your hand can neither be shuffled nor filled.";
+	}
+	else if (GearName == "Weak Back") {
+		Type = "Trait Sacrifice";
+		Description = "You can no longer pick up gear.";
+	}
+	else if (GearName == "Charred Skin") {
+		Type = "Trait Sacrifice";
+		Description = "You heal instead of gaining block.";
+	}
+	else if (GearName == "Purple") {
+		Type = "Trait Sacrifice";
+		Description = "All stat changes are now permanent.";
+	}
+	else if (GearName == "Madness") {
+		Type = "Trait Sacrifice";
+		Description = "Add a Mad card to your deck.";
+	}
+	else if (GearName == "Inefficient") {
+		Type = "Trait Sacrifice";
+		Description = "Everyone takes 2 turns instead of 1.";
+	}
+	else if (GearName == "Brain Worm") {
+		Type = "Trait Sacrifice";
+		Description = "Lose half your max hp. Double your current max mana.";
+	}
+	else if (GearName == "Gold Flesh") {
+		Type = "Trait Sacrifice";
+		Description = "Lose 1 gold every time you lose health.";
+	}
+	else if (GearName == "Terraform") {
+		Type = "Trait Sacrifice";
+		Description = "You sometimes transform the land around you.";
+	}
+	else if (GearName == "Psychosis") {
+		Type = "Trait Sacrifice";
+		Description = "Spells with cost are used twice and cost twice as much.";
+	}
+	else if (GearName == "Dazed") {
+		Type = "Trait Sacrifice";
+		Description = "Spells cost 1 more mana.";
+	}
+	else if (GearName == "Strategy") {
+		Type = "Trait Sacrifice";
+		Description = "Your damage and block are switched.";
+	}
+	else if (GearName == "Doomed") {
+		Type = "Trait Sacrifice";
+		Description = "The final boss will have 50% more hp.";
+	}
+	else if (GearName == "The Floor is Lava") {
+		Type = "Trait Sacrifice";
+		Description = "All land ahead of you will become lava.";
+	}
+	else if (GearName == "Slippery") {
+		Type = "Trait Sacrifice";
+		Description = "All land directly above and right will become ice.";
+	}
+	else if (GearName == "Scented") {
+		Type = "Trait Sacrifice";
+		Description = "Combat tiles have a chance for an extra fight.";
+	}
+	else if (GearName == "Colossus") {
+		Type = "Trait Sacrifice";
+		Description = "Convert all Str, Def, and Int into twofold max health.";
+	}
+	else if (GearName == "Timer") {
+		Type = "Trait Sacrifice";
+		Description = "Start combat with 1 health and 6 Negates.";
+	}
+	else if (GearName == "Sacrificial") {
+		Type = "Trait Sacrifice";
+		Description = "You take damage instead of losing mana.";
+	}
+	//not yet, dont want to add another double damage modifier
+	else if (GearName == "Heavy") {
+		Type = "Trait Sacrifice";
+		Description = "You deal double damage but take 2 turns.";
+	}
+	else if (GearName == "Membrane") {
+		Type = "Trait Sacrifice";
+		Description = "Start combat with half current hp and that much block.";
+	}
+	else if (GearName == "Addiction") {
+		Type = "Trait Sacrifice";
+		Description = "Every time you play a non-Spell, lose 1 Int. +3 Int.";
+	}
+	else if (GearName == "Paranoia") {
+		Type = "Trait Sacrifice";
+		Description = "Does nothing.";
+	}
+	else if (GearName == "Sticky Skin") {
+		Type = "Trait Sacrifice";
+		Description = "You can no longer take off gear.";
+	}
+	else if (GearName == "Asthma") {
+		Type = "Trait Sacrifice";
+		Description = "Increase your max Energy by 2.";
+	}
+	else if (GearName == "Flat Feet") {
+		Type = "Trait Sacrifice";
+		Description = "If you have -5 or less Energy, decrease it to -10.";
+	}
+	else if (GearName == "Muscle Mass") {
+		Type = "Trait Sacrifice";
+		Description = "Damage dealt is stored instead and dealt every 5 turns.";
+	}
+	else if (GearName == "Chaos#") {
+		Type = "Trait Sacrifice";
+		Description = "Add two Chaos cards to your deck.";
+	}
+	else {
+		Type = "";
+		Description = "";
+	}
 }
 void Gear::TraitRDescription() {
+	//Trait Reward
+	if (GearName == "Mending Flesh") {
+	Type = "Trait Reward";
+	Description = "Heal 1d(Skl) health each turn.";
+	}
+	else if (GearName == "Gymnast") {
+	Type = "Trait Reward";
+	Description = "Gain 1d2 Energy every turn.";
+	}
+	else if (GearName == "Third Eye") {
+	Type = "Trait Reward";
+	Description = "See the next 2 cards to be drawn.";
+	}
+	else if (GearName == "Warper") {
+	Type = "Trait Reward";
+	Description = "You can travel downwards up to 5 times.";
+	}
+	else if (GearName == "Growth Spurt") {
+	Type = "Trait Reward";
+	Description = "Chance to gain +1 in a random stat after battle.";
+	}
+	else if (GearName == "Mind") {
+	Type = "Trait Reward";
+	Description = "+(Skl) max mana.";
+	}
+	else if (GearName == "Matter") {
+	Type = "Trait Reward";
+	Description = "+2x(Skl) max hp.";
+	}
+	else if (GearName == "Sharp Claws") {
+	Type = "Trait Reward";
+	Description = "Deal 1d(Skl) extra damage every attack.";
+	}
+	else if (GearName == "Unseen") {
+	Type = "Trait Reward";
+	Description = "Gain 9 +1d(Skl) Energy at the start of combat.";
+	}
+	else if (GearName == "Spiny Skin") {
+	Type = "Trait Reward";
+	Description = "Deal (Skl)+3 damage when attacked.";
+	}
+	else if (GearName == "Wings") {
+	Type = "Trait Reward";
+	Description = "Leave non-Final Boss combat at any time.";
+	}
+	else if (GearName == "Exoskeleton") {
+	Type = "Trait Reward";
+	Description = "Gain 1d(Skl) -1 block every turn.";
+	}
+	else if (GearName == "Unpredictable") {
+	Type = "Trait Reward";
+	Description = "Shuffle your hand every turn.";
+	}
+	else if (GearName == "Ego") {
+	Type = "Trait Reward";
+	Description = "Choose a Boss card to add to your deck.";
+	}
+	else if (GearName == "The Box#") {
+	Type = "Trait Reward";
+	Description = "Reroll all stats.";
+	}
+	else if (GearName == "Quick Thinker") {
+	Type = "Trait Reward";
+	Description = "Every 4 turns, gain (Skl)d2 mana.";
+	}
+	else if (GearName == "Foresight") {
+	Type = "Trait Reward";
+	Description = "Start your hand with spells.";
+	}
+	else if (GearName == "Photosynthesis") {
+	Type = "Trait Reward";
+	Description = "Heal for (Skl) hp when you use a spell.";
+	}
+	else if (GearName == "Dexterous") {
+	Type = "Trait Reward";
+	Description = "Deal (Skl) damage when you use a defend.";
+	}
+	else if (GearName == "Reconstruction") {
+	Type = "Trait Reward";
+	Description = "If you die, spend 2 Skill to come back to life.";
+	}
+	else if (GearName == "Laser Vision") {
+	Type = "Trait Reward";
+	Description = "Add a Laser card to your deck.";
+	}
+	else if (GearName == "Carnivore") {
+	Type = "Trait Reward";
+	Description = "Gain 1 max health after every battle.";
+	}
+	else if (GearName == "Hemoglobin") {
+	Type = "Trait Reward";
+	Description = "Your heals are increased by 50%.";
+	}
+	else if (GearName == "Destiny") {
+	Type = "Trait Reward";
+	Description = "Get 3 Cauldrons. You cannot recieve any more.";
+	}
+	else if (GearName == "Scavenger") {
+	Type = "Trait Reward";
+	Description = "You find twice as much gear.";
+	}
+	else if (GearName == "Horns") {
+	Type = "Trait Reward";
+	Description = "When you play an Attack, (Skl)+7% chance for a negate.";
+	}
+	else if (GearName == "Genius") {
+	Type = "Trait Reward";
+	Description = "+2 Int. Choose a spell to add to your deck.";
+	}
+	else if (GearName == "Green Scales") {
+	Type = "Trait Reward";
+	Description = "All damage taken is reduced by (Skl/2).";
+	}
+	else if (GearName == "Multi-Tongued") {
+	Type = "Trait Reward";
+	Description = "You can now talk to your enemies.";
+	}
+	else if (GearName == "Triple-Jointed") {
+	Type = "Trait Reward";
+	Description = "Draw 1 more card every turn.";
+	}
+	else if (GearName == "Blacksmith") {
+	Type = "Trait Reward";
+	Description = "Recieve 12 card modifiers.";
+	}
+	else if (GearName == "Gold Blood") {
+	Type = "Trait Reward";
+	Description = "You gain twice as much gold.";
+	}
+	else if (GearName == "Iron Scabs") {
+	Type = "Trait Reward";
+	Description = "Whenever you lose health, gain half of that as block.";
+	}
+	else if (GearName == "Gelatinous") {
+	Type = "Trait Reward";
+	Description = "Gain (Skl)x2 block at the start of each combat.";
+	}
+	else if (GearName == "Evolve") {
+	Type = "Trait Reward";
+	Description = "All stats +1.";
+	}
+	else if (GearName == "Eight Legs") {
+	Type = "Trait Reward";
+	Description = "Ice and Forest no longer affects you negatively.";
+	}
+	else if (GearName == "Refine") {
+		Type = "Trait Reward";
+		Description = "Gain 2 Void modifiers.";
+	}
+	else if (GearName == "Relentless") {
+	Type = "Trait Reward";
+	Description = "Gain 4 Stay modifiers.";
+	}
+	else if (GearName == "Heat Walker") {
+	Type = "Trait Reward";
+	Description = "Lava no longer affects you negatively.";
+	}
+	else if (GearName == "Metamorphosis") {
+	Type = "Trait Reward";
+	Description = "Lose all Str, Def, and Int. Gain that many +2 stats.";
+	}
+	else if (GearName == "Thick Hide") {
+	Type = "Trait Reward";
+	Description = "Having any block reduces damage taken by 15%.";
+	}
+	else if (GearName == "Gold Bones") {
+	Type = "Trait Reward";
+	Description = "Losing health will remove gold first. +25 gold.";
+	}
+	else if (GearName == "Absorption") {
+	Type = "Trait Reward";
+	Description = "Deal (Skl)d3 damage on death. You live if the enemy dies.";
+	}
+	else if (GearName == "Adrenaline") {
+	Type = "Trait Reward";
+	Description = "+6 Str and +12 Def if below 15 block + hp.";
+	}
+	else if (GearName == "Reaper") {
+	Type = "Trait Reward";
+	Description = "Kill any enemy below 5+ 2x(Skl) health.";
+	}
+	else if (GearName == "Toxic Release") {
+	Type = "Trait Reward";
+	Description = "The enemy takes 1+ 1d(Skl/2) damage every turn.";
+	}
+	else if (GearName == "Recycling") {
+	Type = "Trait Reward";
+	Description = "Playing 3 Spells in a row gives 4 +1d(Skl) mana.";
+	}
+	else if (GearName == "Blue Scales") {
+	Type = "Trait Reward";
+	Description = "If you take 5 or less damage, reduce it to 0.";
+	}
+	else if (GearName == "Red Scales") {
+	Type = "Trait Reward";
+	Description = "If you take 25 or more damage, reduce it to 0.";
+	}
+	else if (GearName == "Curved Tusks") {
+	Type = "Trait Reward";
+	Description = "Deal 4+(Skl/2) damage every turn you have 0 block.";
+	}
+	else if (GearName == "Early Riser") {
+	Type = "Trait Reward";
+	Description = "Get +5 to Str, Def, and Int on the first turn of combat.";
+	}
+	else if (GearName == "Outer Shell") {
+	Type = "Trait Reward";
+	Description = "Block is retained after combat.";
+	}
 
+	else {
+	Type = "";
+	Description = "";
+	}
 }
 
 void Gear::GearOnOrOff(bool On, Character &guy, Deck &deck) {
@@ -1245,6 +1504,7 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Reinforced Mail") {
 		Card toughen("Toughen");
+		Card ghost("Ghost");
 		if (On) {
 			deck.addCard(toughen);
 		}
@@ -1412,6 +1672,17 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 		}
 		else {
 			deck.removeCard(dash, guy);
+		}
+	}
+	else if (GearName == "Chain Mail") {
+		Card defend("Defend");
+		if (On) {
+			deck.addCard(defend);
+			deck.addCard(defend);
+		}
+		else {
+			deck.removeCard(defend, guy);
+			deck.removeCard(defend, guy);
 		}
 	}
 }
@@ -2073,6 +2344,160 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 			guy.Terraform = FALSE;
 		}
 	}
+	else if (GearName == "Psychosis") {
+		if (On) {
+			guy.Psychosis = 1;
+		}
+		else {
+			guy.Psychosis = -1;
+		}
+	}
+	else if (GearName == "Dazed") {
+		if (On) {
+			guy.Dazed = TRUE;
+		}
+		else {
+			guy.Dazed = FALSE;
+		}
+	}
+	else if (GearName == "Strategy") {
+		if (On) {
+			guy.Strategy = TRUE;
+		}
+		else {
+			guy.Strategy = FALSE;
+		}
+	}
+	else if (GearName == "Doomed") {
+		if (On) {
+			guy.Doomed = TRUE;
+		}
+		else {
+			guy.Doomed = FALSE;
+		}
+	}
+	else if (GearName == "The Floor is Lava") {
+		if (On) {
+			guy.The_Floor_is_Lava = TRUE;
+		}
+		else {
+			guy.The_Floor_is_Lava = FALSE;
+		}
+	}
+	else if (GearName == "Slippery") {
+		if (On) {
+			guy.Slippery = TRUE;
+		}
+		else {
+			guy.Slippery = FALSE;
+		}
+	}
+	else if (GearName == "Scented") {
+		if (On) {
+			guy.Scented = 1;
+		}
+		else {
+			guy.Scented = -1;
+		}
+	}
+	else if (GearName == "Colossus") {
+		if (On) {
+			int maxhp = guy.Strength + guy.Defense + guy.Intelligence;
+			guy.ModStat(2*maxhp, "MaxHealth");
+			guy.CurrentHealth = guy.MaxHealth;
+			guy.Strength = 0;
+			guy.Defense = 0;
+			guy.Intelligence = 0;
+		}
+		else {
+		}
+	}
+	else if (GearName == "Timer") {
+		if (On) {
+			guy.Timer = TRUE;
+		}
+		else {
+			guy.Timer = FALSE;
+		}
+	}
+	else if (GearName == "Sacrificial") {
+		if (On) {
+			guy.Sacrificial = TRUE;
+		}
+		else {
+			guy.Sacrificial = FALSE;
+		}
+	}
+	else if (GearName == "Membrane") {
+		if (On) {
+			guy.Membrane = TRUE;
+		}
+		else {
+			guy.Membrane = FALSE;
+		}
+	}
+	else if (GearName == "Addiction") {
+		if (On) {
+			guy.ModStat(3, "Intelligence");
+			guy.Addiction = TRUE;
+		}
+		else {
+			guy.ModStat(-3, "Intelligence");
+			guy.Addiction = FALSE;
+		}
+	}
+	else if (GearName == "Paranoia") {
+		if (On) {
+			guy.Paranoia = TRUE;
+		}
+		else {
+			guy.Paranoia = FALSE;
+		}
+	}
+	else if (GearName == "Sticky Skin") {
+		if (On) {
+			guy.Sticky_Skin = TRUE;
+		}
+		else {
+			guy.Sticky_Skin = FALSE;
+		}
+	}
+	else if (GearName == "Asthma") {
+		if (On) {
+			guy.MaxEnergy += 2;
+		}
+		else {
+			guy.MaxEnergy -= 2;
+		}
+	}
+	else if (GearName == "Flat Feet") {
+		if (On) {
+			guy.Flat_Feet = TRUE;
+		}
+		else {
+			guy.Flat_Feet = FALSE;
+		}
+	}
+	else if (GearName == "Muscle Mass") {
+		if (On) {
+			guy.Muscle_Mass = 0;
+		}
+		else {
+			guy.Muscle_Mass = -1;
+		}
+	}
+	else if (GearName == "Chaos#") {
+		Card chaos("Chaos");
+		if (On) {
+			deck.addCard(chaos);
+			deck.addCard(chaos);
+		}
+		else {
+			deck.removeCard(chaos, guy);
+			deck.removeCard(chaos, guy);
+		}
+	}
+
 }
 
 void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
@@ -2214,20 +2639,84 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 			guy.Genius = FALSE;
 		}
 	}
-	else if (GearName == "The Juice") {
+	else if (GearName == "The Box#") {
 		if (On) {
-			guy.The_Juice = TRUE;
+			int statpool = 0;
+			int tempstat = guy.MaxHealthBase;
+			for (int i = 1; i < tempstat; i++) {
+				guy.MaxHealthBase--;
+				guy.MaxHealth--;
+				statpool++;
+			}
+			tempstat = guy.MaxManaBase;
+			for (int i = 0; i < tempstat; i++) {
+				guy.MaxMana--;
+				guy.MaxManaBase--;
+				statpool++;
+			}
+			tempstat = guy.Strength;
+			for (int i = 1; i < tempstat; i++) {
+				guy.Strength--;
+				statpool++;
+			}
+			tempstat = guy.Defense;
+			for (int i = 0; i < tempstat; i++) {
+				guy.Defense--;
+				statpool++;
+			}
+			tempstat = guy.Intelligence;
+			for (int i = 0; i < tempstat; i++) {
+				guy.Intelligence--;
+				statpool++;
+			}
+			tempstat = guy.Skill;
+			for (int i = 0; i < tempstat; i++) {
+				guy.Skill--;
+				statpool++;
+			}
+
+			while (statpool > 0) {
+				int amount = (rand() % statpool + 1) / 2;
+				if (statpool == 1)
+					amount = 1;
+				statpool -= amount;
+				int stat = rand() % 6;
+				switch (stat) {
+				case 0:
+					guy.MaxHealthBase += amount;
+					guy.MaxHealth += amount;
+					break;
+				case 1:
+					guy.MaxManaBase += amount;
+					guy.MaxMana += amount;
+					break;
+				case 5:
+					guy.Strength += amount;
+					break;
+				case 2:
+					guy.Defense += amount;
+					break;
+				case 3:
+					guy.Intelligence += amount;
+					break;
+				case 4:
+					guy.Skill += amount;
+					break;
+				}
+				guy.CurrentHealth = guy.MaxHealth;
+				guy.CurrentMana = guy.MaxMana;
+				guy.printStats();
+			}
 		}
 		else {
-			guy.The_Juice = FALSE;
 		}
 	}
 	else if (GearName == "Quick Thinker") {
 		if (On) {
-			guy.Quick_Thinker = TRUE;
+			guy.Quick_Thinker = 0;
 		}
 		else {
-			guy.Quick_Thinker = FALSE;
+			guy.Quick_Thinker = -1;
 		}
 	}
 	else if (GearName == "Foresight") {
@@ -2337,7 +2826,7 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Blacksmith") {
 		if (On) {
-			guy.Blacksmith = 6;
+			guy.Blacksmith = 5;
 		}
 		else {
 			guy.Blacksmith = -1;
@@ -2395,42 +2884,169 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 			guy.Eight_Legs = FALSE;
 		}
 	}
+	else if (GearName == "Refine") {
+		if (On) {
+			guy.Void += 2;
+		}
+		else {
+		}
+	}
+	else if (GearName == "Relentless") {
+		if (On) {
+			guy.Stay += 4;
+		}
+		else {
+		}
+	}
+	else if (GearName == "Heat Walker") {
+		if (On) {
+			guy.Heat_Walker = TRUE;
+		}
+		else {
+			guy.Heat_Walker = FALSE;
+		}
+	}
+	else if (GearName == "Metamorphosis") {
+		if (On) {
+			int meta = guy.Strength + guy.Defense + guy.Intelligence + 2 + 1;
+			guy.Metamorphosis = meta;
+			guy.Strength = 0;
+			guy.Defense = 0;
+			guy.Intelligence = 0;
+		}
+		else {
+			guy.Metamorphosis = 0;
+		}
+	}
+	else if (GearName == "Thick Hide") {
+		if (On) {
+			guy.Thick_Hide = TRUE;
+		}
+		else {
+			guy.Thick_Hide = FALSE;
+		}
+	}
+	else if (GearName == "Gold Bones") {
+		if (On) {
+			guy.Gold_Bones = TRUE;
+			guy.Gold += 25;
+		}
+		else {
+			guy.Gold_Bones = FALSE;
+		}
+	}
+	else if (GearName == "Absorption") {
+		if (On) {
+			guy.Absorption = 1;
+		}
+		else {
+			guy.Absorption = -1;
+		}
+	}
+	else if (GearName == "Adrenaline") {
+		if (On) {
+			guy.Adrenaline = 0;
+		}
+		else {
+			guy.Adrenaline = -1;
+		}
+	}
+	else if (GearName == "Reaper") {
+		if (On) {
+			guy.Reaper = TRUE;
+		}
+		else {
+			guy.Reaper = FALSE;
+		}
+	}
+	else if (GearName == "Toxic Release") {
+		if (On) {
+			guy.Toxic_Release = TRUE;
+		}
+		else {
+			guy.Toxic_Release = FALSE;
+		}
+	}
+	else if (GearName == "Recycling") {
+		if (On) {
+			guy.Recycling = 0;
+		}
+		else {
+			guy.Recycling = -1;
+		}
+	}
+	else if (GearName == "Blue Scales") {
+		if (On) {
+			guy.Blue_Scales = TRUE;
+		}
+		else {
+			guy.Blue_Scales = FALSE;
+		}
+	}
+	else if (GearName == "Red Scales") {
+		if (On) {
+			guy.Red_Scales = TRUE;
+		}
+		else {
+			guy.Red_Scales = FALSE;
+		}
+	}
+	else if (GearName == "Curved Tusks") {
+		if (On) {
+			guy.Curved_Tusks = TRUE;
+		}
+		else {
+			guy.Curved_Tusks = FALSE;
+		}
+	}
+	else if (GearName == "Early Riser") {
+		if (On) {
+			guy.Early_Riser = 0;
+		}
+		else {
+			guy.Early_Riser = -1;
+		}
+	}
+	else if (GearName == "Outer Shell") {
+		if (On) {
+			guy.Outer_Shell = TRUE;
+		}
+		else {
+			guy.Outer_Shell = FALSE;
+		}
+	}
 }
 
 void Gear::CardOnOrOff(bool On, Character &guy, Deck &deck) {
-	vector<Card> specials;
-	specials.push_back(Card("Revivify"));
-	specials.push_back(Card("Change Mind"));
-	specials.push_back(Card("Intimidate"));
-	specials.push_back(Card("Cripple"));
-	specials.push_back(Card("Merge"));
-	specials.push_back(Card("Entomb"));
-	specials.push_back(Card("Grow"));
-	specials.push_back(Card("Solidify"));
-	specials.push_back(Card("Learn"));
-	specials.push_back(Card("Boost"));
-	specials.push_back(Card("Vitalise"));
-	specials.push_back(Card("Combo"));
-	specials.push_back(Card("Slam"));
-	specials.push_back(Card("Stall"));
-	specials.push_back(Card("Strike"));
-	specials.push_back(Card("Defend"));
-	specials.push_back(Card("Steroids"));
-	specials.push_back(Card("Distract"));
-	specials.push_back(Card("Prepare"));
-	specials.push_back(Card("Train"));
-	specials.push_back(Card("Jump"));
-	specials.push_back(Card("Shimmer"));
-	specials.push_back(Card("Repel"));
+	vector<Card> bosss;
+	bosss.push_back(Card("Haste"));
+	bosss.push_back(Card("Revivify"));
+	bosss.push_back(Card("Change Mind"));
+	bosss.push_back(Card("Intimidate"));
+	bosss.push_back(Card("Boost"));
+	bosss.push_back(Card("Vitalise"));
+	bosss.push_back(Card("Slam"));
+	bosss.push_back(Card("Stall"));
+	bosss.push_back(Card("Steroids"));
+	bosss.push_back(Card("Distract"));
+	bosss.push_back(Card("Prepare"));
+	bosss.push_back(Card("Jump"));
+	bosss.push_back(Card("Repel"));
+	bosss.push_back(Card("Ghost"));
+	bosss.push_back(Card("Catalyze"));
+	bosss.push_back(Card("Detonate"));
+	bosss.push_back(Card("Polymorph"));
+	bosss.push_back(Card("Cleanse"));
+	bosss.push_back(Card("Chaos"));
 
 	int index = 0;
-	for (int i = 0; i < specials.size(); i++) {
-		if (specials.at(i).CardName == GearName) {
+	for (int i = 0; i < bosss.size(); i++) {
+		if (bosss.at(i).CardName == GearName) {
 			if (On) {
-				deck.addCard(specials.at(i));
+				deck.addCard(bosss.at(i));
 			}
 			else {
-				deck.removeCard(specials.at(i), guy);
+				deck.removeCard(bosss.at(i), guy);
 			}
 			break;
 		}

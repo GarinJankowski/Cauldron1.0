@@ -45,7 +45,7 @@ void Deck::deckScreen() {
 		else if (cardnow.CardType == "Spell") {
 			attron(COLOR_PAIR(3));
 		}
-		else if (cardnow.CardType == "Special") {
+		else if (cardnow.CardType == "BossCard") {
 			standend();
 		}
 		else if (cardnow.CardType == "Negative") {

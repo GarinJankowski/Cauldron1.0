@@ -23,6 +23,8 @@ Character::Character()
 	CurrentBlock = 0;
 	Negate = 0;
 	Gold = 0;
+	Energy = 0;
+	MaxEnergy = 10;
 
 	extraTurns = 0;
 	pierce = FALSE;
@@ -95,6 +97,9 @@ void Character::printStats() {
 	statline = "Skl: " + to_string(Skill) + "  ";
 	//mvprintInSize(3, 31, 0, statline.c_str(), fuzzy);
 	mvprintInSize(3, 27, 0, statline.c_str(), fuzzy);
+
+	/*statline = "Energy: #g" + to_string(Energy) + "/10#o";
+	mvprintInSize(4, 18, 0, statline.c_str(), fuzzy);*/
 
 	statline = "#$" + to_string(Gold) + "g  #o";
 	mvprintInSize(3, 36, 0, statline.c_str(), fuzzy);
@@ -378,6 +383,31 @@ int Character::TakeDamage(int damageTaken) {
 		if (damageTaken < 0)
 			damageTaken = 0;
 	}
+	//Thick Hide trait
+	if (Thick_Hide && CurrentBlock > 0) {
+		damageTaken = int(damageTaken*.85);
+	}
+
+	//Gold Bones trait
+	if (Gold_Bones && damageTaken > CurrentBlock && Negate == 0) {
+		int goldblock = damageTaken - CurrentBlock;
+		if (goldblock > Gold) {
+			damageTaken -= Gold;
+			Gold = 0;
+		 }
+		else {
+			damageTaken -= goldblock;
+			Gold -= goldblock;
+		}
+	}
+
+	if (Blue_Scales && damageTaken <= 5) {
+		damageTaken = 0;
+	}
+	if (Red_Scales && damageTaken >= 25) {
+		damageTaken = 0;
+	}
+
 	//pierce
 	if (pierce) {
 		CurrentHealth -= damageTaken;
@@ -434,6 +464,10 @@ int Character::gainBlock(int block) {
 		else
 			CurrentBlock += b;
 	}
+	if (CurrentBlock > 999) {
+		CurrentBlock = 999;
+	}
+
 	return b;
 }
 
@@ -450,7 +484,7 @@ int Character::DrainMana(int manaDrained) {
 	return manaDrained;
 }
 
-//change stats besides CurrentHealth
+//change stats permanently
 int Character::ModStat(int bonus, string stat) {
 	if (stat == "MaxHealth") {
 		MaxHealthBase += bonus;

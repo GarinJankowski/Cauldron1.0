@@ -39,6 +39,8 @@ public:
 	bool stepOne;
 	bool stepTwo;
 
+	int numA;
+
 	int sandstorm;
 	int bleeding;
 	int fumes;
@@ -50,7 +52,7 @@ public:
 	int takeDamage(int damage, Character &guy, TextLog &log);
 	//print monster info
 	void updateEnemy(Character &guy) {
-		for (int i = 6; i < 10; i++) {
+		for (int i = 7; i < 9; i++) {
 			mvprintw(i, 29, "             ");
 		}
 

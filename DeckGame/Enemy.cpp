@@ -97,11 +97,11 @@ Enemy::Enemy(const char *name):Name(name)
 		MaxHealth = 60;
 	}
 	else if (Name == "Jester") {
-		MaxHealth = 50;
+		MaxHealth = 60;
 	}
 	//------Witch:
 	else if (Name == "Eyeball") {
-		MaxHealth = 30;
+		MaxHealth = 25;
 	}
 	else if (Name == "Apprentice") {
 		MaxHealth = 45;
@@ -110,14 +110,14 @@ Enemy::Enemy(const char *name):Name(name)
 		MaxHealth = 60;
 	}
 	else if (Name == "Brain") {
-		MaxHealth = 100;
+		MaxHealth = 120;
 	}
 	//------Demon:
 	else if (Name == "Cultist") {
 		MaxHealth = 30;
 	}
 	else if (Name == "Imp") {
-		MaxHealth = 30;
+		MaxHealth = 25;
 		charge = TRUE;
 	}
 	else if (Name == "Weeping Soul") {
@@ -128,7 +128,7 @@ Enemy::Enemy(const char *name):Name(name)
 	}
 	//------Machine:
 	else if (Name == "Robot") {
-		MaxHealth = 30;
+		MaxHealth = 25;
 	}
 	else if (Name == "Golem") {
 		MaxHealth = 60;
@@ -188,6 +188,8 @@ Enemy::Enemy(const char *name):Name(name)
 	}
 	else if (Name == "Machine") {
 		MaxHealth = 300;
+		numA = MaxHealth / 3;
+		dot = numA * 2;
 	}
 	initNegotiateLines();
 
@@ -286,6 +288,10 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 	int td = int(TurnCount / 25);
 
 	//check if the enemy is DOT
+	if (guy.Toxic_Release) {
+		int damage = 1 + rtd(1, guy.Skill / 2);
+		takeDamage(damage, guy, log);
+	}
 	if (bleeding > 0 || flay > 0) {
 		int damage = 0;
 		if (bleeding > 0) {
@@ -320,10 +326,13 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 		guy.reagent--;
 	}
 	if (guy.drown > 0 && guy.CurrentMana > 0) {
-		int mana = 1*guy.drown;
+		int mana = guy.drown;
 		int damage = int(guy.Intelligence / 2);
 		damage = takeDamage(damage*guy.drown, guy, log);
-		guy.DrainMana(mana);
+		if (guy.Sacrificial)
+			guy.TakeDamage(mana);
+		else
+			guy.DrainMana(mana);
 
 		string drown = "-You drown the " + string(Name) + " for #y"
 					+ to_string(damage) + "#o damage.";
@@ -350,7 +359,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 //----------------Basic----------------
 	//Rat: just some damage
 		if (Name == "Rat") {
-				int damage = rtd(3+td, 3);
+				int damage = rtd(3+td, 4);
 
 				damage = guy.TakeDamage(damage);
 				string line = string("-The Rat bites you for #r") + to_string(damage)
@@ -367,7 +376,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				else {
 					int rng = rand() % 4;
 					if (rng == 0) {
-						int block = rtd(3 + td, 3);
+						int block = rtd(3 + td, 4);
 						CurrentBlock += block;
 						line = "-The Crab gains #b" + to_string(block) + "#o block.";
 					}
@@ -733,14 +742,14 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					if (!charge) {
 						int damage = rtd(4, 5);
 						damage = guy.TakeDamage(damage);
-						line = "The Adventurer zaps you for #r" + to_string(damage) + "#o damage.";
+						line = "-The Adventurer zaps you for #r" + to_string(damage) + "#o damage.";
 						charge = TRUE;
 						Turn(guy, log);
 					}
 					else {
 						int damage = rtd(4, 5);
 						damage = guy.TakeDamage(damage);
-						line = "The Adventurer zaps you for #r" + to_string(damage) + "#o damage.";
+						line = "-The Adventurer zaps you for #r" + to_string(damage) + "#o damage.";
 					}
 				}
 				else if (type == 2) {
@@ -896,13 +905,13 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				line = "-The Slave consumes their block and heals for #b" + to_string(health) + "#o health.";
 			}
 			else if (rng < 2 && CurrentBlock < 10) {
-				int block = rtd(1, 5) + 3 + ((MaxHealth - CurrentHealth)/4);
+				int block = rtd(1, 5) + 2 + ((MaxHealth - CurrentHealth)/5);
 				CurrentBlock += block;
 
 				line = "-The Slave gains #b" + to_string(block) + "#o block.";
 			}
 			else{
-				int damage = rtd(3+td, 3);
+				int damage = rtd(3+td, 4);
 				damage = guy.TakeDamage(damage);
 
 				line = "-The Slave hits you for #r" + to_string(damage) + "#o damage.";
@@ -1097,11 +1106,11 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			}
 			else if (guy.MaxHealth > 1) {
 				int health;
-				if (guy.MaxHealth <= 20) {
+				if (guy.MaxHealth <= 24) {
 					health = guy.MaxHealth - 1;
 				}
 				else {
-					health = rtd(10, 2);
+					health = rtd(12, 2);
 				}
 				guy.ModStat(-1 * health, "MaxHealth");
 				guy.hpMod += health;
@@ -1133,7 +1142,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			else {
 				int health = rtd(3, 2);
 				heal(health);
-				line = "-The Apprentice is recharging and regains #b" + to_string(health) + "#o health.";
+				line = "-The Apprentice regains #b" + to_string(health) + "#o health.";
 			
 				if (rand() % 7 < 4 || CurrentHealth == MaxHealth) {
 					charge = FALSE;
@@ -1205,7 +1214,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				line = "-The Cultist drains #r1 intelligence#o from you.";
 			}
 			else {
-				int damage = rtd(3+td, 4);
+				int damage = rtd(4+td, 3);
 				damage = guy.TakeDamage(damage);
 				line = "-The Cultist stabs you for #r" + to_string(damage) + "#o damage.";
 			}
@@ -1252,7 +1261,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			}
 			else {
 				if (invisible > 0) {
-					int damage = rtd(5, 4) - 1;
+					int damage = rtd(6, 4);
 					damage = guy.TakeDamage(damage);
 					invisible -= damage;
 					line = "-The Weeping Soul wails at you for #r" + to_string(damage) + "#o damage.";
@@ -1461,7 +1470,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 	//Paladin: passive block, hits hard, heals
 		else if (Name == "Paladin") {
 			CurrentBlock += 5;
-			string line2 = "-The Paladain gains #b5#o block";
+			string line2 = "-The Paladin gains #b5#o block";
 			log.PushPop(line2);
 
 			string line;
@@ -1819,7 +1828,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					}
 				}
 				if (charge) {
-					int damage = rtd(1, 16) + 24;
+					int damage = rtd(1, 16+td) + 24;
 					damage = guy.TakeDamage(damage);
 					line = "-The Dragon blasts flames at you for #r" + to_string(damage) + "#o damage.";
 					dot--;
@@ -1860,7 +1869,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					line = "-The Dragon gains #b" + to_string(block) + "#o block.";
 				}
 				else {
-					int damage = rtd(7, 3);
+					int damage = rtd(7, 3+td);
 					damage = guy.TakeDamage(damage);
 					line = "-The Dragon claws you for #r" + to_string(damage) + "#o damage.";
 				}
@@ -1877,7 +1886,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				line = "-The King slashes you for #r" + to_string(damage) + "#o damage.";
 			}
 			else if (rng == 1) {
-				int block = rtd(25, 3);
+				int block = rtd(25+td, 3);
 				CurrentBlock += block;
 				line = "-The King gains #b" + to_string(block) + "#o block.";
 			}
@@ -1924,7 +1933,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 
 			if (invisible > 0) {
 				invisible--;
-				int health = rtd(1, 6) + 9;
+				int health = rtd(1, 6) + 6;
 				heal(health);
 				line = "-The Witch regenerates #b" + to_string(health) + "#o health.";
 			}
@@ -2092,14 +2101,14 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 
 			log.PushPop(line);
 			if (TurnCount > 2 && rand() % 2 == 0) {
-				int damage = rtd(4, 2);
+				int damage = rtd(5, 2+td);
 				damage = guy.TakeDamage(damage);
 
 				string line3 = "-The Witch zaps you for #r" + to_string(damage) + "#o damage.";
 				log.PushPop(line3);
 			}
 			if (TurnCount > 2 && rand() % 3 == 0) {
-				int damage = rtd(4, 2);
+				int damage = rtd(5, 2+td);
 				damage = guy.TakeDamage(damage);
 
 				string line3 = "-The Witch zaps you for #r" + to_string(damage) + "#o damage.";
@@ -2118,7 +2127,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 
 			if (charge) {
 				if (type > 4 && rand() % 8 < 3) {
-					guy.dotDamage -= 6;
+					//guy.dotDamage -= 6;
 					guy.dotDamage /= 3;
 
 					type = 0;
@@ -2135,17 +2144,18 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				int rng = rand() % 8;
 				if (CurrentHealth < 80 && rng < 3) {
 					guy.dotDamage *= 3;
-					guy.dotDamage += 6;
+					//guy.dotDamage += 6;
 
 					charge = TRUE;
 					line = "#r-The Demon slams the ground and begins to channel.#o";
 				}
-				else if ((rng == 0 || rng == 1) && guy.dotDamage < 3) {
-					guy.dotDamage++;
-					if (guy.dotDamage == 1)
-						line = "#r-The Demon points at you. You begin to waste away.#o";
-					else
-						line = "#r-The Demon points at you. You rot further.#o";
+				else if (guy.dotDamage == 0) {
+					guy.dotDamage += 3;
+					line = "#r-The Demon points at you. You begin to waste away.#o";
+				}
+				else if ((rng == 0 || rng == 1) && guy.dotDamage < 5+td) {
+					guy.dotDamage+=2;
+					line = "#r-The Demon points at you. You rot further.#o";
 				}
 				else if ((rng == 2 || rng == 3) && guy.CurrentHealth > 1) {
 					int damage;
@@ -2168,12 +2178,12 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 						stepOne = TRUE;
 				}
 				else if (rng == 5) {
-					int block = rtd(12, 2);
+					int block = rtd(16, 2);
 					CurrentBlock += block;
 					line = "-The Demon gains #b" + to_string(block) + "#o block.";
 				}
 				else {
-					int damage = rtd(5, 2) + 7;
+					int damage = rtd(5, 2+td) + 7;
 					guy.TakeDamage(damage);
 					line = "-The Demon spears you for #r" + to_string(damage) + "#o damage.";
 				}
@@ -2190,7 +2200,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				log.PushPop(line2);
 			}
 			if (charge) {
-				int damage = rtd(14, 2);
+				int damage = rtd(14, 2+td);
 				damage = guy.TakeDamage(damage);
 				string line2 = "-The turrets shoot you for #r" + to_string(damage) + "#o damage.";
 				log.PushPop(line2);
@@ -2204,16 +2214,16 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			}
 			else {
 				int rngsteam = rand() % extraTurns;
-				if (CurrentHealth <= 200 && !stepOne) {
+				if (CurrentHealth <= dot && !stepOne) {
 					type += 2;
-					MaxHealth = 200;
+					MaxHealth = dot;
 					line = "#b A chunk of the machine is no longer in operation.#o";
 					extraTurns /= 2;
 					stepOne = TRUE;
 				}
-				else if (CurrentHealth <= 100 && !stepTwo) {
+				else if (CurrentHealth <= numA && !stepTwo) {
 					type += 2;
-					MaxHealth = 100;
+					MaxHealth = numA;
 					charge = TRUE;
 					string line2 = "#b Another chunk of the machine is no longer in operation.#o";
 					line = "#r Two emergency turrets extend from the Machine.#o";
@@ -2234,6 +2244,9 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			log.PushPop(line);
 
 		}
+
+		if (CurrentBlock > 999)
+			CurrentBlock = 999;
 
 		//Spiny Skin trait
 		if (guy.Spiny_Skin && guy.SpinyDamage > 0) {
@@ -2270,16 +2283,41 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			TurnCount++;
 			Turn(guy, log);
 		}
+		//Reaper trait
+		if (guy.Reaper && CurrentHealth < 5 + (2 * guy.Skill)) {
+			CurrentHealth = 0;
+			string reap = "#r You kill the " + string(Name) + ".#o";
+			//log.PushPop(reap);
+		}
 	}
 	if (guy.CurrentHealth <= 0) {
+		//Absorption Trait
+		if (guy.Absorption == 1) {
+			int damage = rtd(guy.Skill, 3);
+			damage = takeDamage(damage, guy, log);
+			string absorb1 = "-You deal #g" + to_string(damage) + "#o damage.";
+			log.PushPop(absorb1);
+			guy.Absorption = 0;
+			if (CurrentHealth <= 0) {
+				string absorb2 = "#g-You absorb the " + string(Name) + " and remain alive.#o";
+				log.PushPop(absorb2);
+				guy.CurrentHealth = 1;
+				guy.Alive = TRUE;
+				guy.Absorption = 1;
+			}
+			guy.printStats();
+			updateEnemy(guy);
+		}
 		//Reconstruction Trait
-		if (guy.Reconstruction && guy.Skill > 1) {
+		if (guy.Reconstruction && guy.Skill > 1 && guy.CurrentHealth <= 0) {
 			guy.CurrentHealth = guy.MaxHealth;
 			guy.ModStat(-2, "Skill");
 			string recon = "#g You come back to life!#o";
 			log.PushPop(recon);
+			if (guy.Absorption == 0)
+				guy.Absorption++;
 		}
-		else
+		if (guy.CurrentHealth <= 0)
 			guy.Alive = FALSE;
 	}
 
@@ -2313,14 +2351,33 @@ void Enemy::ActivateDOT(Character &guy, TextLog &log) {
 		log.PushPop(line);
 
 		if (guy.CurrentHealth <= 0) {
+			//Absorption Trait
+			if (guy.Absorption == 1) {
+				int damage = rtd(guy.Skill, 3);
+				damage = takeDamage(damage, guy, log);
+				string absorb1 = "-You deal #g" + to_string(damage) + "#o damage.";
+				log.PushPop(absorb1);
+				guy.Absorption = 0;
+				if (CurrentHealth <= 0) {
+					string absorb2 = "#g-You absorb the " + string(Name) + " and remain alive.#o";
+					log.PushPop(absorb2);
+					guy.CurrentHealth = 1;
+					guy.Alive = TRUE;
+					guy.Absorption = 1;
+				}
+				guy.printStats();
+				updateEnemy(guy);
+			}
 			//Reconstruction Trait
-			if (guy.Reconstruction && guy.Skill > 1) {
+			if (guy.Reconstruction && guy.Skill > 1 && guy.CurrentHealth <= 0) {
 				guy.CurrentHealth = guy.MaxHealth;
 				guy.ModStat(-2, "Skill");
-				string recon = " You come back to life!";
+				string recon = "#g You come back to life!#o";
 				log.PushPop(recon);
+				if (guy.Absorption == 0)
+					guy.Absorption++;
 			}
-			else
+			if (guy.CurrentHealth <= 0)
 				guy.Alive = FALSE;
 		}
 	}
@@ -2362,6 +2419,13 @@ int Enemy::takeDamage(int damage, Character &guy, TextLog &log) {
 		log.PushPop(line);
 	}*/
 
+	//Reaper trait
+	if (guy.Reaper && CurrentHealth < 5 + (2 * guy.Skill)) {
+		CurrentHealth = 0;
+		string reap = "#r You kill the " + string(Name) + ".#o";
+		//log.PushPop(reap);
+	}
+
 	return damage2;
 	updateEnemy(guy);
 }
@@ -2392,8 +2456,8 @@ void Enemy::initNegotiateLines() {
 	2 Skill
 	3 Skill
 
-	1 Special
-	5 Special
+	1 boss
+	5 boss
 
 	Merchant (2 Gear, 1 Skill)
 	Jester
@@ -2663,23 +2727,23 @@ void Enemy::initNegotiateLines() {
 	else if (Name == "Hunter") {
 		negotiate1 = "What?";
 		you2 = "I don't want to fight";
-		negotiate2 = "My price is #g1 Special Card#o";
+		negotiate2 = "My price is #g1 boss Card#o";
 		you3 = "Ok";
-		price = "1 Special";
+		price = "1 boss";
 	}
 	else if (Name == "Juggernaut") {
 		negotiate1 = "*grunts*";
 		you2 = "Let's not fight";
-		negotiate2 = "Not fight? Then give me #ga Special Card#o.";
+		negotiate2 = "Not fight? Then give me #ga boss Card#o.";
 		you3 = "Ok";
-		price = "1 Special";
+		price = "1 boss";
 	}
 	else if (Name == "Vampire") {
 		negotiate1 = "Hmmm?";
 		you2 = "I don't want to fight";
-		negotiate2 = "Provide me #g1 Special Card#o and I will be merciful.";
+		negotiate2 = "Provide me #g1 boss Card#o and I will be merciful.";
 		you3 = "Ok";
-		price = "1 Special";
+		price = "1 boss";
 	}
 	else if (Name == "Druid") {
 	negotiate1 = "";
@@ -2699,25 +2763,25 @@ void Enemy::initNegotiateLines() {
 
 	if (stepTwo) {
 		negotiate1 = "What? What? What?";
-		negotiate2 = "Then...give us...#ga Special Card#o.";
+		negotiate2 = "Then...give us...#ga boss Card#o.";
 	}
 	else if (stepOne) {
 		negotiate1 = "What? What?";
-		negotiate2 = "Then give us...#ga Special Card#o.";
+		negotiate2 = "Then give us...#ga boss Card#o.";
 	}
 	else {
 		negotiate1 = "What?";
-		negotiate2 = "Then give me #ga Special Card#o.";
+		negotiate2 = "Then give me #ga boss Card#o.";
 	}
 
-	price = "1 Special";
+	price = "1 boss";
 	}
 	else if (Name == "Wolf") {
 		negotiate1 = "grrrrr";
 		you2 = "I don't want to fight you";
-		negotiate2 = "Then give me #r1 Special Card#o or I will eat you.";
+		negotiate2 = "Then give me #r1 boss Card#o or I will eat you.";
 		you3 = "Sure";
-		price = "1 Special";
+		price = "1 boss";
 	}
 	else if (Name == "Exorcist") {
 		negotiate1 = "What?";
@@ -2729,44 +2793,44 @@ void Enemy::initNegotiateLines() {
 	else if (Name == "Demigod") {
 		negotiate1 = "What, mortal?";
 		you2 = "I don't want to fight";
-		negotiate2 = "Alright. Show me your worth with #ra Special Card#o.";
+		negotiate2 = "Alright. Show me your worth with #ra boss Card#o.";
 		you3 = "Ok";
-		price = "1 Special";
+		price = "1 boss";
 	}
 	//-------------Final Boss--------------
 	else if (Name == "Dragon") {
 		negotiate1 = "What is it, human?";
 		you2 = "I wish to leave this place.";
-		negotiate2 = "I will let you pass, if you provide me with #g5 Special Cards#o.";
+		negotiate2 = "I will let you pass, if you provide me with #g5 boss Cards#o.";
 		you3 = "Take them.";
-		price = "5 Special";
+		price = "5 boss";
 	}
 	else if (Name == "King") {
 		negotiate1 = "What, peasant?";
 		you2 = "Call off your soldiers please. I wish to leave.";
-		negotiate2 = "Very well. The price is #g5 Special Cards#o.";
+		negotiate2 = "Very well. The price is #g5 boss Cards#o.";
 		you3 = "Here.";
-		price = "5 Special";
+		price = "5 boss";
 	}
 	else if (Name == "Witch") {
 		negotiate1 = "What!? What isss it?";
 		you2 = "Please. I wish to leave, not to fight.";
-		negotiate2 = "Hmph. Throw over #g5 Special Cards#o.";
+		negotiate2 = "Hmph. Throw over #g5 boss Cards#o.";
 		you3 = "Alright. Here.";
-		price = "5 Special";
+		price = "5 boss";
 	}
 	else if (Name == "Demon") {
 		negotiate1 = "So you wish to make a deal, mortal?";
 		you2 = "I wish to leave this place.";
-		negotiate2 = "If you give me #g5 Special Cards#o I will allow your passage through here.";
+		negotiate2 = "If you give me #g5 boss Cards#o I will allow your passage through here.";
 		you3 = "Take them.";
-		price = "5 Special";
+		price = "5 boss";
 	}
 	else if (Name == "Machine") {
 		negotiate1 = "WHAT IS YOUR REQUEST.";
 		you2 = "I wish to leave this place.";
-		negotiate2 = "INSERT #g5 SPECIAL CARDS#o.";
+		negotiate2 = "INSERT #g5 boss CARDS#o.";
 		you3 = "Here.";
-		price = "5 Special";
+		price = "5 boss";
 	}
 }

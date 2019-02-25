@@ -60,9 +60,9 @@ public:
 	vector<Gear> headNorm;
 	vector<Gear> headRare;
 
-	vector<Card> specialNorm;
-	vector<Card> specialNormREFILL;
-	vector<Card> specialDecision;
+	vector<Card> bossNorm;
+	vector<Card> bossNormREFILL;
+	vector<Card> bossDecision;
 
 	vector<Card> AvailableSpells;
 	vector<Card> spellDecision;
@@ -101,7 +101,7 @@ public:
 	Card shopG;
 	Card shopH;
 	Card shopI;
-		//specials $18
+		//bosss $18
 	Card shopJ;
 	Card shopK;
 	Card shopL;
@@ -144,6 +144,8 @@ public:
 	void effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 	void restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 	bool checkEnemyLife(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
+	bool checkDead(Character &guy, Enemy &enemy, TextLog &log);
+	void printDisplayStats(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 
 	void showDeck(Character &guy, Deck &cardDeck, bool notbattle);
 	void deckLoopWhole(Character &guy, Deck &cardDeck);
@@ -160,7 +162,7 @@ public:
 	void inventoryLoopItem(Gear &item, Character &guy, Deck &deck);
 	void removeGear(Gear &item);
 	void generateGear(Character &guy);
-	void generateSpecial();
+	void generateboss();
 
 	void showTraits();
 	void traitsLoopWhole();
@@ -177,6 +179,7 @@ public:
 	void shuffleHand();
 
 	int gainBlock(int block, Character &guy);
+	int gainEnergy(int energy, Character &guy, Enemy &enemy, TextLog &log);
 	void updateDeck(Deck &deck);
 	void clearBoard();
 	void clearBoardWhole();
@@ -190,9 +193,10 @@ public:
 
 	bool restart = FALSE;
 	bool quit = FALSE;
+	string currentEnemyName;
 	void win(Character &guy, Deck &deck, TextLog &log, bool gamewin);
 
-	//special other stuff
+	//boss other stuff
 	int negotiateStep;
 	bool Negotiate(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 	bool NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);

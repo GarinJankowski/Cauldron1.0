@@ -76,7 +76,7 @@ Map::Map()
 					else if (rng > 14 && rng <= 16) {
 						bcd = Room("Mod", x, y);
 					}
-					else if (rng == 24 && shopCounter < 1) {
+					else if (rng > 20 && rng <= 24 && shopCounter < 1) {
 						bcd = Room("Shop", x, y);
 						shopCounter++;
 					}
@@ -109,7 +109,7 @@ Map::Map()
 					else if (rng > 16 && rng <= 18) {
 						e = Room("Boss", x, y);
 					}
-					else if (rng == 19 && shopCounter < 3) {
+					else if ((rng == 19 || rng == 20) && shopCounter < 3) {
 						e = Room("Shop", x, y);
 						shopCounter++;
 					}
@@ -137,6 +137,13 @@ Map::Map()
 					else {
 						f = Room("Combat", x, y);
 					}
+
+					/*if (x > 21 && y > 4) {
+						if (rand() % 7 > 3 && f.RoomType != "Shop") {
+							f = Room("Boss", x, y);
+						}
+					}*/
+
 					f.Terrain = terrainGrid[x][y];
 					roomList.push_back(f);
 				}
@@ -159,6 +166,9 @@ void Map::checkPosition(Character &guy, InputBoard &board) {
 		if (roomList.at(i).checkXY(guy.posx, guy.posy)) {
 			board.RoomType = roomList.at(i).RoomType;
 			board.Terrain = roomList.at(i).Terrain;
+			guy.RoomType = board.RoomType;
+			guy.Terrain = board.Terrain;
+			roomList.at(i).clear = TRUE;
 		}
 	}
 }
@@ -184,10 +194,6 @@ void Map::PrintWholeMap(Character &guy, InputBoard &board) {
 							(roomList.at(i).posx == guy.posx && roomList.at(i).posy == guy.posy - 1) ||
 							(roomList.at(i).posx == guy.posx && roomList.at(i).posy == guy.posy)) {
 
-							roomList.at(i).fogged = FALSE;
-						}
-						//Eight Legs Trait
-						else if (guy.Eight_Legs) {
 							roomList.at(i).fogged = FALSE;
 						}
 						else {
@@ -226,19 +232,20 @@ void Map::generateTerrain() {
 	}
 
 	for (int i = 0; i < 3; i++) {
-		if (rand() % 2 == 0)
+		if (rand() % 2 == 0) {
 			generateCity();
+		}
 	}
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 12; i++) {
 		if (rand() % 3 > 1) {
 			generateSingleTerrain("Ice");
 		}
 		if (rand() % 3 > 1) {
 			generateSingleTerrain("Forest");
 		}
-		if (rand() % 7 > 3) {
-			generateSingleTerrain("Magma");
+		if (rand() % 8 > 1) {
+			generateSingleTerrain("Lava");
 		}
 		if (rand() % 7 > 4) {
 			generateSingleTerrain("Wasteland");
@@ -247,10 +254,25 @@ void Map::generateTerrain() {
 
 	generateSingleTerrain("Ice");
 	generateSingleTerrain("Forest");
-	generateSingleTerrain("Magma");
+	generateSingleTerrain("Lava");
 	generateSingleTerrain("Wasteland");
 
-	for (int i = 0; i < 6; i++) {
+	int iter = 4;
+	if (rand() % 4 == 0) {
+		if (rand() % 2 == 0) {
+			iter++;
+			if (rand() % 15 == 0) {
+				iter++;
+			}
+		}
+		else {
+			iter--;
+			if (rand() % 15 == 0) {
+				iter--;
+			}
+		}
+	}
+	for (int i = 0; i < iter; i++) {
 		for (int x = 0; x < 26; x++) {
 			for (int y = 0; y < 8; y++) {
 				generateSurroundingTerrain(x, y);
@@ -259,8 +281,9 @@ void Map::generateTerrain() {
 	}
 
 	for (int i = 0; i < 6; i++) {
-		if (rand() % 2 > 0)
+		if (rand() % 2 > 0) {
 			generateCity();
+		}
 	}
 
 	for (int x = 0; x < 26; x++) {
@@ -315,19 +338,24 @@ int Map::generateSurroundingTerrain(int x, int y) {
 	if(terrainGrid[x][y] != "Fog" && terrainGrid[x][y] != "City")
 		 terr = terrainGrid[x][y];
 	if (terrainGrid[x][y] == terr && terr != " ") {
-		if (y > 0 && rand() % 25 > 17) {
+		int chance = 17;
+		if (terr == "Lava")
+			chance += 3;
+		if (terr == "Wasteland")
+			chance++;
+		if (y > 0 && rand() % 25 > chance) {
 			terrainGrid[x][y - 1] = terr;
 			num++;
 		}
-		if (x > 0 && rand() % 25 > 17) {
+		if (x > 0 && rand() % 25 > chance) {
 			terrainGrid[x - 1][y] = terr;
 			num++;
 		}
-		if (y < 7 && rand() % 25 > 17) {
+		if (y < 7 && rand() % 25 > chance) {
 			terrainGrid[x][y + 1] = terr;
 			num++;
 		}
-		if (x < 25 && rand() % 25 > 17) {
+		if (x < 25 && rand() % 25 > chance) {
 			terrainGrid[x + 1][y] = terr;
 			num++;
 		}
@@ -526,12 +554,87 @@ char Map::getTier(int posx, int posy) {
 }
 
 void Map::UpdateMap(Character &guy, InputBoard &board) {
-	checkPosition(guy, board);
+	//checkPosition(guy, board);
 
+	//Floor is Lava trait
+	if (guy.The_Floor_is_Lava) {
+		for (int x = guy.posx; x < 26; x++) {
+			for (int y = guy.posy; y < 8; y++) {
+				if (x != 25 || y != 7) {
+					terrainGrid[x][y] = "Lava";
+				}
+			}
+		}
+		int i = 0;
+		for (int x = 0; x < 26; x++) {
+			for (int y = 0; y < 8; y++) {
+				roomList.at(i).Terrain = terrainGrid[x][y];
+				i++;
+			}
+		}
+		guy.The_Floor_is_Lava = FALSE;
+		PrintWholeMap(guy, board);
+	}
+	//Slippery trait
+	if (guy.Slippery) {
+		for (int x = guy.posx; x < 26; x++) {
+			if (x != 25 || guy.posy != 7)
+				terrainGrid[x][guy.posy] = "Ice";
+		}
+		for (int y = guy.posy; y < 8; y++) {
+			if (guy.posx != 25 || y != 7)
+				terrainGrid[guy.posx][y] = "Ice";
+		}
+		int i = 0;
+		for (int x = 0; x < 26; x++) {
+			for (int y = 0; y < 8; y++) {
+				roomList.at(i).Terrain = terrainGrid[x][y];
+				i++;
+			}
+		}
+		guy.Slippery = FALSE;
+		PrintWholeMap(guy, board);
+	}
 	//Terraform trait
-	if (guy.Terraform && rand() % 6 == 0) {
-		generateTerrain();
+	if (guy.Terraform && rand() % 5 == 0) {
+		/*generateTerrain();
 
+		int i = 0;
+		for (int x = 0; x < 26; x++) {
+			for (int y = 0; y < 8; y++) {
+				roomList.at(i).Terrain = terrainGrid[x][y];
+				i++;
+			}
+		}*/
+
+		for (int x = guy.posx; x < guy.posx + 3; x++) {
+			for (int y = guy.posy; y < guy.posy + 3; y++) {
+				if (x < 26 && y < 8 && (x != 25 || y != 7) && (x != guy.posx || y != guy.posy)) {
+					int rng = rand() % 19;
+					if (rng >= 0 && rng <= 2) {
+						terrainGrid[x][y] = "Ice";
+					}
+					else if (rng > 2 && rng <= 5) {
+						terrainGrid[x][y] = "Forest";
+					}
+					else if (rng > 5 && rng <= 8) {
+						terrainGrid[x][y] = "Wasteland";
+					}
+					else if (rng > 8 && rng <= 11) {
+						terrainGrid[x][y] = "City";
+					}
+					else if (rng > 11 && rng <= 14) {
+						terrainGrid[x][y] = "Lava";
+					}
+					else if (rng > 14 && rng <= 17) {
+						terrainGrid[x][y] = "Fog";
+					}
+					else {
+						terrainGrid[x][y] = "Treasure";
+					}
+				}
+			}
+		}
 		int i = 0;
 		for (int x = 0; x < 26; x++) {
 			for (int y = 0; y < 8; y++) {
@@ -560,10 +663,6 @@ void Map::UpdateMap(Character &guy, InputBoard &board) {
 				(roomList.at(i).posx == guy.posx && roomList.at(i).posy == guy.posy + 1) ||
 				(roomList.at(i).posx == guy.posx - 1 && roomList.at(i).posy == guy.posy) ||
 				(roomList.at(i).posx == guy.posx && roomList.at(i).posy == guy.posy - 1)) {
-				roomList.at(i).fogged = FALSE;
-			}
-			//Eight Legs Trait
-			else if (guy.Eight_Legs) {
 				roomList.at(i).fogged = FALSE;
 			}
 			else {
@@ -646,7 +745,7 @@ final bosses
 lightblue- Ice: when you enter ice you have to keep going in a straight line
 yellow- Treasure: gain 25 gold here
 green- Forest: you cant go the same direction you went before
-orange- Magma: get two combat for each tile, cauldrons are empty
+orange- Lava: get two combat for each tile, cauldrons are empty
 purple- Wasteland: get double cauldrons for each tile, everything else is empty
 gray- Fog: cant see these tiles, if inside fog you see a 1 radius circle around you
 dark gray- City: only themed enemies. double forges

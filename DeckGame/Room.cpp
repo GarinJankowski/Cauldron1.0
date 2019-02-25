@@ -8,7 +8,7 @@
 //Combat
 	//fight an enemy
 //Addition
-	//obtain a special card
+	//obtain a boss card
 //Gear
 	//get gear
 //Empty
@@ -35,11 +35,11 @@ int gear_forest = 42;
 int cauldron_forest = 43;
 int shop_forest = 44;
 
-int combat_magma = 45;
-int boss_magma = 46;
-int gear_magma = 47;
-int cauldron_magma = 48;
-int shop_magma = 49;
+int combat_Lava = 45;
+int boss_Lava = 46;
+int gear_Lava = 47;
+int cauldron_Lava = 48;
+int shop_Lava = 49;
 
 int combat_wasteland = 50;
 int boss_wasteland = 51;
@@ -56,11 +56,11 @@ int shop_fog = 59;
 int forge_ice = 60;
 int forge_treasure = 61;
 int forge_forest = 62;
-int forge_magma = 63;
+int forge_Lava = 63;
 int forge_wasteland = 64;
 int forge_fog = 65;
 
-int magma = 66;
+int Lava = 66;
 int wasteland = 67;
 int fog = 68;
 
@@ -113,6 +113,11 @@ void Room::PrintRoom(bool gray) {
 
 	init_color(COLOR_BLUE, 200, 400, 1000);
 	init_pair(6, COLOR_BLUE, COLOR_BLACK);*/
+	if (clear)
+		gray = TRUE;
+	else
+		gray = FALSE;
+	
 	if (RoomType == "First") {
 		if (gray)
 			attron(COLOR_PAIR(8));
@@ -131,8 +136,8 @@ void Room::PrintRoom(bool gray) {
 			else if (Terrain == "Forest") {
 				attron(COLOR_PAIR(combat_forest));
 			}
-			else if (Terrain == "Magma") {
-				attron(COLOR_PAIR(combat_magma));
+			else if (Terrain == "Lava") {
+				attron(COLOR_PAIR(combat_Lava));
 			}
 			else if (Terrain == "Wasteland") {
 				attron(COLOR_PAIR(combat_wasteland));
@@ -164,8 +169,8 @@ void Room::PrintRoom(bool gray) {
 			else if (Terrain == "Forest") {
 				attron(COLOR_PAIR(gear_forest));
 			}
-			else if (Terrain == "Magma") {
-				attron(COLOR_PAIR(gear_magma));
+			else if (Terrain == "Lava") {
+				attron(COLOR_PAIR(gear_Lava));
 			}
 			else if (Terrain == "Wasteland") {
 				attron(COLOR_PAIR(gear_wasteland));
@@ -197,8 +202,8 @@ void Room::PrintRoom(bool gray) {
 			else if (Terrain == "Forest") {
 				attron(COLOR_PAIR(gear_forest));
 			}
-			else if (Terrain == "Magma") {
-				attron(COLOR_PAIR(gear_magma));
+			else if (Terrain == "Lava") {
+				attron(COLOR_PAIR(gear_Lava));
 			}
 			else if (Terrain == "Wasteland") {
 				attron(COLOR_PAIR(gear_wasteland));
@@ -230,8 +235,8 @@ void Room::PrintRoom(bool gray) {
 			else if (Terrain == "Forest") {
 				attron(COLOR_PAIR(gear_forest));
 			}
-			else if (Terrain == "Magma") {
-				attron(COLOR_PAIR(gear_magma));
+			else if (Terrain == "Lava") {
+				attron(COLOR_PAIR(gear_Lava));
 			}
 			else if (Terrain == "Wasteland") {
 				attron(COLOR_PAIR(gear_wasteland));
@@ -263,8 +268,8 @@ void Room::PrintRoom(bool gray) {
 			else if (Terrain == "Forest") {
 				attron(COLOR_PAIR(forge_forest));
 			}
-			else if (Terrain == "Magma") {
-				attron(COLOR_PAIR(forge_magma));
+			else if (Terrain == "Lava") {
+				attron(COLOR_PAIR(forge_Lava));
 			}
 			else if (Terrain == "Wasteland") {
 				attron(COLOR_PAIR(forge_wasteland));
@@ -296,8 +301,8 @@ void Room::PrintRoom(bool gray) {
 			else if (Terrain == "Forest") {
 				attron(COLOR_PAIR(shop_forest));
 			}
-			else if (Terrain == "Magma") {
-				attron(COLOR_PAIR(shop_magma));
+			else if (Terrain == "Lava") {
+				attron(COLOR_PAIR(shop_Lava));
 			}
 			else if (Terrain == "Wasteland") {
 				attron(COLOR_PAIR(shop_wasteland));
@@ -329,8 +334,8 @@ void Room::PrintRoom(bool gray) {
 			else if (Terrain == "Forest") {
 				attron(COLOR_PAIR(cauldron_forest));
 			}
-			else if (Terrain == "Magma") {
-				attron(COLOR_PAIR(cauldron_magma));
+			else if (Terrain == "Lava") {
+				attron(COLOR_PAIR(cauldron_Lava));
 			}
 			else if (Terrain == "Wasteland") {
 				attron(COLOR_PAIR(cauldron_wasteland));
@@ -362,8 +367,8 @@ void Room::PrintRoom(bool gray) {
 			else if (Terrain == "Forest") {
 				attron(COLOR_PAIR(boss_forest));
 			}
-			else if (Terrain == "Magma") {
-				attron(COLOR_PAIR(boss_magma));
+			else if (Terrain == "Lava") {
+				attron(COLOR_PAIR(boss_Lava));
 			}
 			else if (Terrain == "Wasteland") {
 				attron(COLOR_PAIR(boss_wasteland));
