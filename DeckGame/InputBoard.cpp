@@ -61,6 +61,7 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	handsNorm.push_back(Gear("Lance"));
 	handsNorm.push_back(Gear("Dirk"));
 	handsNorm.push_back(Gear("Cutlass"));
+	handsNorm.push_back(Gear("Buckler"));
 
 	handsNormREFILL = handsNorm;
 
@@ -108,7 +109,6 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	bodyLate.push_back(Gear("Mage Armor"));
 
 	bodyLateREFILL = bodyLate;
-
 
 	//head
 	headNorm.push_back(Gear("Vampire Fangs"));
@@ -205,6 +205,7 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsSacrifice.push_back(Gear("Blind"));
 	AvailableTraitsSacrifice.push_back(Gear("Numb"));
 	AvailableTraitsSacrifice.push_back(Gear("Sensitive"));
+	AvailableTraitsSacrifice.push_back(Gear("Frenzy"));
 	AvailableTraitsSacrifice.push_back(Gear("Corpse"));
 	AvailableTraitsSacrifice.push_back(Gear("Radioactive"));
 	AvailableTraitsSacrifice.push_back(Gear("Forgetful"));
@@ -221,6 +222,7 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsSacrifice.push_back(Gear("Inefficient"));
 	AvailableTraitsSacrifice.push_back(Gear("Brain Worm"));
 	AvailableTraitsSacrifice.push_back(Gear("Gold Flesh"));
+	AvailableTraitsSacrifice.push_back(Gear("Terraform"));
 	AvailableTraitsSacrifice.push_back(Gear("Psychosis"));
 	AvailableTraitsSacrifice.push_back(Gear("Dazed"));
 	AvailableTraitsSacrifice.push_back(Gear("Strategy"));
@@ -237,7 +239,6 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsSacrifice.push_back(Gear("Flat Feet"));
 	AvailableTraitsSacrifice.push_back(Gear("Muscle Mass"));
 	AvailableTraitsSacrifice.push_back(Gear("Chaos#"));
-
 
 	AvailableTraitsSacrificeREFILL = AvailableTraitsSacrifice;
 
@@ -271,7 +272,6 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsReward.push_back(Gear("Multi-Tongued"));
 	AvailableTraitsReward.push_back(Gear("Triple-Jointed"));
 	AvailableTraitsReward.push_back(Gear("Blacksmith"));
-	AvailableTraitsReward.push_back(Gear("Gold Blood"));
 	AvailableTraitsReward.push_back(Gear("Iron Scabs"));
 	AvailableTraitsReward.push_back(Gear("Gelatinous"));
 	AvailableTraitsReward.push_back(Gear("Evolve"));
@@ -364,6 +364,7 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	shopAttacks.push_back(Card("Slash"));
 	shopAttacks.push_back(Card("Lash"));
 	shopAttacks.push_back(Card("Pummel"));
+	shopAttacks.push_back(Card("Ram"));
 
 	shopAttacksREFILL = shopAttacks;
 
@@ -378,7 +379,7 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	shopDefends.push_back(Card("Flee"));
 	shopDefends.push_back(Card("Spikes"));
 	shopDefends.push_back(Card("Repulse"));
-
+	
 	shopDefendsREFILL = shopDefends;
 
 	//Multi-Tongued trait
@@ -1537,7 +1538,7 @@ void InputBoard::traitsLoopWhole() {
 				attron(COLOR_PAIR(7));
 			int ax = int(strlen(ctrait.GearName) / 2);
 			const char *desc = ctrait.Description;
-			mvprintw(2, x - ax, "%s", ctrait.GearName);
+			mvprintInSize(2, x - ax, 0, ctrait.GearName, FALSE);
 			mvprintInSize(4, desc_x, desc_maxx, desc, FALSE);
 			standend();
 			int c = 0;
@@ -1991,6 +1992,9 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 		getchCard(guy, enemy, deck, log);
 	}
 
+	//make sure the win() function prints the correct enemy name
+	currentEnemyName = enemy.Name;
+
 	//Reaper trait
 	if (guy.Reaper && enemy.CurrentHealth < 5 + (2 * guy.Skill)) {
 		enemy.CurrentHealth = 0;
@@ -2209,6 +2213,7 @@ bool InputBoard::checkDead(Character &guy, Enemy &enemy, TextLog &log) {
 		}
 		//Reconstruction Trait
 		if (guy.Reconstruction && guy.Skill > 1 && guy.CurrentHealth <= 0) {
+			guy.restoreStats();
 			guy.CurrentHealth = guy.MaxHealth;
 			guy.ModStat(-2, "Skill");
 			string recon = "#g You come back to life!#o";
@@ -2293,7 +2298,7 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 		//Timer trait
 		if (guy.Timer) {
 			guy.CurrentHealth = 1;
-			guy.Negate += 6;
+			guy.Negate += 5;
 		}
 		//Gelatinous trait
 		if (guy.Gelatinous && guy.Skill > 0) {
@@ -2318,8 +2323,11 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 		//Membrane trait
 		if (guy.Membrane) {
 			int mem = guy.CurrentHealth / 2;
-			guy.CurrentHealth /= 2;
-			guy.CurrentBlock += mem;
+			if(guy.CurrentHealth != 1)
+				guy.CurrentHealth /= 2;
+			mem = guy.gainBlock(mem);
+			string brane = "-You gain #b" + to_string(mem) + "#o block.";
+			log.PushPop(brane);
 		}
 		//Forgetful trait
 		if (guy.Forgetful) {
@@ -2947,7 +2955,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	//Hallucinations trait
 	if (guy.Hallucinations) {
 		if (rand() % 7 == 0) {
-			int enemyhp = enemy.CurrentHealth;
+			/*int enemyhp = enemy.CurrentHealth;
 			int enemyblock = enemy.CurrentBlock;
 			int enemyneg = enemy.enemyNegate;
 			int enemytc = enemy.TurnCount;
@@ -3018,6 +3026,10 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 			if (enemy.CurrentHealth > enemy.MaxHealth) {
 				enemy.CurrentHealth = enemy.MaxHealth;
 			}
+
+			currentEnemyName = enemy.Name;*/
+
+			polymorph(guy, enemy);
 
 			string line;
 			int rngline = rand() % 3;
@@ -3115,10 +3127,7 @@ bool InputBoard::checkEnemyLife(Character &guy, Enemy &enemy, Deck &deck, TextLo
 			log.PushPop(line);
 
 			int gold = generateGold(enemy);
-			//gold blood trait
-			if (guy.Gold_Blood)
-				gold *= 2;
-			guy.Gold += gold;
+			gold = guy.gainGold(gold);
 			string goldline = "#$~You gain " + to_string(gold) + " gold.#o";
 			log.PushPop(goldline);
 
@@ -3244,7 +3253,8 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 
 	//clears the decision board, reprints windows
 	clearBoardWhole();
-	manualBox("Decision", 0);
+	if(RoomType != "Shop")
+		manualBox("Decision", 0);
 	manualBox("Card 1", 0);
 	manualBox("Card 2", 0);
 	manualBox("Card 3", 0);
@@ -3291,12 +3301,9 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 	//TERRAIN: Treasure
 	if (Terrain == "Treasure" && RoomType != "Empty" && RoomType != "Stat" &&
 		RoomType != "BossCard" && RoomType != "Spell" && RoomType != "Cauldron 2" &&
-		!shopS && guy.Blacksmith < 1 && (RoomType != "Combat" || guy.Scented != 0)) {
+		(RoomType != "Combat" || guy.Scented != 0)) {
 		int g = 15;
-		if (guy.Gold_Blood)
-			g *= 2;
-
-		guy.Gold += g;
+		g = guy.gainGold(g);
 		string gline = "#$~You gain " + to_string(g) + " gold.#o";
 		log.PushPop(gline);
 		guy.printStats();
@@ -3305,7 +3312,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 	//TERRAIN: Wasteland
 	//Eight Legs Trait
 	if (Terrain == "Wasteland" && RoomType != "Cauldron" && RoomType != "Cauldron 2" &&
-		RoomType != "Spell" && RoomType != "BossCard" && guy.Blacksmith < 0 && guy.Metamorphosis == 0) {
+		RoomType != "Spell" && RoomType != "BossCard" && guy.Metamorphosis == 0) {
 		RoomType = "Empty";
 	}
 	//Eight Legs Trait\
@@ -3462,6 +3469,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 					guy.posy += tiles;
 			}
 
+			teleported = TRUE;
 			string tele = "#r You teleport.#o";
 			log.PushPop(tele);
 			log.printLog();
@@ -3534,6 +3542,13 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		else
 			right = TRUE;
 
+		//temporary bug fix for being unable to move anywhere after being teleported
+		if (teleported) {
+			up = TRUE;
+			right = TRUE;
+			teleported = FALSE;
+		}
+
 		if (up) {
 			mvprintInSize(19, 25, 0, "1) Up", FALSE);
 		}
@@ -3541,7 +3556,11 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 			mvprintInSize(20, 25, 0, "2) Right", FALSE);
 		}
 		if (down) {
-			mvprintInSize(21, 25, 0, "3) Down", FALSE);
+			string down = "3) Down";
+			if (guy.Warper > 0) {
+				down += " [" + to_string(guy.Warper) + "]";
+			}
+			mvprintInSize(21, 25, 0, down.c_str(), FALSE);
 		}
 
 		/*
@@ -3980,6 +3999,7 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 	if (guy.CurrentHealth <= 0) {
 		//Reconstruction Trait
 		if (guy.Reconstruction && guy.Skill > 1) {
+			guy.restoreStats();
 			guy.CurrentHealth = guy.MaxHealth;
 			guy.ModStat(-2, "Skill");
 			string recon = "#g You come back to life!#o";
@@ -4179,13 +4199,6 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					RoomType = "Empty";
 
 				guy.printStats();
-				//getting a trait in shop
-				if (shopS && guy.Metamorphosis == 0 && guy.Destiny <= 1) {
-					shopS = FALSE;
-					printShop(guy);
-					RoomType = "Shop";
-					//getchShop(guy, deck, log);
-				}
 
 				if (guy.Metamorphosis == 1)
 					guy.Metamorphosis--;
@@ -4244,16 +4257,11 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					guy.Link++;
 				}
 			
-				//Blacksmith trait
-				if (guy.Blacksmith > 0) {
-					RoomType = "Mod";
-					guy.Blacksmith--;
-				}
-				else if (guy.Destiny > 1) {
+				if (guy.Destiny > 1) {
 					RoomType = "Cauldron";
 					guy.Destiny--;
 				}
-				else if (Terrain == "Wasteland" && guy.Destiny == 0 && guy.Blacksmith == 0) {
+				else if (Terrain == "Wasteland" && guy.Destiny == 0) {
 					if (extraCauldron) {
 						extraCauldron = FALSE;
 						RoomType = "Cauldron";
@@ -4263,8 +4271,8 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 						RoomType = "Empty";
 					}
 				}
-				else if (Terrain == "City" && guy.Blacksmith < 0 && guy.Destiny <= 1) {
-					if (extraForge && guy.Blacksmith < 0) {
+				else if (Terrain == "City" && guy.Destiny <= 1) {
+					if (extraForge) {
 						RoomType = "Mod";
 						extraForge = FALSE;
 					}
@@ -4275,18 +4283,6 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				}
 				else
 					RoomType = "Empty";
-
-
-				if (guy.Blacksmith == 0)
-					guy.Blacksmith--;
-
-				//getting a trait in shop
-				if (shopS && guy.Blacksmith <= 0 && guy.Destiny <= 1) {
-					shopS = FALSE;
-					printShop(guy);
-					RoomType = "Shop";
-					//getchShop(guy, deck, log);
-				}
 
 				if (RoomType != "Shop") {
 					printDecision(guy, log);
@@ -4565,28 +4561,21 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					guy.Ego = FALSE;
 
 				guy.printStats();
-				//getting a trait in shop
-				if (shopS) {
-					printShop(guy);
-					RoomType = "Shop";
-					//getchShop(guy, deck, log);
-				}
-				else {
-					if (Terrain == "Wasteland" && guy.Destiny == 0) {
-						if (extraCauldron) {
-							extraCauldron = FALSE;
-							RoomType = "Cauldron";
-						}
-						else {
-							extraCauldron = TRUE;
-							RoomType = "Empty";
-						}
+				
+				if (Terrain == "Wasteland" && guy.Destiny == 0) {
+					if (extraCauldron) {
+						extraCauldron = FALSE;
+						RoomType = "Cauldron";
 					}
-					else
+					else {
+						extraCauldron = TRUE;
 						RoomType = "Empty";
-
-					printDecision(guy, log);
+					}
 				}
+				else
+					RoomType = "Empty";
+
+				printDecision(guy, log);
 				//getchDecision(guy, deck, log);
 			}
 			else {
@@ -4629,11 +4618,6 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				if (guy.Destiny > 1) {
 					RoomType = "Cauldron";
 					printDecision(guy, log);
-				}
-				else if (shopS) {
-					printShop(guy);
-					RoomType = "Shop";
-					//getchShop(guy, deck, log);
 				}
 				else if (Terrain == "Wasteland" && guy.Destiny == 0) {
 					if (extraCauldron) {
@@ -4701,6 +4685,79 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					TraitsDecision.erase(TraitsDecision.begin() + 2);
 				}
 				log.PushPop(line);
+
+				//Blacksmith trait (its added here because the Gear class cannot access the TextLog
+				if (guy.Blacksmith) {
+					guy.Blacksmith = FALSE;
+					int voidd = 0;
+					int burn = 0;
+					int flow = 0;
+					int copy = 0;
+					int push = 0;
+					int link = 0;
+					int stay = 0;
+					for (int i = 0; i < 12; i++) {
+						int rng = rand() % 25;
+						if (rng == 1) {
+							voidd++;
+						}
+						else if (rng > 1 && rng <= 6) {
+							burn++;
+						}
+						else if (rng > 6 && rng <= 11) {
+							flow++;
+						}
+						else if (rng > 11 && rng <= 13) {
+							copy++;
+						}
+						else if (rng > 13 && rng <= 18) {
+							push++;
+						}
+						else if (rng > 18 && rng <= 22) {
+							link++;
+						}
+						else {
+							stay++;
+						}
+					}
+					string vline = "#o~You gain #o" + to_string(voidd) + " Void#o mods.#o";
+					string bline = "#o~You gain #r" + to_string(burn) + " Burn#o mods.#o";
+					string fline = "#o~You gain #c" + to_string(flow) + " Flow#o mods.#o";
+					string cline = "#o~You gain #m" + to_string(copy) + " Copy#o mods.#o";
+					string pline = "#o~You gain #y" + to_string(push) + " Push#o mods.#o";
+					string lline = "#o~You gain #b" + to_string(link) + " Link#o mods.#o";
+					string sline = "#o~You gain #g" + to_string(stay) + " Stay#o mods.#o";
+
+					if (voidd > 0) {
+						guy.Void += voidd;
+						log.PushPop(vline);
+					}
+					if (burn > 0) {
+						guy.Burn += burn;
+						log.PushPop(bline);
+					}
+					if (flow > 0) {
+						guy.Flow += flow;
+						log.PushPop(fline);
+					}
+					if (copy > 0) {
+						guy.Copy += copy;
+						log.PushPop(cline);
+					}
+					if (push > 0) {
+						guy.Push += push;
+						log.PushPop(pline);
+					}
+					if (link > 0) {
+						guy.Link += link;
+						log.PushPop(lline);
+					}
+					if (stay > 0) {
+						guy.Stay += stay;
+						log.PushPop(sline);
+					}
+				}
+
 				log.printLog();
 				while (TraitsDecision.size() > 0) {
 					if (RoomType == "Cauldron") {
@@ -4761,12 +4818,6 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 						printDecision(guy, log);
 						getchDecision(guy, deck, log);
 					}
-					//Blacksmith trait
-					else if (guy.Blacksmith > 0) {
-						RoomType = "Mod";
-						if(guy.Destiny <= 1)
-							guy.Blacksmith--;
-					}
 					//Metamorphosis trait
 					else if (guy.Metamorphosis > 0) {
 						RoomType = "Stat";
@@ -4787,12 +4838,6 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 							RoomType = "Empty";
 							extraCauldron = TRUE;
 						}
-					}
-					//getting a trait in shop
-					else if (shopS && guy.Destiny <= 1 && guy.Blacksmith <= 0) {
-						shopS = FALSE;
-						RoomType = "Shop";
-						printShop(guy);
 					}
 					else {
 						RoomType = "Empty";
@@ -5161,8 +5206,6 @@ void InputBoard::generateShop() {
 	shopR = modchoice.at(rng);
 	modchoice.erase(modchoice.begin() + rng);
 
-	//positive trait
-	shopS = FALSE;
 }
 
 //print the shop in the Decision area
@@ -5214,21 +5257,20 @@ void InputBoard::printShop(Character &guy) {
 	mvprintInSize(22, 34, 0, shopK.CardName, FALSE);
 	mvprintInSize(23, 34, 0, shopL.CardName, FALSE);
 
-	mvprintInSize(17, 50, 0, "M)#$20g#o", FALSE);
-	mvprintInSize(18, 50, 0, "N)#$20g#o", FALSE);
-	mvprintInSize(19, 50, 0, "O)#$20g#o", FALSE);
-	mvprintInSize(20, 50, 0, "P)#$15g#o", FALSE);
-	mvprintInSize(21, 50, 0, "Q)#$15g#o", FALSE);
-	mvprintInSize(22, 50, 0, "R)#$15g#o", FALSE);
-	mvprintInSize(23, 50, 0, "S)#$75g#o #gPositive Trait#o", FALSE);
+	mvprintInSize(18, 50, 0, "M)#$20g#o", FALSE);
+	mvprintInSize(19, 50, 0, "N)#$20g#o", FALSE);
+	mvprintInSize(20, 50, 0, "O)#$20g#o", FALSE);
+	mvprintInSize(21, 50, 0, "P)#$15g#o", FALSE);
+	mvprintInSize(22, 50, 0, "Q)#$15g#o", FALSE);
+	mvprintInSize(23, 50, 0, "R)#$15g#o", FALSE);
 	attron(COLOR_PAIR(6));
-	mvprintInSize(17, 56, 0, shopM.GearName, FALSE);
-	mvprintInSize(18, 56, 0, shopN.GearName, FALSE);
-	mvprintInSize(19, 56, 0, shopO.GearName, FALSE);
+	mvprintInSize(18, 56, 0, shopM.GearName, FALSE);
+	mvprintInSize(19, 56, 0, shopN.GearName, FALSE);
+	mvprintInSize(20, 56, 0, shopO.GearName, FALSE);
 	standend();
-	mvprintInSize(20, 56, 0, shopP.c_str(), FALSE);
-	mvprintInSize(21, 56, 0, shopQ.c_str(), FALSE);
-	mvprintInSize(22, 56, 0, shopR.c_str(), FALSE);
+	mvprintInSize(21, 56, 0, shopP.c_str(), FALSE);
+	mvprintInSize(22, 56, 0, shopQ.c_str(), FALSE);
+	mvprintInSize(23, 56, 0, shopR.c_str(), FALSE);
 
 	attron(COLOR_PAIR(10));
 	mvprintw(15, 27, "\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD\u00CD");
@@ -5266,7 +5308,6 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		for (int i = 0; i < 8; i++)
 			mvprintw(6 + i, 29, "             ");
 		shopnum2++;
-		shopS = FALSE;
 		clearBoardWhole();
 		manualBox("Decision", 0);
 		RoomType = "Empty";
@@ -5538,17 +5579,6 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		mvprintInSize(22, 55, 0, "                     ", FALSE);
 		getchShop(guy, deck, log);
 	}
-	else if (c == 'S' && guy.Gold >= 75) {
-		guy.Gold -= 75;
-
-		shopS = TRUE;
-		RoomType = "Cauldron 2";
-		printDecision(guy, log);
-		getchDecision(guy, deck, log);
-
-		//getchShop(guy, deck, log);
-		//mvprintInSize(23, 53, 0, "                        ", FALSE);
-	}
 	else {
 		getchShop(guy, deck, log);
 	}
@@ -5641,6 +5671,115 @@ void InputBoard::win(Character &guy, Deck &deck, TextLog &log, bool gamewin) {
 	else {
 		win(guy, deck, log, gamewin);
 	}
+}
+
+
+void InputBoard::polymorph(Character &guy, Enemy &enemy) {
+	Enemy beforeenemy = enemy;
+
+	int enemyhp = enemy.CurrentHealth;
+	int enemyblock = enemy.CurrentBlock;
+	int enemyneg = enemy.enemyNegate;
+	int enemytc = enemy.TurnCount;
+	int enemydot = enemy.dot;
+
+
+	vector<Enemy> early;
+	vector<Enemy> mid;
+	vector<Enemy> late;
+	vector<Enemy> boss;
+	vector<Enemy> finalboss;
+
+	early.push_back(Enemy("Rat"));
+	early.push_back(Enemy("Crab"));
+	early.push_back(Enemy("Hound"));
+	early.push_back(Enemy("Zombie"));
+	early.push_back(Enemy("Kobold"));
+	mid.push_back(Enemy("Giant Rat"));
+	mid.push_back(Enemy("Wild Buffalo"));
+	mid.push_back(Enemy("Harpy"));
+	mid.push_back(Enemy("Brown Recluse"));
+	late.push_back(Enemy("Adventurer"));
+	late.push_back(Enemy("Adventurer"));
+	late.push_back(Enemy("Troll"));
+	late.push_back(Enemy("Elemental"));
+
+	early.push_back(Enemy("Hatchling"));
+	mid.push_back(Enemy("Molten Jelly"));
+	late.push_back(Enemy("Knight"));
+	late.push_back(Enemy("Drake"));
+	early.push_back(Enemy("Slave"));
+	mid.push_back(Enemy("Soldier"));
+	late.push_back(Enemy("Guard"));
+	late.push_back(Enemy("Jester"));
+	early.push_back(Enemy("Eyeball"));
+	mid.push_back(Enemy("Apprentice"));
+	late.push_back(Enemy("Monster"));
+	late.push_back(Enemy("Brain"));
+	early.push_back(Enemy("Cultist"));
+	mid.push_back(Enemy("Imp"));
+	late.push_back(Enemy("Weeping Soul"));
+	late.push_back(Enemy("Hellhound"));
+	early.push_back(Enemy("Robot"));
+	mid.push_back(Enemy("Golem"));
+	late.push_back(Enemy("Merchant"));
+	late.push_back(Enemy("Turret"));
+
+	boss.push_back(Enemy("Paladin"));
+	boss.push_back(Enemy("Juggernaut"));
+	boss.push_back(Enemy("Vampire"));
+	boss.push_back(Enemy("Hydra"));
+	boss.push_back(Enemy("Demigod"));
+	boss.push_back(Enemy("Hunter"));
+	boss.push_back(Enemy("Exorcist"));
+	boss.push_back(Enemy("Wolf"));
+
+	finalboss.push_back(Enemy("King"));
+	finalboss.push_back(Enemy("Demon"));
+	finalboss.push_back(Enemy("Witch"));
+	finalboss.push_back(Enemy("Dragon"));
+	finalboss.push_back(Enemy("Machine"));
+
+	char tier = guy.getTier();
+
+	if (guy.RoomType == "Final Boss") {
+		int rng = rand() % finalboss.size();
+		enemy = finalboss.at(rng);
+	}
+	else if (guy.RoomType == "Boss") {
+		int rng = rand() % boss.size();
+		enemy = boss.at(rng);
+	}
+	else if (tier == 'A' || tier == 'B') {
+		int rng = rand() % early.size();
+		enemy = early.at(rng);
+	}
+	else if (tier == 'C' || tier == 'D') {
+		int rng = rand() % mid.size();
+		enemy = mid.at(rng);
+	}
+	else if (tier == 'E' || tier == 'F') {
+		int rng = rand() % late.size();
+		enemy = late.at(rng);
+	}
+
+	if (enemy.Name == beforeenemy.Name) {
+		polymorph(guy, enemy);
+	}
+
+	enemy.CurrentHealth = enemyhp;
+	enemy.CurrentBlock = enemyblock;
+	enemy.enemyNegate = enemyneg;
+	enemy.TurnCount = enemytc;
+	enemy.dot = enemydot;
+
+	if (enemy.CurrentHealth > enemy.MaxHealth) {
+		enemy.CurrentHealth = enemy.MaxHealth;
+	}
+	currentEnemyName = enemy.Name;
+
+	manualBox("Display", 0);
+	enemy.updateEnemy(guy);
 }
 
 bool InputBoard::Negotiate(Character &guy, Enemy &enemy, Deck &deck, TextLog &log) {

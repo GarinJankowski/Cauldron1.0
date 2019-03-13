@@ -52,7 +52,8 @@ Card::Card(const char *name):CardName(name)
 		CardName == "Slash" ||
 		CardName == "Lash" ||
 		CardName == "Pummel" ||
-		CardName == "Shoot") {
+		CardName == "Shoot" ||
+		CardName == "Laser") {
 		CardType = "Attack";
 		setAttack();
 	}
@@ -114,8 +115,7 @@ Card::Card(const char *name):CardName(name)
 		CardName == "Transmogrify" ||
 		CardName == "Liquidate" ||
 		CardName == "Sandstorm" ||
-		CardName == "Screen" ||
-		CardName == "Laser") {
+		CardName == "Screen") {
 		CardType = "Spell";
 		setSpell();
 	}
@@ -221,13 +221,16 @@ void Card::setAttack() {
 		Description = "Deal 2d(Str) damage. Deal (Str/2) damage for 3 turns.";
 	}
 	else if (CardName == "Slash") {
-		Description = "Deal (Str)d2 damage. Fill hand with attacks. -2 Energy.";
+		Description = "Deal (Str)d2 damage. Fill hand with Attacks. -2 Energy.";
 	}
 	else if (CardName == "Lash") {
 		Description = "Deal (Str)d3 damage. Take 6d2 damage.";
 	}
 	else if (CardName == "Pummel") {
-		Description = "Deal 2 damage. Increase this damage by 2d(Str/2). +2 Energy.";
+		Description = "Deal 2 damage. Increase this by 2d(Str/2). +2 Energy.";
+	}
+	else if (CardName == "Laser") {
+		Description = "Deal (Skl)d3 damage to health and block. +13 Energy.";
 	}
 }
 void Card::setDefend() {
@@ -273,7 +276,7 @@ void Card::setDefend() {
 		Description = "Costs all of your block. +10d3 Energy.";
 	}
 	else if (CardName == "Spikes") {
-		Description = "Gain (Def) damage. Deal 7 damage. +2 Energy";
+		Description = "Gain (Def) damage. Deal 7 damage. +2 Energy.";
 	}
 	else if (CardName == "Repulse") {
 		Description = "Take 7 damage, negate the next hit. +11 Energy.";
@@ -448,11 +451,6 @@ void Card::setSpell() {
 	else if (CardName == "Screen") {
 		ManaCost = 0;
 		Description = "Gain 5 mana. Negate the next 2 attacks. -2 Energy.";
-	}
-
-	else if (CardName == "Laser") {
-		ManaCost = 0;
-		Description = "Deal (Skl)d3 damage to health and block. +13 Energy.";
 	}
 }
 void Card::setboss() {
@@ -741,6 +739,10 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	while (!copyUsed && guy.copy > 0) {
 		guy.copy--;
 		guy.DrainMana(-1 * ManaCost);
+		if (chaos) {
+			CardName = "Chaos";
+			CardType = "BossCard";
+		}
 		cardFunction(guy, enemy, log);
 	}
 	//Dizzy trait
@@ -883,6 +885,13 @@ void Card::attackFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			log.PushPop(line);
 			return;
 		}
+		if (guy.Strategy) {
+			int damage = rtd(guy.Strength, 2);
+			damage = gainBlockStrategy(damage, guy, enemy);
+			line = "-You hack the " + string(enemy.Name) + " for #y" + to_string(damage) + "#o damage.";
+			log.PushPop(line);
+			return;
+		}
 
 		int damageNormal = rtd(2, guy.Strength);
 		int damageDouble = damageNormal * 2;
@@ -989,6 +998,26 @@ void Card::attackFunction(Character &guy, Enemy &enemy, TextLog &log) {
 
 		string line = "-You pummel the " + string(enemy.Name)
 			+ " for #y" + to_string(damage)
+			+ "#o damage.";
+		log.PushPop(line);
+	}
+
+	else if (CardName == "Laser") {
+		//Deal (Skl)d3 damage to health and block. +13 energy
+		int damageH = rtd(guy.Skill, 3);
+		int damageB = rtd(guy.Skill, 3);
+		if (damageB > enemy.CurrentBlock) {
+			damageB = enemy.CurrentBlock;
+			enemy.CurrentBlock = 0;
+		}
+		else
+			enemy.CurrentBlock -= damageB;
+
+		enemy.CurrentHealth -= damageH;
+		gainEnergy(13, guy, enemy);
+
+		string line = "-You incinerate the " + string(enemy.Name)
+			+ " for #y" + to_string(damageB + damageH)
 			+ "#o damage.";
 		log.PushPop(line);
 	}
@@ -1527,9 +1556,7 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	else if (CardName == "Transmogrify") {
 		//Cost 5 mana. gain (Int)d2 gold
 		int gold = rtd(guy.Intelligence, 2);
-		if (guy.Gold_Blood)
-			gold *= 2;
-		guy.Gold += gold;
+		gold = guy.gainGold(gold);
 
 		string line = "#y-You gain " + to_string(gold) + " gold.#o";
 		log.PushPop(line);
@@ -1564,26 +1591,6 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		gainEnergy(-2, guy, enemy);
 
 		string line = "-You #mgain " + to_string(mana) + " mana#o and #cnegate the next 2 hits taken#o.";
-		log.PushPop(line);
-	}
-
-	else if (CardName == "Laser") {
-		//Deal (Skl)d3 damage to health and block. +13 energy
-		int damageH = rtd(guy.Skill, 3);
-		int damageB = rtd(guy.Skill, 3);
-		if (damageB > enemy.CurrentBlock) {
-			damageB = enemy.CurrentBlock;
-			enemy.CurrentBlock = 0;
-		}
-		else
-			enemy.CurrentBlock -= damageB;
-
-		enemy.CurrentHealth -= damageH;
-		gainEnergy(13, guy, enemy);
-
-		string line = "-You incinerate the " + string(enemy.Name)
-			+ " for #y" + to_string(damageB + damageH)
-			+ "#o damage.";
 		log.PushPop(line);
 	}
 
@@ -1678,7 +1685,7 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		int damage = guy.CurrentBlock;
 		damage = dealDamage(damage, guy, enemy, log);
 
-		string line = "You slam the " + string(enemy.Name)
+		string line = "-You slam the " + string(enemy.Name)
 			+ " for #y" + to_string(damage)
 			+ "#o damage.";
 		log.PushPop(line);
@@ -1800,6 +1807,7 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		cards.push_back("Lash");
 		cards.push_back("Pummel");
 		cards.push_back("Shoot");
+		cards.push_back("Laser");
 
 		cards.push_back("Endure");
 		cards.push_back("Force Field");
@@ -1852,7 +1860,6 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		cards.push_back("Liquidate");
 		cards.push_back("Sandstorm");
 		cards.push_back("Screen");
-		cards.push_back("Laser");
 
 		cards.push_back("Haste");
 		cards.push_back("Revivify");
@@ -1889,6 +1896,7 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		cardFunction(guy, enemy, log);
 		CardName = "Chaos";
 		CardType = "BossCard";
+		chaos = FALSE;
 	}
 }
 void Card::negativeFunction(Character &guy, Enemy &enemy, TextLog &log) {
@@ -1941,7 +1949,7 @@ void Card::negativeFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	else if (CardName == "Drain Def") {
 		guy.ModStat(-1, "Defense");
 		guy.defMod++;
-		string line = "You #rlose 1 Defense.#o";
+		string line = "-You #rlose 1 Defense.#o";
 		log.PushPop(line);
 	}
 	else if (CardName == "Drain Int") {
@@ -2121,11 +2129,13 @@ int Card::dealDamageStrategy(int damage, Character &guy, Enemy &enemy) {
 		guy.DrainMana(-1 * mana);
 		guy.damageToMana = 0;
 	}
+	return damage2;
 }
 
 int Card::gainBlock(int block, Character &guy, Enemy &enemy) {
 	if (guy.Strategy) {
-		dealDamageStrategy(block, guy, enemy);
+		int dmg = dealDamageStrategy(block, guy, enemy);
+		return dmg;
 	}
 	int b = block;
 	if (b < 0)
@@ -2175,7 +2185,7 @@ int Card::gainEnergy(int energy, Character &guy, Enemy &enemy) {
 	return en;
 }
 
-//transform the enemy
+//transform the enemy to one of the same tier
 void Card::polymorph(Character &guy, Enemy &enemy) {
 	Enemy beforeenemy = enemy;
 
@@ -2185,7 +2195,6 @@ void Card::polymorph(Character &guy, Enemy &enemy) {
 	int enemytc = enemy.TurnCount;
 	int enemydot = enemy.dot;
 
-	manualBox("Display", 0);
 
 	vector<Enemy> early;
 	vector<Enemy> mid;
@@ -2279,6 +2288,9 @@ void Card::polymorph(Character &guy, Enemy &enemy) {
 	if (enemy.CurrentHealth > enemy.MaxHealth) {
 		enemy.CurrentHealth = enemy.MaxHealth;
 	}
+
+	manualBox("Display", 0);
+	enemy.updateEnemy(guy);
 }
 
 void Card::setMod(string Mod, bool On, Character &guy) {

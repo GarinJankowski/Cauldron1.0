@@ -97,11 +97,11 @@ public:
 	Card shopD;
 	Card shopE;
 	Card shopF;
-		//spells $15
+		//spells $18
 	Card shopG;
 	Card shopH;
 	Card shopI;
-		//bosss $18
+		//bosss $40
 	Card shopJ;
 	Card shopK;
 	Card shopL;
@@ -113,8 +113,6 @@ public:
 	string shopP;
 	string shopQ;
 	string shopR;
-		//positive trait $50
-	bool shopS;
 
 	bool up = TRUE;
 	bool right = TRUE;
@@ -196,12 +194,14 @@ public:
 	string currentEnemyName;
 	void win(Character &guy, Deck &deck, TextLog &log, bool gamewin);
 
-	//boss other stuff
+	//other stuff
 	int negotiateStep;
 	bool Negotiate(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 	bool NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
+	void polymorph(Character &guy, Enemy &enemy);
 	bool Third_Eye = FALSE;
 	bool Tail = FALSE;
+	bool teleported = FALSE;
 };
 
 #endif //INPUTBOARD_H

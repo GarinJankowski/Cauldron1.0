@@ -215,7 +215,6 @@ Gear::Gear(const char *name):GearName(name)
 	GearName == "Multi-Tongued" ||
 	GearName == "Triple-Jointed" ||
 	GearName == "Blacksmith" ||
-	GearName == "Gold Blood" ||
 	GearName == "Iron Scabs" ||
 	GearName == "Gelatinous" ||
 	GearName == "Evolve" ||
@@ -257,6 +256,9 @@ void Gear::HandsDescription() {
 	}
 	else if (GearName == "Crystal Ball") {
 		Description = "A glass ball on a stand, supposedly used for scrying. Not a very good weapon, though.";
+	}
+	else if (GearName == "Buckler") {
+		Description = "A small shield, also capable of ramming the opponent.";
 	}
 	else if (GearName == "Shield") {
 		Description = "Although it doesn't look like much of a weapon, it can pack quite an offensive punch.";
@@ -682,7 +684,7 @@ void Gear::TraitSDescription() {
 	}
 	else if (GearName == "Timer") {
 		Type = "Trait Sacrifice";
-		Description = "Start combat with 1 health and 6 Negates.";
+		Description = "Start combat with 1 health and 5 Negates.";
 	}
 	else if (GearName == "Sacrificial") {
 		Type = "Trait Sacrifice";
@@ -695,7 +697,7 @@ void Gear::TraitSDescription() {
 	}
 	else if (GearName == "Membrane") {
 		Type = "Trait Sacrifice";
-		Description = "Start combat with half current hp and that much block.";
+		Description = "Start combat with half current hp, gain that much block.";
 	}
 	else if (GearName == "Addiction") {
 		Type = "Trait Sacrifice";
@@ -855,10 +857,6 @@ void Gear::TraitRDescription() {
 	else if (GearName == "Blacksmith") {
 	Type = "Trait Reward";
 	Description = "Recieve 12 card modifiers.";
-	}
-	else if (GearName == "Gold Blood") {
-	Type = "Trait Reward";
-	Description = "You gain twice as much gold.";
 	}
 	else if (GearName == "Iron Scabs") {
 	Type = "Trait Reward";
@@ -1944,10 +1942,14 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 		if (On) {
 			guy.ModStat(-4, "Intelligence");
 			guy.ModStat(1, "Defense");
+			if (guy.Intelligence < 0)
+				guy.Intelligence = 0;
 		}
 		else {
 			guy.ModStat(4, "Intelligence");
 			guy.ModStat(-1, "Defense");
+			if (guy.Defense < 0)
+				guy.Defense = 0;
 		}
 	}
 	else if (GearName == "Mind Flooded") {
@@ -1964,11 +1966,17 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 			guy.ModStat(-2, "Strength");
 			guy.ModStat(-2, "Defense");
 			guy.ModStat(1, "Skill");
+			if (guy.Strength < 0)
+				guy.Strength = 0;
+			if (guy.Defense < 0)
+				guy.Defense = 0;
 		}
 		else {
 			guy.ModStat(2, "Strength");
 			guy.ModStat(2, "Defense");
 			guy.ModStat(-1, "Skill");
+			if (guy.Skill < 0)
+				guy.Skill = 0;
 		}
 	}
 	else if (GearName == "Teleportitis") {
@@ -2120,8 +2128,8 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 			for (int x = 1; x < 27; x++) {
 				for (int y = 6; y < 14; y++) {
 					if (rand() % 2 == 0)
-						if (x != guy.posx && y != guy.posy)
-							mvprintw(y, x, " ");
+						if (x-1 != guy.posx || y != guy.posy)
+							mvprintw(y, x, "?");
 				}
 			}
 		}
@@ -2229,6 +2237,8 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 		}
 		else {
 			guy.ModStat(-2, "Skill");
+			if (guy.Skill < 0)
+				guy.Skill = 0;
 			guy.Succumb = FALSE;
 			Succumb = FALSE;
 		}
@@ -2826,18 +2836,9 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Blacksmith") {
 		if (On) {
-			guy.Blacksmith = 5;
+			guy.Blacksmith = TRUE;
 		}
 		else {
-			guy.Blacksmith = -1;
-		}
-	}
-	else if (GearName == "Gold Blood") {
-		if (On) {
-			guy.Gold_Blood = TRUE;
-		}
-		else {
-			guy.Gold_Blood = FALSE;
 		}
 	}
 	else if (GearName == "Iron Scabs") {
@@ -2929,7 +2930,7 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 	else if (GearName == "Gold Bones") {
 		if (On) {
 			guy.Gold_Bones = TRUE;
-			guy.Gold += 25;
+			guy.gainGold(25);
 		}
 		else {
 			guy.Gold_Bones = FALSE;

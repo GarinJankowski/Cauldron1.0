@@ -12,6 +12,7 @@
 using namespace std;
 
 void mvprintInSize(int starty, int startx, int maxx, const char* toBePrinted, bool Fuzzy);
+void manualBox(string typebox, int colorpair);
 
 //abstract enemy class
 class Enemy
@@ -60,24 +61,21 @@ public:
 			Alive = FALSE;
 			guy.extraTurns = 0;
 		}
-		int n = (strlen(Name))/2;
 		
-		if (invisible > 0)
-			attron(COLOR_PAIR(2));
-		else
-			standend();
 
 		//Blind trait
 		bool fuzzy = FALSE;
 		if (guy.Blind)
 			fuzzy = TRUE;
 
-		string stat = string(Name);
-		mvprintInSize(6, 35 - n, 0, stat.c_str(), fuzzy);
+		if (invisible > 0)
+			attron(COLOR_PAIR(2));
+		else
+			standend();
 
 		mvprintInSize(7, 35, 0, "/", fuzzy);
 
-		stat = to_string(MaxHealth) + ")  ";
+		string stat = to_string(MaxHealth) + ")  ";
 		mvprintInSize(7, 36, 0, stat.c_str(), fuzzy);
 
 		stat = "  (" + to_string(CurrentHealth);
@@ -87,6 +85,13 @@ public:
 			mvprintInSize(7, 30, 0, stat.c_str(), fuzzy);
 		else if (CurrentHealth >= 0)
 			mvprintInSize(7, 31, 0, stat.c_str(), fuzzy);
+
+		standend();
+
+		if (invisible > 0)
+			attron(COLOR_PAIR(2));
+		else
+			standend();
 
 		if (enemyNegate > 0) {
 			stat = "Block: " + to_string(CurrentBlock) + "    ";
@@ -101,6 +106,21 @@ public:
 		}
 		
 		standend();
+
+		manualBox("Display", 0);
+
+		int n = (strlen(Name)) / 2;
+
+		if (invisible > 0)
+			attron(COLOR_PAIR(2));
+		else
+			standend();
+
+		stat = string(Name);
+		mvprintInSize(6, 35 - n, 0, stat.c_str(), fuzzy);
+
+		standend();
+
 	}
 	//stat changes
 	void heal(int health) {

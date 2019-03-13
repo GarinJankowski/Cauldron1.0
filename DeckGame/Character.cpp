@@ -387,6 +387,14 @@ int Character::TakeDamage(int damageTaken) {
 	if (Thick_Hide && CurrentBlock > 0) {
 		damageTaken = int(damageTaken*.85);
 	}
+	//Blue Scales trait
+	if (Blue_Scales && damageTaken <= 5) {
+		damageTaken = 0;
+	}
+	//Red Scales trait
+	if (Red_Scales && damageTaken >= 25) {
+		damageTaken = 0;
+	}
 
 	//Gold Bones trait
 	if (Gold_Bones && damageTaken > CurrentBlock && Negate == 0) {
@@ -399,13 +407,6 @@ int Character::TakeDamage(int damageTaken) {
 			damageTaken -= goldblock;
 			Gold -= goldblock;
 		}
-	}
-
-	if (Blue_Scales && damageTaken <= 5) {
-		damageTaken = 0;
-	}
-	if (Red_Scales && damageTaken >= 25) {
-		damageTaken = 0;
 	}
 
 	//pierce
@@ -438,8 +439,11 @@ int Character::TakeDamage(int damageTaken) {
 	}
 
 	//Spiny Skin trait
-	if (Spiny_Skin && damageTaken > 0) {
+	if (Spiny_Skin) {
 		SpinyDamage = Skill + 3;
+	}
+	else {
+		SpinyDamage = 0;
 	}
 	if (Iron_Scabs && CurrentHealth < healthBefore) {
 		int block = int((healthBefore - CurrentHealth) / 2);
@@ -507,6 +511,31 @@ int Character::ModStat(int bonus, string stat) {
 	else if (stat == "Skill")
 		Skill += bonus;
 	return bonus;
+}
+
+void Character::restoreStats() {
+	//Purple trait
+	if (Purple)
+		return;
+
+	ModStat(strMod, "Strength");
+	ModStat(defMod, "Defense");
+	ModStat(intMod, "Intelligence");
+	ModStat(hpMod, "MaxHealth");
+	ModStat(mpMod, "MaxMana");
+	ModStat(sklMod, "Skill");
+
+	strMod = 0;
+	defMod = 0;
+	intMod = 0;
+	hpMod = 0;
+	mpMod = 0;
+	sklMod = 0;
+}
+
+int Character::gainGold(int gold) {
+	Gold += gold;
+	return gold;
 }
 
 //to be implemented

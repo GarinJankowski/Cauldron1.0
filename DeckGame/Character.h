@@ -186,8 +186,7 @@ public:
 		bool Green_Scales = FALSE;
 		bool Multi_Tongued = FALSE;
 		bool negotiate = FALSE;
-		int Blacksmith = -1;
-		bool Gold_Blood = FALSE;
+		bool Blacksmith = FALSE;
 		bool Iron_Scabs = FALSE;
 		bool Gelatinous = FALSE;
 		bool Eight_Legs = FALSE;
@@ -211,6 +210,8 @@ public:
 	int gainBlock(int block);
 	int DrainMana(int manaDrained);
 	int ModStat(int bonus, string stat);
+	void restoreStats();
+	int gainGold(int gold);
 
 	//print character stuff
 	void printDirectory();

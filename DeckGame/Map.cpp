@@ -11,6 +11,8 @@ Map::Map()
 	int boss = 10;
 
 	int cauldronCounter = 0;
+	int cauldronx = 0;
+	int cauldrony = 2;
 	int shopCounter = 0;
 
 	generateTerrain();
@@ -45,10 +47,10 @@ Map::Map()
 					}
 					else if (rng == 6) {
 						a = Room("Cauldron", x, y);
+						cauldronCounter++;
 					}
 					else if (rng > 7 && rng <= 8) {
 						a = Room("Mod", x, y);
-						cauldronCounter++;
 					}
 					else {
 						a = Room("Combat", x, y);
@@ -76,7 +78,7 @@ Map::Map()
 					else if (rng > 14 && rng <= 16) {
 						bcd = Room("Mod", x, y);
 					}
-					else if (rng > 20 && rng <= 24 && shopCounter < 1) {
+					else if (rng > 20 && rng <= 24 && shopCounter < 2 && getTier(x, y) != 'B') {
 						bcd = Room("Shop", x, y);
 						shopCounter++;
 					}
@@ -91,7 +93,7 @@ Map::Map()
 				}
 				else if (getTier(x, y) == 'E') {
 					//combat, hands, body, head, cauldron, boss
-					rng = rand() % 22;
+					rng = rand() % 24;
 					Room e;
 					if (cauldronCounter < 18 && (rng == 0 || rng == 21)) {
 						e = Room("Cauldron", x, y);
@@ -109,7 +111,7 @@ Map::Map()
 					else if (rng > 16 && rng <= 18) {
 						e = Room("Boss", x, y);
 					}
-					else if ((rng == 19 || rng == 20) && shopCounter < 3) {
+					else if ((rng >= 19 && rng <= 22) && shopCounter < 4) {
 						e = Room("Shop", x, y);
 						shopCounter++;
 					}
@@ -130,7 +132,7 @@ Map::Map()
 					else if (rng > 0 && rng <= 4) {
 						f = Room("Boss", x, y);
 					}
-					else if (rng == 5 && shopCounter < 4) {
+					else if (rng == 5 && shopCounter < 5) {
 						f = Room("Shop", x, y);
 						shopCounter++;
 					}

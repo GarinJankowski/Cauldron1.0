@@ -2,6 +2,7 @@
 #include "TextLog.h"
 
 void mvprintInSize(int starty, int startx, int maxx, const char* toBePrinted, bool Fuzzy, bool Log);
+void manualBox(string typebox, int colorpair);
 
 TextLog::TextLog()
 {
@@ -82,6 +83,8 @@ void TextLog::printLog() {
 			L++;
 
 		}
+
+	manualBox("Decision", 0);
 }
 
 void TextLog::printAllLog(int starti, int endi) {
