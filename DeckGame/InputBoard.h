@@ -129,7 +129,7 @@ public:
 	bool extraForge = TRUE;
 
 	void setRoom(const char *type, const char *terrain);
-	void ShuffleAddPrint();
+	void ShuffleAddPrint(Character &guy);
 	Card removeCard();
 	void getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 	void getchDecision(Character &guy, Deck &deck, TextLog &log);
@@ -174,7 +174,7 @@ public:
 	void restoreStats(Character &guy);
 	void AddRemoveTrait(int pm, const char *Name);
 	void fillHand(Character &guy);
-	void shuffleHand();
+	void shuffleHand(Character &guy);
 
 	int gainBlock(int block, Character &guy);
 	int gainEnergy(int energy, Character &guy, Enemy &enemy, TextLog &log);
@@ -184,6 +184,7 @@ public:
 
 	int shopnum = 0;
 	int shopnum2 = 1;
+	bool shopRoom = FALSE;
 	int generateGold(Enemy &enemy);
 	void generateShop();
 	void printShop(Character &guy);
@@ -199,6 +200,7 @@ public:
 	bool Negotiate(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 	bool NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 	void polymorph(Character &guy, Enemy &enemy);
+	void teleport(Character &guy, Deck &deck, TextLog &log);
 	bool Third_Eye = FALSE;
 	bool Tail = FALSE;
 	bool teleported = FALSE;

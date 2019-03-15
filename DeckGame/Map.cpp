@@ -60,7 +60,7 @@ Map::Map()
 				}
 				else if (getTier(x, y) == 'B' || getTier(x, y) == 'C' || getTier(x, y) == 'D') {
 					//combat, hands, body, head, cauldron, boss(very small chance)
-					rng = rand() % 26;
+					rng = rand() % 23;
 					Room bcd;
 					if (rng == 0) {
 						bcd = Room("Gear Head", x, y);
@@ -78,9 +78,8 @@ Map::Map()
 					else if (rng > 14 && rng <= 16) {
 						bcd = Room("Mod", x, y);
 					}
-					else if (rng > 20 && rng <= 24 && shopCounter < 2 && getTier(x, y) != 'B') {
+					else if (rng == 20 && getTier(x, y) != 'B' && rand() % 8 < 6) {
 						bcd = Room("Shop", x, y);
-						shopCounter++;
 					}
 					else if (rng == 25) {
 						bcd = Room("Boss", x, y);
@@ -93,7 +92,7 @@ Map::Map()
 				}
 				else if (getTier(x, y) == 'E') {
 					//combat, hands, body, head, cauldron, boss
-					rng = rand() % 24;
+					rng = rand() % 22;
 					Room e;
 					if (cauldronCounter < 18 && (rng == 0 || rng == 21)) {
 						e = Room("Cauldron", x, y);
@@ -111,9 +110,8 @@ Map::Map()
 					else if (rng > 16 && rng <= 18) {
 						e = Room("Boss", x, y);
 					}
-					else if ((rng >= 19 && rng <= 22) && shopCounter < 4) {
+					else if (rng == 19 && rand() % 5 < 3) {
 						e = Room("Shop", x, y);
-						shopCounter++;
 					}
 					else {
 						e = Room("Combat", x, y);
@@ -132,7 +130,7 @@ Map::Map()
 					else if (rng > 0 && rng <= 4) {
 						f = Room("Boss", x, y);
 					}
-					else if (rng == 5 && shopCounter < 5) {
+					else if (rng == 5 && rand() % 2 == 0) {
 						f = Room("Shop", x, y);
 						shopCounter++;
 					}
@@ -140,11 +138,15 @@ Map::Map()
 						f = Room("Combat", x, y);
 					}
 
-					/*if (x > 21 && y > 4) {
+					if (x > 21 && y > 4 && shopCounter < 2 && !(x == 22 && y == 5) && rand() % 3 == 0) {
+						f = Room("Shop", x, y);
+						shopCounter++;
+					}
+					if (x > 21 && y > 4 && !(x == 22 && y == 5)) {
 						if (rand() % 7 > 3 && f.RoomType != "Shop") {
 							f = Room("Boss", x, y);
 						}
-					}*/
+					}
 
 					f.Terrain = terrainGrid[x][y];
 					roomList.push_back(f);
@@ -239,7 +241,7 @@ void Map::generateTerrain() {
 		}
 	}
 
-	for (int i = 0; i < 12; i++) {
+	for (int i = 0; i < 8; i++) {
 		if (rand() % 3 > 1) {
 			generateSingleTerrain("Ice");
 		}
@@ -254,6 +256,10 @@ void Map::generateTerrain() {
 		}
 	}
 
+	generateSingleTerrain("Ice");
+	generateSingleTerrain("Forest");
+	generateSingleTerrain("Lava");
+	generateSingleTerrain("Wasteland");
 	generateSingleTerrain("Ice");
 	generateSingleTerrain("Forest");
 	generateSingleTerrain("Lava");
@@ -344,7 +350,7 @@ int Map::generateSurroundingTerrain(int x, int y) {
 		if (terr == "Lava")
 			chance += 3;
 		if (terr == "Wasteland")
-			chance++;
+			chance += 3;
 		if (y > 0 && rand() % 25 > chance) {
 			terrainGrid[x][y - 1] = terr;
 			num++;

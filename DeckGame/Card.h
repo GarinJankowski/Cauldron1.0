@@ -48,7 +48,7 @@ public:
 	void setboss();
 	void setNegative();
 	
-	void printCard(int position);
+	void printCard(int position, Character &guy);
 	int dealDamage(int damage, Character &guy, Enemy &enemy, TextLog &log);
 	int dealDamageStrategy(int damage, Character &guy, Enemy &enemy);
 	int gainBlock(int block, Character &guy, Enemy &enemy);

@@ -307,20 +307,20 @@ void Card::setSpell() {
 		//4 Mana
 		//recover (Int)d3 current hp
 		ManaCost = 4;
-		Description = "Costs 4 mana. Recover (Int)d3 health.";
+		Description = "Recover (Int)d3 health.";
 	}
 	else if (CardName == "Blast") {
 		ManaCost = 8;
-		Description = "Costs 8 mana. Deal (Int)d2 damage. +11 Energy.";
+		Description = "Deal (Int)d2 damage. +11 Energy.";
 	}
 
 	else if (CardName == "Leech") {
 		ManaCost = 5;
-		Description = "Costs 5 mana. Deal and heal (Int)d2 damage. +2 Energy";
+		Description = "Deal and heal (Int)d2 damage. +2 Energy";
 	}
 	else if (CardName == "Regenerate") {
 		ManaCost = 5;
-		Description = "Costs 5 mana. Heal 2+1d(Int) health for 5 turns.";
+		Description = "Heal 2+1d(Int) health for 5 turns.";
 	}
 	else if (CardName == "Transmute") {
 		ManaCost = 0;
@@ -329,7 +329,7 @@ void Card::setSpell() {
 
 	else if (CardName == "Blink") {
 		ManaCost = 3;
-		Description = "Costs 3 mana. Deal 2d(Int) damage. +10 Energy.";
+		Description = "Deal 2d(Int) damage. +10 Energy.";
 	}
 	else if (CardName == "Singularity") {
 		ManaCost = 0;
@@ -338,7 +338,7 @@ void Card::setSpell() {
 
 	else if (CardName == "Freeze") {
 		ManaCost = 10;
-		Description = "Costs 10 mana. Gain 6+ 2d(Int) block. -5 Energy.";
+		Description = "Gain 6+ 2d(Int) block. -5 Energy.";
 	}
 	else if (CardName == "Shard") {
 		ManaCost = 0;
@@ -347,7 +347,7 @@ void Card::setSpell() {
 
 	else if (CardName == "Fumes") {
 		ManaCost = 8;
-		Description = "Costs 8 mana. Deal (Int/2)d2 damage for (Int) turns.";
+		Description = "Deal (Int/2)d2 damage for (Int) turns.";
 	}
 	else if (CardName == "Incense") {
 		ManaCost = 0;
@@ -356,7 +356,7 @@ void Card::setSpell() {
 
 	else if (CardName == "Fireball") {
 		ManaCost = 5;
-		Description = "Cost 5 mana. Deal (Int)d4 damage. -5 Energy.";
+		Description = "Deal (Int)d4 damage. -5 Energy.";
 	}
 	else if (CardName == "Fuel") {
 		ManaCost = 0;
@@ -365,7 +365,7 @@ void Card::setSpell() {
 
 	else if (CardName == "Charm") {
 		ManaCost = 4;
-		Description = "Cost 4 mana. The next damage taken is dealt to the enemy.";
+		Description = "The next damage taken is dealt to the enemy.";
 	}
 	else if (CardName == "Attract") {
 		ManaCost = 0;
@@ -374,7 +374,7 @@ void Card::setSpell() {
 
 	else if (CardName == "Copy") {
 		ManaCost = 6;
-		Description = "Cost 6 mana. Use the next card twice. +5 Energy.";
+		Description = "Use the next card twice. +5 Energy.";
 	}
 	else if (CardName == "Confuse") {
 		ManaCost = 0;
@@ -387,12 +387,12 @@ void Card::setSpell() {
 	}
 	else if (CardName == "Shock") {
 		ManaCost = 0;
-		Description = "Gain 2 mana. Take 4 damage. +12 Energy.";
+		Description = "Take 4 damage. +12 Energy.";
 	}
 
 	else if (CardName == "Destroy") {
 		ManaCost = 10;
-		Description = "Costs 10 mana. Deal your block as damage, lose your block.";
+		Description = "Deal your block as damage, lose your block.";
 	}
 	else if (CardName == "Construct") {
 		ManaCost = 0;
@@ -401,7 +401,7 @@ void Card::setSpell() {
 
 	else if (CardName == "Beam") {
 		ManaCost = 3;
-		Description = "Costs 3 mana. Deal (Int)d2 damage. Fill hand with Spells.";
+		Description = "Deal (Int)d2 damage. Fill hand with Spells.";
 	}
 	else if (CardName == "Diffract") {
 		ManaCost = 0;
@@ -414,7 +414,7 @@ void Card::setSpell() {
 	}
 	else if (CardName == "Synthesize") {
 		ManaCost = 10;
-		Description = "Costs 10 mana. Heal for 8d(Int).";
+		Description = "Heal for 8d(Int).";
 	}
 
 	else if (CardName == "Drown") {
@@ -428,7 +428,7 @@ void Card::setSpell() {
 
 	else if (CardName == "Reagent") {
 		ManaCost = 5;
-		Description = "Cost 5 mana. Deal 1d4 damage for (Int) more turns.";
+		Description = "Deal 1d4 damage for (Int) more turns.";
 	}
 	else if (CardName == "Reactant") {
 		ManaCost = 0;
@@ -437,16 +437,16 @@ void Card::setSpell() {
 
 	else if (CardName == "Transmogrify") {
 		ManaCost = 5;
-		Description = "Cost 5 mana. Gain (Int)d2 gold.";
+		Description = "Gain (Int)d2 gold.";
 	}
 	else if (CardName == "Liquidate") {
 		ManaCost = 0;
-		Description = "Cost 10 gold. Deal 3d(Int) damage. +12 Energy.";
+		Description = "Deal 3d(Int) damage. +12 Energy.";
 	}
 
 	else if (CardName == "Sandstorm") {
 		ManaCost = 10;
-		Description = "Cost 10 mana. Everybody takes 3d(Int) damage for 3 turns.";
+		Description = "Everybody takes 3d(Int) damage for 3 turns.";
 	}
 	else if (CardName == "Screen") {
 		ManaCost = 0;
@@ -553,7 +553,7 @@ void Card::setNegative() {
 	}
 }
 
-void Card::printCard(int position) {
+void Card::printCard(int position, Character &guy) {
 	/*init_pair(1, COLOR_YELLOW, COLOR_BLACK);
 
 	init_pair(2, COLOR_CYAN, COLOR_BLACK);
@@ -651,6 +651,36 @@ void Card::printCard(int position) {
 	else if (CardType == "Negative")
 		attron(COLOR_PAIR(5));
 
+	//string for cost description at the bottom of the card
+	int mcx = 0;
+	int mcy = 23;
+	string manacost = "";
+	int mc = ManaCost;
+	if (guy.Dazed && CardType == "Spell")
+		mc++;
+	if (guy.Psychosis != -1)
+		mc *= 2;
+	if (mc > 0 || CardName == "Lightning") {
+		manacost = "(Costs " + to_string(mc) + " mana.)";
+		if (CardName == "Lightning") {
+			manacost = "(Lose all mana.)";
+		}
+		if (guy.Sacrificial) {
+			manacost = "#r(Take " + to_string(mc) + " damage.)#m";
+			if (CardName == "Lightning") {
+				manacost = "(Lose all hp and block.)";
+				mcx -= 2;
+			}
+		}
+	}
+	if (CardName == "Liquidate") {
+		manacost = "#$(Costs 10 gold.)#m";
+	}
+	if (CardName == "Flee") {
+		manacost = "(Costs all block.)";
+		mcx--;
+	}
+
 	//const char* car;
 	switch (position) {
 	case 1:
@@ -659,6 +689,10 @@ void Card::printCard(int position) {
 		//car = Description;
 		mvprintInSize(19, 4, 15, Description, FALSE);
 		manualBox("Card 1", 0);
+
+		mcx += 3;
+		mvprintInSize(mcy, mcx, 0, manacost.c_str(), FALSE);
+
 		break;
 	case 2:
 		//car = CardName;
@@ -666,6 +700,10 @@ void Card::printCard(int position) {
 		//car = Description;
 		mvprintInSize(19, 24, 15, Description, FALSE);
 		manualBox("Card 2", 0);
+
+		mcx += 23;
+		mvprintInSize(mcy, mcx, 0, manacost.c_str(), FALSE);
+
 		break;
 	case 3:
 		//car = CardName;
@@ -673,6 +711,10 @@ void Card::printCard(int position) {
 		//car = Description;
 		mvprintInSize(19, 44, 15, Description, FALSE);
 		manualBox("Card 3", 0);
+
+		mcx += 43;
+		mvprintInSize(mcy, mcx, 0, manacost.c_str(), FALSE);
+
 		break;
 	case 4:
 		mvprintw(17, 64, "            ");
@@ -1902,18 +1944,18 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 void Card::negativeFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	if (CardName == "Steam") {
 		//take 5 damage, +10 energy
-		guy.TakeDamage(5);
+		int damage = guy.TakeDamage(5);
 		gainEnergy(10, guy, enemy);
 
-		string line = "-You burn for #r5#o damage.";
+		string line = "-You burn for #r" + to_string(damage) + "#o damage.";
 		log.PushPop(line);
 	}
 	else if (CardName == "Scalding Steam") {
 		//take 5 damage, +10 energy
-		guy.TakeDamage(12);
+		int damage = guy.TakeDamage(12);
 		gainEnergy(10, guy, enemy);
 
-		string line = "-You burn for #r12#o damage.";
+		string line = "-You burn for #r" + to_string(damage) + "#o damage.";
 		log.PushPop(line);
 	}
 	else if (CardName == "Webbed") {

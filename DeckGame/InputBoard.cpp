@@ -107,7 +107,7 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	bodyLate.push_back(Gear("Amulet of Aura"));
 	bodyLate.push_back(Gear("Turtle Shell"));
 	bodyLate.push_back(Gear("Mage Armor"));
-
+	
 	bodyLateREFILL = bodyLate;
 
 	//head
@@ -1665,7 +1665,7 @@ void InputBoard::terrainLoopWhole() {
 /*function for shuffling the deck in battle if the draw pile is empty,
   pushing forward cards from the draw pile into the cards that can be chosen,
   and printing the cards that can be chosen*/
-void InputBoard::ShuffleAddPrint() {
+void InputBoard::ShuffleAddPrint(Character &guy) {
 	clearBoardWhole();
 	manualBox("Card 1", 0);
 	manualBox("Card 2", 0);
@@ -1761,7 +1761,7 @@ void InputBoard::ShuffleAddPrint() {
 		//prints the cards to choose from
 		for (int i = 0; i < handSize; i++) {
 			if(DecisionCards.size() > i)
-				DecisionCards.at(i).printCard(i + 1);
+				DecisionCards.at(i).printCard(i + 1, guy);
 		}
 
 		//Third Eye trait
@@ -1951,34 +1951,34 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 			int rng = rand() % (Discard.size() + 1);
 			Discard.insert(Discard.begin() + rng, tempCard);
 		}
-		ShuffleAddPrint();
+		ShuffleAddPrint(guy);
 	}
 	else if (choose == 'd') {
 		showDeck(guy, deck, FALSE);
 		
 		log.printLog();
-		ShuffleAddPrint();
+		ShuffleAddPrint(guy);
 		getchCard(guy, enemy, deck, log);
 	}
 	else if (choose == 't') {
 		showTraits();
 
 		log.printLog();
-		ShuffleAddPrint();
+		ShuffleAddPrint(guy);
 		getchCard(guy, enemy, deck, log);
 	}
 	else if (choose == 'm') {
 		showMods(guy, deck, FALSE);
 
 		log.printLog();
-		ShuffleAddPrint();
+		ShuffleAddPrint(guy);
 		getchCard(guy, enemy, deck, log);
 	}
 	else if (choose == 'l') {
 		showTerrain();
 
 		log.printLog();
-		ShuffleAddPrint();
+		ShuffleAddPrint(guy);
 		getchCard(guy, enemy, deck, log);
 	}
 	//Wings trait
@@ -2356,7 +2356,7 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 		log.printLog();
 
 		//show the card options
-		ShuffleAddPrint();
+		ShuffleAddPrint(guy);
 
 		//Foresight trait
 		if (guy.Foresight == 1) {
@@ -2373,7 +2373,7 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 				break;
 			}
 			//show card options, update/print character stats, update/print enemy stats
-			ShuffleAddPrint();
+			ShuffleAddPrint(guy);
 			guy.printStats();
 			enemy.updateEnemy(guy);
 
@@ -2552,7 +2552,7 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 				}
 				else {
 					negotiateStep = 0;
-					ShuffleAddPrint();
+					ShuffleAddPrint(guy);
 				}
 			}
 
@@ -3086,7 +3086,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 
 	//shuffles if shuffle is true
 	if (guy.shuffle) {
-		shuffleHand();
+		shuffleHand(guy);
 		guy.shuffle = FALSE;
 	}
 
@@ -3449,32 +3449,6 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		for (int i = 5; i < 15; i++)
 			mvprintw(i, 28, "               ");
 
-		//Teleportitis trait
-		if (guy.Teleportitis && rand() % 4 == 0) {
-			int tiles = (rand() % 4)-2;
-			if (tiles == 0)
-				tiles += 2;
-
-			int axis = rand() % 2;
-			if (tiles > 0) {
-				if (axis == 0 && guy.posx <= 23)
-					guy.posx += tiles;
-				else if (axis == 1 && guy.posy <= 5)
-					guy.posy += tiles;
-			}
-			else if (tiles < 0) {
-				if (axis == 0 && guy.posx > 2)
-					guy.posx += tiles;
-				else if (axis == 1 && guy.posy > 2)
-					guy.posy += tiles;
-			}
-
-			teleported = TRUE;
-			string tele = "#r You teleport.#o";
-			log.PushPop(tele);
-			log.printLog();
-			return;
-		}
 		manualBox("Card 2", 0);
 
 		//print legend
@@ -3542,13 +3516,6 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		else
 			right = TRUE;
 
-		//temporary bug fix for being unable to move anywhere after being teleported
-		if (teleported) {
-			up = TRUE;
-			right = TRUE;
-			teleported = FALSE;
-		}
-
 		if (up) {
 			mvprintInSize(19, 25, 0, "1) Up", FALSE);
 		}
@@ -3561,6 +3528,9 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 				down += " [" + to_string(guy.Warper) + "]";
 			}
 			mvprintInSize(21, 25, 0, down.c_str(), FALSE);
+		}
+		if (shopRoom) {
+			mvprintInSize(22, 22, 0, "(Enter) Enter Shop", FALSE);
 		}
 
 		/*
@@ -3626,7 +3596,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 
 		generateboss();
 		for (int i = 0; i < 3; i++) {
-			bossDecision.at(i).printCard(i+1);
+			bossDecision.at(i).printCard(i+1, guy);
 		}
 
 		if (guy.Carnivore && !guy.Ego) {
@@ -3655,7 +3625,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		}
 
 		for (int i = 0; i < 3; i++) {
-			spellDecision.at(i).printCard(i + 1);
+			spellDecision.at(i).printCard(i + 1, guy);
 		}
 	}
 	else if (RoomType == "Cauldron") {
@@ -3710,6 +3680,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 			generateShop();
 			shopnum++;
 		}
+		shopRoom = TRUE;
 		printShop(guy);
 	}
 }
@@ -4157,7 +4128,7 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					guy.Metamorphosis--;
 					guy.printStats();
 
-					if (guy.Metamorphosis == 1) {
+					if (guy.Metamorphosis == 1 && guy.Destiny <= 1) {
 						printDecision(guy, log);
 						getchDecision(guy, deck, log);
 					}
@@ -4327,6 +4298,12 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				guy.changePosBefore('y', guy.posy);
 				guy.changePosBefore('x', guy.posx);
 				guy.posy += space;
+
+				//leave shop completely
+				if (shopRoom) {
+					shopnum2++;
+					shopRoom = FALSE;
+				}
 			}
 			else if (right && choose == '2') {
 				//Long Legs trait
@@ -4338,6 +4315,12 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				guy.changePosBefore('y', guy.posy);
 				guy.changePosBefore('x', guy.posx);
 				guy.posx += space;
+
+				//leave shop completely
+				if (shopRoom) {
+					shopnum2++;
+					shopRoom = FALSE;
+				}
 			}
 			else if (down && choose == '3') {
 				//Long Legs trait
@@ -4350,11 +4333,27 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				guy.changePosBefore('x', guy.posx);
 				guy.posy -= space;
 				guy.Warper--;
+
+				//leave shop completely
+				if (shopRoom) {
+					shopnum2++;
+					shopRoom = FALSE;
+				}
+			}
+			else if (choose == 10 && shopRoom) {
+				RoomType = "Shop";
+				printDecision(guy, log);
+				getchShop(guy, deck, log);
 			}
 			else {
 				getchDecision(guy, deck, log);
 			}
 			
+			//Teleportitis trait
+			if (guy.Teleportitis && rand() % 10 < 2+(guy.Skill/4)) {
+				teleport(guy, deck, log);
+			}
+
 			/*
 			if (guy.posx == 25) {
 				if (choose == '1') {
@@ -4549,6 +4548,7 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				else if (choose == '4') {
 
 				}
+
 				while (bossDecision.size() > 0) {
 					bossDecision.pop_back();
 				}
@@ -4571,6 +4571,9 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 						extraCauldron = TRUE;
 						RoomType = "Empty";
 					}
+				}
+				else if (guy.Destiny > 1) {
+					RoomType = "Cauldron";
 				}
 				else
 					RoomType = "Empty";
@@ -4988,10 +4991,10 @@ void InputBoard::fillHand(Character &guy) {
 					i--;
 				}
 			}
-			ShuffleAddPrint();
+			ShuffleAddPrint(guy);
 			/*while (DecisionCards.size() < 3) {
 				if (Discard.size() == 0)
-					ShuffleAddPrint();
+					ShuffleAddPrint(guy);
 				else {
 					DecisionCards.push_back(Discard.front());
 					Discard.erase(Discard.begin());
@@ -5022,7 +5025,7 @@ void InputBoard::updateDeck(Deck &deck) {
 }
 
 //shuffles the player's hand
-void InputBoard::shuffleHand() {
+void InputBoard::shuffleHand(Character &guy) {
 	//Tail trait
 	if (!Tail) {
 		//put everything in the discard pile
@@ -5034,7 +5037,7 @@ void InputBoard::shuffleHand() {
 			Discard.push_back(Draw.back());
 			Draw.pop_back();
 		}
-		ShuffleAddPrint();
+		ShuffleAddPrint(guy);
 	}
 }
 
@@ -5307,7 +5310,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 	if (c == 27) {
 		for (int i = 0; i < 8; i++)
 			mvprintw(6 + i, 29, "             ");
-		shopnum2++;
+		//shopnum2++;
 		clearBoardWhole();
 		manualBox("Decision", 0);
 		RoomType = "Empty";
@@ -5514,7 +5517,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		string line = "#y-You recieve a " + shopP + "#y modifier.#o";
 		log.PushPop(line);
 		shopP = "";
-		mvprintInSize(20, 55, 0, "                     ", FALSE);
+		mvprintInSize(21, 55, 0, "                     ", FALSE);
 		getchShop(guy, deck, log);
 	}
 	else if (c == 'Q' && guy.Gold >= 15 && shopQ != "") {
@@ -5545,7 +5548,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		string line = "#y-You recieve a " + shopQ + "#y modifier.#o";
 		log.PushPop(line);
 		shopQ = "";
-		mvprintInSize(21, 55, 0, "                     ", FALSE);
+		mvprintInSize(22, 55, 0, "                     ", FALSE);
 		getchShop(guy, deck, log);
 	}
 	else if (c == 'R' && guy.Gold >= 15 && shopR != "") {
@@ -5576,7 +5579,7 @@ void InputBoard::getchShop(Character &guy, Deck &deck, TextLog &log) {
 		string line = "#y-You recieve a " + shopR + "#y modifier.#o";
 		log.PushPop(line);
 		shopR = "";
-		mvprintInSize(22, 55, 0, "                     ", FALSE);
+		mvprintInSize(23, 55, 0, "                     ", FALSE);
 		getchShop(guy, deck, log);
 	}
 	else {
@@ -5673,6 +5676,44 @@ void InputBoard::win(Character &guy, Deck &deck, TextLog &log, bool gamewin) {
 	}
 }
 
+
+void InputBoard::teleport(Character &guy, Deck &deck, TextLog &log) {
+	int tiles = (rand() % 4) - 2;
+	if (tiles == 0)
+		tiles += 2;
+
+	int maxx = 23;
+	int maxy = 5;
+	int min = 2;
+	if (tiles == 1 || tiles == -1) {
+		maxx++;
+		maxy++;
+		min--;
+	}
+
+	int axis = rand() % 2;
+	if (tiles > 0) {
+		if (axis == 0 && guy.posx <= maxx)
+			guy.posx += tiles;
+		else if (axis == 1 && guy.posy <= maxy)
+			guy.posy += tiles;
+	}
+	else if (tiles < 0) {
+		if (axis == 0 && guy.posx > min)
+			guy.posx += tiles;
+		else if (axis == 1 && guy.posy > min)
+			guy.posy += tiles;
+	}
+	else {
+		teleport(guy, deck, log);
+	}
+
+	teleported = TRUE;
+	string tele = "#r You teleport.#o";
+	log.PushPop(tele);
+	log.printLog();
+	return;
+}
 
 void InputBoard::polymorph(Character &guy, Enemy &enemy) {
 	Enemy beforeenemy = enemy;

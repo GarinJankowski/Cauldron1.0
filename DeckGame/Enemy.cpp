@@ -57,7 +57,7 @@ Enemy::Enemy(const char *name):Name(name)
 		MaxHealth = 45;
 	}
 	else if (Name == "Brown Recluse") {
-		MaxHealth = 70;
+		MaxHealth = 65;
 	}
 	else if (Name == "Fairy") {
 		MaxHealth = 1;
@@ -813,6 +813,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			int rng = rand() % 3;
 			if (dot == 3 || (dot > 0 && rng < 2)) {
 				int damage = 0;
+				damage -= rtd(2 * dot, 2);
 				for (int i = 0; i < dot; i++) {
 					damage += rtd(1, 7) + 11 + td;
 				}
@@ -1902,9 +1903,10 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			string line;
 			int rng = rand() % 7;
 			if (rng == 0) {
-				int damage = rtd(4, 2);
+				int damage = rtd(3, 2);
 				damage = guy.TakeDamage(damage);
-				line = "-The King slashes you for #r" + to_string(damage) + "#o damage.";
+				damage = guy.TakeDamage(damage);
+				line = "-The King slashes you twice for #r" + to_string(damage) + "#o damage each.";
 			}
 			else if (rng == 1) {
 				int block = rtd(25+td, 3);
@@ -2150,7 +2152,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			}
 
 			if (charge) {
-				if (type > 4 && rand() % 8 < 3) {
+				if (type > 4 && rand() % 9 < 5) {
 					//guy.dotDamage -= 6;
 					guy.dotDamage /= 3;
 
