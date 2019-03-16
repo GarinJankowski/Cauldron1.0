@@ -62,6 +62,7 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	handsNorm.push_back(Gear("Dirk"));
 	handsNorm.push_back(Gear("Cutlass"));
 	handsNorm.push_back(Gear("Buckler"));
+	handsNorm.push_back(Gear("Athame"));
 
 	handsNormREFILL = handsNorm;
 
@@ -82,6 +83,7 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	handsLate.push_back(Gear("Shield"));
 	handsLate.push_back(Gear("Wand"));
 	handsLate.push_back(Gear("Hand Cannon"));
+	handsLate.push_back(Gear("Greatsword"));
 
 	handsLateREFILL = handsLate;
 
@@ -93,6 +95,10 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	bodyNorm.push_back(Gear("Steel Breastplate"));
 	bodyNorm.push_back(Gear("Feathered Cloak"));
 	bodyNorm.push_back(Gear("Padded Tunic"));
+	bodyNorm.push_back(Gear("Gilded Robes"));
+	bodyNorm.push_back(Gear("Wizard Garb"));
+	bodyNorm.push_back(Gear("Cloth Shirt"));
+	bodyNorm.push_back(Gear("Grass Armor"));
 
 	bodyNormREFILL = bodyNorm;
 
@@ -107,6 +113,8 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	bodyLate.push_back(Gear("Amulet of Aura"));
 	bodyLate.push_back(Gear("Turtle Shell"));
 	bodyLate.push_back(Gear("Mage Armor"));
+	bodyLate.push_back(Gear("Flesh Suit"));
+	bodyLate.push_back(Gear("Grey Robes"));
 	
 	bodyLateREFILL = bodyLate;
 
@@ -244,7 +252,6 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 
 	AvailableTraitsReward.push_back(Gear("Mending Flesh"));
 	AvailableTraitsReward.push_back(Gear("Gymnast"));
-	AvailableTraitsReward.push_back(Gear("Third Eye"));
 	AvailableTraitsReward.push_back(Gear("Warper"));
 	AvailableTraitsReward.push_back(Gear("Growth Spurt"));
 	AvailableTraitsReward.push_back(Gear("Mind"));
@@ -365,6 +372,8 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	shopAttacks.push_back(Card("Lash"));
 	shopAttacks.push_back(Card("Pummel"));
 	shopAttacks.push_back(Card("Ram"));
+	shopAttacks.push_back(Card("Rend"));
+	shopAttacks.push_back(Card("Ritual"));
 
 	shopAttacksREFILL = shopAttacks;
 
@@ -379,6 +388,13 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	shopDefends.push_back(Card("Flee"));
 	shopDefends.push_back(Card("Spikes"));
 	shopDefends.push_back(Card("Repulse"));
+	shopDefends.push_back(Card("Gamble"));
+	shopDefends.push_back(Card("Inspire"));
+	shopDefends.push_back(Card("Bide"));
+	shopDefends.push_back(Card("Restore"));
+	shopDefends.push_back(Card("Form"));
+	shopDefends.push_back(Card("Tear"));
+	shopDefends.push_back(Card("Barrier"));
 	
 	shopDefendsREFILL = shopDefends;
 
@@ -2635,11 +2651,15 @@ void InputBoard::printDisplayStats(Character &guy, Enemy &enemy, Deck &deck, Tex
 	if (guy.Numb)
 		fuzzy = TRUE;
 
+	for (int y = 10; y < 13; y++) {
+		mvprintInSize(y, 29, 0, "             ", FALSE);
+	}
+
 	mvprintInSize(9, 34, 0, "You", fuzzy);
 
-	string stat = "#oHP: #r" + to_string(guy.CurrentHealth) + "/" + to_string(guy.MaxHealth) + "  ";
+	string stat = "#oHP: #r" + to_string(guy.CurrentHealth) + "/" + to_string(guy.MaxHealth);
 	mvprintInSize(10, 31, 0, stat.c_str(), fuzzy);
-	stat = "#oMP: #m" + to_string(guy.CurrentMana) + "/" + to_string(guy.MaxMana) + "  ";
+	stat = "#oMP: #m" + to_string(guy.CurrentMana) + "/" + to_string(guy.MaxMana);
 	mvprintInSize(11, 31, 0, stat.c_str(), fuzzy);
 
 	int xe = 30;
@@ -2656,12 +2676,12 @@ void InputBoard::printDisplayStats(Character &guy, Enemy &enemy, Deck &deck, Tex
 	//if you have any Negation, print the character block a bit more to the left to make room
 	//print character block
 	if (guy.Negate <= 0) {
-		stat = "  Block: #c" + to_string(guy.CurrentBlock) + "  ";
+		stat = "  Block: #c" + to_string(guy.CurrentBlock);
 		mvprintInSize(12, 29, 0, stat.c_str(), fuzzy);
 		mvprintInSize(12, 41, 0, " ", fuzzy);
 	}
 	else {
-		stat = "Block: #c" + to_string(guy.CurrentBlock) + "    ";
+		stat = "Block: #c" + to_string(guy.CurrentBlock);
 		mvprintInSize(12, 29, 0, stat.c_str(), fuzzy);
 		stat = "(" + to_string(guy.Negate) + ")";
 		mvprintInSize(12, 39, 0, stat.c_str(), fuzzy);
@@ -2734,6 +2754,14 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 		string line = "-You gain #g" + to_string(heal) + "#o health.";
 		log.PushPop(line);
 		guy.regenerateTurns--;
+	}
+	//tear
+	if (guy.tear > 0) {
+		int heal = rtd(3, 2);
+		guy.TakeDamage(-1 * heal);
+		string line = "-You gain #g" + to_string(heal) + "#o health.";
+		log.PushPop(line);
+		guy.tear--;
 	}
 	//incense
 	if (guy.incense > 0) {
@@ -2823,8 +2851,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	if (guy.Anemia && guy.CurrentHealth > 5) {
 		if (rand() % 4 == 0) {
 			int damage = 5;
-			guy.pierce = TRUE;
-			damage = guy.TakeDamage(damage);
+			guy.CurrentHealth -= 5;
 			string line = "-You lose #r" + to_string(damage) + "#o health.";
 			log.PushPop(line);
 		}
@@ -2878,7 +2905,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	if (guy.Curved_Tusks && guy.CurrentBlock == 0) {
 		int damage = 4 + guy.Skill/2;
 		damage = enemy.takeDamage(damage, guy, log);
-		string tusk = "-You ram the " + string(enemy.Name) + " for #y" + to_string(damage) + "#o damage.";
+		string tusk = "-You horn the " + string(enemy.Name) + " for #y" + to_string(damage) + "#o damage.";
 		log.PushPop(tusk);
 	}
 	//Volatile trait
@@ -3126,7 +3153,7 @@ bool InputBoard::checkEnemyLife(Character &guy, Enemy &enemy, Deck &deck, TextLo
 				+ " dies. ";
 			log.PushPop(line);
 
-			int gold = generateGold(enemy);
+			int gold = enemy.goldreward;
 			gold = guy.gainGold(gold);
 			string goldline = "#$~You gain " + to_string(gold) + " gold.#o";
 			log.PushPop(goldline);
@@ -5039,72 +5066,6 @@ void InputBoard::shuffleHand(Character &guy) {
 		}
 		ShuffleAddPrint(guy);
 	}
-}
-
-//generate gold based on enemy
-int InputBoard::generateGold(Enemy &enemy) {
-	int gold = 0;
-	if (enemy.Name == "Rat") {
-		gold = 2;
-	}
-	else if (enemy.Name == "Crab" ||
-		enemy.Name == "Kobold" ||
-		enemy.Name == "Hound" ||
-		enemy.Name == "Zombie" ||
-		enemy.Name == "Hatchling" ||
-		enemy.Name == "Slave" ||
-		enemy.Name == "Eyeball" ||
-		enemy.Name == "Cultist" ||
-		enemy.Name == "Robot") {
-		gold = 3;
-	}
-	else if (enemy.Name == "Giant Rat" ||
-		enemy.Name == "Wild Buffalo" ||
-		enemy.Name == "Harpy" ||
-		enemy.Name == "Fairy" ||
-		enemy.Name == "Brown Recluse" ||
-		enemy.Name == "Molten Jelly" ||
-		enemy.Name == "Soldier" ||
-		enemy.Name == "Apprentice" ||
-		enemy.Name == "Imp" ||
-		enemy.Name == "Golem") {
-		gold = 5;
-	}
-	else if (enemy.Name == "Adventurer" ||
-		enemy.Name == "Troll" ||
-		enemy.Name == "Elemental" ||
-		enemy.Name == "Drake" ||
-		enemy.Name == "Knight" ||
-		enemy.Name == "Guard" ||
-		enemy.Name == "Jester" ||
-		enemy.Name == "Monster" ||
-		enemy.Name == "Brain" ||
-		enemy.Name == "Weeping Soul" ||
-		enemy.Name == "Hellhound" ||
-		enemy.Name == "Turret") {
-		gold = 7;
-	}
-	else if (enemy.Name == "Merchant") {
-		gold = 15;
-	}
-	else if (enemy.Name == "Paladin" ||
-		enemy.Name == "Hunter" ||
-		enemy.Name == "Juggernaut" ||
-		enemy.Name == "Vampire" ||
-		enemy.Name == "Hydra" ||
-		enemy.Name == "Wolf" ||
-		enemy.Name == "Exorcist" ||
-		enemy.Name == "Demigod") {
-		gold = 20;
-	}
-	else if (enemy.Name == "Dragon" ||
-		enemy.Name == "King" ||
-		enemy.Name == "Witch" ||
-		enemy.Name == "Demon" ||
-		enemy.Name == "Machine") {
-		gold = 50;
-	}
-	return gold;
 }
 
 //generate shop items

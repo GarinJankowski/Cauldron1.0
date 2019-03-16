@@ -59,7 +59,9 @@ Gear::Gear(const char *name):GearName(name)
 		GearName == "Spiked Gauntlets" ||
 		GearName == "Arbalest" ||
 		GearName == "Dirk" ||
-		GearName == "Cutlass") {
+		GearName == "Cutlass" ||
+		GearName == "Greatsword" ||
+		GearName == "Athame") {
 		Type = "Hands";
 		HandsDescription();
 	}
@@ -82,7 +84,13 @@ Gear::Gear(const char *name):GearName(name)
 		GearName == "Turtle Shell" ||
 		GearName == "Crystal Breastplate" ||
 		GearName == "Padded Tunic" ||
-		GearName == "Chain Mail") {
+		GearName == "Chain Mail" ||
+		GearName == "Gilded Robes" ||
+		GearName == "Wizard Garb" ||
+		GearName == "Cloth Shirt" ||
+		GearName == "Grass Armor" ||
+		GearName == "Flesh Suit" ||
+		GearName == "Grey Robes") {
 		Type = "Body";
 		BodyDescription();
 	}
@@ -186,7 +194,7 @@ Gear::Gear(const char *name):GearName(name)
 	//Trait Reward
 	else if (GearName == "Mending Flesh" ||
 	GearName == "Gymnast" ||
-	GearName == "Third Eye" ||
+	GearName == "Third Eye" || //not in pool
 	GearName == "Warper" ||
 	GearName == "Growth Spurt" ||
 	GearName == "Mind" ||
@@ -356,6 +364,12 @@ void Gear::HandsDescription() {
 	else if (GearName == "Cutlass") {
 		Description = "A common weapon of sailors and pirates, useful for close quarters combat.";
 	}
+	else if (GearName == "Greatsword") {
+		Description = "A mighty and heavy two-handed sword, able to cut foes right in half.";
+	}
+	else if (GearName == "Athame") {
+	Description = "Daggers used to perform sacrifices in hope that a god will respond in favor.";
+	}
 }
 void Gear::BodyDescription() {
 	if (GearName == "No Armor") {
@@ -414,6 +428,24 @@ void Gear::BodyDescription() {
 	}
 	else if (GearName == "Chain Mail") {
 		Description = "A simple coat of metal rings linked together.";
+	}
+	else if (GearName == "Gilded Robes") {
+		Description = "Clothing lined with gold, once belonging to a very wealthy individual.";
+	}
+	else if (GearName == "Wizard Garb") {
+		Description = "The typical attire for an aspiring magician.";
+	}
+	else if (GearName == "Cloth Shirt") {
+		Description = "A light and simple shirt.";
+	}
+	else if (GearName == "Grass Armor") {
+		Description = "Light armor that mends itself.";
+	}
+	else if (GearName == "Flesh Suit") {
+		Description = "A repulsive piece of equipment, made of ever morphing and moving tissue and bone.";
+	}
+	else if (GearName == "Grey Robes") {
+		Description = "These robes give off a powerful feeling.";
 	}
 }
 void Gear::HeadDescription() {
@@ -558,7 +590,7 @@ void Gear::TraitSDescription() {
 	}
 	else if (GearName == "Oblivious") {
 		Type = "Trait Sacrifice";
-		Description = "You no longer see the text log.";
+		Description = "You no longer see the text log. ";
 	}
 	else if (GearName == "Blind") {
 		Type = "Trait Sacrifice";
@@ -852,7 +884,7 @@ void Gear::TraitRDescription() {
 	}
 	else if (GearName == "Triple-Jointed") {
 	Type = "Trait Reward";
-	Description = "Draw 1 more card every turn.";
+	Description = "Have one more card choice in combat.";
 	}
 	else if (GearName == "Blacksmith") {
 	Type = "Trait Reward";
@@ -1451,6 +1483,33 @@ void Gear::HandsOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.removeCard(feint, guy);
 		}
 	}
+
+	else if (GearName == "Greatsword") {
+		Card rend("Rend");
+		Card slice("Slice");
+		if (On) {
+			deck.addCard(rend);
+			deck.addCard(rend);
+			deck.addCard(slice);
+		}
+		else {
+			deck.removeCard(rend, guy);
+			deck.removeCard(rend, guy);
+			deck.removeCard(slice, guy);
+		}
+	}
+	else if (GearName == "Athame") {
+		Card prick("Prick");
+		Card ritual("Ritual");
+		if (On) {
+			deck.addCard(prick);
+			deck.addCard(ritual);
+		}
+		else {
+			deck.removeCard(prick, guy);
+			deck.removeCard(ritual, guy);
+		}
+	}
 }
 
 void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
@@ -1486,23 +1545,22 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 		}
 	}
 	else if (GearName == "Riveted Chainmail") {
-		Card counter("Counter");
 		Card dash("Dash");
 		Card obstruct("Obstruct");
+		Card bide("Bide");
 		if (On) {
-			deck.addCard(counter);
 			deck.addCard(dash);
+			deck.addCard(bide);
 			deck.addCard(obstruct);
 		}
 		else {
-			deck.removeCard(counter, guy);
 			deck.removeCard(dash, guy);
+			deck.removeCard(bide, guy);
 			deck.removeCard(obstruct, guy);
 		}
 	}
 	else if (GearName == "Reinforced Mail") {
 		Card toughen("Toughen");
-		Card ghost("Ghost");
 		if (On) {
 			deck.addCard(toughen);
 		}
@@ -1617,8 +1675,10 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 		Card obstruct("Obstruct");
 		if (On) {
 			deck.addCard(obstruct);
+			deck.addCard(obstruct);
 		}
 		else {
+			deck.removeCard(obstruct, guy);
 			deck.removeCard(obstruct, guy);
 		}
 	}
@@ -1649,26 +1709,25 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 	else if (GearName == "Crystal Breastplate") {
 		Card obstruct("Obstruct");
 		Card repulse("Repulse");
-		Card predict("Predict");
 		if (On) {
 			deck.addCard(obstruct);
 			deck.addCard(obstruct);
 			deck.addCard(repulse);
-			deck.addCard(predict);
 		}
 		else {
 			deck.removeCard(obstruct, guy);
 			deck.removeCard(obstruct, guy);
 			deck.removeCard(repulse, guy);
-			deck.removeCard(predict, guy);
 		}
 	}
 	else if (GearName == "Padded Tunic") {
 		Card dash("Dash");
 		if (On) {
 			deck.addCard(dash);
+			deck.addCard(dash);
 		}
 		else {
+			deck.removeCard(dash, guy);
 			deck.removeCard(dash, guy);
 		}
 	}
@@ -1682,6 +1741,75 @@ void Gear::BodyOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.removeCard(defend, guy);
 			deck.removeCard(defend, guy);
 		}
+	}
+	else if (GearName == "Gilded Robes") {
+		Card gamble("Gamble");
+		if (On) {
+			deck.addCard(gamble);
+			deck.addCard(gamble);
+			deck.addCard(gamble);
+		}
+		else {
+			deck.removeCard(gamble, guy);
+			deck.removeCard(gamble, guy);
+			deck.removeCard(gamble, guy);
+		}
+	}
+	else if (GearName == "Wizard Garb") {
+		Card inspire("Inspire");
+		if (On) {
+			deck.addCard(inspire);
+			deck.addCard(inspire);
+		}
+		else {
+			deck.removeCard(inspire, guy);
+			deck.removeCard(inspire, guy);
+		}
+	}
+	else if (GearName == "Cloth Shirt") {
+		Card bide("Bide");
+		if (On) {
+			deck.addCard(bide);
+			deck.addCard(bide);
+		}
+		else {
+			deck.removeCard(bide, guy);
+			deck.removeCard(bide, guy);
+		}
+	}
+	else if (GearName == "Grass Armor") {
+		Card restore("Restore");
+		if (On) {
+			deck.addCard(restore);
+			deck.addCard(restore);
+		}
+		else {
+			deck.removeCard(restore, guy);
+			deck.removeCard(restore, guy);
+		}
+	}
+	else if (GearName == "Flesh Suit") {
+		Card form("Form");
+		Card tear("Tear");
+		if (On) {
+			deck.addCard(form);
+			deck.addCard(form);
+			deck.addCard(tear);
+		}
+		else {
+			deck.removeCard(form, guy);
+			deck.removeCard(form, guy);
+			deck.removeCard(tear, guy);
+		}
+	}
+	else if (GearName == "Grey Robes") {
+		Card barrier("Barrier");
+		if (On) {
+			deck.addCard(barrier);
+		}
+		else {
+			deck.removeCard(barrier, guy);
+	}
 	}
 }
 

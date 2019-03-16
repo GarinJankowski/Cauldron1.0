@@ -53,6 +53,9 @@ Card::Card(const char *name):CardName(name)
 		CardName == "Lash" ||
 		CardName == "Pummel" ||
 		CardName == "Shoot" ||
+		CardName == "Rend" ||
+		CardName == "Ritual" ||
+		CardName == "Prick" ||
 		CardName == "Laser") {
 		CardType = "Attack";
 		setAttack();
@@ -75,6 +78,13 @@ Card::Card(const char *name):CardName(name)
 		CardName == "Repulse" ||
 		CardName == "Wall" ||
 		CardName == "Toughen" ||
+		CardName == "Gamble" ||
+		CardName == "Inspire" ||
+		CardName == "Bide" ||
+		CardName == "Restore" ||
+		CardName == "Form" ||
+		CardName == "Tear" ||
+		CardName == "Barrier" ||
 		CardName == "Defend") {
 		CardType = "Defend";
 		setDefend();
@@ -229,6 +239,15 @@ void Card::setAttack() {
 	else if (CardName == "Pummel") {
 		Description = "Deal 2 damage. Increase this by 2d(Str/2). +2 Energy.";
 	}
+	else if (CardName == "Rend") {
+		Description = "Halve the enemy's hp. -5 Energy.";
+	}
+	else if (CardName == "Ritual") {
+		Description = "Deal 5 damage. If it kills, +1 max hp and max mana.";
+	}
+	else if (CardName == "Prick") {
+		Description = "Deal 2 damage. +5 Energy.";
+	}
 	else if (CardName == "Laser") {
 		Description = "Deal (Skl)d3 damage to health and block. +13 Energy.";
 	}
@@ -290,7 +309,30 @@ void Card::setDefend() {
 		naturalBurn = TRUE;
 	}
 	else if (CardName == "Defend") {
-		Description = "Gain (Def)+5 block. -3 Energy.";
+		Description = "Gain (Def)+6 block. -3 Energy.";
+	}
+	else if (CardName == "Gamble") {
+		Description = "You and enemy gain (Def)+3 block. +5g after combat. Burn.";
+		naturalBurn = TRUE;
+	}
+	else if (CardName == "Inspire") {
+		Description = "Gain (Def)+2 block. Gain 3 mana.";
+	}
+	else if (CardName == "Bide") {
+		Description = "Gain (Def)+2 block. Shuffle your deck.";
+	}
+	else if (CardName == "Restore") {
+		Description = "Heal for (Def)x2.";
+	}
+	else if (CardName == "Form") {
+		Description = "Gain (Def)+5 max hp and health for the combat.";
+	}
+	else if (CardName == "Tear") {
+		Description = "Take (Def)x5 damage. Heal 3d2 for (Def)x2 turns. Burn.";
+		naturalBurn = TRUE;
+	}
+	else if (CardName == "Barrier") {
+		Description = "Lose all of your mana. Gain 4 block for each.";
 	}
 }
 void Card::setSpell() {
@@ -387,7 +429,7 @@ void Card::setSpell() {
 	}
 	else if (CardName == "Shock") {
 		ManaCost = 0;
-		Description = "Take 4 damage. +12 Energy.";
+		Description = "Gain 2 mana. Take 4 damage. +12 Energy.";
 	}
 
 	else if (CardName == "Destroy") {
@@ -1043,6 +1085,37 @@ void Card::attackFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			+ "#o damage.";
 		log.PushPop(line);
 	}
+	else if (CardName == "Rend") {
+		//Halve the enemy's hp. -5 Energy.
+		if (enemy.CurrentHealth > 1)
+			enemy.CurrentHealth /= 2;
+		gainEnergy(-5, guy, enemy);
+
+		string line = "#y-You rend the " + string(enemy.Name) + ".#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Ritual") {
+		//Deal 5 damage. If it kills, +1 max hp and max mana.
+		int damage = dealDamage(5, guy, enemy, log);
+		
+		string line = "-You cut the " + string(enemy.Name) + " for #y" + to_string(damage) + "#o damage.";
+		string line2 = "#r-You steal the " + string(enemy.Name) + "'s vitality.#o";
+
+		log.PushPop(line);
+		if (enemy.CurrentHealth <= 0) {
+			guy.ModStat(1, "MaxHealth");
+			guy.ModStat(1, "MaxMana");
+			log.PushPop(line2);
+		}
+	}
+	else if (CardName == "Prick") {
+		//Deal 2 damage. +5 Energy.
+		int damage = dealDamage(2, guy, enemy, log);
+		gainEnergy(5, guy, enemy);
+
+		string line = "-You prick the " + string(enemy.Name) + " for #y" + to_string(damage) + "#o damage.";
+		log.PushPop(line);
+	}
 
 	else if (CardName == "Laser") {
 		//Deal (Skl)d3 damage to health and block. +13 energy
@@ -1220,14 +1293,78 @@ void Card::defendFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Defend") {
-		//gain (Def)+5 block. -3 Energy
-		int block = gainBlock(guy.Defense + 5, guy, enemy);
+		//gain (Def)+6 block. -3 Energy
+		int block = gainBlock(guy.Defense + 6, guy, enemy);
 		gainEnergy(-3, guy, enemy);
 
 		string line = "-You gain #c" + to_string(block) + "#o block.";
 		log.PushPop(line);
 	}
-	
+	else if (CardName == "Gamble") {
+		//You and enemy gain (Def)+3 block. +5g after combat. Burn
+		int block1 = gainBlock(guy.Defense+3, guy, enemy);
+		int block2 = enemy.gainBlock(guy.Defense+3, guy, log);
+		enemy.goldreward += 5;
+
+		string line1 = "-You gain #c" + to_string(block1) + "#o block.";
+		string line2 = "-The " + string(enemy.Name) + " gains #b" + to_string(block1) + "#o block.";
+		log.PushPop(line1);
+		log.PushPop(line2);
+	}
+	else if (CardName == "Inspire") {
+		//Gain (Def)+2 block. Gain 3 mana.
+		int block = gainBlock(guy.Defense + 2, guy, enemy);
+		int mana = guy.DrainMana(-3);
+
+		string line = "-You gain #c" + to_string(block) + "#o block and #m" + to_string(mana) + "#o mana.";
+		log.PushPop(line);
+	}
+	else if (CardName == "Bide") {
+		//Gain (Def)+2 block. Shuffle your deck."
+		int block = gainBlock(guy.Defense + 2, guy, enemy);
+		guy.shuffle = TRUE;
+
+		string line = "-You gain #c" + to_string(block) + "#o block.";
+		log.PushPop(line);
+	}
+	else if (CardName == "Restore") {
+		//Heal for (Def)x2."
+		int health = guy.TakeDamage(guy.Defense*-2);
+
+		string line = "-You restore #g" + to_string(-health) + "#o health.";
+		log.PushPop(line);
+	}
+	else if (CardName == "Form") {
+		//Gain (Def)+5 max hp and health for the combat
+		int hp = guy.Defense + 5;
+		guy.ModStat(hp, "MaxHealth");
+		guy.hpMod -= hp;
+		int hp2 = guy.TakeDamage(-hp);
+
+		string line = "-You gain #g" + to_string(hp) + " max health#o for the combat and heal for #g" + to_string(-hp2) + "#o.";
+		log.PushPop(line);
+	}
+	else if (CardName == "Tear") {
+		//Take (Def)x5 damage. Heal 3d2 for (Def)x2 turns. Burn.
+		int damage = guy.TakeDamage(guy.Defense * 5);
+		int turns = guy.Defense * 2;
+		guy.tear += turns;
+
+		string line = "-You take #r" + to_string(damage) + "#o damage and #gheal for " + to_string(turns) + " turns#o.";
+		log.PushPop(line);
+	}
+	else if (CardName == "Barrier") {
+		//Lose all of your mana. Gain 4 block for each.
+		int times = 0;
+		int block = 0;
+		for (guy.CurrentMana; guy.CurrentMana > 0; guy.DrainMana(1)) {
+			times++;
+			block += gainBlock(4, guy, enemy);
+		}
+
+		string line = "-You gain block #c" + to_string(times) + " times#o for a total of #c" + to_string(block) + "#o block.";
+		log.PushPop(line);
+	}
 
 	//Dexterous trait
 	if (guy.Dexterous && CardType == "Defend") {

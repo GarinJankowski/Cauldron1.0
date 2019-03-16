@@ -185,7 +185,6 @@ public:
 	int shopnum = 0;
 	int shopnum2 = 1;
 	bool shopRoom = FALSE;
-	int generateGold(Enemy &enemy);
 	void generateShop();
 	void printShop(Character &guy);
 	void getchShop(Character &guy, Deck &deck, TextLog &log);

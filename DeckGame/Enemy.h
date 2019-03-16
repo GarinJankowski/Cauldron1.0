@@ -47,10 +47,13 @@ public:
 	int fumes;
 	int flay;
 
+	int goldreward;
+
 	//enemy moves
 	void Turn(Character &guy, TextLog &log);
 	void ActivateDOT(Character &guy, TextLog &log);
 	int takeDamage(int damage, Character &guy, TextLog &log);
+	int gainBlock(int block, Character &guy, TextLog &log);
 	//print monster info
 	void updateEnemy(Character &guy) {
 		for (int i = 7; i < 9; i++) {
@@ -94,13 +97,13 @@ public:
 			standend();
 
 		if (enemyNegate > 0) {
-			stat = "Block: " + to_string(CurrentBlock) + "    ";
+			stat = "Block: " + to_string(CurrentBlock);
 			mvprintInSize(8, 29, 0, stat.c_str(), fuzzy);
 			stat = "(" + to_string(enemyNegate) + ")";
 			mvprintInSize(8, 39, 0, stat.c_str(), fuzzy);
 		}
 		else {
-			stat = "  Block: " + to_string(CurrentBlock) + "  ";
+			stat = "  Block: " + to_string(CurrentBlock);
 			mvprintInSize(8, 29, 0, stat.c_str(), fuzzy);
 			mvprintInSize(8, 41, 0, " ", fuzzy);
 		}

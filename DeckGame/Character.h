@@ -69,6 +69,7 @@ public:
 	int ghost = 0;
 	bool ghostPlayed = FALSE;
 	bool cleanse = FALSE;
+	int tear = 0;
 
 	int strMod;
 	int defMod;
