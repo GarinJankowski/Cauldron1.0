@@ -170,9 +170,15 @@ void Map::checkPosition(Character &guy, InputBoard &board) {
 		if (roomList.at(i).checkXY(guy.posx, guy.posy)) {
 			board.RoomType = roomList.at(i).RoomType;
 			board.Terrain = roomList.at(i).Terrain;
+
+			if (roomList.at(i).clear)
+				board.RoomType = "Empty";
+
 			guy.RoomType = board.RoomType;
 			guy.Terrain = board.Terrain;
-			roomList.at(i).clear = TRUE;
+
+			if(roomList.at(i).RoomType != "Final Boss")
+				roomList.at(i).clear = TRUE;
 		}
 	}
 }
@@ -206,7 +212,7 @@ void Map::PrintWholeMap(Character &guy, InputBoard &board) {
 					}
 					roomList.at(i).PrintRoom(FALSE);
 				}
-				if (roomList.at(i).posx == guy.posx && roomList.at(i).posy == guy.posy)
+				if (roomList.at(i).posx == guy.posx && roomList.at(i).posy == guy.posy && roomList.at(i).RoomType != "Final Boss")
 					roomList.at(i).clear = TRUE;
 				
 				if (roomList.at(i).checkXY(guy.posx, guy.posy + 1)) {
@@ -656,7 +662,8 @@ void Map::UpdateMap(Character &guy, InputBoard &board) {
 
 	for (int i = 0; i < roomList.size(); i++) {
 		if (roomList.at(i).checkXY(guy.posxBefore, guy.posyBefore)) {
-			roomList.at(i).clear = TRUE;
+			if(roomList.at(i).RoomType != "Final Boss")
+				roomList.at(i).clear = TRUE;
 			roomList.at(i).PrintRoom(TRUE);
 			//mvprintw(5, 60, "%i, %i", guy.posxBefore, guy.posyBefore);
 			//mvprintw(6, 60, "%i, %i", guy.posx, guy.posy);

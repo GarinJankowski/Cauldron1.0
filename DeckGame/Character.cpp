@@ -339,6 +339,27 @@ void Character::showInventoryScreen() {
 
 }
 
+//check if stats are above their maximums
+void Character::checkMax() {
+	if (CurrentHealth > MaxHealth)
+		CurrentHealth = MaxHealth;
+	if (CurrentMana > MaxMana)
+		CurrentMana = MaxMana;
+
+	if (Strength < 0)
+		Strength = 0;
+	if (Defense < 0)
+		Defense = 0;
+	if (Intelligence < 0)
+		Intelligence = 0;
+	if (Skill < 0)
+		Skill = 0;
+	if (MaxHealth < 0)
+		MaxHealth = 0;
+	if (MaxMana < 0)
+		MaxMana = 0;
+}
+
 //take/heal damage
 int Character::TakeDamage(int damageTaken) {
 	int healthBefore = CurrentHealth;
@@ -367,10 +388,17 @@ int Character::TakeDamage(int damageTaken) {
 	}
 	//healing
 	if (damageTaken < 0) {
+		if (materialize > 0) {
+			materialize--;
+			materializeblock = -damageTaken;
+			materializeTRUE = TRUE;
+		}
+
 		if (healthBefore - damageTaken > MaxHealth)
 			CurrentHealth = MaxHealth;
 		else
 			CurrentHealth -= damageTaken;
+
 		return healthBefore - CurrentHealth;
 	}
 	//intimidate
@@ -395,6 +423,17 @@ int Character::TakeDamage(int damageTaken) {
 	if (Red_Scales && damageTaken >= 25) {
 		damageTaken = 0;
 	}
+	if (Negate > 0 && damageTaken > 0) {
+		if (deflect > 0) {
+			deflectdamage = damageTaken;
+			deflectTRUE = TRUE;
+			deflect--;
+		}
+		else {
+			damageTaken = 0;
+		}
+		Negate--;
+	}
 
 	//Gold Bones trait
 	if (Gold_Bones && damageTaken > CurrentBlock && Negate == 0) {
@@ -418,10 +457,7 @@ int Character::TakeDamage(int damageTaken) {
 		if ((CurrentHealth - damageTaken) > MaxHealth)
 			CurrentHealth = MaxHealth;
 		else {
-			if (Negate > 0) {
-				Negate--;
-			}
-			else if (damageTaken >= CurrentBlock) {
+			if (damageTaken >= CurrentBlock) {
 				int damage = damageTaken - CurrentBlock;
 				CurrentHealth -= damage;
 				CurrentBlock = 0;
@@ -493,14 +529,10 @@ int Character::ModStat(int bonus, string stat) {
 	if (stat == "MaxHealth") {
 		MaxHealthBase += bonus;
 		MaxHealth += bonus;
-		if (CurrentHealth > MaxHealth)
-			CurrentHealth = MaxHealth;
 	}
 	else if (stat == "MaxMana") {
 		MaxManaBase += bonus;
 		MaxMana += bonus;
-		if (CurrentMana > MaxMana)
-			CurrentMana = MaxMana;
 	}
 	else if (stat == "Strength")
 		Strength += bonus;
@@ -510,6 +542,9 @@ int Character::ModStat(int bonus, string stat) {
 		Intelligence += bonus;
 	else if (stat == "Skill")
 		Skill += bonus;
+
+	checkMax();
+
 	return bonus;
 }
 

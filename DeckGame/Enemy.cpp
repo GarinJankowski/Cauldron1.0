@@ -79,12 +79,12 @@ Enemy::Enemy(const char *name):Name(name)
 	}
 	else if (Name == "Adventurer") {
 		MaxHealth = 80;
-		goldreward = 8;
+		goldreward = 7;
 		type = rand() % 4;
 	}
 	else if (Name == "Troll") {
 		MaxHealth = 140;
-		goldreward = 8;
+		goldreward = 7;
 	}
 //---------------Themed----------------
 	//------Dragon:
@@ -1159,7 +1159,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				line = "-The Eyeball drains #r" + to_string(health) + "#o of your max health.";
 			}
 			else {
-				int damage = rtd(3+td, 3);
+				int damage = rtd(3+td, 2);
 				damage = guy.TakeDamage(damage);
 
 				line = "-The Eyeball zaps you for #r" + to_string(damage) + "#o damage.";
@@ -1873,7 +1873,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					}
 				}
 				if (charge) {
-					int damage = rtd(1, 16) + 24;
+					int damage = rtd(1, 11) + 24;
 					damage = guy.TakeDamage(damage);
 					line = "-The Dragon blasts flames at you for #r" + to_string(damage) + "#o damage.";
 					dot--;

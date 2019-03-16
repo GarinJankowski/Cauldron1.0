@@ -70,6 +70,23 @@ public:
 	bool ghostPlayed = FALSE;
 	bool cleanse = FALSE;
 	int tear = 0;
+	bool teleport = FALSE;
+	int inject = 0;
+	int flurry = 0;
+	int materialize = 0;
+	int materializeTRUE = FALSE;
+	int materializeblock = 0;
+	int overdrive = 0;
+	int overdrivestats = 0;
+	int enrich = 0;
+	int relax = 0;
+	int sharpen = 0;
+	int amplify = 0;
+	bool amplifyTRUE = FALSE;
+	int cell = 0;
+	int deflect = 0;
+	bool deflectTRUE = FALSE;
+	int deflectdamage = 0;
 
 	int strMod;
 	int defMod;
@@ -213,6 +230,7 @@ public:
 	int ModStat(int bonus, string stat);
 	void restoreStats();
 	int gainGold(int gold);
+	void checkMax();
 
 	//print character stuff
 	void printDirectory();

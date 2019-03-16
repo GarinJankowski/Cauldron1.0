@@ -148,6 +148,18 @@ Card::Card(const char *name):CardName(name)
 		CardName == "Detonate" ||
 		CardName == "Polymorph" ||
 		CardName == "Cleanse" ||
+		CardName == "Teleport" ||
+		CardName == "Inject" ||
+		CardName == "Flurry" ||
+		CardName == "Materialize" ||
+		CardName == "Overdrive" ||
+		CardName == "Enrich" ||
+		CardName == "Shimmer" ||
+		CardName == "Relax" ||
+		CardName == "Sharpen" ||
+		CardName == "Amplify" ||
+		CardName == "Cell" ||
+		CardName == "Deflect" ||
 		CardName == "Chaos") {
 		CardType = "BossCard";
 		setboss();
@@ -561,6 +573,53 @@ void Card::setboss() {
 		Description = "Burn your entire hand. +10 Energy.";
 		naturalBurn = TRUE;
 	}
+	else if (CardName == "Teleport") {
+		Description = "End combat. Go to a random nearby tile.";
+	}
+	else if (CardName == "Inject") {
+		Description = "Next damage dealt heals you for the same. +10 Energy. Burn.";
+		naturalBurn = TRUE;
+	}
+	else if (CardName == "Flurry") {
+		Description = "Cards also Attack for 3 damage. +10 Energy. Burn.";
+		naturalBurn = TRUE;
+	}
+	else if (CardName == "Materialize") {
+		Description = "Your next heal also gives half block. +10 Energy. Burn.";
+		naturalBurn = TRUE;
+	}
+	else if (CardName == "Overdrive") {
+		Description = "All stats +8 for 3 turns, then stats -10. +10 Energy. Burn.";
+		naturalBurn = TRUE;
+	}
+	else if (CardName == "Enrich") {
+		Description = "Gain 1 mana per turn. +10 Energy. Burn.";
+		naturalBurn = TRUE;
+	}
+	else if (CardName == "Shimmer") {
+		Description = "Deal (Gold) damage, lose your gold. +10 Energy. Burn.";
+		naturalBurn = TRUE;
+	}
+	else if (CardName == "Relax") {
+		Description = "Stop your turn effects for 5 turns. +10 Energy. Burn.";
+		naturalBurn = TRUE;
+	}
+	else if (CardName == "Sharpen") {
+		Description = "Next damage dealt pierces. +10 Energy. Burn.";
+		naturalBurn = TRUE;
+	}
+	else if (CardName == "Amplify") {
+		Description = "Next Spell is used twice. +10 Energy. Burn.";
+		naturalBurn = TRUE;
+	}
+	else if (CardName == "Cell") {
+		Description = "Next Spell that has cost is free. +10 Energy. Burn.";
+		naturalBurn = TRUE;
+	}
+	else if (CardName == "Deflect") {
+		Description = "Next damage taken is dealt to enemy instead. Burn.";
+		naturalBurn = TRUE;
+	}
 	else if (CardName == "Chaos") {
 		Description = "Play a random card.";
 	}
@@ -794,6 +853,22 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		negativeFunction(guy, enemy, log);
 	}
 
+	//Flurry
+	if (guy.flurry > 0) {
+		int totaldamage = 0;
+		for (int i = 0; i < guy.flurry; i++) {
+			int damage = dealDamage(3, guy, enemy, log);
+			totaldamage += damage;
+		}
+		string line;
+		if (guy.flurry == 1) {
+			line = "-You attack for #y" + to_string(totaldamage) + "#o damage.";
+		}
+		else {
+			line = "-You attack #y" + to_string(guy.flurry) + " times#o for #y" + to_string(totaldamage) + "#o damage total.";
+		}
+		log.PushPop(line);
+	}
 	//Addiction trait
 	if (guy.Addiction && CardType != "Spell") {
 		if (guy.Intelligence > 0) {
@@ -1376,7 +1451,7 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	//Sacrificial trait
 	//Dazed trait
 	//makes sure you dont lose mana while using chaos
-	if (!chaos) {
+	if (!chaos && !guy.amplifyTRUE && guy.cell == 0) {
 		if (guy.Sacrificial) {
 			int sac = ManaCost;
 			if (guy.Dazed)
@@ -1388,6 +1463,9 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			if (guy.Dazed)
 				guy.CurrentMana--;
 		}
+	}
+	if ((ManaCost > 0 || guy.Dazed) && guy.cell > 0) {
+		guy.cell--;
 	}
 
 	//no headgear
@@ -1778,6 +1856,12 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		int health = guy.Skill;
 		guy.TakeDamage(-1 * health);
 	}
+	//Amplify
+	if (guy.amplify > 0) {
+		guy.amplifyTRUE = TRUE;
+		guy.amplify--;
+		spellFunction(guy, enemy, log);
+	}
 	//Psychosis trait
 	if (guy.Psychosis != -1) {
 		if (guy.Psychosis == 1 && (ManaCost > 0 || guy.Dazed)) {
@@ -1803,7 +1887,7 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	else if (CardName == "Steroids") {
 		//Your next attack deals double damage
 		guy.steroids = TRUE;
-		string line = "#y-You feel a boost in power.#o";
+		string line = "#y-Your next attack will deal double damage.#o";
 		log.PushPop(line);
 	}
 	else if (CardName == "Change Mind") {
@@ -1961,6 +2045,118 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		string line = "#g-You cleanse your hand.#o";
 		log.PushPop(line);
 	}
+	else if (CardName == "Teleport") {
+		//End combat. Go to a random nearby tile.
+		guy.teleport = TRUE;
+	}
+	else if (CardName == "Inject") {
+		//Next damage dealt heals you for the same. +10 Energy. Burn.
+		guy.inject++;
+		gainEnergy(10, guy, enemy);
+
+		string line = "#c-Your next damage dealt will heal you.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Flurry") {
+		//Cards also Attack for 3 damage. +10 Energy. Burn.
+		guy.flurry++;
+		gainEnergy(10, guy, enemy);
+
+		string line = "#y-You launch into a flurry of attacks.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Materialize") {
+		//Your next heal also gives block. +10 Energy. Burn
+		guy.materialize++;
+		gainEnergy(10, guy, enemy);
+
+		string line = "#c-Your next heal will also give block.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Overdrive") {
+		//All stats +8 for 3 turns, then stats -10. +10 Energy. Burn.
+		guy.ModStat(8, "Strength");
+		guy.ModStat(8, "Defense");
+		guy.ModStat(8, "Intelligence");
+		guy.ModStat(8, "Skill");
+		guy.ModStat(8, "MaxHealth");
+		guy.ModStat(8, "MaxMana");
+		guy.strMod -= 8;
+		guy.defMod -= 8;
+		guy.intMod -= 8;
+		guy.sklMod -= 8;
+		guy.hpMod -= 8;
+		guy.mpMod -= 8;
+
+		guy.overdrive += 3;
+		guy.overdrivestats += 10;
+		gainEnergy(10, guy, enemy);
+
+		string line = "#r-You overexert yourself.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Enrich") {
+		//Gain 1 mana per turn. +10 Energy. Burn.
+		guy.enrich++;
+		gainEnergy(10, guy, enemy);
+
+		string line = "#m-You increase your mana regeneration.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Shimmer") {
+		//Deal (Gold) damage, lose your gold. +10 Energy. Burn.
+		int damage = guy.Gold;
+		guy.gainGold(damage);
+		damage = dealDamage(damage, guy, enemy, log);
+
+		gainEnergy(10, guy, enemy);
+
+		string line = "-You deal #$" + to_string(damage) + "#o damage.";
+		string line2 = "#r-You lose all of your gold.#o";
+		log.PushPop(line);
+		log.PushPop(line2);
+	}
+	else if (CardName == "Relax") {
+		//Stop your turn effects for 5 turns. +10 Energy. Burn.
+		guy.relax += 5;
+		gainEnergy(10, guy, enemy);
+
+		string line = "#g-You relax your body.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Sharpen") {
+		//Next damage dealt pierces. +10 Energy. Burn.
+		guy.sharpen++;
+		gainEnergy(10, guy, enemy);
+
+		string line = "#y-Your next damage dealt will pierce.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Amplify") {
+		//Next Spell is used twice. +10 Energy. Burn.
+		guy.amplify++;
+		gainEnergy(10, guy, enemy);
+
+		string line = "#m-You will amplify your next spell.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Cell") {
+		//Next Spell that has cost is free. +10 Energy. Burn.
+		guy.cell++;
+		gainEnergy(10, guy, enemy);
+
+		string line = "#m-Your next Spell with cost will be free.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Deflect") {
+		//Next damage taken is dealt to enemy instead. Burn.
+		guy.deflect++;
+		guy.Negate++;
+		gainEnergy(10, guy, enemy);
+
+		string line = "#c-You will deflect your next hit.#o";
+		log.PushPop(line);
+	}
 	else if (CardName == "Chaos") {
 		//play a random card
 		vector<const char*> cards;
@@ -1986,6 +2182,9 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		cards.push_back("Lash");
 		cards.push_back("Pummel");
 		cards.push_back("Shoot");
+		cards.push_back("Rend");
+		cards.push_back("Prick");
+		cards.push_back("Ritual");
 		cards.push_back("Laser");
 
 		cards.push_back("Endure");
@@ -2005,6 +2204,13 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		cards.push_back("Repulse");
 		cards.push_back("Toughen");
 		cards.push_back("Defend");
+		cards.push_back("Gamble");
+		cards.push_back("Inspire");
+		cards.push_back("Bide");
+		cards.push_back("Restore");
+		cards.push_back("Form");
+		cards.push_back("Tear");
+		cards.push_back("Barrier");
 
 		cards.push_back("Ponder");
 		cards.push_back("Channel");
@@ -2058,6 +2264,18 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		cards.push_back("Detonate");
 		cards.push_back("Polymorph");
 		cards.push_back("Cleanse");
+		cards.push_back("Teleport");
+		cards.push_back("Inject");
+		cards.push_back("Flurry");
+		cards.push_back("Materialize");
+		cards.push_back("Overdrive");
+		cards.push_back("Enrich");
+		cards.push_back("Shimmer");
+		cards.push_back("Relax");
+		cards.push_back("Sharpen");
+		cards.push_back("Amplify");
+		cards.push_back("Cell");
+		cards.push_back("Deflect");
 
 		cards.push_back("Steam");
 		cards.push_back("Scalding Steam");
@@ -2238,18 +2456,20 @@ int Card::dealDamage(int damage, Character &guy, Enemy &enemy, TextLog &log) {
 	int damage2 = damage;
 	//invisibility
 	if (enemy.invisible > 0) {
-		return 0;
+		damage2 = 0;
 	}
 	if (enemy.enemyNegate > 0) {
 		enemy.enemyNegate--;
-		return 0;
+		damage2 = 0;
 	}
 	if (damage < 0) {
 		damage2 = 0;
 	}
-	if (pierce) {
+	if (pierce || guy.sharpen > 0) {
 		enemy.CurrentHealth -= damage2;
 		pierce = FALSE;
+		if (guy.sharpen > 0)
+			guy.sharpen--;
 	}
 	else {
 		if (enemy.CurrentBlock > damage2)
@@ -2260,12 +2480,18 @@ int Card::dealDamage(int damage, Character &guy, Enemy &enemy, TextLog &log) {
 			enemy.CurrentBlock = 0;
 		}
 	}
+	if (guy.inject > 0) {
+		int health = guy.TakeDamage(-damage2);
+		string line = "-You gain #g" + to_string(-health) + "#o health.";
+		log.PushPop(line);
+		guy.inject--;
+	}
 	if (guy.damageToMana > 0) {
 		int mana = damage2 - enemy.CurrentBlock;
 		if (mana < 0)
 			mana = 0;
 		guy.DrainMana(-1 * mana);
-		guy.damageToMana = 0;
+		guy.damageToMana--;
 		string line = "#m-You gain " + to_string(mana) + " mana.#o";
 		log.PushPop(line);
 	}
@@ -2686,7 +2912,11 @@ void Card::setType() {
 		CardName == "Slash" ||
 		CardName == "Lash" ||
 		CardName == "Pummel" ||
-		CardName == "Shoot") {
+		CardName == "Shoot" ||
+		CardName == "Rend" ||
+		CardName == "Ritual" ||
+		CardName == "Prick" ||
+		CardName == "Laser") {
 		CardType = "Attack";
 	}
 	//Defends
@@ -2707,7 +2937,14 @@ void Card::setType() {
 		CardName == "Repulse" ||
 		CardName == "Wall" ||
 		CardName == "Toughen" ||
-		CardName == "Defend") {
+		CardName == "Defend" ||
+		CardName == "Gamble" ||
+		CardName == "Inspire" ||
+		CardName == "Bide" ||
+		CardName == "Restore" ||
+		CardName == "Form" ||
+		CardName == "Tear" ||
+		CardName == "Barrier") {
 		CardType = "Defend";
 	}
 	//Spells
@@ -2746,8 +2983,7 @@ void Card::setType() {
 		CardName == "Transmogrify" ||
 		CardName == "Liquidate" ||
 		CardName == "Sandstorm" ||
-		CardName == "Screen" ||
-		CardName == "Laser") {
+		CardName == "Screen") {
 		CardType = "Spell";
 	}
 	//bosss
@@ -2769,6 +3005,18 @@ void Card::setType() {
 		CardName == "Detonate" ||
 		CardName == "Polymorph" ||
 		CardName == "Cleanse" ||
+		CardName == "Teleport" ||
+		CardName == "Inject" ||
+		CardName == "Flurry" ||
+		CardName == "Materialize" ||
+		CardName == "Overdrive" ||
+		CardName == "Enrich" ||
+		CardName == "Shimmer" ||
+		CardName == "Relax" ||
+		CardName == "Sharpen" ||
+		CardName == "Amplify" ||
+		CardName == "Cell" ||
+		CardName == "Deflect" ||
 		CardName == "Chaos") {
 		CardType = "BossCard";
 	}

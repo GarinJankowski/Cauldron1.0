@@ -83,8 +83,6 @@ void TextLog::printLog() {
 			L++;
 
 		}
-
-	manualBox("Decision", 0);
 }
 
 void TextLog::printAllLog(int starti, int endi) {

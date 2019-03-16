@@ -729,7 +729,7 @@ void Gear::TraitSDescription() {
 	}
 	else if (GearName == "Membrane") {
 		Type = "Trait Sacrifice";
-		Description = "Start combat with half current hp, gain that much block.";
+		Description = "Start combat with half hp, gain that much block.";
 	}
 	else if (GearName == "Addiction") {
 		Type = "Trait Sacrifice";
@@ -3166,6 +3166,18 @@ void Gear::CardOnOrOff(bool On, Character &guy, Deck &deck) {
 	bosss.push_back(Card("Detonate"));
 	bosss.push_back(Card("Polymorph"));
 	bosss.push_back(Card("Cleanse"));
+	bosss.push_back(Card("Teleport"));
+	bosss.push_back(Card("Inject"));
+	bosss.push_back(Card("Flurry"));
+	bosss.push_back(Card("Materialize"));
+	bosss.push_back(Card("Overdrive"));
+	bosss.push_back(Card("Enrich"));
+	bosss.push_back(Card("Shimmer"));
+	bosss.push_back(Card("Relax"));
+	bosss.push_back(Card("Sharpen"));
+	bosss.push_back(Card("Amplify"));
+	bosss.push_back(Card("Cell"));
+	bosss.push_back(Card("Deflect"));
 	bosss.push_back(Card("Chaos"));
 
 	int index = 0;

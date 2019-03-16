@@ -49,15 +49,18 @@ public:
 	vector<Gear> handsNormREFILL;
 	vector<Gear> handsLate;
 	vector<Gear> handsLateREFILL;
+	vector<Gear> handsLateSHOP;
 	vector<Gear> handsRare;
 
 	vector<Gear> bodyNorm;
 	vector<Gear> bodyNormREFILL;
 	vector<Gear> bodyLate;
 	vector<Gear> bodyLateREFILL;
+	vector<Gear> bodyLateSHOP;
 	vector<Gear> bodyRare;
 
 	vector<Gear> headNorm;
+	vector<Gear> headNormSHOP;
 	vector<Gear> headRare;
 
 	vector<Card> bossNorm;
@@ -89,30 +92,52 @@ public:
 	vector<Card> shopDefends;
 	vector<Card> shopDefendsREFILL;
 	//shop items
-		//attacks $12
+		//
 	Card shopA;
+	int sA;
 	Card shopB;
+	int sB;
 	Card shopC;
-		//defends $12
+	int sC;
+		//
 	Card shopD;
+	int sD;
 	Card shopE;
+	int sE;
 	Card shopF;
-		//spells $18
+	int sF;
+		//
 	Card shopG;
+	int sG;
 	Card shopH;
+	int sH;
 	Card shopI;
-		//bosss $40
-	Card shopJ;
-	Card shopK;
-	Card shopL;
-		//gear $20
-	Gear shopM;
-	Gear shopN;
-	Gear shopO;
-		//mods $15
+	int sI;
+		//
+	Gear shopJ;
+	int sJ;
+	Gear shopK;
+	int sK;
+	Gear shopL;
+	int sL;
+		//
+	string shopM;
+	int sM;
+	string shopN;
+	int sN;
+	string shopO;
+	int sO;
 	string shopP;
+	int sP;
 	string shopQ;
+	int sQ;
 	string shopR;
+	int sR;
+	string shopS;
+	int sS;
+		//
+	Card shopT;
+	int sT;
 
 	bool up = TRUE;
 	bool right = TRUE;
@@ -176,7 +201,7 @@ public:
 	void fillHand(Character &guy);
 	void shuffleHand(Character &guy);
 
-	int gainBlock(int block, Character &guy);
+	int gainBlock(int block, Character &guy, Enemy &enemy);
 	int gainEnergy(int energy, Character &guy, Enemy &enemy, TextLog &log);
 	void updateDeck(Deck &deck);
 	void clearBoard();
@@ -185,6 +210,8 @@ public:
 	int shopnum = 0;
 	int shopnum2 = 1;
 	bool shopRoom = FALSE;
+	Card generateCard(string CardType);
+	Gear generateGear(string GearType);
 	void generateShop();
 	void printShop(Character &guy);
 	void getchShop(Character &guy, Deck &deck, TextLog &log);
