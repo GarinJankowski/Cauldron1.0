@@ -363,6 +363,10 @@ void Character::checkMax() {
 //take/heal damage
 int Character::TakeDamage(int damageTaken) {
 	int healthBefore = CurrentHealth;
+	//Stop card
+	if (stop > 0 && damageTaken > 0) {
+		damageTaken = 0;
+	}
 	//Hemoglobin trait
 	if (Hemoglobin && damageTaken < 0) {
 		damageTaken = int(damageTaken*1.5);
@@ -394,12 +398,10 @@ int Character::TakeDamage(int damageTaken) {
 			materializeTRUE = TRUE;
 		}
 
-		if (healthBefore - damageTaken > MaxHealth)
-			CurrentHealth = MaxHealth;
-		else
-			CurrentHealth -= damageTaken;
+		CurrentHealth -= damageTaken;
+		checkMax();
 
-		return healthBefore - CurrentHealth;
+		return damageTaken;
 	}
 	//intimidate
 	if (damageTaken >= 0 && intimidate > 0) {
@@ -516,11 +518,11 @@ int Character::DrainMana(int manaDrained) {
 	int mananow = CurrentMana;
 	if (CurrentMana - manaDrained < 0)
 		CurrentMana = 0;
-	else if (mananow - manaDrained > MaxMana) {
-		CurrentMana = MaxMana;
-	}
 	else
 		CurrentMana -= manaDrained;
+
+	checkMax();
+
 	return manaDrained;
 }
 

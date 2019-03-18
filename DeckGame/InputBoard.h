@@ -165,6 +165,7 @@ public:
 	Enemy generateEnemy(Character &guy);
 	void startBattle(Character &guy, Deck &deck, TextLog &log);
 	void effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
+	void effectsToEnemy(Character &guy, Enemy &enemy, Deck & deck, TextLog &log);
 	void restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 	bool checkEnemyLife(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 	bool checkDead(Character &guy, Enemy &enemy, TextLog &log);

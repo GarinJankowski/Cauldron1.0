@@ -41,6 +41,12 @@ public:
 	bool stepTwo;
 
 	int numA;
+	int numB;
+	int numC;
+	int numD;
+	int numE;
+	int numF;
+	int numG;
 
 	int sandstorm;
 	int bleeding;
@@ -48,8 +54,10 @@ public:
 	int flay;
 
 	int goldreward;
+	int tier;
 
 	//enemy moves
+	void setStats(Character &guy);
 	void Turn(Character &guy, TextLog &log);
 	void ActivateDOT(Character &guy, TextLog &log);
 	int takeDamage(int damage, Character &guy, TextLog &log);
@@ -126,13 +134,14 @@ public:
 
 	}
 	//stat changes
-	void heal(int health) {
+	int heal(int health) {
 		if ((MaxHealth - CurrentHealth) < health) {
 			CurrentHealth = MaxHealth;
 		}
 		else {
 			CurrentHealth += health;
 		}
+		return health;
 	}
 
 	//other stuff

@@ -68,6 +68,7 @@ public:
 	int catalyze = 0;
 	int ghost = 0;
 	bool ghostPlayed = FALSE;
+	int ghostinarow = 0;
 	bool cleanse = FALSE;
 	int tear = 0;
 	bool teleport = FALSE;
@@ -87,6 +88,11 @@ public:
 	int deflect = 0;
 	bool deflectTRUE = FALSE;
 	int deflectdamage = 0;
+	int save = 0;
+	int stop = 0;
+	int burncard = 0;
+	bool burnPlayed = FALSE;
+	int burninarow = 0;
 
 	int strMod;
 	int defMod;
@@ -122,7 +128,7 @@ public:
 	int Link;
 
 	//Traits
-	//sacrifice
+	//Sacrifice
 		bool Anemia = FALSE;
 		bool Teleportitis = FALSE;
 		bool Growing_Pains = FALSE;
@@ -141,7 +147,6 @@ public:
 		bool Fast_Metabolism = FALSE;
 		bool Frenzy = FALSE;
 		bool Undead = FALSE;
-		//bool The_Juice = FALSE;
 		bool Radioactive = FALSE;
 		bool Forgetful = FALSE;
 		bool Succumb = FALSE;

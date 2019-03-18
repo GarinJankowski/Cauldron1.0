@@ -160,6 +160,8 @@ Card::Card(const char *name):CardName(name)
 		CardName == "Amplify" ||
 		CardName == "Cell" ||
 		CardName == "Deflect" ||
+		CardName == "Save" ||
+		CardName == "Stop" ||
 		CardName == "Chaos") {
 		CardType = "BossCard";
 		setboss();
@@ -173,7 +175,8 @@ Card::Card(const char *name):CardName(name)
 	CardName == "Drain Def" ||
 	CardName == "Drain Int" ||
 	CardName == "Patch" ||
-	CardName == "Mad") {
+	CardName == "Mad" ||
+	CardName == "Burn") {
 	CardType = "Negative";
 	setNegative();
  }
@@ -328,10 +331,10 @@ void Card::setDefend() {
 		naturalBurn = TRUE;
 	}
 	else if (CardName == "Inspire") {
-		Description = "Gain (Def)+2 block. Gain 3 mana.";
+		Description = "Gain (Def)+4 block. Gain 3 mana.";
 	}
 	else if (CardName == "Bide") {
-		Description = "Gain (Def)+2 block. Shuffle your deck.";
+		Description = "Gain (Def)+3 block. Shuffle your deck.";
 	}
 	else if (CardName == "Restore") {
 		Description = "Heal for (Def)x2.";
@@ -446,7 +449,7 @@ void Card::setSpell() {
 
 	else if (CardName == "Destroy") {
 		ManaCost = 10;
-		Description = "Deal your block as damage, lose your block.";
+		Description = "Deal your block as damage, lose your block. +10 Energy.";
 	}
 	else if (CardName == "Construct") {
 		ManaCost = 0;
@@ -620,13 +623,21 @@ void Card::setboss() {
 		Description = "Next damage taken is dealt to enemy instead. Burn.";
 		naturalBurn = TRUE;
 	}
+	else if (CardName == "Save") {
+		Description = "Dying next turn brings you back to life. Burn.";
+		naturalBurn = TRUE;
+	}
+	else if (CardName == "Stop") {
+		Description = "You will not take damage next turn. Burn.";
+		naturalBurn = TRUE;
+	}
 	else if (CardName == "Chaos") {
 		Description = "Play a random card.";
 	}
 }
 void Card::setNegative() {
 	if (CardName == "Steam") {
-		Description = "Take 5 damage. +10 Energy.";
+		Description = "Take 7 damage. +10 Energy.";
 	}
 	else if (CardName == "Scalding Steam") {
 		Description = "Take 12 damage. +10 Energy.";
@@ -651,6 +662,9 @@ void Card::setNegative() {
 	}
 	else if (CardName == "Mad") {
 		Description = "+2 and -2 to random stats for the battle. +10 Energy.";
+	}
+	else if (CardName == "Burn") {
+		Description = "Burn your next card. +10 Energy.";
 	}
 }
 
@@ -853,6 +867,13 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		negativeFunction(guy, enemy, log);
 	}
 
+	//used for consecutive Burn uses
+	if (CardName != "Burn")
+		guy.burninarow = 0;
+	//used for consecutive Ghost uses
+	if (CardName != "Ghost")
+		guy.ghostinarow = 0;
+
 	//Flurry
 	if (guy.flurry > 0) {
 		int totaldamage = 0;
@@ -904,7 +925,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		}
 		cardFunction(guy, enemy, log);
 	}
-	//Dizzy trait
+	//Unpredictable trait
 	if (guy.Dizzy) {
 		guy.shuffle = TRUE;
 	}
@@ -1387,16 +1408,16 @@ void Card::defendFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line2);
 	}
 	else if (CardName == "Inspire") {
-		//Gain (Def)+2 block. Gain 3 mana.
-		int block = gainBlock(guy.Defense + 2, guy, enemy);
+		//Gain (Def)+4 block. Gain 3 mana.
+		int block = gainBlock(guy.Defense + 4, guy, enemy);
 		int mana = guy.DrainMana(-3);
 
 		string line = "-You gain #c" + to_string(block) + "#o block and #m" + to_string(mana) + "#o mana.";
 		log.PushPop(line);
 	}
 	else if (CardName == "Bide") {
-		//Gain (Def)+2 block. Shuffle your deck."
-		int block = gainBlock(guy.Defense + 2, guy, enemy);
+		//Gain (Def)+3 block. Shuffle your deck."
+		int block = gainBlock(guy.Defense + 3, guy, enemy);
 		guy.shuffle = TRUE;
 
 		string line = "-You gain #c" + to_string(block) + "#o block.";
@@ -1448,20 +1469,22 @@ void Card::defendFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	}
 }
 void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
+	//lose mana if the spell has a cost
 	//Sacrificial trait
 	//Dazed trait
 	//makes sure you dont lose mana while using chaos
-	if (!chaos && !guy.amplifyTRUE && guy.cell == 0) {
+	if (!chaos && !guy.amplifyTRUE && guy.cell == 0 && !guy.Psychosis == 0) {
+		int cost = ManaCost;
+		if (guy.Dazed)
+			cost++;
+		if (guy.Psychosis != -1)
+			cost *= 2;
+
 		if (guy.Sacrificial) {
-			int sac = ManaCost;
-			if (guy.Dazed)
-				sac++;
-			guy.TakeDamage(sac);
+			guy.TakeDamage(cost);
 		}
 		else {
-			guy.CurrentMana -= ManaCost;
-			if (guy.Dazed)
-				guy.CurrentMana--;
+			guy.DrainMana(cost);
 		}
 	}
 	if ((ManaCost > 0 || guy.Dazed) && guy.cell > 0) {
@@ -1608,8 +1631,8 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Fuel") {
-		//on the next turn, gain mana for unblocked damage dealt. +12 energy
-		guy.damageToMana += 2;
+		//next attack gain mana for unblocked damage dealt. +12 energy
+		guy.damageToMana += 1;
 		gainEnergy(12, guy, enemy);
 
 		string line = "#m -You prepare to attack.#o";
@@ -1705,10 +1728,11 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	}
 
 	else if (CardName == "Destroy") {
-		//Costs 10 mana. Deal your block as damage, lose your block
+		//Costs 10 mana. Deal your block as damage, lose your block. +10 Energy
 		int damage = guy.CurrentBlock;
 		damage = dealDamage(damage, guy, enemy, log);
 		guy.CurrentBlock = 0;
+		gainEnergy(10, guy, enemy);
 
 		string line = "-You destroy the " + string(enemy.Name)
 			+ " for #y" + to_string(damage)
@@ -1968,6 +1992,7 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		//the next card you play will not burn
 		guy.ghost++;
 		guy.ghostPlayed = TRUE;
+		guy.ghostinarow++;
 
 		string line = "#g-You will save your next card.#o";
 		log.PushPop(line);
@@ -2002,21 +2027,25 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			}
 		}
 		while (guy.drown > 0) {
-			if (guy.drown > 0 && guy.CurrentMana) {
+			if (guy.drown > 0) {
 				int mana = guy.drown;
 				damage += guy.drown*guy.Intelligence / 2;
 				if (guy.Sacrificial) {
 					guy.TakeDamage(mana);
+					if (guy.CurrentHealth <= 0)
+						break;
 				}
 				else {
-					guy.DrainMana(mana);
 					if (guy.CurrentMana < guy.drown)
 						break;
+					guy.DrainMana(mana);
 				}
 			}
 		}
 
 		damage = dealDamage(damage, guy, enemy, log);
+		if (enemy.CurrentHealth <= 0)
+			guy.CurrentHealth = 1+guy.drown;
 
 		string line = "-You detonate the " + string(enemy.Name) + " for a total of #y" + to_string(damage) + "#o damage.";
 		log.PushPop(line);
@@ -2106,7 +2135,7 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	else if (CardName == "Shimmer") {
 		//Deal (Gold) damage, lose your gold. +10 Energy. Burn.
 		int damage = guy.Gold;
-		guy.gainGold(damage);
+		guy.gainGold(-damage);
 		damage = dealDamage(damage, guy, enemy, log);
 
 		gainEnergy(10, guy, enemy);
@@ -2155,6 +2184,20 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		gainEnergy(10, guy, enemy);
 
 		string line = "#c-You will deflect your next hit.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Save") {
+		//Dying next turn brings you back to life. Burn
+		guy.save++;
+
+		string line = "#r-You feel immortal.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Stop") {
+		//You will not take damage next turn. Burn
+		guy.stop++;
+
+		string line = "#r-You feel invincible.#o";
 		log.PushPop(line);
 	}
 	else if (CardName == "Chaos") {
@@ -2276,6 +2319,8 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		cards.push_back("Amplify");
 		cards.push_back("Cell");
 		cards.push_back("Deflect");
+		cards.push_back("Save");
+		cards.push_back("Stop");
 
 		cards.push_back("Steam");
 		cards.push_back("Scalding Steam");
@@ -2285,6 +2330,7 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		cards.push_back("Drain Int");
 		cards.push_back("Patch");
 		cards.push_back("Mad");
+		cards.push_back("Burn");
 
 		CardName = cards.at(rand() % cards.size());
 		setType();
@@ -2299,7 +2345,7 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 void Card::negativeFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	if (CardName == "Steam") {
 		//take 5 damage, +10 energy
-		int damage = guy.TakeDamage(5);
+		int damage = guy.TakeDamage(7);
 		gainEnergy(10, guy, enemy);
 
 		string line = "-You burn for #r" + to_string(damage) + "#o damage.";
@@ -2419,6 +2465,16 @@ void Card::negativeFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		}
 		gainEnergy(10, guy, enemy);
 		string line = "#r-You go slightly insane.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Burn") {
+		//Burn your next card. +10 Energy
+		guy.burncard++;
+		guy.burnPlayed = TRUE;
+		guy.burninarow++;
+		gainEnergy(10, guy, enemy);
+
+		string line = "#r Your next card will burn.#o";
 		log.PushPop(line);
 	}
 }
@@ -2650,6 +2706,10 @@ void Card::polymorph(Character &guy, Enemy &enemy) {
 	boss.push_back(Enemy("Hunter"));
 	boss.push_back(Enemy("Exorcist"));
 	boss.push_back(Enemy("Wolf"));
+	boss.push_back(Enemy("Druid"));
+	boss.push_back(Enemy("Serpent"));
+	boss.push_back(Enemy("Spirit"));
+	boss.push_back(Enemy("Artificer"));
 
 	finalboss.push_back(Enemy("King"));
 	finalboss.push_back(Enemy("Demon"));
@@ -2666,6 +2726,17 @@ void Card::polymorph(Character &guy, Enemy &enemy) {
 	else if (guy.RoomType == "Boss") {
 		int rng = rand() % boss.size();
 		enemy = boss.at(rng);
+
+		if (guy.getTier() == 'C')
+			enemy.tier = 2;
+		if (guy.getTier() == 'D')
+			enemy.tier = 3;
+		if (guy.getTier() == 'E')
+			enemy.tier = 4;
+		if (guy.getTier() == 'F')
+			enemy.tier = 5;
+
+		enemy.setStats(guy);
 	}
 	else if (tier == 'A' || tier == 'B') {
 		int rng = rand() % early.size();
@@ -3017,6 +3088,8 @@ void Card::setType() {
 		CardName == "Amplify" ||
 		CardName == "Cell" ||
 		CardName == "Deflect" ||
+		CardName == "Save" ||
+		CardName == "Stop" ||
 		CardName == "Chaos") {
 		CardType = "BossCard";
 	}
@@ -3029,7 +3102,8 @@ void Card::setType() {
 		CardName == "Drain Def" ||
 		CardName == "Drain Int" ||
 		CardName == "Patch" ||
-		CardName == "Mad") {
+		CardName == "Mad" ||
+		CardName == "Burn") {
 		CardType = "Negative";
 	}
 }

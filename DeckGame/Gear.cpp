@@ -3178,6 +3178,8 @@ void Gear::CardOnOrOff(bool On, Character &guy, Deck &deck) {
 	bosss.push_back(Card("Amplify"));
 	bosss.push_back(Card("Cell"));
 	bosss.push_back(Card("Deflect"));
+	bosss.push_back(Card("Save"));
+	bosss.push_back(Card("Stop"));
 	bosss.push_back(Card("Chaos"));
 
 	int index = 0;

@@ -172,12 +172,14 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	bossNorm.push_back(Card("Amplify"));
 	bossNorm.push_back(Card("Cell"));
 	bossNorm.push_back(Card("Deflect"));
+	bossNorm.push_back(Card("Save"));
+	bossNorm.push_back(Card("Stop"));
 	bossNorm.push_back(Card("Chaos"));
 
 	bossNormREFILL = bossNorm;
 
 	//spells
-	//AvailableSpells.push_back(Card("Channel"));
+	AvailableSpells.push_back(Card("Channel"));
 	AvailableSpells.push_back(Card("Blast"));
 	AvailableSpells.push_back(Card("Leech"));
 	AvailableSpells.push_back(Card("Transmute"));
@@ -327,6 +329,10 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	bosses.push_back(Enemy("Exorcist"));
 	bosses.push_back(Enemy("Demigod"));
 	bosses.push_back(Enemy("Wolf"));
+	bosses.push_back(Enemy("Druid"));
+	bosses.push_back(Enemy("Serpent"));
+	bosses.push_back(Enemy("Spirit"));
+	bosses.push_back(Enemy("Artificer"));
 
 	bossesREFILL = bosses;
 
@@ -1927,11 +1933,11 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 			}
 			if (DecisionCards.at(in).Push)
 				pushthisturn = TRUE;
-			if (!DecisionCards.at(in).Burn && !DecisionCards.at(in).naturalBurn && !DecisionCards.at(in).StayCard) {
+			if (!DecisionCards.at(in).Burn && !DecisionCards.at(in).naturalBurn && (guy.burncard <= 0 || (guy.burnPlayed && guy.burninarow <= 1)) && !DecisionCards.at(in).StayCard) {
 				Discard.push_back(DecisionCards.at(in));
 			}
 			//Ghost card
-			if (((DecisionCards.at(in).Burn || DecisionCards.at(in).naturalBurn) && guy.ghost > 0 && !guy.ghostPlayed)) {
+			if (((DecisionCards.at(in).Burn || DecisionCards.at(in).naturalBurn || (guy.burncard > 0 && (!guy.burnPlayed || guy.burninarow > 1))) && guy.ghost > 0 && (!guy.ghostPlayed || guy.ghostinarow > 1))) {
 				Discard.push_back(DecisionCards.at(in));
 			}
 			//check stay
@@ -1941,14 +1947,19 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 				DecisionCards.at(in).tempStay--;
 			}
 			//check burn, also check for Ghost
-			if (dontstay || ((DecisionCards.at(in).Burn || DecisionCards.at(in).naturalBurn) && guy.ghost == 0 && !guy.ghostPlayed)) {
+			if (dontstay || ((DecisionCards.at(in).Burn || DecisionCards.at(in).naturalBurn || (guy.burncard > 0 && (!guy.burnPlayed || guy.burninarow > 1))) && guy.ghost == 0 && (!guy.ghostPlayed || guy.ghostinarow > 1))) {
 				/*if (!DecisionCards.at(in).Burn && !DecisionCards.at(in).naturalBurn)
 					Discard.push_back(DecisionCards.at(in));*/
 				DecisionCards.erase(DecisionCards.begin() + in);
 			}
-			if (guy.ghost > 0 && !guy.ghostPlayed)
+			if (guy.ghost > 0 && (!guy.ghostPlayed || guy.ghostinarow > 1))
 				guy.ghost--;
 			guy.ghostPlayed = FALSE;
+
+			if (guy.burncard > 0 && (!guy.burnPlayed || guy.burninarow > 1))
+				guy.burncard--;
+			guy.burnPlayed = FALSE;
+
 			//check flow
 			int limit2 = 0;
 			while (DecisionCards.size() > limit2) {
@@ -2231,8 +2242,14 @@ Enemy InputBoard::generateEnemy(Character &guy) {
 bool InputBoard::checkDead(Character &guy, Enemy &enemy, TextLog &log) {
 	//check dead
 	if (guy.CurrentHealth <= 0) {
+		//Save card
+		if(guy.save > 0 && guy.MaxHealth > 0) {
+			guy.CurrentHealth = guy.MaxHealth;
+			string sv = "#g-You come back to life!#o";
+			log.PushPop(sv);
+		}
 		//Absorption Trait
-		if (guy.Absorption == 1) {
+		if (guy.Absorption == 1 && guy.CurrentHealth <= 0) {
 			int damage = rtd(guy.Skill, 3);
 			damage = enemy.takeDamage(damage, guy, log);
 			string absorb1 = "-You deal #g" + to_string(damage) + "#o damage.";
@@ -2295,7 +2312,17 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 			enemy = bosses.at(rng);
 			currentEnemyName = enemy.Name;
 			bosses.erase(bosses.begin() + rng);
-			
+
+			if (guy.getTier() == 'C')
+				enemy.tier = 2;
+			if (guy.getTier() == 'D')
+				enemy.tier = 3;
+			if (guy.getTier() == 'E')
+				enemy.tier = 4;
+			if (guy.getTier() == 'F')
+				enemy.tier = 5;
+
+			enemy.setStats(guy);
 		}
 		//chooses a regular enemy
 		else if (RoomType == "Combat"){
@@ -2310,6 +2337,11 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 		}
 		else
 			encounter = " You encounter a " + string(enemy.Name) + ".";
+
+		if (RoomType == "Boss" || RoomType == "Final Boss") {
+			encounter = " You encounter the " + string(enemy.Name) + ".";
+		}
+
 		log.PushPop(encounter);
 
 		//activate Tail trait
@@ -2492,6 +2524,7 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 				getchDecision(guy, deck, log);
 				break;
 			}
+			//Teleport card
 			if (guy.teleport) {
 				teleport(guy, deck, log);
 				guy.teleport = FALSE;
@@ -2578,6 +2611,8 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 				guy.extraTurns--;
 
 			//apply any turn effects
+			effectsToEnemy(guy, enemy, deck, log);
+
 			//Relax card
 			if (guy.relax == 0) {
 				effectsBeforeTurns(guy, enemy, deck, log);
@@ -2609,36 +2644,6 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 
 			//print character stats
 			printDisplayStats(guy, enemy, deck, log);
-			/*if (!guy.Numb) {
-				mvprintInSize(9, 34, 0, "You", fuzzy);
-
-				string stat = "#oHP: #r" + to_string(guy.CurrentHealth) + "/" + to_string(guy.MaxHealth) + "  ";
-				mvprintInSize(10, 31, 0, stat.c_str(), fuzzy);
-				stat = "#oMP: #m" + to_string(guy.CurrentMana) + "/" + to_string(guy.MaxMana) + "  ";
-				mvprintInSize(11, 31, 0, stat.c_str(), fuzzy);
-
-				stat = "#oEnergy: #g" + to_string(guy.Energy) + "/10#o";
-				if (guy.Energy < 0)
-					stat = "#oEnergy:#r" + to_string(guy.Energy) + "#g/10#o";
-				mvprintInSize(13, 30, 0, stat.c_str(), fuzzy);
-
-				standend();
-				//if you have any Negation, print the character block a bit more to the left to make room
-				//print character block
-				if (guy.Negate <= 0) {
-					stat = "  Block: #c" + to_string(guy.CurrentBlock) + "  ";
-					mvprintInSize(12, 29, 0, stat.c_str(), fuzzy);
-					mvprintInSize(12, 41, 0, " ", fuzzy);
-				}
-				else {
-					stat = "Block: #c" + to_string(guy.CurrentBlock) + "    ";
-					mvprintInSize(12, 29, 0, stat.c_str(), fuzzy);
-					stat = "(" + to_string(guy.Negate) + ")";
-					mvprintInSize(12, 39, 0, stat.c_str(), fuzzy);
-				}
-				standend();
-			}
-			*/
 		
 			//check dead
 			checkDead(guy, enemy, log);
@@ -2654,6 +2659,7 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 			log.printLog();
 		}
 }
+
 
 //prints the character stats under the enemy stats
 void InputBoard::printDisplayStats(Character &guy, Enemy &enemy, Deck &deck, TextLog &log) {
@@ -2743,7 +2749,41 @@ int InputBoard::gainEnergy(int energy, Character &guy, Enemy &enemy, TextLog &lo
 	return en;
 }
 
-//call boss mechanics on characters if requested
+//basically same as effectsBeforeTurns, but these won't be affected by Sensitive, Catalyze, Relax, etc.
+void InputBoard::effectsToEnemy(Character &guy, Enemy &enemy, Deck & deck, TextLog &log) {
+	if (enemy.CurrentHealth <= 0) {
+		return;
+	}
+	checkDead(guy, enemy, log);
+	if (guy.CurrentHealth <= 0)
+		return;
+
+	//Stop card
+	if (guy.stop > 0) {
+		guy.stop--;
+		if (guy.stop == 0) {
+			string stopstop = "#c-You return to normal.#o";
+			log.PushPop(stopstop);
+		}
+	}
+	//Save card
+	if (guy.save > 0) {
+		guy.save--;
+		if (guy.save == 0) {
+			string stopsave = "#c-You return to normal.#o";
+			log.PushPop(stopsave);
+		}
+	}
+	//Curved Tusks trait
+	if (guy.Curved_Tusks && guy.CurrentBlock == 0) {
+		int damage = 4 + guy.Skill / 2;
+		damage = enemy.takeDamage(damage, guy, log);
+		string tusk = "-You horn the " + string(enemy.Name) + " for #y" + to_string(damage) + "#o damage.";
+		log.PushPop(tusk);
+	}
+}
+
+//effects that occur to the player every turn
 void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, TextLog &log) {
 	if (enemy.CurrentHealth <= 0) {
 		return;
@@ -2751,6 +2791,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	checkDead(guy, enemy, log);
 	if (guy.CurrentHealth <= 0)
 		return;
+
 	//Early Riser trait
 	if (guy.Early_Riser == 1) {
 		guy.Early_Riser = 0;
@@ -2886,7 +2927,8 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	if (guy.Anemia && guy.CurrentHealth > 5) {
 		if (rand() % 4 == 0) {
 			int damage = 5;
-			guy.CurrentHealth -= 5;
+			guy.pierce = TRUE;
+			guy.TakeDamage(damage);
 			string line = "-You lose #r" + to_string(damage) + "#o health.";
 			log.PushPop(line);
 		}
@@ -2936,12 +2978,6 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 		else if (guy.CurrentBlock > 0 || guy.Negate > 0) {
 			guy.Jittery++;
 		}
-	}
-	if (guy.Curved_Tusks && guy.CurrentBlock == 0) {
-		int damage = 4 + guy.Skill/2;
-		damage = enemy.takeDamage(damage, guy, log);
-		string tusk = "-You horn the " + string(enemy.Name) + " for #y" + to_string(damage) + "#o damage.";
-		log.PushPop(tusk);
 	}
 	//Volatile trait
 	if (guy.Volatile != -1) {
@@ -3139,6 +3175,8 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	if (guy.catalyze > 0) {
 		guy.catalyze--;
 		effectsBeforeTurns(guy, enemy, deck, log);
+		if (guy.Fast_Metabolism)
+			effectsBeforeTurns(guy, enemy, deck, log);
 	}
 }
 
@@ -3248,7 +3286,31 @@ void InputBoard::restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, Te
 	guy.catalyze = 0;
 	guy.ghost = 0;
 	guy.ghostPlayed = FALSE;
+	guy.ghostinarow = 0;
 	guy.cleanse = FALSE;
+	guy.tear = 0;
+	guy.teleport = FALSE;
+	guy.inject = 0;
+	guy.flurry = 0;
+	guy.materialize = 0;
+	guy.materializeTRUE = FALSE;
+	guy.materializeblock = 0;
+	guy.overdrive = 0;
+	guy.overdrivestats = 0;
+	guy.enrich = 0;
+	guy.relax = 0;
+	guy.sharpen = 0;
+	guy.amplify = 0;
+	guy.amplifyTRUE = FALSE;
+	guy.cell = 0;
+	guy.deflect = 0;
+	guy.deflectTRUE = FALSE;
+	guy.deflectdamage = 0;
+	guy.save = 0;
+	guy.stop = 0;
+	guy.burncard = 0;
+	guy.burnPlayed = FALSE;
+	guy.burninarow = 0;
 
 	if (guy.Quick_Thinker != -1)
 		guy.Quick_Thinker = 0;
@@ -3637,7 +3699,9 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		mvprintw(8, 32, "CHOOSE A");
 		mvprintw(9, 32, "CARD TO");
 		mvprintw(10, 32, "  ADD");
-		mvprintw(17, 62, "4) Leave");
+		manualBox("Card 42", 0);
+		mvprintw(17, 62, "4) +2 Max Hp");
+		mvprintw(18, 65, "+1 Max Mana");
 
 		generateboss();
 		for (int i = 0; i < 3; i++) {
@@ -4572,7 +4636,6 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 						bossDecision.erase(bossDecision.begin());
 					bossPickup.CardOnOrOff(TRUE, guy, deck);
 					line = "#g~You add " + string(bossPickup.GearName) + " to your deck.#o";
-					log.PushPop(line);
 				}
 				else if (choose == '2') {
 					Gear bossPickup(bossDecision.at(1).CardName);
@@ -4580,7 +4643,6 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 						bossDecision.erase(bossDecision.begin()+1);
 					bossPickup.CardOnOrOff(TRUE, guy, deck);
 					line = "#g~You add " + string(bossPickup.GearName) + " to your deck.#o";
-					log.PushPop(line);
 				}
 				else if (choose == '3') {
 					Gear bossPickup(bossDecision.at(2).CardName);
@@ -4588,11 +4650,13 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 						bossDecision.erase(bossDecision.begin()+2);
 					bossPickup.CardOnOrOff(TRUE, guy, deck);
 					line = "#g~You add " + string(bossPickup.GearName) + " to your deck.#o";
-					log.PushPop(line);
 				}
 				else if (choose == '4') {
-
+					guy.ModStat(2, "MaxHealth");
+					guy.ModStat(1, "MaxMana");
+					line = "#g~You gain 2 Max Health and 1 Max Mana.#o";
 				}
+				log.PushPop(line);
 
 				while (bossDecision.size() > 0) {
 					bossDecision.pop_back();
@@ -4931,6 +4995,7 @@ void InputBoard::addNegative(Character &guy, Deck &deck) {
 		Card ddef("Drain Def");
 		Card dint("Drain Int");
 		Card patch("Patch");
+		Card burn("Burn");
 
 		if (guy.negative == "Steam") {
 			Draw.push_back(steam);
@@ -4955,6 +5020,9 @@ void InputBoard::addNegative(Character &guy, Deck &deck) {
 		}
 		else if (guy.negative == "Patch") {
 			Draw.push_back(patch);
+		}
+		else if (guy.negative == "Burn") {
+			Draw.push_back(burn);
 		}
 	}
 	guy.negative = "";
@@ -5843,6 +5911,10 @@ void InputBoard::polymorph(Character &guy, Enemy &enemy) {
 	boss.push_back(Enemy("Hunter"));
 	boss.push_back(Enemy("Exorcist"));
 	boss.push_back(Enemy("Wolf"));
+	boss.push_back(Enemy("Druid"));
+	boss.push_back(Enemy("Serpent"));
+	boss.push_back(Enemy("Spirit"));
+	boss.push_back(Enemy("Artificer"));
 
 	finalboss.push_back(Enemy("King"));
 	finalboss.push_back(Enemy("Demon"));
@@ -5859,6 +5931,17 @@ void InputBoard::polymorph(Character &guy, Enemy &enemy) {
 	else if (guy.RoomType == "Boss") {
 		int rng = rand() % boss.size();
 		enemy = boss.at(rng);
+
+		if (guy.getTier() == 'C')
+			enemy.tier = 2;
+		if (guy.getTier() == 'D')
+			enemy.tier = 3;
+		if (guy.getTier() == 'E')
+			enemy.tier = 4;
+		if (guy.getTier() == 'F')
+			enemy.tier = 5;
+
+		enemy.setStats(guy);
 	}
 	else if (tier == 'A' || tier == 'B') {
 		int rng = rand() % early.size();

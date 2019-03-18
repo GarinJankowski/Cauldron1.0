@@ -60,28 +60,28 @@ Map::Map()
 				}
 				else if (getTier(x, y) == 'B' || getTier(x, y) == 'C' || getTier(x, y) == 'D') {
 					//combat, hands, body, head, cauldron, boss(very small chance)
-					rng = rand() % 23;
+					rng = rand() % 22;
 					Room bcd;
 					if (rng == 0) {
 						bcd = Room("Gear Head", x, y);
 					}
-					else if (cauldronCounter < 12 && rng > 1 && rng <= 4) {
+					else if (cauldronCounter < 12 && rng > 1 && rng <= 3) {
 						bcd = Room("Cauldron", x, y);
 						cauldronCounter++;
 					}
-					else if (rng > 4 && rng <= 8) {
+					else if (rng > 4 && rng <= 7) {
 						bcd = Room("Gear Body", x, y);
 					}
-					else if (rng > 9 && rng <= 13) {
+					else if (rng > 9 && rng <= 12) {
 						bcd = Room("Gear Hands", x, y);
 					}
-					else if (rng > 14 && rng <= 16) {
+					else if (rng > 14 && rng <= 15) {
 						bcd = Room("Mod", x, y);
 					}
 					else if (rng == 20 && getTier(x, y) != 'B' && rand() % 8 < 6) {
 						bcd = Room("Shop", x, y);
 					}
-					else if (rng == 25) {
+					else if (rng == 21) {
 						bcd = Room("Boss", x, y);
 					}
 					else {
