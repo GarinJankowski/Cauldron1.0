@@ -34,6 +34,8 @@ public:
 	int Energy;
 	int MaxEnergy;
 
+	int dotDamage = 0;
+
 	int handSize = 3;
 
 	int extraTurns;
@@ -47,7 +49,6 @@ public:
 	const char *Terrain;
 
 	//card specific mechanics
-	int dotDamage = 0;
 	int regenerateTurns = 0;
 	int smoke = 0;
 	int incense = 0;
@@ -57,14 +58,18 @@ public:
 	int copy = 0;
 	int charge = 0;
 	int chargeMana = 0;
+	int drown = 0;
+	int refresh = 0;
+	int reagent = 0;
+	int empower = 0;
+	int soldier = 0;
+	int arise = 0;
+	int horrify = 0;
+
 	int metabolise = 0;
 	bool steroids = FALSE;
 	int intimidate = 0;
 	int entomb = 0;
-	int pummel = 2;
-	int drown = 0;
-	int refresh = 0;
-	int reagent = 0;
 	int catalyze = 0;
 	int ghost = 0;
 	bool ghostPlayed = FALSE;
@@ -93,6 +98,7 @@ public:
 	int burncard = 0;
 	bool burnPlayed = FALSE;
 	int burninarow = 0;
+
 
 	int strMod;
 	int defMod;
@@ -231,6 +237,7 @@ public:
 	//change stats
 	int TakeDamage(int damageTaken);
 	int gainBlock(int block);
+	int loseBlock(int block);
 	int DrainMana(int manaDrained);
 	int ModStat(int bonus, string stat);
 	void restoreStats();

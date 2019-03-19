@@ -136,6 +136,15 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	headNorm.push_back(Gear("Safety Glasses"));
 	headNorm.push_back(Gear("Golden Monocle"));
 	headNorm.push_back(Gear("Desert Wrappings"));
+	headNorm.push_back(Gear("Viking Helm"));
+	headNorm.push_back(Gear("Unholy Cowl"));
+	headNorm.push_back(Gear("Jewelled Crown"));
+	headNorm.push_back(Gear("Human Skull"));
+	headNorm.push_back(Gear("Crystal Earrings"));
+	headNorm.push_back(Gear("Scary Face"));
+	headNorm.push_back(Gear("Ear Plugs"));
+	headNorm.push_back(Gear("White Halo"));
+	headNorm.push_back(Gear("Bronze Head"));
 
 	headRare.push_back(Gear("Brown Hat"));
 
@@ -211,6 +220,24 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableSpells.push_back(Card("Liquidate"));
 	AvailableSpells.push_back(Card("Sandstorm"));
 	AvailableSpells.push_back(Card("Screen"));
+	AvailableSpells.push_back(Card("Empower"));
+	AvailableSpells.push_back(Card("Shed"));
+	AvailableSpells.push_back(Card("Extract"));
+	AvailableSpells.push_back(Card("Drain"));
+	AvailableSpells.push_back(Card("Soldier"));
+	AvailableSpells.push_back(Card("Attack"));
+	AvailableSpells.push_back(Card("Arise"));
+	AvailableSpells.push_back(Card("The Flesh"));
+	AvailableSpells.push_back(Card("Rainbow"));
+	AvailableSpells.push_back(Card("Focus"));
+	AvailableSpells.push_back(Card("Horrify"));
+	AvailableSpells.push_back(Card("Lurk"));
+	AvailableSpells.push_back(Card("Screech"));
+	AvailableSpells.push_back(Card("Echo"));
+	AvailableSpells.push_back(Card("Judge"));
+	AvailableSpells.push_back(Card("Bless"));
+	AvailableSpells.push_back(Card("Aegis"));
+	AvailableSpells.push_back(Card("Steadfast"));
 
 	//traits
 	AvailableTraitsSacrifice.push_back(Gear("Anemia"));
@@ -248,7 +275,6 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsSacrifice.push_back(Gear("Inefficient"));
 	AvailableTraitsSacrifice.push_back(Gear("Brain Worm"));
 	AvailableTraitsSacrifice.push_back(Gear("Gold Flesh"));
-	AvailableTraitsSacrifice.push_back(Gear("Terraform"));
 	AvailableTraitsSacrifice.push_back(Gear("Psychosis"));
 	AvailableTraitsSacrifice.push_back(Gear("Dazed"));
 	AvailableTraitsSacrifice.push_back(Gear("Strategy"));
@@ -2720,6 +2746,10 @@ int InputBoard::gainBlock(int block, Character &guy, Enemy &enemy) {
 		else
 			guy.CurrentBlock += block;
 	}
+	if (guy.CurrentBlock > 999) {
+		guy.CurrentBlock = 999;
+	}
+
 	return block;
 }
 
@@ -2773,6 +2803,20 @@ void InputBoard::effectsToEnemy(Character &guy, Enemy &enemy, Deck & deck, TextL
 			string stopsave = "#c-You return to normal.#o";
 			log.PushPop(stopsave);
 		}
+	}
+	//Arise
+	if (guy.arise > 0) {
+		int damage = 0;
+		for (int i = 0; i < guy.arise; i++) {
+			damage += enemy.takeDamage(1, guy, log);
+		}
+
+		string ar;
+		if (guy.arise == 1)
+			ar = "-Your follower deals #y" + to_string(damage) + "#o damage.";
+		else
+			ar = "-Your #m" + to_string(guy.arise) + " followers#o deal a total of #y" +to_string(damage) + "#o damage.";
+		log.PushPop(ar);
 	}
 	//Curved Tusks trait
 	if (guy.Curved_Tusks && guy.CurrentBlock == 0) {
@@ -2838,6 +2882,19 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 		string line = "-You gain #g" + to_string(heal) + "#o health.";
 		log.PushPop(line);
 		guy.tear--;
+	}
+	//soldier
+	if (guy.soldier > 0) {
+		int block = 0;
+		for (int i = 0; i < guy.soldier; i++) {
+			block += gainBlock(rtd(2, 2), guy, enemy);
+		}
+		string line;
+		if (guy.soldier == 1)
+			line = "-Your soldier gains #c" + to_string(block) + "#o block.";
+		else
+			line = "-Your #c" + to_string(guy.soldier) + " soldiers#o gain a total of #c" + to_string(block) + "#o block.";
+		log.PushPop(line);
 	}
 	//incense
 	if (guy.incense > 0) {
@@ -3311,6 +3368,10 @@ void InputBoard::restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, Te
 	guy.burncard = 0;
 	guy.burnPlayed = FALSE;
 	guy.burninarow = 0;
+	guy.empower = 0;
+	guy.soldier = 0;
+	guy.arise = 0;
+	guy.horrify = 0;
 
 	if (guy.Quick_Thinker != -1)
 		guy.Quick_Thinker = 0;
@@ -4871,6 +4932,20 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				}
 
 				log.printLog();
+
+				if (guy.Strength < 0)
+					guy.Strength = 0;
+				if (guy.Defense < 0)
+					guy.Defense = 0;
+				if (guy.Intelligence < 0)
+					guy.Intelligence = 0;
+				if (guy.Skill < 0)
+					guy.Skill = 0;
+				if (guy.MaxHealth < 0)
+					guy.MaxHealth = 0;
+				if (guy.MaxMana < 0)
+					guy.MaxMana = 0;
+
 				while (TraitsDecision.size() > 0) {
 					if (RoomType == "Cauldron") {
 						AvailableTraitsSacrifice.push_back(TraitsDecision.back());
@@ -5860,6 +5935,7 @@ void InputBoard::polymorph(Character &guy, Enemy &enemy) {
 	int enemyneg = enemy.enemyNegate;
 	int enemytc = enemy.TurnCount;
 	int enemydot = enemy.dot;
+	int enemyreward = enemy.goldreward;
 
 
 	vector<Enemy> early;
@@ -5965,6 +6041,7 @@ void InputBoard::polymorph(Character &guy, Enemy &enemy) {
 	enemy.enemyNegate = enemyneg;
 	enemy.TurnCount = enemytc;
 	enemy.dot = enemydot;
+	enemy.goldreward = enemyreward;
 
 	if (enemy.CurrentHealth > enemy.MaxHealth) {
 		enemy.CurrentHealth = enemy.MaxHealth;

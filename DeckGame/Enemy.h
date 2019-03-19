@@ -62,6 +62,7 @@ public:
 	void ActivateDOT(Character &guy, TextLog &log);
 	int takeDamage(int damage, Character &guy, TextLog &log);
 	int gainBlock(int block, Character &guy, TextLog &log);
+	int heal(int health, Character &guy, TextLog &log);
 	//print monster info
 	void updateEnemy(Character &guy) {
 		for (int i = 7; i < 9; i++) {
@@ -132,16 +133,6 @@ public:
 
 		standend();
 
-	}
-	//stat changes
-	int heal(int health) {
-		if ((MaxHealth - CurrentHealth) < health) {
-			CurrentHealth = MaxHealth;
-		}
-		else {
-			CurrentHealth += health;
-		}
-		return health;
 	}
 
 	//other stuff

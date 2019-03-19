@@ -111,7 +111,16 @@ Gear::Gear(const char *name):GearName(name)
 		GearName == "Makeup Set" ||
 		GearName == "Safety Glasses" ||
 		GearName == "Golden Monocle" ||
-		GearName == "Desert Wrappings") {
+		GearName == "Desert Wrappings" ||
+		GearName == "Viking Helm" ||
+		GearName == "Unholy Cowl" ||
+		GearName == "Jewelled Crown" ||
+		GearName == "Human Skull" ||
+		GearName == "Crystal Earrings" ||
+		GearName == "Scary Face" ||
+		GearName == "Ear Plugs" ||
+		GearName == "White Halo" ||
+		GearName == "Bronze Head") {
 		Type = "Head";
 		HeadDescription();
 
@@ -166,7 +175,7 @@ Gear::Gear(const char *name):GearName(name)
 		GearName == "Inefficient" ||
 		GearName == "Brain Worm" ||
 		GearName == "Gold Flesh" ||
-		GearName == "Terraform" ||
+		GearName == "Terraform" || //not in pool
 		GearName == "Psychosis" ||
 		GearName == "Dazed" ||
 		GearName == "Strategy" ||
@@ -499,6 +508,33 @@ void Gear::HeadDescription() {
 	}
 	else if (GearName == "Desert Wrappings") {
 		Description = "Protect your self from the sand, it hits harder than you think.";
+	}
+	else if (GearName == "Viking Helm") {
+		Description = "This ancient helmet holds the memories of many valiant warriors who were slain in battled.";
+	}
+	else if (GearName == "Unholy Cowl") {
+		Description = "This hood is worn during rituals performed to drain the soul out of sacrifices.";
+	}
+	else if (GearName == "Jewelled Crown") {
+		Description = "This priceless headpiece was clearly one of a powerfuk king, able to summon loyal soldiers with only a word.";
+	}
+	else if (GearName == "Human Skull") {
+		Description = "An object that once had life, able to channel the forbidden magic.";
+	}
+	else if (GearName == "Crystal Earrings") {
+		Description = "The light glistens off these earrings quite beautifully.";
+	}
+	else if (GearName == "Scary Face") {
+		Description = "Even a glance can scare an opponent into submission.";
+	}
+	else if (GearName == "Ear Plugs") {
+		Description = "Be careful not to rupture your own eardrums.";
+	}
+	else if (GearName == "White Halo") {
+		Description = "A symbol of the gods, capable of channeling divine power.";
+	}
+	else if (GearName == "Bronze Head") {
+		Description = "An impenetrable helm of thick bronze.";
 	}
 }
 
@@ -2038,6 +2074,130 @@ void Gear::HeadOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.removeCard(storm, guy);
 			deck.removeCard(screen, guy);
 			deck.removeCard(screen, guy);
+		}
+	}
+	else if (GearName == "Viking Helm") {
+		Card empower("Empower");
+		Card shed("Shed");
+		if (On) {
+			deck.addCard(empower);
+			deck.addCard(empower);
+			deck.addCard(shed);
+		}
+		else {
+			deck.removeCard(empower, guy);
+			deck.removeCard(empower, guy);
+			deck.removeCard(shed, guy);
+		}
+	}
+	else if (GearName == "Unholy Cowl") {
+		Card extract("Extract");
+		Card drain("Drain");
+		if (On) {
+			deck.addCard(extract);
+			deck.addCard(drain);
+			deck.addCard(drain);
+			deck.addCard(drain);
+		}
+		else {
+			deck.removeCard(extract, guy);
+			deck.removeCard(drain, guy);
+			deck.removeCard(drain, guy);
+			deck.removeCard(drain, guy);
+		}
+	}
+	else if (GearName == "Jewelled Crown") {
+		Card soldier("Soldier");
+		Card attack("Attack");
+		if (On) {
+			deck.addCard(soldier);
+			deck.addCard(soldier);
+			deck.addCard(attack);
+		}
+		else {
+			deck.removeCard(soldier, guy);
+			deck.removeCard(soldier, guy);
+			deck.removeCard(attack, guy);
+		}
+	}
+	else if (GearName == "Human Skull") {
+		Card arise("Arise");
+		Card the_flesh("The Flesh");
+		if (On) {
+			deck.addCard(arise);
+			deck.addCard(arise);
+			deck.addCard(arise);
+			deck.addCard(the_flesh);
+		}
+		else {
+			deck.removeCard(arise, guy);
+			deck.removeCard(arise, guy);
+			deck.removeCard(arise, guy);
+			deck.removeCard(the_flesh, guy);
+		}
+	}
+	else if (GearName == "Crystal Earrings") {
+		Card rainbow("Rainbow");
+		Card focus("Focus");
+		if (On) {
+			deck.addCard(rainbow);
+			deck.addCard(focus);
+		}
+		else {
+			deck.removeCard(rainbow, guy);
+			deck.removeCard(focus, guy);
+		}
+	}
+	else if (GearName == "Scary Face") {
+		Card horrify("Horrify");
+		Card lurk("Lurk");
+		if (On) {
+			deck.addCard(horrify);
+			deck.addCard(lurk);
+			deck.addCard(lurk);
+		}
+		else {
+			deck.removeCard(horrify, guy);
+			deck.removeCard(lurk, guy);
+			deck.removeCard(lurk, guy);
+		}
+	}
+	else if (GearName == "Ear Plugs") {
+		Card screech("Screech");
+		Card echo("Echo");
+		if (On) {
+			deck.addCard(screech);
+			deck.addCard(echo);
+			deck.addCard(echo);
+		}
+		else {
+			deck.removeCard(screech, guy);
+			deck.removeCard(echo, guy);
+			deck.removeCard(echo, guy);
+		}
+	}
+	else if (GearName == "White Halo") {
+		Card judge("Judge");
+		Card bless("Bless");
+		if (On) {
+			deck.addCard(judge);
+			deck.addCard(bless);
+		}
+		else {
+			deck.removeCard(judge, guy);
+			deck.removeCard(bless, guy);
+		}
+	}
+	else if (GearName == "Bronze Head") {
+		Card aegis("Aegis");
+		Card steadfast("Steadfast");
+		if (On) {
+			deck.addCard(aegis);
+			deck.addCard(steadfast);
+		}
+		else {
+			deck.removeCard(aegis, guy);
+			deck.removeCard(steadfast, guy);
 		}
 	}
 }

@@ -125,7 +125,25 @@ Card::Card(const char *name):CardName(name)
 		CardName == "Transmogrify" ||
 		CardName == "Liquidate" ||
 		CardName == "Sandstorm" ||
-		CardName == "Screen") {
+		CardName == "Screen" ||
+		CardName == "Empower" ||
+		CardName == "Shed" ||
+		CardName == "Extract" ||
+		CardName == "Drain" ||
+		CardName == "Soldier" ||
+		CardName == "Attack" ||
+		CardName == "Arise" ||
+		CardName == "The Flesh" ||
+		CardName == "Rainbow" ||
+		CardName == "Focus" ||
+		CardName == "Horrify" ||
+		CardName == "Lurk" ||
+		CardName == "Screech" ||
+		CardName == "Echo" ||
+		CardName == "Judge" ||
+		CardName == "Bless" ||
+		CardName == "Aegis" ||
+		CardName == "Steadfast") {
 		CardType = "Spell";
 		setSpell();
 	}
@@ -509,6 +527,78 @@ void Card::setSpell() {
 		ManaCost = 0;
 		Description = "Gain 5 mana. Negate the next 2 attacks. -2 Energy.";
 	}
+	else if (CardName == "Empower") {
+		ManaCost = 3;
+		Description = "Your next Attack gains (Int/2)d3 damage. +10 Energy.";
+	}
+	else if (CardName == "Shed") {
+		ManaCost = 0;
+		Description = "Lose all block and Negates. Gain 9 mana.";
+	}
+	else if (CardName == "Extract") {
+		ManaCost = 0;
+		Description = "+8 mana. Deal 10 damage. -5 Energy. +1 Int on kill.";
+	}
+	else if (CardName == "Drain") {
+		ManaCost = 2;
+		Description = "The Enemy loses (Int/2) max hp. +8 Energy.";
+	}
+	else if (CardName == "Soldier") {
+		ManaCost = 3;
+		Description = "Gain 2d2 block every turn.";
+	}
+	else if (CardName == "Attack") {
+		ManaCost = 0;
+		Description = "Lose all Soldiers. +3 mana and deal (Int) damage for each.";
+	}
+	else if (CardName == "Arise") {
+		ManaCost = 0;
+		Description = "-4 max hp for the combat. Deal 1 dmg per turn. +10 Energy.";
+	}
+	else if (CardName == "The Flesh") {
+		ManaCost = 0;
+		Description = "Gain (Int) max hp for the combat.";
+	}
+	else if (CardName == "Rainbow") {
+		ManaCost = 5;
+		Description = "Deal 2d(Int) dmg, +(Def)+2 block and (Int)/2 Energy.";
+	}
+	else if (CardName == "Focus") {
+		ManaCost = 0;
+		Description = "Gain (Int) mana. Fill hand with Spells.";
+	}
+	else if (CardName == "Horrify") {
+		ManaCost = 7;
+		Description = "The enemy can't gain block or hp for (Int/2) turns.";
+	}
+	else if (CardName == "Lurk") {
+		ManaCost = 0;
+		Description = "Gain 4 mana. +1d2 Int for the combat. +6 Energy.";
+	}
+	else if (CardName == "Screech") {
+		ManaCost = 10;
+		Description = "Pierce for (Int) damage 2d2 times.";
+	}
+	else if (CardName == "Echo") {
+		ManaCost = 0;
+		Description = "Gain 1d(Int) mana. +5 Energy.";
+	}
+	else if (CardName == "Judge") {
+		ManaCost = 6;
+		Description = "Halve the enemy's hp. +5 Energy.";
+	}
+	else if (CardName == "Bless") {
+		ManaCost = 0;
+		Description = "Gain (Int/2)d2 mana and health.";
+	}
+	else if (CardName == "Aegis") {
+		ManaCost = 10;
+		Description = "Gain 2+(Int/9) Negates.";
+	}
+	else if (CardName == "Steadfast") {
+		ManaCost = 0;
+		Description = "Lose 1 hp 2d2 times. Gain (Int/3) mana per hit.";
+	}
 }
 void Card::setboss() {
 	if (CardName == "Haste") {
@@ -588,7 +678,7 @@ void Card::setboss() {
 		naturalBurn = TRUE;
 	}
 	else if (CardName == "Materialize") {
-		Description = "Your next heal also gives half block. +10 Energy. Burn.";
+		Description = "Your next heal also gives the same block. +10 Energy. Burn.";
 		naturalBurn = TRUE;
 	}
 	else if (CardName == "Overdrive") {
@@ -1490,6 +1580,8 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	if ((ManaCost > 0 || guy.Dazed) && guy.cell > 0) {
 		guy.cell--;
 	}
+	if (guy.amplifyTRUE)
+		guy.amplifyTRUE = FALSE;
 
 	//no headgear
 	if (CardName == "Ponder") {
@@ -1872,6 +1964,192 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		gainEnergy(-2, guy, enemy);
 
 		string line = "-You #mgain " + to_string(mana) + " mana#o and #cnegate the next 2 hits taken#o.";
+		log.PushPop(line);
+	}
+	else if (CardName == "Empower") {
+		//Your next Attack gains (Int/2)d3 damage. +10 Energy.
+		int dmg = rtd(guy.Intelligence / 2, 3);
+		guy.empower += dmg;
+		gainEnergy(10, guy, enemy);
+
+		string line = "#m-You empower your next Attack.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Shed") {
+		//Lose all block and Negates. Gain 9 mana.
+		guy.loseBlock(guy.CurrentBlock);
+		guy.Negate = 0;
+		int mana = -guy.DrainMana(-9);
+
+		string line = "-You #rlose all your defenses#o and gain #m" + to_string(mana) + "#o mana.";
+		log.PushPop(line);
+	}
+	else if (CardName == "Extract") {
+		//+8 mana. Deal 10 damage. -5 Energy. +1 Int on kill.
+		int mana = guy.DrainMana(-8);
+		int damage = dealDamage(10, guy, enemy, log);
+		gainEnergy(-5, guy, enemy);
+
+		string line = "-You deal #y" + to_string(damage) + "#o and gain #m" + to_string(mana) + "#o mana.";
+		log.PushPop(line);
+
+		string line2 = "#m-You extract the " + string(enemy.Name) + "'s Intelligence.#o";
+		if (enemy.CurrentHealth <= 0) {
+			guy.ModStat(1, "Intelligence");
+			log.PushPop(line2);
+		}
+	}
+	else if (CardName == "Drain") {
+		//The Enemy loses (Int/2) max hp. +8 Energy.
+		int maxhp = guy.Intelligence / 2;
+		enemy.MaxHealth -= maxhp;
+		if (enemy.CurrentHealth > enemy.MaxHealth)
+			enemy.CurrentHealth = enemy.MaxHealth;
+		gainEnergy(8, guy, enemy);
+
+		string line = "-The " + string(enemy.Name) + "#m loses #y" + to_string(maxhp) + "#m max health#o.";
+		log.PushPop(line);
+	}
+	else if (CardName == "Soldier") {
+		//Gain 2d2 block every turn.
+		guy.soldier++;
+
+		string line = "#m-You summon a solder.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Attack") {
+		//Lose all Soldiers. +3 mana and deal (Int) damage for each.
+		int times = 0;
+		int damage = 0;
+		int mana = 0;
+		while (guy.soldier > 0) {
+			damage += dealDamage(guy.Intelligence, guy, enemy, log);
+			mana += -guy.DrainMana(-3);
+			times++;
+			guy.soldier--;
+		}
+
+		string line = "-You command #y" + to_string(times) + " soldiers#o to deal a total of #y" +
+					to_string(damage) + "#o damage and #mgain " + to_string(mana) + " mana#o.";
+		log.PushPop(line);
+	}
+	else if (CardName == "Arise") {
+		//-4 max hp for the combat. Deal 1 dmg per turn. +10 Energy.
+		int maxhp = 4;
+		guy.ModStat(-maxhp, "MaxHealth");
+		guy.hpMod += maxhp;
+		guy.arise++;
+		gainEnergy(10, guy, enemy);
+
+		string line = "-You #rlose " +to_string(maxhp) + " max health#o.";
+		string line2 = "#m-You raise a follower from the ground.#o";
+		log.PushPop(line);
+		log.PushPop(line2);
+	}
+	else if (CardName == "The Flesh") {
+		//Gain (Int) max hp for the combat.
+		int maxhp = guy.Intelligence;
+		guy.ModStat(maxhp, "MaxHealth");
+		guy.hpMod -= maxhp;
+
+		string line = "#m-You gain #g" + to_string(maxhp) + " max health#m for the combat.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Rainbow") {
+		//Deal 2d(Str) damage, gain (Def)+2 block, and (Int) Energy.
+		int damage = dealDamage(rtd(2, guy.Strength), guy, enemy, log);
+		int block = gainBlock(guy.Defense + 2, guy, enemy);
+		gainEnergy(guy.Intelligence/2, guy, enemy);
+
+		string line = "-You deal #y" + to_string(damage) + "#o damage and gain #c" + to_string(block) + "#o block.";
+		log.PushPop(line);
+	}
+	else if (CardName == "Focus") {
+		//Gain (Int) mana. Fill hand with Spells.
+		int mana = -guy.DrainMana(-guy.Intelligence);
+		guy.fillType = "Spell";
+
+		string line = "#m-You gain " + to_string(mana) + " mana.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Horrify") {
+		//The enemy can't gain block or hp for (Int/2) turns.
+		int h = guy.Intelligence / 2;
+		guy.horrify += h;
+
+		string line = "#m-You horrify the " + string(enemy.Name) + " for " + to_string(h) + " more turns.";
+		log.PushPop(line);
+	}
+	else if (CardName == "Lurk") {
+		//Gain 4 mana. +1d2 Int for the combat. +6 Energy.
+		int mana = -guy.DrainMana(-4);
+		int in = rtd(1, 2);
+		guy.ModStat(in, "Intelligence");
+		guy.intMod -= in;
+		gainEnergy(6, guy, enemy);
+
+		string line = "-You #mgain " + to_string(mana) + " mana#o and #m" + to_string(in) + " Intelligence#o for the combat.";
+		log.PushPop(line);
+	}
+	else if (CardName == "Screech") {
+		//Pierce for (Int) damage 2d2 times.
+		int damage = 0;
+		int times = rtd(2, 2);
+
+		for (int i = 0; i < times; i++) {
+			pierce = TRUE;
+			damage += dealDamage(guy.Intelligence, guy, enemy, log);
+		}
+
+		string line = "-You #ypierce " + to_string(times) + " times#o for a total of #y" + to_string(damage) + "#o damage.";
+		log.PushPop(line);
+	}
+	else if (CardName == "Echo") {
+		//Gain 1d(Int) mana. +5 Energy.
+		int mana = -guy.DrainMana(-rtd(1, guy.Intelligence));
+		gainEnergy(5, guy, enemy);
+
+		string line = "#m-You gain " + to_string(mana) + " mana.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Judge") {
+		//Halve the enemy's hp. +5 Energy.
+		if(enemy.CurrentHealth > 1)
+			enemy.CurrentHealth /= 2;
+		gainEnergy(5, guy, enemy);
+
+		string line = "#m-You halve the " + string(enemy.Name) + "'s health.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Bless") {
+		//Gain (Int/2)d2 mana and health.
+		int mana = -guy.DrainMana(-rtd(guy.Intelligence/2, 2));
+		int health = -guy.TakeDamage(-rtd(guy.Intelligence / 2, 2));
+
+		string line = "-You #mgain " + to_string(mana) + " mana#o and heal for #g" + to_string(health) + "#o health.";
+		log.PushPop(line);
+	}
+	else if (CardName == "Aegis") {
+		//Gain 2+(Int/9) Negates.
+		int neg = 2 + (guy.Intelligence / 9);
+		guy.Negate += neg;
+
+		string line = "#m-You gain #c" + to_string(neg) + " Negates#m.#o";
+		log.PushPop(line);
+	}
+	else if (CardName == "Steadfast") {
+		//Lose 1 hp 2d2 times. Gain (Int/3) mana per hit.
+		int times = rtd(2, 2);
+		int damage = 0;
+		int mana = 0;
+		for (int i = 0; i < times; i++) {
+			guy.pierce = TRUE;
+			damage += guy.TakeDamage(1);
+			mana += -guy.DrainMana(-guy.Intelligence / 3);
+		}
+
+		string line = "-You lose health and gain mana #m" + to_string(times) + " times#o for a total of #r" +
+						to_string(damage) + "#o damage and #m" + to_string(mana) + "#o mana. ";
 		log.PushPop(line);
 	}
 
@@ -2288,6 +2566,24 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		cards.push_back("Liquidate");
 		cards.push_back("Sandstorm");
 		cards.push_back("Screen");
+		cards.push_back("Empower");
+		cards.push_back("Shed");
+		cards.push_back("Extract");
+		cards.push_back("Drain");
+		cards.push_back("Soldier");
+		cards.push_back("Attack");
+		cards.push_back("Arise");
+		cards.push_back("The Flesh");
+		cards.push_back("Rainbow");
+		cards.push_back("Focus");
+		cards.push_back("Horrify");
+		cards.push_back("Lurk");
+		cards.push_back("Screech");
+		cards.push_back("Echo");
+		cards.push_back("Judge");
+		cards.push_back("Bless");
+		cards.push_back("Aegis");
+		cards.push_back("Steadfast");
 
 		cards.push_back("Haste");
 		cards.push_back("Revivify");
@@ -2493,6 +2789,11 @@ int Card::dealDamage(int damage, Character &guy, Enemy &enemy, TextLog &log) {
 		damage *= 2;
 		guy.steroids = FALSE;
 	}
+	//Empower
+	if (guy.empower > 0 && CardType == "Attack") {
+		damage += guy.empower;
+		guy.empower = 0;
+	}
 	//Sharp Claws trait
 	if (guy.Sharp_Claws) {
 		int claw = rtd(1, guy.Skill);
@@ -2655,6 +2956,7 @@ void Card::polymorph(Character &guy, Enemy &enemy) {
 	int enemyneg = enemy.enemyNegate;
 	int enemytc = enemy.TurnCount;
 	int enemydot = enemy.dot;
+	int enemyreward = enemy.goldreward;
 
 
 	vector<Enemy> early;
@@ -2760,6 +3062,7 @@ void Card::polymorph(Character &guy, Enemy &enemy) {
 	enemy.enemyNegate = enemyneg;
 	enemy.TurnCount = enemytc;
 	enemy.dot = enemydot;
+	enemy.goldreward = enemyreward;
 
 	if (enemy.CurrentHealth > enemy.MaxHealth) {
 		enemy.CurrentHealth = enemy.MaxHealth;
@@ -3054,7 +3357,25 @@ void Card::setType() {
 		CardName == "Transmogrify" ||
 		CardName == "Liquidate" ||
 		CardName == "Sandstorm" ||
-		CardName == "Screen") {
+		CardName == "Screen" ||
+		CardName == "Empower" ||
+		CardName == "Shed" ||
+		CardName == "Extract" ||
+		CardName == "Drain" ||
+		CardName == "Soldier" ||
+		CardName == "Attack" ||
+		CardName == "Arise" ||
+		CardName == "The Flesh" ||
+		CardName == "Rainbow" ||
+		CardName == "Focus" ||
+		CardName == "Horrify" ||
+		CardName == "Lurk" ||
+		CardName == "Screech" ||
+		CardName == "Echo" ||
+		CardName == "Judge" ||
+		CardName == "Bless" ||
+		CardName == "Aegis" ||
+		CardName == "Steadfast") {
 		CardType = "Spell";
 	}
 	//bosss

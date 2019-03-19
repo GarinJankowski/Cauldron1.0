@@ -166,6 +166,97 @@ Room Map::at(int i) {
 }
 
 void Map::checkPosition(Character &guy, InputBoard &board) {
+	//Floor is Lava trait
+	if (guy.The_Floor_is_Lava) {
+		for (int x = guy.posx; x < 26; x++) {
+			for (int y = guy.posy; y < 8; y++) {
+				if (x != 25 || y != 7) {
+					terrainGrid[x][y] = "Lava";
+				}
+			}
+		}
+		int i = 0;
+		for (int x = 0; x < 26; x++) {
+			for (int y = 0; y < 8; y++) {
+				roomList.at(i).Terrain = terrainGrid[x][y];
+				i++;
+			}
+		}
+		guy.The_Floor_is_Lava = FALSE;
+		PrintWholeMap(guy, board);
+	}
+	//Slippery trait
+	if (guy.Slippery) {
+		for (int x = guy.posx; x < 26; x++) {
+			if (x != 25 || guy.posy != 7)
+				terrainGrid[x][guy.posy] = "Ice";
+		}
+		for (int y = guy.posy; y < 8; y++) {
+			if (guy.posx != 25 || y != 7)
+				terrainGrid[guy.posx][y] = "Ice";
+		}
+		int i = 0;
+		for (int x = 0; x < 26; x++) {
+			for (int y = 0; y < 8; y++) {
+				roomList.at(i).Terrain = terrainGrid[x][y];
+				i++;
+			}
+		}
+		guy.Slippery = FALSE;
+		PrintWholeMap(guy, board);
+	}
+	//Terraform trait
+	if (guy.Terraform && rand() % 5 == 0) {
+		/*generateTerrain();
+
+		int i = 0;
+		for (int x = 0; x < 26; x++) {
+			for (int y = 0; y < 8; y++) {
+				roomList.at(i).Terrain = terrainGrid[x][y];
+				i++;
+			}
+		}*/
+
+		for (int x = guy.posx; x < guy.posx + 3; x++) {
+			for (int y = guy.posy; y < guy.posy + 3; y++) {
+				if (x < 26 && y < 8 && (x != 25 || y != 7) && (x != guy.posx || y != guy.posy)) {
+					int rng = rand() % 19;
+					if (rng >= 0 && rng <= 2) {
+						terrainGrid[x][y] = "Ice";
+					}
+					else if (rng > 2 && rng <= 5) {
+						terrainGrid[x][y] = "Forest";
+					}
+					else if (rng > 5 && rng <= 8) {
+						terrainGrid[x][y] = "Wasteland";
+					}
+					else if (rng > 8 && rng <= 11) {
+						terrainGrid[x][y] = "City";
+					}
+					else if (rng > 11 && rng <= 14) {
+						terrainGrid[x][y] = "Lava";
+					}
+					else if (rng > 14 && rng <= 17) {
+						terrainGrid[x][y] = "Fog";
+					}
+					else {
+						terrainGrid[x][y] = "Treasure";
+					}
+				}
+			}
+		}
+		int i = 0;
+		for (int x = 0; x < 26; x++) {
+			for (int y = 0; y < 8; y++) {
+				roomList.at(i).Terrain = terrainGrid[x][y];
+				i++;
+			}
+		}
+
+		UpdateMap(guy, board);
+		PrintWholeMap(guy, board);
+	}
+
 	for (int i = 0; i < roomList.size(); i++) {
 		if (roomList.at(i).checkXY(guy.posx, guy.posy)) {
 			board.RoomType = roomList.at(i).RoomType;
@@ -569,96 +660,6 @@ char Map::getTier(int posx, int posy) {
 
 void Map::UpdateMap(Character &guy, InputBoard &board) {
 	//checkPosition(guy, board);
-
-	//Floor is Lava trait
-	if (guy.The_Floor_is_Lava) {
-		for (int x = guy.posx; x < 26; x++) {
-			for (int y = guy.posy; y < 8; y++) {
-				if (x != 25 || y != 7) {
-					terrainGrid[x][y] = "Lava";
-				}
-			}
-		}
-		int i = 0;
-		for (int x = 0; x < 26; x++) {
-			for (int y = 0; y < 8; y++) {
-				roomList.at(i).Terrain = terrainGrid[x][y];
-				i++;
-			}
-		}
-		guy.The_Floor_is_Lava = FALSE;
-		PrintWholeMap(guy, board);
-	}
-	//Slippery trait
-	if (guy.Slippery) {
-		for (int x = guy.posx; x < 26; x++) {
-			if (x != 25 || guy.posy != 7)
-				terrainGrid[x][guy.posy] = "Ice";
-		}
-		for (int y = guy.posy; y < 8; y++) {
-			if (guy.posx != 25 || y != 7)
-				terrainGrid[guy.posx][y] = "Ice";
-		}
-		int i = 0;
-		for (int x = 0; x < 26; x++) {
-			for (int y = 0; y < 8; y++) {
-				roomList.at(i).Terrain = terrainGrid[x][y];
-				i++;
-			}
-		}
-		guy.Slippery = FALSE;
-		PrintWholeMap(guy, board);
-	}
-	//Terraform trait
-	if (guy.Terraform && rand() % 5 == 0) {
-		/*generateTerrain();
-
-		int i = 0;
-		for (int x = 0; x < 26; x++) {
-			for (int y = 0; y < 8; y++) {
-				roomList.at(i).Terrain = terrainGrid[x][y];
-				i++;
-			}
-		}*/
-
-		for (int x = guy.posx; x < guy.posx + 3; x++) {
-			for (int y = guy.posy; y < guy.posy + 3; y++) {
-				if (x < 26 && y < 8 && (x != 25 || y != 7) && (x != guy.posx || y != guy.posy)) {
-					int rng = rand() % 19;
-					if (rng >= 0 && rng <= 2) {
-						terrainGrid[x][y] = "Ice";
-					}
-					else if (rng > 2 && rng <= 5) {
-						terrainGrid[x][y] = "Forest";
-					}
-					else if (rng > 5 && rng <= 8) {
-						terrainGrid[x][y] = "Wasteland";
-					}
-					else if (rng > 8 && rng <= 11) {
-						terrainGrid[x][y] = "City";
-					}
-					else if (rng > 11 && rng <= 14) {
-						terrainGrid[x][y] = "Lava";
-					}
-					else if (rng > 14 && rng <= 17) {
-						terrainGrid[x][y] = "Fog";
-					}
-					else {
-						terrainGrid[x][y] = "Treasure";
-					}
-				}
-			}
-		}
-		int i = 0;
-		for (int x = 0; x < 26; x++) {
-			for (int y = 0; y < 8; y++) {
-				roomList.at(i).Terrain = terrainGrid[x][y];
-				i++;
-			}
-		}
-
-		PrintWholeMap(guy, board);
-	}
 
 	for (int i = 0; i < roomList.size(); i++) {
 		if (roomList.at(i).checkXY(guy.posxBefore, guy.posyBefore)) {

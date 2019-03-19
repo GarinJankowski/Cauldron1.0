@@ -539,7 +539,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					health -= guy.CurrentBlock;
 				}
 				damage = guy.TakeDamage(damage);
-				heal(health);
+				heal(health, guy, log);
 				line = "-The Zombie bites you for #r" + to_string(damage) + "#o damage and steals #b" + to_string(health) + "#o health.";
 
 				log.PushPop(line);
@@ -696,13 +696,13 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				//leech
 				int damage = rtd(3, 2);
 				damage = guy.TakeDamage(damage);
-				heal(damage);
+				heal(damage, guy, log);
 				line = "-The Elemental #rsteals " + to_string(damage) + " health#o from you.";
 			}
 			else if (rng > 4 && rng <= 6) {
 				//heal
 				int health = rtd(6, 2);
-				heal(health);
+				heal(health, guy, log);
 				line = "-The Elemental gains #b" + to_string(health) + "#o health.";
 			}
 			else if (rng > 6 && rng <= 7) {
@@ -807,8 +807,8 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					int damage = rtd(12 + td, 2);
 					damage = guy.TakeDamage(damage);
 					line = "-The Adventurer stabs you for #r" + to_string(damage) + "#o damage.";
-					heal(2);
-					string line2 = "-The Adventurer regenerates #r2#o health.";
+					int hp = heal(2, guy, log);
+					string line2 = "-The Adventurer regenerates #r" + to_string(hp) + "#o health.";
 					log.PushPop(line2);
 				}
 			}
@@ -829,8 +829,8 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				else if (type == 3) {
 					int block = gainBlock(rtd(2, 5), guy, log);
 					line = "-The Adventurer gains #b" + to_string(block) + "#o block.";
-					heal(2);
-					string line2 = "-The Adventurer regenerates #r2#o health.";
+					int hp = heal(2, guy, log);
+					string line2 = "-The Adventurer regenerates #r" + to_string(hp) + "#o health.";
 					log.PushPop(line2);
 				}
 			}
@@ -843,7 +843,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					}
 					else {
 						int health = rtd(4, 3);
-						heal(health);
+						heal(health, guy, log);
 						line = "-The Adventurer heals for #r" + to_string(health) + "#o health.";
 					}
 				}
@@ -876,10 +876,10 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				}
 				else if (type == 3) {
 					int health = rtd(5, 2);
-					heal(health);
+					heal(health, guy, log);
 					line = "-The Adventurer heals for #r" + to_string(health) + "#o health.";
-					heal(2);
-					string line2 = "-The Adventurer regenerates #r2#o health.";
+					int hp = heal(2, guy, log);
+					string line2 = "-The Adventurer regenerates #r" + to_string(hp) + "#o health.";
 					log.PushPop(line2);
 				}
 			}
@@ -1007,7 +1007,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			if (CurrentBlock > 6 && CurrentHealth < 15) {
 				int health = CurrentBlock;
 				CurrentBlock = 0;
-				heal(health);
+				heal(health, guy, log);
 
 				line = "-The Slave consumes their block and heals for #b" + to_string(health) + "#o health.";
 			}
@@ -1251,7 +1251,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			}
 			else {
 				int health = rtd(3, 2);
-				heal(health);
+				heal(health, guy, log);
 				line = "-The Apprentice regains #b" + to_string(health) + "#o health.";
 			
 				if (rand() % 7 < 4 || CurrentHealth == MaxHealth) {
@@ -1446,7 +1446,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 
 			if (CurrentHealth < MaxHealth) {
 				int regen = rtd(1, 3);
-				heal(regen);
+				heal(regen, guy, log);
 				string line2 = "-The Golem repairs itself for #b" + to_string(regen) + "#o health.";
 				log.PushPop(line2);
 			}
@@ -1587,7 +1587,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			if (rng == 0) {
 				int roll = 1 + (tier / 2);
 				int health = rtd(3, roll);
-				heal(health);
+				heal(health, guy, log);
 				line = "-The Paladin heals for #b" + to_string(health) + "#o health.";
 			}
 			else if (rng == 1) {
@@ -1675,7 +1675,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					healthNeeded = CurrentBlock;
 					CurrentBlock = 0;
 				}
-				heal(healthNeeded);
+				heal(healthNeeded, guy, log);
 				line2 = "#b The Juggernaut converts its block into " + to_string(healthNeeded) + " health.#o";
 				log.PushPop(line2);
 			}
@@ -1690,7 +1690,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 						int multi = tier * 1.4;
 						int damage = rtd(5+multi, 2);
 						damage = guy.TakeDamage(damage);
-						heal(damage);
+						heal(damage, guy, log);
 						line = "-The Vampire suddenly appears and #rsteals " + to_string(damage) + " health#o from you.";
 					}
 					else {
@@ -1707,7 +1707,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					}
 					else {
 						int health = (tier*.6) + 4;
-						heal(health);
+						heal(health, guy, log);
 						line = "-The Vampire regenerates #b" + to_string(health) + "#o health.";
 					}
 				}
@@ -1730,7 +1730,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 						else {
 							int damage = rtd(2+tier, 3);
 							damage = guy.TakeDamage(damage);
-							heal(damage);
+							heal(damage, guy, log);
 							line = "-The Vampire #rsteals " + to_string(damage) + " health#o from you.";
 						}
 					}
@@ -1740,7 +1740,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					if (rng == 0) {
 						int damage = rtd(3+tier, 2);
 						damage = guy.TakeDamage(damage);
-						heal(damage);
+						heal(damage, guy, log);
 						line = "-The Vampire #rsteals " + to_string(damage) + " health#o from you.";
 					}
 					else if (rng == 1) {
@@ -1759,7 +1759,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 	//Druid: heals, short damage over time, rivial move
 		else if (Name == "Druid") {
 			int health = 1 + tier / 3;
-			heal(health);
+			heal(health, guy, log);
 			string regen = "-The Druid regenerates #b" + to_string(health) + "#o health.";
 			log.PushPop(regen);
 
@@ -1790,7 +1790,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			}
 			else if (rng == 1) {
 				int damage = guy.TakeDamage(rtd(3, 2+(tier/2)));
-				heal(damage);
+				heal(damage, guy, log);
 
 				string line = "#b-The Druid saps #r" + to_string(damage) + "#b of your health.#o";
 				log.PushPop(line);
@@ -1803,7 +1803,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			}
 			else {
 				int health = rtd(tier, 3);
-				heal(health);
+				heal(health, guy, log);
 
 				string line = "-The Druid heals for #b" + to_string(health) + "#o.";
 				log.PushPop(line);
@@ -1972,7 +1972,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			if (rng == 0) {
 				int multi = tier * 1.25;
 				int health = rtd(2+type+multi, 2);
-				heal(health);
+				heal(health, guy, log);
 				line = "-The Demigod heals for #b" + to_string(health) + "#o health.";
 			}
 			else if (rng > 0 && rng < 3) {
@@ -2157,7 +2157,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				string line;
 				if (rng < 2) {
 					int hp = rtd(1, tier);
-					hp = heal(hp);
+					hp = heal(hp, guy, log);
 					line = "-The Artificer heals for #b" + to_string(hp) + "#o.";
 				}
 				else {
@@ -2428,7 +2428,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			else if (rng == 2) {
 				if (CurrentHealth < rtd(30, 3) && CurrentBlock > 0) {
 					int health = CurrentBlock;
-					heal(health);
+					heal(health, guy, log);
 					CurrentBlock = 0;
 					line = "-The King uses his #bblock to heal#o for #b" + to_string(health) + "#o health.";
 				}
@@ -2466,7 +2466,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			if (invisible > 0) {
 				invisible--;
 				int health = rtd(1, 7) + 9;
-				heal(health);
+				heal(health, guy, log);
 				line = "-The Witch regenerates #b" + to_string(health) + "#o health.";
 			}
 			else {
@@ -2728,7 +2728,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 		else if (Name == "Machine") {
 			if (CurrentHealth < MaxHealth) {
 				int health = 5-type;
-				heal(health);
+				heal(health, guy, log);
 				string line2 = "-The Machine repairs itself for #b" + to_string(health) + "#o health.";
 				log.PushPop(line2);
 			}
@@ -2780,6 +2780,14 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 
 		}
 
+		//Horrify
+		if (guy.horrify > 0) {
+			guy.horrify--;
+			if (guy.horrify == 0) {
+				string line = "#m-The " + string(Name) + "'s fear wears off.#o";
+				log.PushPop(line);
+			}
+		}
 		//Spiny Skin trait
 		if (guy.Spiny_Skin && guy.SpinyDamage > 0) {
 			takeDamage(guy.SpinyDamage, guy, log);
@@ -2882,7 +2890,7 @@ void Enemy::ActivateDOT(Character &guy, TextLog &log) {
 		}
 		else if (Name == "Demon" || Name == "Imp" || Name == "Brain" || Name == "Hellhound") {
 			if (charge) {
-				heal(damage);
+				heal(damage, guy, log);
 				line = "-The " + string(Name) + " #rsteals " + to_string(damage) + " of your health#o.";
 			}
 			else
@@ -2985,10 +2993,26 @@ int Enemy::takeDamage(int damage, Character &guy, TextLog &log) {
 }
 
 int Enemy::gainBlock(int block, Character &guy, TextLog &log) {
+	if (guy.horrify > 0)
+		block = 0;
 	CurrentBlock += block;
 	if (CurrentBlock > 999)
 		CurrentBlock = 999;
 	return block;
+}
+
+
+//stat changes
+int Enemy::heal(int health, Character &guy, TextLog &log) {
+	if (guy.horrify > 0)
+		health = 0;
+	if ((MaxHealth - CurrentHealth) < health) {
+		CurrentHealth = MaxHealth;
+	}
+	else {
+		CurrentHealth += health;
+	}
+	return health;
 }
 
 void Enemy::initNegotiateLines() {

@@ -346,14 +346,14 @@ void Character::checkMax() {
 	if (CurrentMana > MaxMana)
 		CurrentMana = MaxMana;
 
-	if (Strength < 0)
+	/*if (Strength < 0)
 		Strength = 0;
 	if (Defense < 0)
 		Defense = 0;
 	if (Intelligence < 0)
 		Intelligence = 0;
 	if (Skill < 0)
-		Skill = 0;
+		Skill = 0;*/
 	if (MaxHealth < 0)
 		MaxHealth = 0;
 	if (MaxMana < 0)
@@ -511,6 +511,15 @@ int Character::gainBlock(int block) {
 	}
 
 	return b;
+}
+
+//lose block
+int Character::loseBlock(int block) {
+	if (block > CurrentBlock)
+		CurrentBlock = 0;
+	else
+		CurrentBlock -= block;
+	return block;
 }
 
 //drain/regain mana
