@@ -24,6 +24,7 @@ public:
 
 	void PushPop(string pushed);
 	void printLog();
+	void printLogEnd();
 	void printAllLog(int starti, int endi);
 };
 #endif //TEXTLOG_H

@@ -341,9 +341,11 @@ void Character::showInventoryScreen() {
 
 //check if stats are above their maximums
 void Character::checkMax() {
-	if (CurrentHealth > MaxHealth)
+	//Engorged trait
+	if (CurrentHealth > MaxHealth && !Engorged)
 		CurrentHealth = MaxHealth;
-	if (CurrentMana > MaxMana)
+	//Enlightened trait
+	if (CurrentMana > MaxMana && !Enlightened)
 		CurrentMana = MaxMana;
 
 	/*if (Strength < 0)
@@ -385,7 +387,7 @@ int Character::TakeDamage(int damageTaken) {
 	}
 	//Tumors trait
 	if (Tumors && damageTaken < 0) {
-		ModStat(-1, "MaxHealth");
+		ModStat(-1, "MaxHealth", TRUE);
 		if (CurrentHealth > MaxHealth)
 			CurrentHealth = MaxHealth;
 		hpMod++;
@@ -426,6 +428,7 @@ int Character::TakeDamage(int damageTaken) {
 		damageTaken = 0;
 	}
 	if (Negate > 0 && damageTaken > 0) {
+		//Deflect card
 		if (deflect > 0) {
 			deflectdamage = damageTaken;
 			deflectTRUE = TRUE;
@@ -433,6 +436,10 @@ int Character::TakeDamage(int damageTaken) {
 		}
 		else {
 			damageTaken = 0;
+		}
+		//Horns trait
+		if (Horns != -1) {
+			Horns++;
 		}
 		Negate--;
 	}
@@ -448,6 +455,31 @@ int Character::TakeDamage(int damageTaken) {
 			damageTaken -= goldblock;
 			Gold -= goldblock;
 		}
+	}
+
+	//Panic Attack trait
+	if (Panic_Attack != -1 && damageTaken >= 20) {
+		Panic_Attack = 1;
+	}
+	//Falter trait
+	if (Falter != -1) {
+		Falter += damageTaken;
+	}
+	//Exposed trait
+	if (Exposed != -1) {
+		int ex = damageTaken - CurrentBlock;
+		if (ex < 0)
+			ex = 0;
+		Exposed += ex;
+	}
+	//Amass trait
+	if (Amass != -1 && !pierce) {
+		int am;
+		if (damageTaken > CurrentBlock)
+			am = CurrentBlock;
+		else
+			am = damageTaken;
+		Amass += am;
 	}
 
 	//pierce
@@ -491,6 +523,11 @@ int Character::TakeDamage(int damageTaken) {
 		Gold--;
 	}
 
+	//Shock Absorber trait
+	if (Shock_Absorber != -1) {
+		Shock_Absorber += damageTaken;
+	}
+
 	return damageTaken;
 }
 
@@ -503,7 +540,7 @@ int Character::gainBlock(int block) {
 		//Charred Skin trait
 		if (Charred_Skin)
 			TakeDamage(-1 * b);
-		else
+		else if (Overconfidence < 6)
 			CurrentBlock += b;
 	}
 	if (CurrentBlock > 999) {
@@ -515,10 +552,21 @@ int Character::gainBlock(int block) {
 
 //lose block
 int Character::loseBlock(int block) {
+	//Amass trait
+	if (Amass != -1) {
+		int am;
+		if (block > CurrentBlock)
+			am = CurrentBlock;
+		else
+			am = block;
+		Amass += am;
+	}
 	if (block > CurrentBlock)
 		CurrentBlock = 0;
 	else
 		CurrentBlock -= block;
+
+
 	return block;
 }
 
@@ -535,25 +583,68 @@ int Character::DrainMana(int manaDrained) {
 	return manaDrained;
 }
 
-//change stats permanently
-int Character::ModStat(int bonus, string stat) {
-	if (stat == "MaxHealth") {
-		MaxHealthBase += bonus;
-		MaxHealth += bonus;
+//gain energy
+int Character::gainEnergy(int energy) {
+	int en = energy;
+	//Stamina trait
+	if (Stamina && Energy < 0)
+		en *= 2;
+	//Heavy trait
+	if (Heavy)
+		gainBlock(en);
+	else {
+		Energy += en;
 	}
-	else if (stat == "MaxMana") {
-		MaxManaBase += bonus;
-		MaxMana += bonus;
-	}
-	else if (stat == "Strength")
-		Strength += bonus;
-	else if (stat == "Defense")
-		Defense += bonus;
-	else if (stat == "Intelligence")
-		Intelligence += bonus;
-	else if (stat == "Skill")
-		Skill += bonus;
 
+	//Flat Feet trait
+	if (Flat_Feet && Energy <= -5) {
+		Energy = -10;
+	}
+
+	return en;
+}
+
+//change stats permanently
+int Character::ModStat(int bonus, string stat, bool battle) {
+	//Stiff trait
+	if (!Stiff) {
+		//Reversal trait
+		if (Reversal && bonus < 0) {
+			bonus *= -1;
+		}
+
+		if (battle) {
+			if (stat == "MaxHealth")
+				hpMod -= bonus;
+			else if (stat == "MaxMana")
+				mpMod -= bonus;
+			else if (stat == "Strength")
+				strMod -= bonus;
+			else if (stat == "Defense")
+				defMod -= bonus;
+			else if (stat == "Intelligence")
+				intMod -= bonus;
+			else if (stat == "Skill")
+				sklMod -= bonus;
+		}
+
+		if (stat == "MaxHealth") {
+			MaxHealthBase += bonus;
+			MaxHealth += bonus;
+		}
+		else if (stat == "MaxMana") {
+			MaxManaBase += bonus;
+			MaxMana += bonus;
+		}
+		else if (stat == "Strength")
+			Strength += bonus;
+		else if (stat == "Defense")
+			Defense += bonus;
+		else if (stat == "Intelligence")
+			Intelligence += bonus;
+		else if (stat == "Skill")
+			Skill += bonus;
+	}
 	checkMax();
 
 	return bonus;
@@ -561,15 +652,15 @@ int Character::ModStat(int bonus, string stat) {
 
 void Character::restoreStats() {
 	//Purple trait
-	if (Purple)
+	if (Purple || Stiff)
 		return;
 
-	ModStat(strMod, "Strength");
-	ModStat(defMod, "Defense");
-	ModStat(intMod, "Intelligence");
-	ModStat(hpMod, "MaxHealth");
-	ModStat(mpMod, "MaxMana");
-	ModStat(sklMod, "Skill");
+	Strength += strMod;
+	Defense += defMod;
+	Intelligence += intMod;
+	MaxHealth += hpMod;
+	MaxMana += mpMod;
+	Skill += sklMod;
 
 	strMod = 0;
 	defMod = 0;
@@ -581,10 +672,12 @@ void Character::restoreStats() {
 
 int Character::gainGold(int gold) {
 	Gold += gold;
+	if (Gold < 0)
+		gold = 0;
 	return gold;
 }
 
-//to be implemented
+//to be implemented (probably not)
 void Character::manaFlicker() {
 	/*init_pair(1, COLOR_WHITE, COLOR_MAGENTA);
 	attron(COLOR_PAIR(1));

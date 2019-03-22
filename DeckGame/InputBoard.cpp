@@ -25,6 +25,7 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	hands = Gear("No Weapon");
 	hands.GearOnOrOff(TRUE, guy, deck);
 	body = Gear("No Armor");
+	body = Gear("Chain Mail");
 	body.GearOnOrOff(TRUE, guy, deck);
 	head = Gear("No Headgear");
 	head.GearOnOrOff(TRUE, guy, deck);
@@ -291,6 +292,35 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsSacrifice.push_back(Gear("Flat Feet"));
 	AvailableTraitsSacrifice.push_back(Gear("Muscle Mass"));
 	AvailableTraitsSacrifice.push_back(Gear("Chaos#"));
+	AvailableTraitsSacrifice.push_back(Gear("Panic Attack"));
+	AvailableTraitsSacrifice.push_back(Gear("Cursed"));
+	AvailableTraitsSacrifice.push_back(Gear("Joint Pain"));
+	AvailableTraitsSacrifice.push_back(Gear("Daredevil"));
+	AvailableTraitsSacrifice.push_back(Gear("Careless"));
+	AvailableTraitsSacrifice.push_back(Gear("Hoarder"));
+	AvailableTraitsSacrifice.push_back(Gear("Atrophy"));
+	AvailableTraitsSacrifice.push_back(Gear("Burnout"));
+	AvailableTraitsSacrifice.push_back(Gear("Blackout"));
+	AvailableTraitsSacrifice.push_back(Gear("Combo Breaker"));
+	AvailableTraitsSacrifice.push_back(Gear("Memory Lapse"));
+	AvailableTraitsSacrifice.push_back(Gear("Stiff"));
+	AvailableTraitsSacrifice.push_back(Gear("Ethereal"));
+	AvailableTraitsSacrifice.push_back(Gear("Overconfidence"));
+	AvailableTraitsSacrifice.push_back(Gear("Falter"));
+	AvailableTraitsSacrifice.push_back(Gear("Exposed"));
+	AvailableTraitsSacrifice.push_back(Gear("Circus"));
+	AvailableTraitsSacrifice.push_back(Gear("Spiritual"));
+	AvailableTraitsSacrifice.push_back(Gear("Stuck"));
+	AvailableTraitsSacrifice.push_back(Gear("Inert"));
+	AvailableTraitsSacrifice.push_back(Gear("Lightweight"));
+	AvailableTraitsSacrifice.push_back(Gear("Headache"));
+	AvailableTraitsSacrifice.push_back(Gear("Reckless"));
+	AvailableTraitsSacrifice.push_back(Gear("Wasteful"));
+	AvailableTraitsSacrifice.push_back(Gear("Strain"));
+	AvailableTraitsSacrifice.push_back(Gear("Materialist"));
+	AvailableTraitsSacrifice.push_back(Gear("Run"));
+	AvailableTraitsSacrifice.push_back(Gear("Heavy"));
+	AvailableTraitsSacrifice.push_back(Gear("Commitment"));
 
 	AvailableTraitsSacrificeREFILL = AvailableTraitsSacrifice;
 
@@ -343,6 +373,36 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsReward.push_back(Gear("Curved Tusks"));
 	AvailableTraitsReward.push_back(Gear("Early Riser"));
 	AvailableTraitsReward.push_back(Gear("Outer Shell"));
+	AvailableTraitsReward.push_back(Gear("Resourceful"));
+	AvailableTraitsReward.push_back(Gear("Naturalist"));
+	AvailableTraitsReward.push_back(Gear("Bounty Hunter"));
+	AvailableTraitsReward.push_back(Gear("Scraps"));
+	AvailableTraitsReward.push_back(Gear("Tinkerer"));
+	AvailableTraitsReward.push_back(Gear("Magnetic"));
+	AvailableTraitsReward.push_back(Gear("Merchant"));
+	AvailableTraitsReward.push_back(Gear("Conservation"));
+	AvailableTraitsReward.push_back(Gear("Vendor"));
+	AvailableTraitsReward.push_back(Gear("Shock Absorber"));
+	AvailableTraitsReward.push_back(Gear("Stamina"));
+	AvailableTraitsReward.push_back(Gear("Rested"));
+	AvailableTraitsReward.push_back(Gear("Midas Touch"));
+	AvailableTraitsReward.push_back(Gear("Horns"));
+	AvailableTraitsReward.push_back(Gear("Exhaust Vent"));
+	AvailableTraitsReward.push_back(Gear("Fervor"));
+	AvailableTraitsReward.push_back(Gear("Enlightened"));
+	AvailableTraitsReward.push_back(Gear("Engorged"));
+	AvailableTraitsReward.push_back(Gear("Archmage"));
+	AvailableTraitsReward.push_back(Gear("Rebirth"));
+	AvailableTraitsReward.push_back(Gear("Heavyweight"));
+	AvailableTraitsReward.push_back(Gear("Deja Vu"));
+	AvailableTraitsReward.push_back(Gear("Concentration"));
+	AvailableTraitsReward.push_back(Gear("Reversal"));
+	AvailableTraitsReward.push_back(Gear("Amass"));
+	AvailableTraitsReward.push_back(Gear("Technician"));
+	AvailableTraitsReward.push_back(Gear("Optimist"));
+	AvailableTraitsReward.push_back(Gear("Stockpile"));
+	AvailableTraitsReward.push_back(Gear("Draining Touch"));
+	AvailableTraitsReward.push_back(Gear("Fleet of Foot"));
 
 	AvailableTraitsRewardREFILL = AvailableTraitsReward;
 
@@ -788,6 +848,37 @@ void InputBoard::deckLoopCard(Character &guy, Deck &cardDeck, int modindex) {
 	int modx = 59;
 	modx -= (mods.size() / 4) - 1;
 	mvprintInSize(3, modx, 0, mods.c_str(), FALSE);
+
+	//string for cost description
+	int mcx = 52;
+	int mcy = 8;
+	string manacost = "";
+	int mc = cardDeck.at(modindex).ManaCost;
+	if (guy.Dazed && cardDeck.at(modindex).CardType == "Spell")
+		mc++;
+	if (guy.Psychosis != -1)
+		mc *= 2;
+	if (mc > 0 || cardDeck.at(modindex).CardName == "Lightning") {
+		manacost = "(Costs " + to_string(mc) + " mana.)";
+		if (cardDeck.at(modindex).CardName == "Lightning") {
+			manacost = "(Lose all mana.)";
+		}
+		if (guy.Sacrificial) {
+			manacost = "#r(Take " + to_string(mc) + " damage.)#m";
+			if (cardDeck.at(modindex).CardName == "Lightning") {
+				manacost = "(Lose all hp and block.)";
+				mcx -= 2;
+			}
+		}
+	}
+	if (cardDeck.at(modindex).CardName == "Liquidate") {
+		manacost = "#$(Costs 10 gold.)#m";
+	}
+	if (cardDeck.at(modindex).CardName == "Flee") {
+		manacost = "(Costs all block.)";
+		mcx--;
+	}
+	mvprintInSize(mcy, mcx, 0, manacost.c_str(), FALSE);
 
 	standend();
 	mvprintInSize(13, 56, 0, "(M)odify this card", FALSE);
@@ -1367,7 +1458,9 @@ void InputBoard::inventoryLoopItem(Gear &item, Character &guy, Deck &deck) {
 		if (item.Type == "Head") {
 			Gear temp = head;
 			temp.GearOnOrOff(FALSE, guy, deck);
-			inventory.push_back(temp);
+			//Careless trait
+			if (!guy.Careless || temp.GearName != "No Headgear")
+				inventory.push_back(temp);
 			removeGear(item);
 			head = item;
 			head.GearOnOrOff(TRUE, guy, deck);
@@ -1377,7 +1470,9 @@ void InputBoard::inventoryLoopItem(Gear &item, Character &guy, Deck &deck) {
 		if (item.Type == "Body") {
 			Gear temp = body;
 			temp.GearOnOrOff(FALSE, guy, deck);
-			inventory.push_back(temp);
+			//Careless trait
+			if (!guy.Careless || temp.GearName != "No Armor")
+				inventory.push_back(temp);
 			removeGear(item);
 			body = item;
 			body.GearOnOrOff(TRUE, guy, deck);
@@ -1387,7 +1482,9 @@ void InputBoard::inventoryLoopItem(Gear &item, Character &guy, Deck &deck) {
 		if (item.Type == "Hands") {
 			Gear temp = hands;
 			temp.GearOnOrOff(FALSE, guy, deck);
-			inventory.push_back(temp);
+			//Careless trait
+			if (!guy.Careless || temp.GearName != "No Weapon")
+				inventory.push_back(temp);
 			removeGear(item);
 			hands = item;
 			hands.GearOnOrOff(TRUE, guy, deck);
@@ -1959,11 +2056,12 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 			}
 			if (DecisionCards.at(in).Push)
 				pushthisturn = TRUE;
-			if (!DecisionCards.at(in).Burn && !DecisionCards.at(in).naturalBurn && (guy.burncard <= 0 || (guy.burnPlayed && guy.burninarow <= 1)) && !DecisionCards.at(in).StayCard) {
+			if (!DecisionCards.at(in).Burn && !DecisionCards.at(in).naturalBurn && (guy.burncard <= 0 || (guy.burnPlayed && guy.burninarow <= 1)) && guy.Burnout < 1 && !DecisionCards.at(in).StayCard) {
 				Discard.push_back(DecisionCards.at(in));
 			}
 			//Ghost card
-			if (((DecisionCards.at(in).Burn || DecisionCards.at(in).naturalBurn || (guy.burncard > 0 && (!guy.burnPlayed || guy.burninarow > 1))) && guy.ghost > 0 && (!guy.ghostPlayed || guy.ghostinarow > 1))) {
+			//Burnout trait
+			if (((DecisionCards.at(in).Burn || DecisionCards.at(in).naturalBurn || (guy.burncard > 0 && (!guy.burnPlayed || guy.burninarow > 1)) || guy.Burnout > 0) && guy.ghost > 0 && (!guy.ghostPlayed || guy.ghostinarow > 1))) {
 				Discard.push_back(DecisionCards.at(in));
 			}
 			//check stay
@@ -1973,7 +2071,8 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 				DecisionCards.at(in).tempStay--;
 			}
 			//check burn, also check for Ghost
-			if (dontstay || ((DecisionCards.at(in).Burn || DecisionCards.at(in).naturalBurn || (guy.burncard > 0 && (!guy.burnPlayed || guy.burninarow > 1))) && guy.ghost == 0 && (!guy.ghostPlayed || guy.ghostinarow > 1))) {
+			//Burnout trait
+			if (dontstay || ((DecisionCards.at(in).Burn || DecisionCards.at(in).naturalBurn || (guy.burncard > 0 && (!guy.burnPlayed || guy.burninarow > 1)) || guy.Burnout > 0) && guy.ghost == 0 && (!guy.ghostPlayed || guy.ghostinarow > 1))) {
 				/*if (!DecisionCards.at(in).Burn && !DecisionCards.at(in).naturalBurn)
 					Discard.push_back(DecisionCards.at(in));*/
 				DecisionCards.erase(DecisionCards.begin() + in);
@@ -2003,6 +2102,9 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 				}
 			}
 		}
+		//Burnout trait
+		if (guy.Burnout > 0)
+			guy.Burnout--;
 	}
 	else if (choose == 'r' && !checkUsable(guy, enemy)) {
 		
@@ -2019,6 +2121,11 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 
 			int rng = rand() % (Discard.size() + 1);
 			Discard.insert(Discard.begin() + rng, tempCard);
+		}
+		if (guy.Resourceful) {
+			int block = gainBlock(40, guy, enemy);
+			string re = "-You gain #c" + to_string(block) + "#o block.";
+			log.PushPop(re);
 		}
 		ShuffleAddPrint(guy);
 	}
@@ -2231,6 +2338,10 @@ Enemy InputBoard::generateEnemy(Character &guy) {
 				else
 					enemy = tierthree2;
 			}
+
+			if (guy.Circus && rand() % 4 == 0) {
+				enemy = Enemy("Jester");
+			}
 		}
 		else if (guy.getTier() == 'F') {
 			int rng = rand() % 13;
@@ -2256,16 +2367,30 @@ Enemy InputBoard::generateEnemy(Character &guy) {
 				else
 					enemy = tierthree2;
 			}
+
+			if (guy.Circus && rand() % 4 == 0) {
+				enemy = Enemy("Jester");
+			}
 		}
 	}
 	if(enemy.Name == "Adventurer")
 		enemy.type = rand() % 4;
 
+	//Deja Vu trait
+	if (guy.Deja_Vu != -1 && currentEnemyName == enemy.Name) {
+		guy.Deja_Vu = 1;
+	}
 	currentEnemyName = enemy.Name;
 	return enemy;
 }
 
 bool InputBoard::checkDead(Character &guy, Enemy &enemy, TextLog &log) {
+	//Rebirth trait
+	if (guy.Rebirth && guy.MaxHealth <= 0) {
+		guy.MaxHealth = 40;
+		guy.CurrentHealth = guy.MaxHealth;
+		guy.hpMod = 0;
+	}
 	//check dead
 	if (guy.CurrentHealth <= 0) {
 		//Save card
@@ -2296,7 +2421,7 @@ bool InputBoard::checkDead(Character &guy, Enemy &enemy, TextLog &log) {
 		if (guy.Reconstruction && guy.Skill > 1 && guy.CurrentHealth <= 0) {
 			guy.restoreStats();
 			guy.CurrentHealth = guy.MaxHealth;
-			guy.ModStat(-2, "Skill");
+			guy.ModStat(-2, "Skill", FALSE);
 			string recon = "#g You come back to life!#o";
 			log.PushPop(recon);
 			if (guy.Absorption == 0)
@@ -2313,7 +2438,7 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 	handSize = guy.handSize;
 	Third_Eye = guy.Third_Eye;
 
-	updateDeck(deck);
+	updateDeck(guy, deck);
 		Enemy enemy;
 		for (int i = 0; i < 8; i++)
 			mvprintw(6 + i, 29, "             ");
@@ -2374,14 +2499,40 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 		if (guy.Tail) {
 			Tail = TRUE;
 		}
+		//Blackout trait
+		if (guy.Blackout) {
+			Card bo;
+			for (int i = 0; i < deck.size(); i++) {
+				if (deck.at(i).blackout)
+					bo = deck.at(i);
+			}
+			string black;
+			if (bo.CardType == "Attack") {
+				black = " #y";
+			}
+			else if (bo.CardType == "Defend") {
+				black = " #c";
+			}
+			else if (bo.CardType == "Spell") {
+				black = " #m";
+			}
+			else if (bo.CardType == "BossCard") {
+				black = " #o";
+			}
+			else if (bo.CardType == "Negative") {
+				black = " #r";
+			}
+			black += string(bo.CardName) + bo.modchars() + "#r is removed from you deck.#o";
+			log.PushPop(black);
+		}
 		//Early Riser trait
 		if (guy.Early_Riser != -1) {
 			guy.Early_Riser = 1;
-			guy.ModStat(5, "Strength");
+			guy.ModStat(5, "Strength", TRUE);
 			guy.strMod -= 5;
-			guy.ModStat(5, "Defense");
+			guy.ModStat(5, "Defense", TRUE);
 			guy.defMod -= 5;
-			guy.ModStat(5, "Intelligence");
+			guy.ModStat(5, "Intelligence", TRUE);
 			guy.intMod -= 5;
 
 			string rise = "#y-You feel a boost.#o";
@@ -2395,6 +2546,15 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 		if (guy.Timer) {
 			guy.CurrentHealth = 1;
 			guy.Negate += 5;
+		}
+		//Deja Vu trait
+		if (guy.Deja_Vu == 1) {
+			int damage = enemy.takeDamage(40, guy, log);
+			string deja = "#r You feel like you've been here before...#o";
+			string vu = "-You deal #y" + to_string(damage) + "#o damage.";
+			log.PushPop(deja);
+			log.PushPop(vu);
+			guy.Deja_Vu = 0;
 		}
 		//Gelatinous trait
 		if (guy.Gelatinous && guy.Skill > 0) {
@@ -2439,15 +2599,21 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 		if (guy.Adrenaline != -1) {
 			if (guy.CurrentHealth + guy.CurrentBlock < 15) {
 				guy.Adrenaline = 1;
-				guy.ModStat(6, "Strength");
-				guy.strMod -= 6;
-				guy.ModStat(12, "Defense");
-				guy.defMod -= 12;
+				guy.ModStat(6, "Strength", TRUE);
+				guy.ModStat(12, "Defense", TRUE);
 
 				string rush = "#y-You feel a sudden rush.#o";
 				log.PushPop(rush);
 			}
 		}
+		//Conservation trait
+		if (guy.Conservation != -1 && guy.Energy < 0) {
+			guy.Conservation = -guy.Energy;
+			guy.ModStat(guy.Conservation, "Strength", TRUE);
+			guy.ModStat(guy.Conservation, "Defense", TRUE);
+			guy.ModStat(guy.Conservation, "Intelligence", TRUE);
+		}
+		guy.printStats();
 
 		log.printLog();
 
@@ -2494,18 +2660,7 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 			}
 
 			//checks for extra turns 1
-			for (guy.Energy; guy.Energy >= guy.MaxEnergy; guy.Energy -= guy.MaxEnergy) {
-				guy.extraTurns++;
-				string et = "#g EXTRA TURN#o";
-				log.PushPop(et);
-				log.printLog();
-			}
-			for (guy.Energy; guy.Energy <= -guy.MaxEnergy; guy.Energy += guy.MaxEnergy) {
-				guy.extraTurns--;
-				string et = "#r ENEMY EXTRA TURN#o";
-				log.PushPop(et);
-				log.printLog();
-			}
+			checkEnergy(guy, enemy, log);
 
 			if (guy.extraTurns >= 0)
 				getchCard(guy, enemy, deck, log);
@@ -2515,18 +2670,7 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 			}
 
 			//checks for extra turns 2
-			for (guy.Energy; guy.Energy >= guy.MaxEnergy; guy.Energy -= guy.MaxEnergy) {
-				guy.extraTurns++;
-				string et = "#g EXTRA TURN#o";
-				log.PushPop(et);
-				log.printLog();
-			}
-			for (guy.Energy; guy.Energy <= -guy.MaxEnergy; guy.Energy += guy.MaxEnergy) {
-				guy.extraTurns--;
-				string et = "#r ENEMY EXTRA TURN#o";
-				log.PushPop(et);
-				log.printLog();
-			}
+			checkEnergy(guy, enemy, log);
 
 			//Wings trait
 			if (guy.Wings && guy.WingsUsed) {
@@ -2600,21 +2744,13 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 
 						//if its a boss, set the room to addition (not done yet)
 						if (RoomType == "Boss") {
-							//Overconfidence trait
-							if (guy.Overconfidence)
-								RoomType = "Stat";
-							else
-								RoomType = "BossCard";
+							RoomType = "BossCard";
 							printDecision(guy, log);
 							getchDecision(guy, deck, log);
 						}
 						//if its a regular enemy, set the room to stat
 						else if (RoomType == "Combat") {
-							//Overconfidence trait
-							if (guy.Overconfidence)
-								RoomType = "BossCard";
-							else
-								RoomType = "Stat";
+							RoomType = "Stat";
 							printDecision(guy, log);
 							getchDecision(guy, deck, log);
 						}
@@ -2743,7 +2879,7 @@ int InputBoard::gainBlock(int block, Character &guy, Enemy &enemy) {
 		//Charred Skin trait
 		else if (guy.Charred_Skin)
 			guy.TakeDamage(-1 * block);
-		else
+		else if(guy.Overconfidence < 6)
 			guy.CurrentBlock += block;
 	}
 	if (guy.CurrentBlock > 999) {
@@ -2762,21 +2898,56 @@ int InputBoard::gainEnergy(int energy, Character &guy, Enemy &enemy, TextLog &lo
 		guy.Energy = -10;
 	}
 
-	//checks for extra turns
-	for (guy.Energy; guy.Energy >= guy.MaxEnergy; guy.Energy -= guy.MaxEnergy) {
-		guy.extraTurns++;
-		string et = "#g EXTRA TURN#o";
-		log.PushPop(et);
-		log.printLog();
-	}
-	for (guy.Energy; guy.Energy <= -guy.MaxEnergy; guy.Energy += guy.MaxEnergy) {
-		guy.extraTurns--;
-		string et = "#r ENEMY EXTRA TURN#o";
-		log.PushPop(et);
-		log.printLog();
-	}
+	checkEnergy(guy, enemy, log);
 
 	return en;
+}
+
+//check the player's energy
+void InputBoard::checkEnergy(Character &guy, Enemy &enemy, TextLog &log) {
+	//checks for extra turns
+	//Stuck trait
+	if (guy.Stuck == -1 || guy.Stuck == 1) {
+		for (guy.Energy; guy.Energy >= guy.MaxEnergy; guy.Energy -= guy.MaxEnergy) {
+			if (guy.Joint_Pain) {
+				int damage = guy.TakeDamage(6);
+				string pain = "#r You take " + to_string(damage) = " damage.#o";
+				log.PushPop(pain);
+			}
+			string et;
+			//Inert trait
+			if (guy.Inert) {
+				guy.Negate++;
+				et = " #c+1 NEGATE#o";
+			}
+			else {
+				guy.extraTurns++;
+				et = "#g EXTRA TURN#o";
+			}
+			log.PushPop(et);
+			log.printLog();
+		}
+		for (guy.Energy; guy.Energy <= -guy.MaxEnergy; guy.Energy += guy.MaxEnergy) {
+			guy.extraTurns--;
+			string et = "#r ENEMY EXTRA TURN#o";
+			log.PushPop(et);
+			//Rested trait
+			if (guy.Rested) {
+				int hp = -guy.TakeDamage(-rtd(guy.Skill, 3));
+				int mp = -guy.DrainMana(-rtd(guy.Skill, 2));
+				string rest = "-You heal for #g" + to_string(hp) + "#o and #mgain " + to_string(mp) + " mana#o.";
+				log.PushPop(rest);
+			}
+			//Exhaust Vent trait
+			if (guy.Exhaust_Vent != -1) {
+				guy.Exhaust_Vent += 3;
+				string vent = "#y-You release some steam for 3 more turns.#o";
+				log.PushPop(vent);
+			}
+
+			log.printLog();
+		}
+	}
 }
 
 //basically same as effectsBeforeTurns, but these won't be affected by Sensitive, Catalyze, Relax, etc.
@@ -2788,6 +2959,52 @@ void InputBoard::effectsToEnemy(Character &guy, Enemy &enemy, Deck & deck, TextL
 	if (guy.CurrentHealth <= 0)
 		return;
 
+	//Memory Lapse trait
+	if (guy.Memory_Lapse) {
+		for (int i = 0; i < Draw.size(); i++) {
+			if (Draw.at(i).memorylapse > 0)
+				Draw.at(i).memorylapse--;
+		}
+		for (int i = 0; i < Discard.size(); i++) {
+			if (Discard.at(i).memorylapse > 0)
+				Discard.at(i).memorylapse--;
+		}
+		for (int i = 0; i < DecisionCards.size(); i++) {
+			if (DecisionCards.at(i).memorylapse > 0)
+				DecisionCards.at(i).memorylapse--;
+		}
+	}
+
+	//Conservation trait
+	if (guy.Conservation != -1) {
+		//this removes stats a different way because its weird with Reversal
+		if (!guy.Stiff) {
+			guy.Strength -= guy.Conservation;
+			guy.Defense -= guy.Conservation;
+			guy.Intelligence -= guy.Conservation;
+			guy.strMod += guy.Conservation;
+			guy.defMod += guy.Conservation;
+			guy.intMod += guy.Conservation;
+		}
+
+		guy.Conservation = 0;
+
+		if (guy.Energy < 0) {
+			guy.Conservation = -guy.Energy;
+			guy.ModStat(guy.Conservation, "Strength", TRUE);
+			guy.ModStat(guy.Conservation, "Defense", TRUE);
+			guy.ModStat(guy.Conservation, "Intelligence", TRUE);
+		}
+		guy.printStats();
+	}
+
+	//Panic Attack trait
+	if (guy.Panic_Attack == 1) {
+		guy.gainEnergy(-9);
+		string panic = "#r-You panic.#o";
+		log.PushPop(panic);
+		guy.Panic_Attack = 0;
+	}
 	//Stop card
 	if (guy.stop > 0) {
 		guy.stop--;
@@ -2804,11 +3021,17 @@ void InputBoard::effectsToEnemy(Character &guy, Enemy &enemy, Deck & deck, TextL
 			log.PushPop(stopsave);
 		}
 	}
+	//Naturalist trait
+	if (guy.Naturalist && DecisionCards.size() == 0) {
+		int damage = enemy.takeDamage(40, guy, log);
+		string nat = "-You deal #r" + to_string(damage) + "#o damage.";
+		log.PushPop(nat);
+	}
 	//Arise
 	if (guy.arise > 0) {
 		int damage = 0;
 		for (int i = 0; i < guy.arise; i++) {
-			damage += enemy.takeDamage(1, guy, log);
+			damage += enemy.takeDamage(2, guy, log);
 		}
 
 		string ar;
@@ -2818,12 +3041,27 @@ void InputBoard::effectsToEnemy(Character &guy, Enemy &enemy, Deck & deck, TextL
 			ar = "-Your #m" + to_string(guy.arise) + " followers#o deal a total of #y" +to_string(damage) + "#o damage.";
 		log.PushPop(ar);
 	}
+	//Fervor trait
+	if (guy.Fervor == 0)
+		guy.FervorDamage = 0;
+	if (guy.Fervor > 0) {
+		if (guy.FervorDamage > 0) {
+			int damage = enemy.takeDamage(guy.FervorDamage, guy, log);
+			guy.Fervor--;
+			string fer = "#y-Your fervor deals " + to_string(damage) + " damage.";
+			log.PushPop(fer);
+		}
+	}
 	//Curved Tusks trait
 	if (guy.Curved_Tusks && guy.CurrentBlock == 0) {
 		int damage = 4 + guy.Skill / 2;
 		damage = enemy.takeDamage(damage, guy, log);
-		string tusk = "-You horn the " + string(enemy.Name) + " for #y" + to_string(damage) + "#o damage.";
+		string tusk = "-Your tusks stab the " + string(enemy.Name) + " for #y" + to_string(damage) + "#o damage.";
 		log.PushPop(tusk);
+	}
+	//Bounty Hunter trait
+	if (guy.Bounty_Hunter != -1 && enemy.CurrentHealth > 0) {
+		guy.Bounty_Hunter++;
 	}
 }
 
@@ -2836,17 +3074,45 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	if (guy.CurrentHealth <= 0)
 		return;
 
+	//Stuck trait
+	if (guy.Stuck != -1) {
+		if (guy.Stuck == 0)
+			guy.Stuck++;
+		else
+			guy.Stuck--;
+	}
+
 	//Early Riser trait
 	if (guy.Early_Riser == 1) {
 		guy.Early_Riser = 0;
-		guy.ModStat(-5, "Strength");
-		guy.strMod += 5;
-		guy.ModStat(-5, "Defense");
-		guy.defMod += 5;
-		guy.ModStat(-5, "Intelligence");
-		guy.intMod += 5;
+		guy.ModStat(-5, "Strength", TRUE);
+		guy.ModStat(-5, "Defense", TRUE);
+		guy.ModStat(-5, "Intelligence", TRUE);
 	}
-	//for the specific cards
+
+	//Conservation trait
+	if (guy.Conservation != -1) {
+		//this removes stats a different way because its weird with Reversal
+		if (!guy.Stiff) {
+			guy.Strength -= guy.Conservation;
+			guy.Defense -= guy.Conservation;
+			guy.Intelligence -= guy.Conservation;
+			guy.strMod += guy.Conservation;
+			guy.defMod += guy.Conservation;
+			guy.intMod += guy.Conservation;
+		}
+
+		guy.Conservation = 0;
+
+		if (guy.Energy < 0) {
+			guy.Conservation = -guy.Energy;
+			guy.ModStat(guy.Conservation, "Strength", TRUE);
+			guy.ModStat(guy.Conservation, "Defense", TRUE);
+			guy.ModStat(guy.Conservation, "Intelligence", TRUE);
+		}
+		guy.printStats();
+	}
+
 	//deflect
 	if (guy.deflectTRUE) {
 		guy.deflectTRUE = FALSE;
@@ -2990,25 +3256,23 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 			log.PushPop(line);
 		}
 	}
+	//Hoarder trait
+	if (guy.Hoarder) {
+		int damage = guy.TakeDamage(inventory.size());
+	}
 	//Inversion trait
 	if (guy.Inversion) {
-		guy.DrainMana(-1);
-		guy.TakeDamage(3);
-		string inv = "-You gain #m1#o mana and take #r3#o damage.";
+		int mana = -guy.DrainMana(-1);
+		int damage = guy.TakeDamage(3);
+		string inv = "-You gain #m" + to_string(mana) + "#o mana and take #r" + to_string(damage) + "#o damage.";
 		//log.PushPop(inv);
 	}
 
 	//Melting trait
 	if (guy.Melting) {
-		if (guy.CurrentBlock == 1)
-			guy.CurrentBlock = 0;
-		else if (guy.CurrentBlock > 1)
-			guy.CurrentBlock -= 2;
-
-		guy.TakeDamage(1);
-
-		string melt = "-You #rlose 2 block#o and take #r1#o damage.";
-		//log.PushPop(melt);
+		int block = guy.gainBlock(1);
+		guy.pierce = TRUE;
+		int damage = guy.TakeDamage(1);
 	}
 	//Radioactive trait
 	if (guy.Radioactive) {
@@ -3018,6 +3282,20 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 
 		string radiate = "-You radiate #r" + to_string(damage) + "#o damage.";
 		//log.PushPop(radiate);
+	}
+	//Heavyweight trait
+	while (guy.Heavyweight && guy.CurrentBlock >= 50) {
+		guy.loseBlock(50);
+		int damage = enemy.takeDamage(50, guy, log);
+		string hvy = "-You #rlose 50 block#o and deal #y" + to_string(damage) + "#o damage.";
+		log.PushPop(hvy);
+	}
+	//Lightweight trait
+	while (guy.Lightweight && guy.CurrentBlock >= 30) {
+		guy.loseBlock(30);
+		guy.Negate++;
+		string light = "-You #rlose 30 block#o and #cgain 1 Negate#o.";
+		log.PushPop(light);
 	}
 	//Jittery trait
 	if (guy.Jittery != -1) {
@@ -3051,6 +3329,35 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 			guy.Volatile++;
 		}
 	}
+	//Horns trait
+	while (guy.Horns > 0) {
+		int damage = enemy.takeDamage(5 + rtd(guy.Skill / 2, 2), guy, log);
+		string horn = "-You ram the " + string(enemy.Name) + " with your horns for #y" + to_string(damage) + "#o damage.";
+		log.PushPop(horn);
+		guy.Horns--;
+	}
+	//Ethereal trait
+	if (guy.Ethereal) {
+		string eth;
+		if (guy.CurrentBlock == 0) {
+			int mana = -guy.DrainMana(-2);
+			eth = "#m-You gain " + to_string(mana) + " mana.#o";
+		}
+		else {
+			int block = guy.loseBlock(rtd(3, 2));
+			eth = "-You lose #r" + to_string(block) + "#o block.";
+		}
+		log.PushPop(eth);
+	}
+	//Enlightened trait
+	if (guy.Enlightened && guy.CurrentMana > guy.MaxMana) {
+		guy.DrainMana(2);
+	}
+	//Engorged trait
+	if (guy.Engorged && guy.CurrentHealth > guy.MaxHealth) {
+		guy.pierce = TRUE;
+		guy.TakeDamage(2);
+	}
 	//Gymnast trait
 	if (guy.Gymnast) {
 		gainEnergy(rtd(1,2), guy, enemy, log);
@@ -3062,6 +3369,10 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 			string le = "#r-You lose 4 Energy.#o";
 			log.PushPop(le);
 		}
+	}
+	//Headache trait
+	if (guy.Headache && guy.CurrentMana >= guy.MaxMana) {
+		gainEnergy(-2, guy, enemy, log);
 	}
 	//Hallucinations trait
 	if (guy.Hallucinations) {
@@ -3157,49 +3468,148 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	//apply any damage over time from enemies
 	enemy.ActivateDOT(guy, log);
 
+
+	//Shock Absorber trait
+	if (guy.Shock_Absorber >= 50) {
+		guy.Shock_Absorber -= 50;
+		int neg = 2;
+		guy.Negate += neg;
+		string shock = "#c-You negate the next " + to_string(neg) + " hits.#o";
+		log.PushPop(shock);
+	}
+
+	//Amass trait
+	while (guy.Amass >= 4) {
+		guy.Amass -= 4;
+		guy.ModStat(1, "Strength", TRUE);
+	}
+	//Overconfidence trait
+	if (guy.Overconfidence != -1) {
+		guy.Overconfidence++;
+		if (guy.Overconfidence == 6) {
+			string over = "#r-You can no longer gain block.#o";
+			log.PushPop(over);
+		}
+	}
+	//Falter trait
+	if (guy.Falter != -1) {
+		while (guy.Falter >= 6) {
+			guy.ModStat(-1, "MaxHealth", TRUE);
+		}
+	}
+	//Exposed trait
+	if (guy.Exposed != -1) {
+		while (guy.Exposed >= 8) {
+			int rn = rand() % 6;
+			string loss;
+			int stat;
+			switch (rn) {
+			case 0:
+				stat = -guy.ModStat(-1, "Strength", TRUE);
+				loss = "-You #rlose " + to_string(stat) + " Strength#o.";
+			case 1:
+				stat = -guy.ModStat(-1, "Defense", TRUE);
+				loss = "-You #rlose " + to_string(stat) + " Defense#o.";
+			case 2:
+				stat = -guy.ModStat(-1, "Intelligence", TRUE);
+				loss = "-You #rlose " + to_string(stat) + " Intelligence#o.";
+			case 3:
+				stat = -guy.ModStat(-1, "Skill", TRUE);
+				loss = "-You #rlose " + to_string(stat) + " Skill#o.";
+			case 4:
+				stat = -guy.ModStat(-1, "MaxHealth", TRUE);
+				loss = "-You #rlose " + to_string(stat) + " Max Health#o.";
+			case 5:
+				stat = -guy.ModStat(-1, "MaxMana", TRUE);
+				loss = "-You #rlose " + to_string(stat) + " Max Mana#o.";
+			}
+			guy.Exposed -= 8;
+			log.PushPop(loss);
+		}
+	}
 	//Adrenaline trait
 	if (guy.Adrenaline != -1) {
 		if (guy.Adrenaline != 1 && guy.CurrentHealth + guy.CurrentBlock < 15) {
 			guy.Adrenaline = 1;
-			guy.ModStat(6, "Strength");
-			guy.strMod -= 6;
-			guy.ModStat(12, "Defense");
-			guy.defMod -= 12;
+			guy.ModStat(6, "Strength", TRUE);
+			guy.ModStat(12, "Defense", TRUE);
 
 			string rush = "#r-You feel a sudden rush.#o";
 			log.PushPop(rush);
 		}
 		if (guy.Adrenaline == 1 && guy.CurrentHealth && guy.CurrentBlock >= 15) {
 			guy.Adrenaline = 0;
-			guy.ModStat(-6, "Strength");
-			guy.strMod += 6;
-			guy.ModStat(-12, "Defense");
-			guy.defMod += 12;
+			guy.ModStat(-6, "Strength", TRUE);
+			guy.ModStat(-12, "Defense", TRUE);
 		}
 	}
-	
-	//Overdrive
+	//Overdrive card
 	if (guy.overdrive > 0) {
 		guy.overdrive--;
 		if (guy.overdrive == 0) {
 			int stat = guy.overdrivestats;
 
-			guy.ModStat(-stat, "Strength");
-			guy.ModStat(-stat, "Defense");
-			guy.ModStat(-stat, "Intelligence");
-			guy.ModStat(-stat, "Skill");
-			guy.ModStat(-stat, "MaxHealth");
-			guy.ModStat(-stat, "MaxMana");
-			guy.strMod -= stat;
-			guy.defMod -= stat;
-			guy.intMod -= stat;
-			guy.sklMod -= stat;
-			guy.hpMod -= stat;
-			guy.mpMod -= stat;
+			guy.ModStat(-stat, "Strength", TRUE);
+			guy.ModStat(-stat, "Defense", TRUE);
+			guy.ModStat(-stat, "Intelligence", TRUE);
+			guy.ModStat(-stat, "Skill", TRUE);
+			guy.ModStat(-stat, "MaxHealth", TRUE);
+			guy.ModStat(-stat, "MaxMana", TRUE);
 			guy.checkMax();
 		}
 	}
-	
+
+	//Atrophy trait
+	if (guy.Atrophy != -1) {
+		guy.Atrophy++;
+		if (guy.Atrophy == 4) {
+			int rng = rand() % 3;
+			if (rng == 0) {
+				guy.ADDDrain_Str++;
+			}
+			else if (rng == 1) {
+				guy.ADDDrain_Def++;
+			}
+			else {
+				guy.ADDDrain_Int++;
+			}
+		}
+	}
+	//Conservation trait
+	if (guy.Conservation != -1) {
+		//this removes stats a different way because its weird with Reversal
+		if (!guy.Stiff) {
+			guy.Strength -= guy.Conservation;
+			guy.Defense -= guy.Conservation;
+			guy.Intelligence -= guy.Conservation;
+			guy.strMod += guy.Conservation;
+			guy.defMod += guy.Conservation;
+			guy.intMod += guy.Conservation;
+		}
+
+		guy.Conservation = 0;
+
+		if (guy.Energy < 0) {
+			guy.Conservation += -guy.Energy;
+			guy.ModStat(guy.Conservation, "Strength", TRUE);
+			guy.ModStat(guy.Conservation, "Defense", TRUE);
+			guy.ModStat(guy.Conservation, "Intelligence", TRUE);
+		}
+		guy.printStats();
+	}
+
+	//Wasteful trait
+	if (guy.Wasteful != -1) {
+		guy.Wasteful++;
+		if (guy.Wasteful == 10) {
+			guy.Wasteful = 0;
+			while (DecisionCards.size() > 0)
+				DecisionCards.pop_back();
+			string line = "#r-You burn your hand.#o";
+			log.PushPop(line);
+		}
+	}
+
 	if (guy.Paranoia) {
 		if (rand() % 75 == 0 && guy.CurrentHealth > 3 && guy.CurrentHealth < guy.MaxHealth-2) {
 			guy.CurrentHealth--;
@@ -3242,10 +3652,22 @@ bool InputBoard::checkEnemyLife(Character &guy, Enemy &enemy, Deck &deck, TextLo
 	bool live = TRUE;
 	if (!enemy.Alive) {
 		live = FALSE;
+		aftercombat = TRUE;
+		//Daredevil trait
+		if (guy.Daredevil) {
+			int damage = guy.TakeDamage(guy.Skill * 2);
+			int gold = guy.gainGold(guy.Skill);
+			string dare = "-You take #r" + to_string(damage) + "#o damage and #$gain " + to_string(gold) + " gold.#o";
+			log.PushPop(dare);
+		}
 		//if its the final boss, set win varibale to TRUE. The win function will be played out in the main game loop
 		if (RoomType == "Final Boss") {
-			string line = "-The " + string(enemy.Name)
-				+ " dies. ";
+			string line;
+			if (enemy.Name == "Machine")
+				line = "-The " + string(enemy.Name) + " breaks down. ";
+			else
+				line = "-The " + string(enemy.Name) + " dies. ";
+
 			log.PushPop(line);
 			log.printLog();
 
@@ -3257,14 +3679,66 @@ bool InputBoard::checkEnemyLife(Character &guy, Enemy &enemy, Deck &deck, TextLo
 		}
 		//if it is a boss or regular combat, push enemy death line, remove negative cards, restore stats
 		else if (RoomType == "Boss" || RoomType == "Combat") {
-			string line = "-The " + string(enemy.Name)
-				+ " dies. ";
+			string line;
+			if (enemy.Name == "Robot" || enemy.Name == "Golem" || enemy.Name == "Turret")
+				line = "-The " + string(enemy.Name) + " breaks down. ";
+			else
+				line = "-The " + string(enemy.Name) + " dies. ";
 			log.PushPop(line);
 
+			//gain gold after battle
 			int gold = enemy.goldreward;
+			//Bounty Hunter trait
+			if (guy.Bounty_Hunter != -1) {
+				if (guy.Bounty_Hunter < 3) {
+					gold *= 5;
+				}
+				guy.Bounty_Hunter = 0;
+			}
+			//Midas Touch trait
+			if (guy.Midas_Touch && enemy.CurrentHealth < 0) {
+				gold -= enemy.CurrentHealth;
+			}
 			gold = guy.gainGold(gold);
 			string goldline = "#$~You gain " + to_string(gold) + " gold.#o";
 			log.PushPop(goldline);
+
+			//Tinkerer trait
+			if (RoomType == "Combat") {
+				if (guy.Tinkerer) {
+					string line;
+					int rng = rand() % 25;
+					if (rng == 1) {
+						guy.Void++;
+						line = "#o~You gain a #oVoid#o modifier.#o";
+					}
+					else if (rng > 1 && rng <= 6) {
+						guy.Burn++;
+						line = "#o~You gain a #rBurn#o modifier.#o";
+					}
+					else if (rng > 6 && rng <= 11) {
+						guy.Flow++;
+						line = "#o~You gain a #cFlow#o modifier.#o";
+					}
+					else if (rng > 11 && rng <= 13) {
+						guy.Copy++;
+						line = "#o~You gain a #mCopy#o modifier.#o";
+					}
+					else if (rng > 13 && rng <= 18) {
+						guy.Push++;
+						line = "#o~You gain a #yPush#o modifier.#o";
+					}
+					else if (rng > 18 && rng <= 22) {
+						guy.Link++;
+						line = "#o~You gain a #bLink#o modifier.#o";
+					}
+					else {
+						guy.Stay++;
+						line = "#o~You gain a #gStay#o modifier.#o";
+					}
+					log.PushPop(line);
+				}
+			}
 
 			log.printLog();
 
@@ -3392,6 +3866,42 @@ void InputBoard::restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, Te
 		guy.Muscle_Mass = 0;
 		guy.Muscle_MassDamage = 0;
 	}
+	if (guy.Panic_Attack != -1)
+		guy.Panic_Attack = 0;
+	if (guy.Cursed != -1)
+		guy.Cursed = 0;
+	if (guy.Atrophy != -1)
+		guy.Atrophy = 0;
+	if (guy.Burnout != -1)
+		guy.Burnout = guy.Skill;
+	if (guy.Conservation != -1)
+		guy.Conservation = 0;
+	if (guy.Shock_Absorber != -1)
+		guy.Shock_Absorber = 0;
+	if (guy.Overconfidence != -1)
+		guy.Overconfidence = 0;
+	if (guy.Falter != -1)
+		guy.Falter = 0;
+	if (guy.Exposed != -1)
+		guy.Exposed = 0;
+	if (guy.Stuck != -1)
+		guy.Stuck = 0;
+	if (guy.Wasteful != -1)
+		guy.Wasteful = 0;
+	if (guy.Exhaust_Vent != -1)
+		guy.Exhaust_Vent = 0;
+	if (guy.Fervor != -1) {
+		guy.Fervor = 0;
+		guy.FervorDamage = 0;
+	}
+	if (guy.Concentration != -1) {
+		guy.Concentration = 0;
+		guy.ConcentrationType = "";
+	}
+	if (guy.Amass != -1)
+		guy.Amass = 0;
+	if (guy.Horns != -1)
+		guy.Horns = 0;
 
 	pushthisturn = FALSE;
 	linkdraw = 0;
@@ -3404,6 +3914,12 @@ void InputBoard::restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, Te
 		guy.CurrentMana = guy.MaxMana;
 	}
 	guy.Energy = 0;
+	if (guy.Scraps) {
+		int gold = guy.gainGold(guy.CurrentBlock);
+		string scrap = "#$~You turn your block into " + to_string(gold) + " gold.#o";
+		log.PushPop(scrap);
+		guy.CurrentBlock = 0;
+	}
 	if(!guy.Outer_Shell)
 		guy.CurrentBlock = 0;
 	guy.Negate = 0;
@@ -3464,7 +3980,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 	//TERRAIN: Treasure
 	if (Terrain == "Treasure" && RoomType != "Empty" && RoomType != "Stat" &&
 		RoomType != "BossCard" && RoomType != "Spell" && RoomType != "Cauldron 2" &&
-		(RoomType != "Combat" || guy.Scented != 0)) {
+		(RoomType != "Combat" || guy.Scented != 0 && !shopRoom)) {
 		int g = 15;
 		g = guy.gainGold(g);
 		string gline = "#$~You gain " + to_string(g) + " gold.#o";
@@ -3580,9 +4096,20 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		manualBox("Card 3", 0);
 
 		mvprintw(17, 24, "Choose a stat.");
-		mvprintw(19, 25, "1) +1 Str");
-		mvprintw(20, 25, "2) +1 Def");
-		mvprintw(21, 25, "3) +1 Int");
+		//Commitment trait
+		if (commitStrDefInt != 0) {
+			if(commitStrDefInt == 1)
+				mvprintw(19, 25, "1) +1 Str");
+			else if (commitStrDefInt == 2)
+				mvprintw(20, 25, "2) +1 Def");
+			else if (commitStrDefInt == 3)
+				mvprintw(21, 25, "3) +1 Int");
+		}
+		else {
+			mvprintw(19, 25, "1) +1 Str");
+			mvprintw(20, 25, "2) +1 Def");
+			mvprintw(21, 25, "3) +1 Int");
+		}
 
 		string statsleft;
 		if (guy.Metamorphosis > 0) {
@@ -3593,10 +4120,16 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		}
 		mvprintInSize(17, 4, 0, statsleft.c_str(), FALSE);
 		if (guy.Carnivore && guy.Metamorphosis == 0) {
-			guy.ModStat(1, "MaxHealth");
+			guy.ModStat(1, "MaxHealth", FALSE);
 			guy.CurrentHealth = guy.MaxHealth;
 			string car = "#g~You gain 1 Max Health.#o";
 			log.PushPop(car);
+		}
+		if (guy.Spiritual && guy.Metamorphosis == 0) {
+			guy.ModStat(-1, "MaxHealth", FALSE);
+			guy.ModStat(1, "MaxMana", FALSE);
+			string spi = "~You #rlose 1 Max Health#o and #ggain 1 Max Mana#o.";
+			log.PushPop(spi);
 		}
 	}
 	else if (RoomType == "Mod") {
@@ -3629,7 +4162,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		mvprintw(12, 29, "=");
 		attron(COLOR_PAIR(3));
 		mvprintw(13, 29, "+");
-		attron(COLOR_PAIR(1));
+		attron(COLOR_PAIR(10));
 		mvprintw(14, 29, "$");
 		standend();
 
@@ -3761,8 +4294,15 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		mvprintw(9, 32, "CARD TO");
 		mvprintw(10, 32, "  ADD");
 		manualBox("Card 42", 0);
-		mvprintw(17, 62, "4) +2 Max Hp");
-		mvprintw(18, 65, "+1 Max Mana");
+		//Stockpile trait
+		if (guy.Stockpile) {
+			mvprintw(17, 62, "4) +4 Max Hp");
+			mvprintw(18, 65, "+2 Max Mana");
+		}
+		else {
+			mvprintw(17, 62, "4) +2 Max Hp");
+			mvprintw(18, 65, "+1 Max Mana");
+		}
 
 		generateboss();
 		for (int i = 0; i < 3; i++) {
@@ -3770,10 +4310,16 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		}
 
 		if (guy.Carnivore && !guy.Ego) {
-			guy.ModStat(1, "MaxHealth");
+			guy.ModStat(1, "MaxHealth", FALSE);
 			guy.CurrentHealth = guy.MaxHealth;
 			string car = "#g~You gain 1 Max Health.#o";
 			log.PushPop(car);
+		}
+		if (guy.Spiritual && !guy.Ego) {
+			guy.ModStat(-1, "MaxHealth", FALSE);
+			guy.ModStat(1, "MaxMana", FALSE);
+			string spi = "~You #rlose 1 Max Health#o and #ggain 1 Max Mana#o.";
+			log.PushPop(spi);
 		}
 	}
 	else if (RoomType == "Spell") {
@@ -3803,7 +4349,7 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 			mvprintw(6 + i, 29, "             ");
 		clearBoard();
 
-		guy.ModStat(1, "Skill");
+		guy.ModStat(1, "Skill", FALSE);
 		guy.printStats();
 		mvprintw(6, 32, "+1 Skill");
 		string skill1 = "#g~You gain 1 Skill.#o";
@@ -3846,12 +4392,38 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		}
 	}
 	else if (RoomType == "Shop") {
+		//Merchant trait
+		if (guy.Merchant && !shopRoom && inventory.size() > 0) {
+			int gold = 0;
+			while (inventory.size() > 0) {
+				inventory.erase(inventory.begin());
+				gold += 2*guy.Skill;
+			}
+			gold = guy.gainGold(gold);
+			string sell = "#b-You sell your unworn gear for #$" + to_string(gold) + " gold#b.#o";
+			log.PushPop(sell);
+		}
+		
 		if (shopnum != shopnum2) {
 			generateShop();
 			shopnum++;
 		}
 		shopRoom = TRUE;
 		printShop(guy);
+	}
+	//Commitment trait
+	else if (RoomType == "Commit") {
+		for (int i = 0; i < 8; i++)
+			mvprintw(6 + i, 29, "             ");
+		clearBoard();
+
+		attron(COLOR_PAIR(5));
+		manualBox("Card 2", 0);
+
+		mvprintw(17, 24, "Choose a stat.");
+		mvprintw(19, 25, "1) Str");
+		mvprintw(20, 25, "2) Def");
+		mvprintw(21, 25, "3) Int");
 	}
 }
 
@@ -4138,11 +4710,17 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 	}
 
 	if (guy.CurrentHealth <= 0) {
+		//Rebirth trait
+		if (guy.Rebirth && guy.MaxHealth <= 0) {
+			guy.MaxHealth = 40;
+			guy.CurrentHealth = guy.MaxHealth;
+			guy.hpMod = 0;
+		}
 		//Reconstruction Trait
 		if (guy.Reconstruction && guy.Skill > 1) {
 			guy.restoreStats();
 			guy.CurrentHealth = guy.MaxHealth;
-			guy.ModStat(-2, "Skill");
+			guy.ModStat(-2, "Skill", FALSE);
 			string recon = "#g You come back to life!#o";
 			log.PushPop(recon);
 		}
@@ -4219,19 +4797,34 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 			//char choose = getch();
 			if (choose == '1' || choose == '2' || choose == '3') {
 				if (choose == '1') {
-					guy.ModStat(1, "Strength");
+					//Commitement trait
+					if (commitStrDefInt != 0 && commitStrDefInt != 1) {
+						getchDecision(guy, deck, log);
+						return;
+					}
+					guy.ModStat(1, "Strength", FALSE);
 					string gain = "#g~You gain 1 Strength.#o";
 					log.PushPop(gain);
 					log.printLog();
 				}
 				else if (choose == '2') {
-					guy.ModStat(1, "Defense");
+					//Commitement trait
+					if (commitStrDefInt != 0 && commitStrDefInt != 2) {
+						getchDecision(guy, deck, log);
+						return;
+					}
+					guy.ModStat(1, "Defense", FALSE);
 					string gain = "#g~You gain 1 Defense.#o";
 					log.PushPop(gain);
 					log.printLog();
 				}
 				else if (choose == '3') {
-					guy.ModStat(1, "Intelligence");
+					//Commitement trait
+					if (commitStrDefInt != 0 && commitStrDefInt != 3) {
+						getchDecision(guy, deck, log);
+						return;
+					}
+					guy.ModStat(1, "Intelligence", FALSE);
 					string gain = "#g~You gain 1 Intelligence.#o";
 					log.PushPop(gain);
 					log.printLog();
@@ -4251,29 +4844,29 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 						int grow = rand() % 86;
 						string gain2;
 						if (grow > 78) {
-							guy.ModStat(1, "Strength");
+							guy.ModStat(1, "Strength", FALSE);
 							gain2 = "#g~You grow 1 Strength.#o";
 						}
 						else if (grow <= 15 && grow < 30) {
-							guy.ModStat(1, "Defense");
+							guy.ModStat(1, "Defense", FALSE);
 							gain2 = "#g~You grow 1 Defense.#o";
 						}
 						else if (grow <= 30 && grow < 45) {
-							guy.ModStat(1, "Intelligence");
+							guy.ModStat(1, "Intelligence", FALSE);
 							gain2 = "#g~You grow 1 Intelligence.#o";
 						}
 						else if (grow <= 45 && grow < 60) {
-							guy.ModStat(1, "MaxHealth");
+							guy.ModStat(1, "MaxHealth", FALSE);
 							gain2 = "#g~You grow 1 Maximum Health.#o";
 							guy.CurrentHealth = guy.MaxHealth;
 						}
 						else if (grow >= 60 && grow < 75) {
-							guy.ModStat(1, "MaxMana");
+							guy.ModStat(1, "MaxMana", FALSE);
 							gain2 = "#g~You grow 1 Maximum Mana.#o";
 							guy.CurrentMana = guy.MaxMana;
 						}
 						else {
-							guy.ModStat(1, "Skill");
+							guy.ModStat(1, "Skill", FALSE);
 							gain2 = "#g~You grow 1 Skill.#o";
 						}
 						log.PushPop(gain2);
@@ -4332,6 +4925,18 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					else {
 						RoomType = "Empty";
 						extraCombat = TRUE;
+						if (guy.Magnetic) {
+							int rngear = rand() % 8;
+							if (rngear < 3) {
+								RoomType = "Gear Hands";
+							}
+							else if (rngear >= 3 && rngear < 6) {
+								RoomType = "Gear Body";
+							}
+							else {
+								RoomType = "Gear Head";
+							}
+						}
 						printDecision(guy, log);
 						getchDecision(guy, deck, log);
 					}
@@ -4341,13 +4946,36 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 
 				guy.printStats();
 
-				if (guy.Metamorphosis == 1)
+				if (guy.Metamorphosis == 1) {
 					guy.Metamorphosis--;
+					//Vendor trait
+					if (guy.Vendor) {
+						RoomType = "Shop";
+						printDecision(guy, log);
+					}
+				}
 
-				if (RoomType != "Shop") {
+				if (aftercombat) {
+					aftercombat = FALSE;
+					//Magnetic trait
+					if (guy.Magnetic && Terrain != "Lava") {
+						int rngear = rand() % 8;
+						if (rngear < 3) {
+							RoomType = "Gear Hands";
+						}
+						else if (rngear >= 3 && rngear < 6) {
+							RoomType = "Gear Body";
+						}
+						else {
+							RoomType = "Gear Head";
+						}
+					}
+				}
+
+				/*if (RoomType != "Shop") {
 					//printDecision(guy, log);
 					//getchDecision(guy, deck, log);
-				}
+				}*/
 
 			}
 			else
@@ -4713,9 +5341,17 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					line = "#g~You add " + string(bossPickup.GearName) + " to your deck.#o";
 				}
 				else if (choose == '4') {
-					guy.ModStat(2, "MaxHealth");
-					guy.ModStat(1, "MaxMana");
-					line = "#g~You gain 2 Max Health and 1 Max Mana.#o";
+					//Stockpile trait
+					if (guy.Stockpile) {
+						guy.ModStat(4, "MaxHealth", FALSE);
+						guy.ModStat(2, "MaxMana", FALSE);
+						line = "#g~You gain 4 Max Health and 2 Max Mana.#o";
+					}
+					else {
+						guy.ModStat(2, "MaxHealth", FALSE);
+						guy.ModStat(1, "MaxMana", FALSE);
+						line = "#g~You gain 2 Max Health and 1 Max Mana.#o";
+					}
 				}
 				log.PushPop(line);
 
@@ -4745,8 +5381,16 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 				else if (guy.Destiny > 1) {
 					RoomType = "Cauldron";
 				}
+				//Vendor trait
+				else if (guy.Vendor) {
+					RoomType = "Shop";
+				}
 				else
 					RoomType = "Empty";
+
+				if (aftercombat) {
+					aftercombat = FALSE;
+				}
 
 				printDecision(guy, log);
 				//getchDecision(guy, deck, log);
@@ -4801,6 +5445,10 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 						extraCauldron = TRUE;
 						RoomType = "Empty";
 					}
+				}
+				//Vendor trait
+				else if (guy.Vendor) {
+					RoomType = "Shop";
 				}
 				else {
 					RoomType = "Empty";
@@ -4960,7 +5608,13 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 					if (guy.Oblivious)
 						log.Oblivious = TRUE;
 					log.printLog();
-					RoomType = "Cauldron 2";
+					//Commitment trait
+					if (guy.Commitment) {
+						RoomType = "Commit";
+						guy.Commitment = FALSE;
+					}
+					else
+						RoomType = "Cauldron 2";
 					printDecision(guy, log);
 					getchDecision(guy, deck, log);
 				}
@@ -5026,19 +5680,50 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 							extraCauldron = TRUE;
 						}
 					}
+					//Vendor trait
+					else if (guy.Vendor) {
+						RoomType = "Shop";
+						printDecision(guy, log);
+					}
 					else {
 						RoomType = "Empty";
 					}
 
-					if (RoomType != "Shop") {
+					//if (RoomType != "Shop") {
 						printDecision(guy, log);
 						getchDecision(guy, deck, log);
-					}
+					//}
 				}
 			}
 			else {
 				getchDecision(guy, deck, log);
 			}
+		}
+		//Commitment trait
+		else if (RoomType == "Commit") {
+			if (choose == '1' || choose == '2' || choose == '3') {
+				string com;
+				if (choose == '1') {
+					commitStrDefInt = 1;
+					com = "#r You commit to Strength.#o";
+				}
+				else if (choose == '2') {
+					commitStrDefInt = 2;
+					com = "#r You commit to Defense.#o";
+				}
+				else if (choose == '3') {
+					commitStrDefInt = 3;
+					com = "#r You commit to Intelligence.#o";
+				}
+				log.PushPop(com);
+				log.printLog();
+
+				RoomType = "Cauldron 2";
+				printDecision(guy, log);
+				getchDecision(guy, deck, log);
+			}
+			else
+				getchDecision(guy, deck, log);
 		}
 	}
 	else if (RoomType == "Combat"){
@@ -5053,54 +5738,62 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log) {
 	else if (RoomType == "Shop") {
 		getchShop(guy, deck, log);
 	}
-	
 }
 
 //adds any negative cards based of the character's negative variable
 void InputBoard::addNegative(Character &guy, Deck &deck) {
-	if (guy.negative == "") {
-		return;
-	}
-	else {
-		Card steam("Steam");
-		Card steam2("Scalding Steam");
-		Card webbed("Webbed");
-		Card tired("Tired");
-		Card dstr("Drain Str");
-		Card ddef("Drain Def");
-		Card dint("Drain Int");
-		Card patch("Patch");
-		Card burn("Burn");
+	Card steam("Steam");
+	Card steam2("Scalding Steam");
+	Card webbed("Webbed");
+	Card dstr("Drain Str");
+	Card ddef("Drain Def");
+	Card dint("Drain Int");
+	Card patch("Patch");
+	Card burn("Burn");
 
-		if (guy.negative == "Steam") {
-			Draw.push_back(steam);
-		}
-		else if (guy.negative == "Scalding Steam") {
-			Discard.push_back(steam2);
-		}
-		else if (guy.negative == "Webbed") {
-			Draw.push_back(webbed);
-		}
-		else if (guy.negative == "Tired") {
-			Draw.push_back(tired);
-		}
-		else if (guy.negative == "Drain Str") {
-			Draw.push_back(dstr);
-		}
-		else if (guy.negative == "Drain Def") {
-			Draw.push_back(ddef);
-		}
-		else if (guy.negative == "Drain Int") {
-			Draw.push_back(dint);
-		}
-		else if (guy.negative == "Patch") {
-			Draw.push_back(patch);
-		}
-		else if (guy.negative == "Burn") {
-			Draw.push_back(burn);
-		}
+	if (guy.Cursed) {
+		guy.ADDSteam *= 2;
+		guy.ADDScalding_Steam *= 2;
+		guy.ADDWebbed *= 2;
+		guy.ADDDrain_Str *= 2;
+		guy.ADDDrain_Def *= 2;
+		guy.ADDDrain_Int *= 2;
+		guy.ADDPatch *= 2;
+		guy.ADDBurn *= 2;
 	}
-	guy.negative = "";
+	
+	while (guy.ADDSteam > 0) {
+		Draw.push_back(steam);
+		guy.ADDSteam--;
+	}
+	while (guy.ADDScalding_Steam > 0) {
+		Draw.push_back(steam2);
+		guy.ADDScalding_Steam--;
+	}
+	while (guy.ADDWebbed > 0) {
+		Draw.push_back(webbed);
+		guy.ADDWebbed--;
+	}
+	while (guy.ADDDrain_Str > 0) {
+		Draw.push_back(dstr);
+		guy.ADDDrain_Str--;
+	}
+	while (guy.ADDDrain_Def > 0) {
+		Draw.push_back(ddef);
+		guy.ADDDrain_Def--;
+	}
+	while (guy.ADDDrain_Int > 0) {
+		Draw.push_back(dint);
+		guy.ADDDrain_Int--;
+	}
+	while (guy.ADDPatch > 0) {
+		Draw.push_back(patch);
+		guy.ADDPatch--;
+	}
+	while (guy.ADDBurn > 0) {
+		Draw.push_back(burn);
+		guy.ADDBurn--;
+	}
 }
 
 //removes any negative cards after battle
@@ -5123,15 +5816,16 @@ bool InputBoard::removeNegatives(Deck &deck) {
 //any modifiers that were put on the character in battle are reverted
 void InputBoard::restoreStats(Character &guy) {
 	//Purple trait
-	if (guy.Purple)
+	//Stiff trait
+	if (guy.Purple || guy.Stiff)
 		return;
 
-	guy.ModStat(guy.strMod, "Strength");
-	guy.ModStat(guy.defMod, "Defense");
-	guy.ModStat(guy.intMod, "Intelligence");
-	guy.ModStat(guy.hpMod, "MaxHealth");
-	guy.ModStat(guy.mpMod, "MaxMana");
-	guy.ModStat(guy.sklMod, "Skill");
+	guy.Strength += guy.strMod;
+	guy.Defense += guy.defMod;
+	guy.Intelligence += guy.intMod;
+	guy.MaxHealth += guy.hpMod;
+	guy.MaxMana += guy.mpMod;
+	guy.Skill += guy.sklMod;
 
 	guy.strMod = 0;
 	guy.defMod = 0;
@@ -5194,7 +5888,7 @@ void InputBoard::fillHand(Character &guy) {
 }
 
 //used for reshuffling the deck after every combat
-void InputBoard::updateDeck(Deck &deck) {
+void InputBoard::updateDeck(Character &guy, Deck &deck) {
 	while (Draw.size() > 0)
 		Draw.pop_back();
 	while (Discard.size() > 0)
@@ -5202,9 +5896,18 @@ void InputBoard::updateDeck(Deck &deck) {
 	while (DecisionCards.size() > 0)
 		DecisionCards.pop_back();
 
+	//reset trait specific values
+	for (int i = 0; i < deck.size(); i++) {
+		deck.cardDeck.at(i).resetTraitValues();
+	}
+	//Blackout trait
+	if (guy.Blackout) {
+		deck.setBlackout();
+	}
+
 	for (int i = 0; i < deck.size(); i++) {
 		deck.at(i).setStay();
-		if (!deck.at(i).Void) {
+		if (!deck.at(i).Void && !deck.at(i).blackout) {
 			Discard.push_back(deck.at(i));
 			if (deck.at(i).Copy)
 				Discard.push_back(deck.at(i));
@@ -5812,6 +6515,13 @@ void InputBoard::win(Character &guy, Deck &deck, TextLog &log, bool gamewin) {
 		mvprintw(18, 27, "VICTORY");
 	}
 	else {
+		if (!youdie) {
+			string line = "#r-You die.#o";
+			log.PushPop(line);
+			log.printLog();
+			youdie = TRUE;
+		}
+
 		attron(COLOR_PAIR(5));
 		mvprintw(18, 29, "DEAD");
 		manualBox("Directory", 0);
@@ -5848,15 +6558,11 @@ void InputBoard::win(Character &guy, Deck &deck, TextLog &log, bool gamewin) {
 
 	}
 	standend();
-	mvprintInSize(20, 23, 18, "(ENTER) Restart", FALSE);
-	mvprintInSize(21, 23, 18, "(ESC)   Exit", FALSE);
+	mvprintInSize(20, 24, 18, "(PRESS ENTER)", FALSE);
 
 	char go = getch();
-	if (go == 10) {
-		restart = TRUE;
-	}
-	else if (go == 27) {
-		quit = TRUE;
+	if (go == 10 || go == 27) {
+		endscreen(guy, deck, log);
 	}
 	else if (go == 'd') {
 		showDeck(guy, deck, TRUE);
@@ -5888,6 +6594,173 @@ void InputBoard::win(Character &guy, Deck &deck, TextLog &log, bool gamewin) {
 	}
 }
 
+void InputBoard::endscreen(Character &guy, Deck &deck, TextLog &log) {
+	if (!endprinted) {
+		endprinted = TRUE;
+		clearBoardWhole();
+		for (int y = 0; y < 15; y++) {
+			mvprintw(y, 44, "                                  ");
+		}
+		for (int i = 5; i < 15; i++)
+			mvprintw(i, 28, "               ");
+		for (int i = 0; i < 4; i++) {
+			mvprintw(i, 0, "               ");
+		}
+		mvprintw(15, 40, "                                                                                  ");
+
+		manualBox("End", 0);
+
+		//restore and print stats
+		Enemy enemy;
+		Terrain = "";
+		restoreStats(guy);
+		restoreAfterBattle(guy, enemy, deck, log);
+		guy.printStats();
+
+		//print the gear equipped
+		mvprintw(1, 45, "Head:");
+		mvprintw(2, 45, "Body:");
+		mvprintw(3, 45, "Hands:");
+		attron(COLOR_PAIR(6));
+		mvprintw(1, 56, "%s", head.GearName);
+		mvprintw(2, 56, "%s", body.GearName);
+		mvprintw(3, 56, "%s", hands.GearName);
+		standend();
+
+		//print the deck
+		vector<Card> tempdeck = deck.cardDeck;
+		vector<Card> tempscreendeck;
+		vector<int> tempscreendeckcounter;
+
+		while (tempdeck.size() > 0) {
+			Card cardnow = tempdeck.at(0);
+			int counter = 0;
+			for (int i = 0; i < tempdeck.size(); i++) {
+				if (tempdeck.at(i).CardName == cardnow.CardName && tempdeck.at(i).checkSameMods(cardnow)) {
+					tempdeck.erase(tempdeck.begin() + i);
+					i--;
+					counter++;
+				}
+			}
+			tempscreendeck.push_back(cardnow);
+			tempscreendeckcounter.push_back(counter);
+		}
+
+		screendeck = tempscreendeck;
+		screendeckCounter = tempscreendeckcounter;
+
+		int x = 61;
+		int y = 6;
+		for (int i = 0; i < screendeck.size(); i++) {
+			Card cardnow = screendeck.at(i);
+			int counternow = screendeckCounter.at(i);
+
+			if (cardnow.CardType == "Attack") {
+				attron(COLOR_PAIR(1));
+			}
+			else if (cardnow.CardType == "Defend") {
+				attron(COLOR_PAIR(2));
+			}
+			else if (cardnow.CardType == "Spell") {
+				attron(COLOR_PAIR(3));
+			}
+			else if (cardnow.CardType == "BossCard") {
+				standend();
+			}
+			else if (cardnow.CardType == "Negative") {
+				attron(COLOR_PAIR(5));
+			}
+
+			//creates a string of the duplicate count (if any), the card name, and the modifiers (if any) and prints it
+			string whole = "";
+
+
+			if (counternow == 1) {
+				whole = string(cardnow.CardName);
+			}
+			else {
+				whole = to_string(counternow) + "x ";
+				whole += string(cardnow.CardName);
+			}
+			whole += " " + cardnow.modchars();
+			mvprintInSize(y, x, 0, whole.c_str(), FALSE);
+
+			standend();
+			y++;
+		}
+
+		//print traits
+		x = 2;
+		y = 16;
+		for (int i = 0; i < Traits.size(); i++) {
+
+			if (Traits.at(i).Type == "Trait Sacrifice")
+				attron(COLOR_PAIR(5));
+			else
+				attron(COLOR_PAIR(7));
+
+			mvprintInSize(y, x, 0, Traits.at(i).GearName, FALSE);
+
+			y++;
+			if (y == 24) {
+				y = 16;
+				x += 15;
+			}
+		}
+		standend();
+
+		log.printLogEnd();
+		standend();
+
+		manualBox("End", 0);
+
+		if (youdie)
+			attron(COLOR_PAIR(5));
+		else
+			attron(COLOR_PAIR(7));
+
+		mvprintw(0, 0, "\u00da");
+		mvprintw(0, 16, "\u00bf");
+		mvprintw(4, 0, "\u00c0");
+		mvprintw(4, 16, "\u00d9");
+
+		for (int x = 1; x < 16; x++) {
+			mvprintw(0, x, "\u00c4");
+		}
+		for (int x = 1; x < 16; x++) {
+			mvprintw(4, x, "\u00c4");
+		}
+		for (int y = 1; y < 4; y++) {
+			mvprintw(y, 0, "\u00b3");
+		}
+		for (int y = 1; y < 4; y++) {
+			mvprintw(y, 16, "\u00b3");
+		}
+
+		mvprintInSize(1, 1, 0, "(ENTER) Restart", FALSE);
+		mvprintInSize(2, 1, 0, "(ESC)   Exit", FALSE);
+
+		x = 5;
+		string winlose = "VICTORY";
+		if (youdie) {
+			x++;
+			winlose = "DEAD";
+		}
+		mvprintInSize(0, x, 0, winlose.c_str(), FALSE);
+
+		standend();
+	}
+	char go = getch();
+	if (go == 10) {
+		restart = TRUE;
+	}
+	else if (go == 27) {
+		quit = TRUE;
+	}
+	else {
+		endscreen(guy, deck, log);
+	}
+}
 
 void InputBoard::teleport(Character &guy, Deck &deck, TextLog &log) {
 	int tilesx = rand() % 5 - 2;
@@ -6003,6 +6876,10 @@ void InputBoard::polymorph(Character &guy, Enemy &enemy) {
 	if (guy.RoomType == "Final Boss") {
 		int rng = rand() % finalboss.size();
 		enemy = finalboss.at(rng);
+
+		//Doomed trait
+		if (guy.Doomed)
+			enemy.MaxHealth *= 1.5;
 	}
 	else if (guy.RoomType == "Boss") {
 		int rng = rand() % boss.size();
@@ -6307,7 +7184,7 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 		log.PushPop(line);
 
 		int maxhp = 3;
-		guy.ModStat(-1*maxhp, "MaxHealth");
+		guy.ModStat(-1*maxhp, "MaxHealth", FALSE);
 
 		line = "#g You give the " + string(enemy.Name) + " #r" + to_string(maxhp) + " of your Max Health#g.#o";
 		log.PushPop(line);
@@ -6317,7 +7194,7 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 		log.PushPop(line);
 
 		int maxhp = 6;
-		guy.ModStat(-1 * maxhp, "MaxHealth");
+		guy.ModStat(-1 * maxhp, "MaxHealth", FALSE);
 
 		line = "#g You give the " + string(enemy.Name) + " #r" + to_string(maxhp) + " of your Max Health#g.#o";
 		log.PushPop(line);
@@ -6327,7 +7204,7 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 		log.PushPop(line);
 
 		int maxhp = 8;
-		guy.ModStat(-1 * maxhp, "MaxHealth");
+		guy.ModStat(-1 * maxhp, "MaxHealth", FALSE);
 
 		line = "#g You give the " + string(enemy.Name) + " #r" + to_string(maxhp) + " of your Max Health#g.#o";
 		log.PushPop(line);
@@ -6344,7 +7221,7 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 			log.PushPop(line);
 
 			int maxmana = 3;
-			guy.ModStat(-1 * maxmana, "MaxMana");
+			guy.ModStat(-1 * maxmana, "MaxMana", FALSE);
 
 			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(maxmana) + " of your Max Mana#g.#o";
 			log.PushPop(line);
@@ -6362,7 +7239,7 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 			log.PushPop(line);
 
 			int maxmana = 5;
-			guy.ModStat(-1 * maxmana, "MaxMana");
+			guy.ModStat(-1 * maxmana, "MaxMana", FALSE);
 
 			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(maxmana) + " of your Max Mana#g.#o";
 			log.PushPop(line);
@@ -6380,7 +7257,7 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 			log.PushPop(line);
 
 			int str = 2;
-			guy.ModStat(-1 * str, "Strength");
+			guy.ModStat(-1 * str, "Strength", FALSE);
 
 			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(str) + " of your Strength#g.#o";
 			log.PushPop(line);
@@ -6398,7 +7275,7 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 			log.PushPop(line);
 
 			int str = 8;
-			guy.ModStat(-1 * str, "Strength");
+			guy.ModStat(-1 * str, "Strength", FALSE);
 
 			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(str) + " of your Strength#g.#o";
 			log.PushPop(line);
@@ -6416,7 +7293,7 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 			log.PushPop(line);
 
 			int def = 3;
-			guy.ModStat(-1 * def, "Defense");
+			guy.ModStat(-1 * def, "Defense", FALSE);
 
 			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(def) + " of your Defense#g.#o";
 			log.PushPop(line);
@@ -6434,7 +7311,7 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 			log.PushPop(line);
 
 			int def = 5;
-			guy.ModStat(-1 * def, "Defense");
+			guy.ModStat(-1 * def, "Defense", FALSE);
 
 			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(def) + " of your Defense#g.#o";
 			log.PushPop(line);
@@ -6452,7 +7329,7 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 			log.PushPop(line);
 
 			int intt = 3;
-			guy.ModStat(-1 * intt, "Intelligence");
+			guy.ModStat(-1 * intt, "Intelligence", FALSE);
 
 			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(intt) + " of your Intelligence#g.#o";
 			log.PushPop(line);
@@ -6470,7 +7347,7 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 			log.PushPop(line);
 
 			int intt = 7;
-			guy.ModStat(-1 * intt, "Intelligence");
+			guy.ModStat(-1 * intt, "Intelligence", FALSE);
 
 			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(intt) + " of your Intelligence#g.#o";
 			log.PushPop(line);
@@ -6488,7 +7365,7 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 			log.PushPop(line);
 
 			int skl = 1;
-			guy.ModStat(-1 * skl, "Skill");
+			guy.ModStat(-1 * skl, "Skill", FALSE);
 
 			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(skl) + " of your Skill#g.#o";
 			log.PushPop(line);
@@ -6506,7 +7383,7 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 			log.PushPop(line);
 
 			int skl = 2;
-			guy.ModStat(-1 * skl, "Skill");
+			guy.ModStat(-1 * skl, "Skill", FALSE);
 
 			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(skl) + " of your Skill#g.#o";
 			log.PushPop(line);
@@ -6524,7 +7401,7 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 			log.PushPop(line);
 
 			int skl = 3;
-			guy.ModStat(-1 * skl, "Skill");
+			guy.ModStat(-1 * skl, "Skill", FALSE);
 
 			line = "#g You give the " + string(enemy.Name) + " #r" + to_string(skl) + " of your Skill#g.#o";
 			log.PushPop(line);

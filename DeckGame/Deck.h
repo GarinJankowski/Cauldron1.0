@@ -25,6 +25,9 @@ public:
 	Card removeCard(Card cardToBeRemoved, Character &guy);
 	Card at(int i);
 	void deckScreen();
+
+	//trait specific functions
+	void setBlackout();
 };
 
 #endif // DECK_H

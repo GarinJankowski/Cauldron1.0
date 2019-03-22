@@ -24,7 +24,7 @@ public:
 	const char *Description;
 	int ManaCost;
 
-	//variables for boss cards
+	//variables for specific cards
 	bool naturalBurn = FALSE;
 	bool pierce = FALSE;
 	bool copyUsed = FALSE;
@@ -41,6 +41,12 @@ public:
 	bool Push = FALSE;
 	bool Void = FALSE;
 	int Link = 0;
+
+	//variables for traits
+	bool blackout = FALSE;
+	int combobreaker = 0;
+	int memorylapse = 0;
+	void resetTraitValues();
 
 	void setAttack();
 	void setDefend();

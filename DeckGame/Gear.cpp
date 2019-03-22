@@ -165,7 +165,6 @@ Gear::Gear(const char *name):GearName(name)
 		GearName == "Succumb" ||
 		GearName == "Slow" ||
 		GearName == "Sticky Feet" ||
-		GearName == "Overconfidence" || //not in pool
 		GearName == "Hallucinations" ||
 		GearName == "Tail" ||
 		GearName == "Weak Back" ||
@@ -186,7 +185,6 @@ Gear::Gear(const char *name):GearName(name)
 		GearName == "Colossus" ||
 		GearName == "Timer" ||
 		GearName == "Sacrificial" ||
-		GearName == "Heavy" || //not implemented
 		GearName == "Membrane" ||
 		GearName == "Addiction" ||
 		GearName == "Paranoia" ||
@@ -194,7 +192,36 @@ Gear::Gear(const char *name):GearName(name)
 		GearName == "Asthma" ||
 		GearName == "Flat Feet" ||
 		GearName == "Muscle Mass" ||
-		GearName == "Chaos#") {
+		GearName == "Chaos#" ||
+		GearName == "Panic Attack" ||
+		GearName == "Cursed" ||
+		GearName == "Joint Pain" ||
+		GearName == "Daredevil" ||
+		GearName == "Careless" ||
+		GearName == "Hoarder" ||
+		GearName == "Atrophy" ||
+		GearName == "Burnout" ||
+		GearName == "Blackout" ||
+		GearName == "Combo Breaker" ||
+		GearName == "Memory Lapse" ||
+		GearName == "Stiff" ||
+		GearName == "Ethereal" ||
+		GearName == "Overconfidence" ||
+		GearName == "Falter" ||
+		GearName == "Exposed" ||
+		GearName == "Circus" ||
+		GearName == "Spiritual" ||
+		GearName == "Stuck" ||
+		GearName == "Inert" ||
+		GearName == "Lightweight" ||
+		GearName == "Headache" ||
+		GearName == "Reckless" ||
+		GearName == "Wasteful" ||
+		GearName == "Strain" ||
+		GearName == "Materialist" ||
+		GearName == "Run" ||
+		GearName == "Heavy" ||
+		GearName == "Commitment") {
 		Type = "Trait Sacrifice";
 		TraitSDescription();
 	}
@@ -251,7 +278,36 @@ Gear::Gear(const char *name):GearName(name)
 	GearName == "Red Scales" ||
 	GearName == "Curved Tusks" ||
 	GearName == "Early Riser" ||
-	GearName == "Outer Shell") {
+	GearName == "Outer Shell" ||
+	GearName == "Resourceful" ||
+	GearName == "Naturalist" ||
+	GearName == "Bounty Hunter" ||
+	GearName == "Scraps" ||
+	GearName == "Tinkerer" ||
+	GearName == "Magnetic" ||
+	GearName == "Merchant" ||
+	GearName == "Conservation" ||
+	GearName == "Vendor" ||
+	GearName == "Shock Absorber" ||
+	GearName == "Stamina" ||
+	GearName == "Rested" ||
+	GearName == "Midas Touch" ||
+	GearName == "Exhaust Vent" ||
+	GearName == "Fervor" ||
+	GearName == "Enlightened" ||
+	GearName == "Engorged" ||
+	GearName == "Archmage" ||
+	GearName == "Rebirth" ||
+	GearName == "Heavyweight" ||
+	GearName == "Deja Vu" ||
+	GearName == "Concentration" ||
+	GearName == "Reversal" ||
+	GearName == "Amass" ||
+	GearName == "Technician" ||
+	GearName == "Optimist" ||
+	GearName == "Stockpile" ||
+	GearName == "Draining Touch" ||
+	GearName == "Fleet of Foot") {
 		Type = "Trait Reward";
 		TraitRDescription();
 	}
@@ -284,7 +340,7 @@ void Gear::HandsDescription() {
 		Description = "A sturdy weapon with a double sided blade.";
 	}
 	else if (GearName == "Falchion") {
-		Description = "A one-handed sword with a heavy blade, great for hacking throuhg armor.";
+		Description = "A one-handed sword with a heavy blade, great for hacking through armor.";
 	}
 	else if (GearName == "Metal Staff") {
 		Description = "A long metal stick, a much more lethal weapon than its wooden counterparts.";
@@ -510,13 +566,13 @@ void Gear::HeadDescription() {
 		Description = "Protect your self from the sand, it hits harder than you think.";
 	}
 	else if (GearName == "Viking Helm") {
-		Description = "This ancient helmet holds the memories of many valiant warriors who were slain in battled.";
+		Description = "This ancient helmet holds the memories of many valiant warriors slain in battle.";
 	}
 	else if (GearName == "Unholy Cowl") {
 		Description = "This hood is worn during rituals performed to drain the soul out of sacrifices.";
 	}
 	else if (GearName == "Jewelled Crown") {
-		Description = "This priceless headpiece was clearly one of a powerfuk king, able to summon loyal soldiers with only a word.";
+		Description = "This priceless headpiece was one of a powerful king, able to summon loyal soldiers with only a word.";
 	}
 	else if (GearName == "Human Skull") {
 		Description = "An object that once had life, able to channel the forbidden magic.";
@@ -610,7 +666,7 @@ void Gear::TraitSDescription() {
 	}
 	else if (GearName == "Melting") {
 		Type = "Trait Sacrifice";
-		Description = "Lose 2 block and take 1 damage every turn.";
+		Description = "Gain 1 block and lose 1 health every turn.";
 	}
 	else if (GearName == "The Box") {
 		Type = "Trait Sacrifice";
@@ -672,11 +728,9 @@ void Gear::TraitSDescription() {
 		Type = "Trait Sacrifice";
 		Description = "Every turn, 20% chance to lose 4 Energy.";
 	}
-	//trait not in pool
-	//change this one to the new one
 	else if (GearName == "Overconfidence") {
 		Type = "Trait Sacrifice";
-		Description = "Combat and Boss rewards are swapped.";
+		Description = "You cannot gain block after turn 5. +3 Def.";
 	}
 	else if (GearName == "Hallucinations") {
 		Type = "Trait Sacrifice";
@@ -748,7 +802,7 @@ void Gear::TraitSDescription() {
 	}
 	else if (GearName == "Colossus") {
 		Type = "Trait Sacrifice";
-		Description = "Convert all Str, Def, and Int into twofold max health.";
+		Description = "Convert all Str, Def, and Int into threefold max hp.";
 	}
 	else if (GearName == "Timer") {
 		Type = "Trait Sacrifice";
@@ -757,11 +811,6 @@ void Gear::TraitSDescription() {
 	else if (GearName == "Sacrificial") {
 		Type = "Trait Sacrifice";
 		Description = "You take damage instead of losing mana.";
-	}
-	//not yet, dont want to add another double damage modifier
-	else if (GearName == "Heavy") {
-		Type = "Trait Sacrifice";
-		Description = "You deal double damage but take 2 turns.";
 	}
 	else if (GearName == "Membrane") {
 		Type = "Trait Sacrifice";
@@ -794,6 +843,122 @@ void Gear::TraitSDescription() {
 	else if (GearName == "Chaos#") {
 		Type = "Trait Sacrifice";
 		Description = "Add two Chaos cards to your deck.";
+	}
+	else if (GearName == "Panic Attack"){
+		Type = "Trait Sacrifice";
+		Description = "If you take 20 or more damage at once, -9 Energy.";
+	}
+	else if (GearName == "Cursed") {
+	Type = "Trait Sacrifice";
+	Description = "Negative cards are added to your deck twice.";
+	}
+	else if (GearName == "Joint Pain") {
+	Type = "Trait Sacrifice";
+	Description = "Every time you get an extra turn take 6 damage.";
+	}
+	else if (GearName == "Daredevil") {
+	Type = "Trait Sacrifice";
+	Description = "After combat take 2x(Skl) dmg and gain (Skl) gold.";
+	}
+	else if (GearName == "Careless") {
+	Type = "Trait Sacrifice";
+	Description = "Gear is destroyed when taken off.";
+	}
+	else if (GearName == "Hoarder") {
+	Type = "Trait Sacrifice";
+	Description = "Take damage every turn equal to your extra Gear.";
+	}
+	else if (GearName == "Atrophy") {
+	Type = "Trait Sacrifice";
+	Description = "On turn 4, add a Drain card to your hand.";
+	}
+	else if (GearName == "Burnout") {
+	Type = "Trait Sacrifice";
+	Description = "Burn the first (Skl) cards used in combat.";
+	}
+	else if (GearName == "Blackout") {
+	Type = "Trait Sacrifice";
+	Description = "Void a random card at the start of combat.";
+	}
+	else if (GearName == "Combo Breaker") {
+	Type = "Trait Sacrifice";
+	Description = "Playing a card 5 times Burns it.";
+	}
+	else if (GearName == "Memory Lapse") {
+	Type = "Trait Sacrifice";
+	Description = "Take (Skl) dmg if you use the same card twice in a row.";
+	}
+	else if (GearName == "Stiff") {
+	Type = "Trait Sacrifice";
+	Description = "Your stats can no longer change.";
+	}
+	else if (GearName == "Ethereal") {
+	Type = "Trait Sacrifice";
+	Description = "-3d2 block per turn. If you have 0 block, gain 2 mana.";
+	}
+	else if (GearName == "Falter") {
+	Type = "Trait Sacrifice";
+	Description = "Every 6 damage taken, lose 1 Max Health for the combat.";
+	}
+	else if (GearName == "Exposed") {
+	Type = "Trait Sacrifice";
+	Description = "Every 8 health lost, reduce a random stat by 1.";
+	}
+	else if (GearName == "Circus") {
+	Type = "Trait Sacrifice";
+	Description = "Jesters appear more often.";
+	}
+	else if (GearName == "Spiritual") {
+	Type = "Trait Sacrifice";
+	Description = "Lose 1 Max Hp and gain 1 Max Mana after every fight.";
+	}
+	else if (GearName == "Stuck") {
+	Type = "Trait Sacrifice";
+	Description = "Energy goes over max. Extra turns occur every 2 turns.";
+	}
+	else if (GearName == "Inert") {
+	Type = "Trait Sacrifice";
+	Description = "-3 Max Energy. Get Negates instead of extra turns.";
+	}
+	else if (GearName == "Lightweight") {
+	Type = "Trait Sacrifice";
+	Description = "Having 30 block converts it to a Negate.";
+	}
+	else if (GearName == "Headache") {
+	Type = "Trait Sacrifice";
+	Description = "Lose 2 Energy each turn you have full mana.";
+	}
+	else if (GearName == "Reckless") {
+	Type = "Trait Sacrifice";
+	Description = "Take 2 damage when you deal damage.";
+	}
+	else if (GearName == "Wasteful") {
+	Type = "Trait Sacrifice";
+	Description = "Every 10 turns, burn your hand.";
+	}
+	else if (GearName == "Strain") {
+	Type = "Trait Sacrifice";
+	Description = "Lose 5 Energy when you use a Boss Card.";
+	}
+	else if (GearName == "Materialist") {
+	Type = "Trait Sacrifice";
+	Description = "Lose 5 max mana. Gain 50 gold.";
+	}
+	else if (GearName == "Run") {
+	Type = "Trait Sacrifice";
+	Description = "Defends give 10 Energy, other cards lose 10.";
+	}
+	else if (GearName == "Commitment") {
+	Type = "Trait Sacrifice";
+	Description = "Choose a stat. You can only gain this from stat rewards.";
+	}
+	else if (GearName == "Heavy") {
+	Type = "Trait Sacrifice";
+	Description = "Gain/lose block instead of Energy.";
+	}
+	else if (GearName == "") {
+	Type = "Trait Sacrifice";
+	Description = "";
 	}
 	else {
 		Type = "";
@@ -888,7 +1053,7 @@ void Gear::TraitRDescription() {
 	}
 	else if (GearName == "Carnivore") {
 	Type = "Trait Reward";
-	Description = "Gain 1 max health after every battle.";
+	Description = "Gain 1 max health after every fight.";
 	}
 	else if (GearName == "Hemoglobin") {
 	Type = "Trait Reward";
@@ -904,7 +1069,7 @@ void Gear::TraitRDescription() {
 	}
 	else if (GearName == "Horns") {
 	Type = "Trait Reward";
-	Description = "When you play an Attack, (Skl)+7% chance for a negate.";
+	Description = "Losing a Negate deals 5 +(Skl/2)d2 damage.";
 	}
 	else if (GearName == "Genius") {
 	Type = "Trait Reward";
@@ -1005,6 +1170,122 @@ void Gear::TraitRDescription() {
 	else if (GearName == "Outer Shell") {
 	Type = "Trait Reward";
 	Description = "Block is retained after combat.";
+	}
+	else if (GearName == "Resourceful") {
+	Type = "Trait Reward";
+	Description = "If you are forced to Reshuffle, gain 40 block.";
+	}
+	else if (GearName == "Naturalist") {
+	Type = "Trait Reward";
+	Description = "Each turn you have 0 cards, deal 40 damage.";
+	}
+	else if (GearName == "Bounty Hunter") {
+	Type = "Trait Reward";
+	Description = "Winning Combat or Boss before turn 3 gives 5x gold reward.";
+	}
+	else if (GearName == "Scraps") {
+	Type = "Trait Reward";
+	Description = "After battle, turn your block into gold.";
+	}
+	else if (GearName == "Tinkerer") {
+	Type = "Trait Reward";
+	Description = "Gain 1 card modifier after Combat.";
+	}
+	else if (GearName == "Magnetic") {
+	Type = "Trait Reward";
+	Description = "Find 1 gear after Combat.";
+	}
+	else if (GearName == "Merchant") {
+	Type = "Trait Reward";
+	Description = "Entering shops sells your gear for 2x(Skl) gold each.";
+	}
+	else if (GearName == "Conservation") {
+	Type = "Trait Reward";
+	Description = "+1 Str, Def, and Int for each negative Energy.";
+	}
+	else if (GearName == "Vendor") {
+	Type = "Trait Reward";
+	Description = "Open a shop after Cauldrons and bosses.";
+	}
+	else if (GearName == "Shock Absorber") {
+	Type = "Trait Reward";
+	Description = "Taking a total of 50 damage gives 2 Negates.";
+	}
+	else if (GearName == "Stamina") {
+	Type = "Trait Reward";
+	Description = "Gain double Energy if below 0.";
+	}
+	else if (GearName == "Rested") {
+	Type = "Trait Reward";
+	Description = "Losing a turn gives (Skl)d3 hp and (Skl)d2 mana.";
+	}
+	else if (GearName == "Midas Touch") {
+	Type = "Trait Reward";
+	Description = "Gain gold equal to the enemy's negative hp.";
+	}
+	else if (GearName == "Exhaust Vent") {
+	Type = "Trait Reward";
+	Description = "Losing a turn deals (Skl)d2 damage for 3 turns.";
+	}
+	else if (GearName == "Fervor") {
+	Type = "Trait Reward";
+	Description = "Attacks also deal 1 dmg for (Skl) turns, stacking.";
+	}
+	else if (GearName == "Enlightened") {
+	Type = "Trait Reward";
+	Description = "Mana can exceed max. Lose 2 mana per turn over max.";
+	}
+	else if (GearName == "Engorged") {
+	Type = "Trait Reward";
+	Description = "Hp can exceed max. Lose 3 hp per turn over max.";
+	}
+	else if (GearName == "Archmage") {
+	Type = "Trait Reward";
+	Description = "Gain 1 Int every time you use a Spell.";
+	}
+	else if (GearName == "Rebirth") {
+	Type = "Trait Reward";
+	Description = "Having 0 max hp sets it to 40.";
+	}
+	else if (GearName == "Heavyweight") {
+	Type = "Trait Reward";
+	Description = "Having 50 block converts it to damage.";
+	}
+	else if (GearName == "Deja Vu") {
+	Type = "Trait Reward";
+	Description = "Seeing an enemy twice in a row deals 40 damage.";
+	}
+	else if (GearName == "Concentration") {
+	Type = "Trait Reward";
+	Description = "Using a card type thrice in a row gives (Skl)d2 Energy.";
+	}
+	else if (GearName == "Reversal") {
+	Type = "Trait Reward";
+	Description = "Losing a stat gains it instead.";
+	}
+	else if (GearName == "Amass") {
+	Type = "Trait Reward";
+	Description = "Every 4 block lost gain 1 Str for the combat.";
+	}
+	else if (GearName == "Technician") {
+	Type = "Trait Reward";
+	Description = "Damage you deal under 10 is doubled.";
+	}
+	else if (GearName == "Optimist") {
+	Type = "Trait Reward";
+	Description = "Negative cards deal (Skl)x3 damage.";
+	}
+	else if (GearName == "Stockpile") {
+	Type = "Trait Reward";
+	Description = "The Boss stat reward is doubled.";
+	}
+	else if (GearName == "Draining Touch") {
+	Type = "Trait Reward";
+	Description = "Attacks give 2+(Skl) mana.";
+	}
+	else if (GearName == "Fleet of Foot") {
+	Type = "Trait Reward";
+	Description = "Defends give 3 Energy.";
 	}
 
 	else {
@@ -2228,14 +2509,14 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Dumb") {
 		if (On) {
-			guy.ModStat(-4, "Intelligence");
-			guy.ModStat(1, "Defense");
+			guy.ModStat(-4, "Intelligence", FALSE);
+			guy.ModStat(1, "Defense", FALSE);
 			if (guy.Intelligence < 0)
 				guy.Intelligence = 0;
 		}
 		else {
-			guy.ModStat(4, "Intelligence");
-			guy.ModStat(-1, "Defense");
+			guy.ModStat(4, "Intelligence", FALSE);
+			guy.ModStat(-1, "Defense", FALSE);
 			if (guy.Defense < 0)
 				guy.Defense = 0;
 		}
@@ -2251,18 +2532,18 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Tunnel Vision") {
 		if (On) {
-			guy.ModStat(-2, "Strength");
-			guy.ModStat(-2, "Defense");
-			guy.ModStat(1, "Skill");
+			guy.ModStat(-2, "Strength", FALSE);
+			guy.ModStat(-2, "Defense", FALSE);
+			guy.ModStat(1, "Skill", FALSE);
 			if (guy.Strength < 0)
 				guy.Strength = 0;
 			if (guy.Defense < 0)
 				guy.Defense = 0;
 		}
 		else {
-			guy.ModStat(2, "Strength");
-			guy.ModStat(2, "Defense");
-			guy.ModStat(-1, "Skill");
+			guy.ModStat(2, "Strength", FALSE);
+			guy.ModStat(2, "Defense", FALSE);
+			guy.ModStat(-1, "Skill", FALSE);
 			if (guy.Skill < 0)
 				guy.Skill = 0;
 		}
@@ -2475,12 +2756,12 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Corpse") {
 		if (On) {
-			guy.ModStat(5, "MaxHealth");
+			guy.ModStat(5, "MaxHealth", FALSE);
 			guy.CurrentHealth = guy.MaxHealth;
 			guy.Undead = TRUE;
 		}
 		else {
-			guy.ModStat(-5, "MaxHealth");
+			guy.ModStat(-5, "MaxHealth", FALSE);
 			guy.CurrentHealth = guy.MaxHealth;
 			guy.Undead = FALSE;
 		}
@@ -2495,36 +2776,36 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Forgetful") {
 		if (On) {
-			guy.ModStat(2, "MaxMana");
+			guy.ModStat(2, "MaxMana", FALSE);
 			guy.CurrentMana = guy.MaxMana;
 			guy.Forgetful = TRUE;
 		}
 		else {
-			guy.ModStat(-2, "MaxMana");
+			guy.ModStat(-2, "MaxMana", FALSE);
 			guy.Forgetful = FALSE;
 		}
 	}
 
 	else if (GearName == "Tiny") {
 		if (On) {
-			guy.ModStat(-35, "MaxHealth");
-			guy.ModStat(10, "Defense");
+			guy.ModStat(-35, "MaxHealth", FALSE);
+			guy.ModStat(10, "Defense", FALSE);
 			guy.CurrentHealth = guy.MaxHealth;
 		}
 		else {
-			guy.ModStat(35, "MaxHealth");
-			guy.ModStat(-10, "Defense");
+			guy.ModStat(35, "MaxHealth", FALSE);
+			guy.ModStat(-10, "Defense", FALSE);
 			guy.CurrentHealth = guy.MaxHealth;
 		}
 	}
 	else if (GearName == "Succumb") {
 		if (On) {
-			guy.ModStat(2, "Skill");
+			guy.ModStat(2, "Skill", FALSE);
 			guy.Succumb = TRUE;
 			Succumb = TRUE;
 		}
 		else {
-			guy.ModStat(-2, "Skill");
+			guy.ModStat(-2, "Skill", FALSE);
 			if (guy.Skill < 0)
 				guy.Skill = 0;
 			guy.Succumb = FALSE;
@@ -2549,10 +2830,12 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Overconfidence") {
 		if (On) {
-			guy.Overconfidence = TRUE;
+			guy.Overconfidence = 0;
+			guy.ModStat(3, "Defense", FALSE);
 		}
 		else {
-			guy.Overconfidence = FALSE;
+			guy.Overconfidence = -1;
+			guy.ModStat(-3, "Defense", FALSE);
 		}
 	}
 	else if (GearName == "Hallucinations") {
@@ -2599,9 +2882,13 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 		Card mad("Mad");
 		if (On) {
 			deck.addCard(mad);
+			if(guy.Cursed)
+				deck.addCard(mad);
 		}
 		else {
 			deck.removeCard(mad, guy);
+			if(guy.Cursed)
+				deck.removeCard(mad, guy);
 		}
 	}
 	else if (GearName == "Inefficient") {
@@ -2615,14 +2902,14 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 	else if (GearName == "Brain Worm") {
 		if (On) {
 			int hp = int(guy.MaxHealthBase / 2);
-			guy.ModStat(-1 * hp, "MaxHealth");
-			guy.ModStat(guy.MaxManaBase, "MaxMana");
+			guy.ModStat(-1 * hp, "MaxHealth", FALSE);
+			guy.ModStat(guy.MaxManaBase, "MaxMana", FALSE);
 			guy.CurrentMana = guy.MaxMana;
 		}
 		else {
 			int mana = int(guy.MaxManaBase / 2);
-			guy.ModStat(-1 * mana, "MaxMana");
-			guy.ModStat(guy.MaxHealthBase, "MaxHealth");
+			guy.ModStat(-1 * mana, "MaxMana", FALSE);
+			guy.ModStat(guy.MaxHealthBase, "MaxHealth", FALSE);
 			guy.CurrentHealth = guy.MaxHealth;
 		}
 	}
@@ -2701,7 +2988,7 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 	else if (GearName == "Colossus") {
 		if (On) {
 			int maxhp = guy.Strength + guy.Defense + guy.Intelligence;
-			guy.ModStat(2*maxhp, "MaxHealth");
+			guy.ModStat(3*maxhp, "MaxHealth", FALSE);
 			guy.CurrentHealth = guy.MaxHealth;
 			guy.Strength = 0;
 			guy.Defense = 0;
@@ -2736,11 +3023,11 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Addiction") {
 		if (On) {
-			guy.ModStat(3, "Intelligence");
+			guy.ModStat(3, "Intelligence", FALSE);
 			guy.Addiction = TRUE;
 		}
 		else {
-			guy.ModStat(-3, "Intelligence");
+			guy.ModStat(-3, "Intelligence", FALSE);
 			guy.Addiction = FALSE;
 		}
 	}
@@ -2794,6 +3081,243 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 			deck.removeCard(chaos, guy);
 			deck.removeCard(chaos, guy);
 		}
+	}
+	else if (GearName == "Panic Attack") {
+	if (On) {
+		guy.Panic_Attack = 0;
+	}
+	else {
+		guy.Panic_Attack = -1;
+	}
+	}
+	else if (GearName == "Cursed") {
+	if (On) {
+		guy.Cursed = TRUE;
+	}
+	else {
+		guy.Cursed = FALSE;
+	}
+	}
+	else if (GearName == "Joint Pain") {
+	if (On) {
+		guy.Joint_Pain = TRUE;
+	}
+	else {
+		guy.Joint_Pain = FALSE;
+	}
+	}
+	else if (GearName == "Daredevil") {
+	if (On) {
+		guy.Daredevil = TRUE;
+	}
+	else {
+		guy.Daredevil = FALSE;
+	}
+	}
+	else if (GearName == "Careless") {
+	if (On) {
+		guy.Careless = TRUE;
+	}
+	else {
+		guy.Careless = FALSE;
+	}
+	}
+	else if (GearName == "Hoarder") {
+	if (On) {
+		guy.Hoarder = TRUE;
+	}
+	else {
+		guy.Hoarder = FALSE;
+	}
+	}
+	else if (GearName == "Atrophy") {
+	if (On) {
+		guy.Atrophy = 0;
+	}
+	else {
+		guy.Atrophy = -1;
+	}
+	}
+	else if (GearName == "Burnout") {
+	if (On) {
+		guy.Burnout = guy.Skill;
+	}
+	else {
+		guy.Burnout = -1;
+	}
+	}
+	else if (GearName == "Blackout") {
+	if (On) {
+		guy.Blackout = TRUE;
+	}
+	else {
+		guy.Blackout = FALSE;
+	}
+	}
+	else if (GearName == "Combo Breaker") {
+	if (On) {
+		guy.Combo_Breaker = TRUE;
+	}
+	else {
+		guy.Combo_Breaker = FALSE;
+	}
+	}
+	else if (GearName == "Memory Lapse") {
+	if (On) {
+		guy.Memory_Lapse = TRUE;
+	}
+	else {
+		guy.Memory_Lapse = FALSE;
+	}
+	}
+	else if (GearName == "Stiff") {
+	if (On) {
+		guy.Stiff = TRUE;
+	}
+	else {
+		guy.Stiff = FALSE;
+	}
+	}
+	else if (GearName == "Ethereal") {
+	if (On) {
+		guy.Ethereal = TRUE;
+	}
+	else {
+		guy.Ethereal = FALSE;
+	}
+	}
+	else if (GearName == "Falter") {
+	if (On) {
+		guy.Falter = 0;
+	}
+	else {
+		guy.Falter = -1;
+	}
+	}
+	else if (GearName == "Exposed") {
+	if (On) {
+		guy.Exposed = 0;
+	}
+	else {
+		guy.Exposed = -1;
+	}
+	}
+	else if (GearName == "Circus") {
+	if (On) {
+		guy.Circus = TRUE;
+	}
+	else {
+		guy.Circus = FALSE;
+	}
+	}
+	else if (GearName == "Spiritual") {
+	if (On) {
+		guy.Spiritual = TRUE;
+	}
+	else {
+		guy.Spiritual = FALSE;
+	}
+	}
+	else if (GearName == "Stuck") {
+	if (On) {
+		guy.Stuck = 0;
+	}
+	else {
+		guy.Stuck = -1;
+	}
+	}
+	else if (GearName == "Inert") {
+	if (On) {
+		guy.Inert = TRUE;
+	}
+	else {
+		guy.Inert = FALSE;
+	}
+	}
+	else if (GearName == "Lightweight") {
+	if (On) {
+		guy.Lightweight = TRUE;
+	}
+	else {
+		guy.Lightweight = FALSE;
+	}
+	}
+	else if (GearName == "Headache") {
+	if (On) {
+		guy.Headache = TRUE;
+	}
+	else {
+		guy.Headache = FALSE;
+	}
+	}
+	else if (GearName == "Reckless") {
+	if (On) {
+		guy.Reckless = TRUE;
+	}
+	else {
+		guy.Reckless = FALSE;
+	}
+	}
+	else if (GearName == "Wasteful") {
+	if (On) {
+		guy.Wasteful = 0;
+	}
+	else {
+		guy.Wasteful = -1;
+	}
+	}
+	else if (GearName == "Strain") {
+	if (On) {
+		guy.Strain = TRUE;
+	}
+	else {
+		guy.Strain = FALSE;
+	}
+	}
+	else if (GearName == "Materialist") {
+	if (On) {
+		guy.ModStat(-5, "MaxMana", FALSE);
+		guy.checkMax();
+		guy.gainGold(50);
+	}
+	else {
+
+		guy.ModStat(5, "MaxMana", FALSE);
+		guy.checkMax();
+		guy.gainGold(-50);
+	}
+	}
+	else if (GearName == "Run") {
+	if (On) {
+		guy.Run = TRUE;
+	}
+	else {
+		guy.Run = FALSE;
+	}
+	}
+	else if (GearName == "Heavy") {
+	if (On) {
+		guy.Heavy = TRUE;
+	}
+	else {
+		guy.Heavy = FALSE;
+	}
+	}
+	else if (GearName == "Commitment") {
+	if (On) {
+		guy.Commitment = TRUE;
+	}
+	else {
+		guy.Commitment = FALSE;
+	}
+	}
+	else if (GearName == "") {
+	if (On) {
+
+	}
+	else {
+
+	}
 	}
 
 }
@@ -2929,11 +3453,11 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Genius") {
 		if (On) {
-			guy.ModStat(2, "Intelligence");
+			guy.ModStat(2, "Intelligence", FALSE);
 			guy.Genius = TRUE;
 		}
 		else {
-			guy.ModStat(-2, "Intelligence");
+			guy.ModStat(-2, "Intelligence", FALSE);
 			guy.Genius = FALSE;
 		}
 	}
@@ -3092,10 +3616,10 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Horns") {
 		if (On) {
-			guy.Horns = TRUE;
+			guy.Horns = 0;
 		}
 		else {
-			guy.Horns = FALSE;
+			guy.Horns = -1;
 		}
 	}
 	else if (GearName == "Green Scales") {
@@ -3147,22 +3671,22 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Evolve") {
 		if (On) {
-			guy.ModStat(1, "Strength");
-			guy.ModStat(1, "Defense");
-			guy.ModStat(1, "Intelligence");
-			guy.ModStat(1, "Skill");
-			guy.ModStat(1, "MaxHealth");
+			guy.ModStat(1, "Strength", FALSE);
+			guy.ModStat(1, "Defense", FALSE);
+			guy.ModStat(1, "Intelligence", FALSE);
+			guy.ModStat(1, "Skill", FALSE);
+			guy.ModStat(1, "MaxHealth", FALSE);
 			guy.CurrentHealth = guy.MaxHealth;
-			guy.ModStat(1, "MaxMana");
+			guy.ModStat(1, "MaxMana", FALSE);
 			guy.CurrentMana = guy.MaxMana;
 		}
 		else {
-			guy.ModStat(-1, "Strength");
-			guy.ModStat(-1, "Defense");
-			guy.ModStat(-1, "Intelligence");
-			guy.ModStat(-1, "Skill");
-			guy.ModStat(-1, "MaxHealth");
-			guy.ModStat(-1, "MaxMana");
+			guy.ModStat(-1, "Strength", FALSE);
+			guy.ModStat(-1, "Defense", FALSE);
+			guy.ModStat(-1, "Intelligence", FALSE);
+			guy.ModStat(-1, "Skill", FALSE);
+			guy.ModStat(-1, "MaxHealth", FALSE);
+			guy.ModStat(-1, "MaxMana", FALSE);
 		}
 	}
 	else if (GearName == "Eight Legs") {
@@ -3303,6 +3827,246 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 		else {
 			guy.Outer_Shell = FALSE;
 		}
+	}
+	else if (GearName == "Resourceful") {
+	if (On) {
+		guy.Resourceful = TRUE;
+	}
+	else {
+		guy.Resourceful = FALSE;
+	}
+	}
+	else if (GearName == "Naturalist") {
+	if (On) {
+		guy.Naturalist = TRUE;
+	}
+	else {
+		guy.Naturalist = FALSE;
+	}
+	}
+	else if (GearName == "Bounty Hunter") {
+	if (On) {
+		guy.Bounty_Hunter = 0;
+	}
+	else {
+		guy.Bounty_Hunter = -1;
+	}
+	}
+	else if (GearName == "Scraps") {
+	if (On) {
+		guy.Scraps = TRUE;
+	}
+	else {
+		guy.Scraps = FALSE;
+	}
+	}
+	else if (GearName == "Tinkerer") {
+	if (On) {
+		guy.Tinkerer = TRUE;
+	}
+	else {
+		guy.Tinkerer = FALSE;
+	}
+	}
+	else if (GearName == "Magnetic") {
+	if (On) {
+		guy.Magnetic = TRUE;
+	}
+	else {
+		guy.Magnetic = FALSE;
+	}
+	}
+	else if (GearName == "Merchant") {
+	if (On) {
+		guy.Merchant = TRUE;
+	}
+	else {
+		guy.Merchant = FALSE;
+	}
+	}
+	else if (GearName == "Conservation") {
+	if (On) {
+		guy.Conservation = 0;
+	}
+	else {
+		guy.Conservation = -1;
+	}
+	}
+	else if (GearName == "Vendor") {
+	if (On) {
+		guy.Vendor = TRUE;
+	}
+	else {
+		guy.Vendor = FALSE;
+	}
+	}
+	else if (GearName == "Shock Absorber") {
+	if (On) {
+		guy.Shock_Absorber = 0;
+	}
+	else {
+		guy.Shock_Absorber = -1;
+	}
+	}
+	else if (GearName == "Stamina") {
+	if (On) {
+		guy.Stamina = TRUE;
+	}
+	else {
+		guy.Stamina = FALSE;
+	}
+	}
+	else if (GearName == "Rested") {
+	if (On) {
+		guy.Rested = TRUE;
+	}
+	else {
+		guy.Rested = FALSE;
+	}
+	}
+	else if (GearName == "Midas Touch") {
+	if (On) {
+		guy.Midas_Touch = TRUE;
+	}
+	else {
+		guy.Midas_Touch = FALSE;
+	}
+	}
+	else if (GearName == "Exhaust Vent") {
+	if (On) {
+		guy.Exhaust_Vent = 0;
+	}
+	else {
+		guy.Exhaust_Vent = -1;
+	}
+	}
+	else if (GearName == "Fervor") {
+	if (On) {
+		guy.Fervor = 0;
+	}
+	else {
+		guy.Fervor = -1;
+	}
+	}
+	else if (GearName == "Enlightened") {
+	if (On) {
+		guy.Enlightened = TRUE;
+	}
+	else {
+		guy.Enlightened = FALSE;
+	}
+	}
+	else if (GearName == "Engorged") {
+	if (On) {
+		guy.Engorged = TRUE;
+	}
+	else {
+		guy.Engorged = FALSE;
+	}
+	}
+	else if (GearName == "Archmage") {
+	if (On) {
+		guy.Archmage = TRUE;
+	}
+	else {
+		guy.Archmage = FALSE;
+	}
+	}
+	else if (GearName == "Rebirth") {
+	if (On) {
+		guy.Rebirth = TRUE;
+	}
+	else {
+		guy.Rebirth = FALSE;
+	}
+	}
+	else if (GearName == "Heavyweight") {
+	if (On) {
+		guy.Heavyweight = TRUE;
+	}
+	else {
+		guy.Heavyweight = FALSE;
+	}
+	}
+	else if (GearName == "Deja Vu") {
+	if (On) {
+		guy.Deja_Vu = TRUE;
+	}
+	else {
+		guy.Deja_Vu = FALSE;
+	}
+	}
+	else if (GearName == "Concentration") {
+	if (On) {
+		guy.Concentration = 0;
+	}
+	else {
+		guy.Concentration = -1;
+	}
+	}
+	else if (GearName == "Reversal") {
+	if (On) {
+		guy.Reversal = TRUE;
+	}
+	else {
+		guy.Reversal = FALSE;
+	}
+	}
+	else if (GearName == "Amass") {
+	if (On) {
+		guy.Amass = 0;
+	}
+	else {
+		guy.Amass = -1;
+	}
+	}
+	else if (GearName == "Technician") {
+	if (On) {
+		guy.Technician = TRUE;
+	}
+	else {
+		guy.Technician = FALSE;
+	}
+	}
+	else if (GearName == "Optimist") {
+	if (On) {
+		guy.Optimist = TRUE;
+	}
+	else {
+		guy.Optimist = FALSE;
+	}
+	}
+	else if (GearName == "Stockpile") {
+	if (On) {
+		guy.Stockpile = TRUE;
+	}
+	else {
+		guy.Stockpile = FALSE;
+	}
+	}
+	else if (GearName == "Draining Touch") {
+	if (On) {
+		guy.Draining_Touch = TRUE;
+	}
+	else {
+		guy.Draining_Touch = FALSE;
+	}
+	}
+	else if (GearName == "Fleet of Foot") {
+	if (On) {
+		guy.Fleet_of_Foot = TRUE;
+	}
+	else {
+		guy.Fleet_of_Foot = FALSE;
+	}
+	}
+	else if (GearName == "") {
+	if (On) {
+
+	}
+	else {
+
+	}
 	}
 }
 

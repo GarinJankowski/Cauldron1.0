@@ -163,6 +163,7 @@ public:
 	bool checkUsable(int i, Character &guy, Enemy &enemy);
 
 	Enemy generateEnemy(Character &guy);
+	bool aftercombat = FALSE;
 	void startBattle(Character &guy, Deck &deck, TextLog &log);
 	void effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 	void effectsToEnemy(Character &guy, Enemy &enemy, Deck & deck, TextLog &log);
@@ -204,7 +205,8 @@ public:
 
 	int gainBlock(int block, Character &guy, Enemy &enemy);
 	int gainEnergy(int energy, Character &guy, Enemy &enemy, TextLog &log);
-	void updateDeck(Deck &deck);
+	void checkEnergy(Character &guy, Enemy &enemy, TextLog &log);
+	void updateDeck(Character &guy, Deck &deck);
 	void clearBoard();
 	void clearBoardWhole();
 
@@ -220,7 +222,10 @@ public:
 	bool restart = FALSE;
 	bool quit = FALSE;
 	string currentEnemyName;
+	bool youdie = FALSE;
+	bool endprinted = FALSE;
 	void win(Character &guy, Deck &deck, TextLog &log, bool gamewin);
+	void endscreen(Character &guy, Deck &deck, TextLog &log);
 
 	//other stuff
 	int negotiateStep;
@@ -231,6 +236,7 @@ public:
 	bool Third_Eye = FALSE;
 	bool Tail = FALSE;
 	bool teleported = FALSE;
+	int commitStrDefInt = 0;
 };
 
 #endif //INPUTBOARD_H

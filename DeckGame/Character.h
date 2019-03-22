@@ -49,6 +49,15 @@ public:
 	const char *Terrain;
 
 	//card specific mechanics
+	int ADDSteam = 0;
+	int ADDScalding_Steam = 0;
+	int ADDWebbed = 0;
+	int ADDDrain_Str = 0;
+	int ADDDrain_Def = 0;
+	int ADDDrain_Int = 0;
+	int ADDPatch = 0;
+	int ADDBurn = 0;
+
 	int regenerateTurns = 0;
 	int smoke = 0;
 	int incense = 0;
@@ -158,7 +167,7 @@ public:
 		bool Succumb = FALSE;
 		bool Slow = FALSE;
 		int Sticky_Feet = -1;
-		bool Overconfidence = FALSE;
+		int Overconfidence = -1;
 		bool Hallucinations = FALSE;
 		bool Tail = FALSE;
 		bool Weak_Back = FALSE;
@@ -183,6 +192,33 @@ public:
 		bool Flat_Feet = FALSE;
 		int Muscle_Mass = -1;
 		int Muscle_MassDamage = 0;
+		int Panic_Attack = -1;
+		bool Cursed = FALSE;
+		bool Joint_Pain = FALSE;
+		bool Daredevil = FALSE;
+		bool Careless = FALSE;
+		bool Hoarder = FALSE;
+		int Atrophy = -1;
+		int Burnout = -1;
+		bool Blackout = FALSE;
+		bool Combo_Breaker = FALSE;
+		bool Memory_Lapse = FALSE;
+		bool Stiff = FALSE;
+		bool Ethereal = FALSE;
+		int Falter = -1;
+		int Exposed = -1;
+		bool Circus = FALSE;
+		bool Spiritual = FALSE;
+		int Stuck = -1;
+		bool Inert = FALSE;
+		bool Lightweight = FALSE;
+		bool Headache = FALSE;
+		bool Reckless = FALSE;
+		int Wasteful = -1;
+		bool Strain = FALSE;
+		bool Run = FALSE;
+		bool Commitment = FALSE;
+		bool Heavy = FALSE;
 	//Reward
 		bool Mending_Flesh = FALSE;
 		bool Gymnast = FALSE;
@@ -211,7 +247,7 @@ public:
 		bool Hemoglobin = FALSE;
 		int Destiny = 0;
 		int Scavenger = -1;
-		bool Horns = FALSE;
+		int Horns = -1;
 		bool Green_Scales = FALSE;
 		bool Multi_Tongued = FALSE;
 		bool negotiate = FALSE;
@@ -233,13 +269,45 @@ public:
 		bool Curved_Tusks = FALSE;
 		int Early_Riser = -1;
 		bool Outer_Shell = FALSE;
+		bool Resourceful = FALSE;
+		bool Naturalist = FALSE;
+		int Bounty_Hunter = -1;
+		bool Scraps = FALSE;
+		bool Tinkerer = FALSE;
+		bool Magnetic = FALSE;
+		bool Merchant = FALSE;
+		int Conservation = -1;
+		bool Vendor = FALSE;
+		int Shock_Absorber = -1;
+		bool Stamina = FALSE;
+		bool Rested = FALSE;
+		bool Midas_Touch = FALSE;
+		int Exhaust_Vent = -1;
+		int Fervor = -1;
+		int FervorDamage = 0;
+		bool Enlightened = FALSE;
+		bool Engorged = FALSE;
+		bool Archmage = FALSE;
+		bool Rebirth = FALSE;
+		bool Heavyweight = FALSE;
+		int Deja_Vu = -1;
+		int Concentration = -1;
+		const char *ConcentrationType = "";
+		bool Reversal = FALSE;
+		int Amass = -1;
+		bool Technician = FALSE;
+		bool Optimist = FALSE;
+		bool Stockpile = FALSE;
+		bool Draining_Touch = FALSE;
+		bool Fleet_of_Foot = FALSE;
 
 	//change stats
 	int TakeDamage(int damageTaken);
 	int gainBlock(int block);
 	int loseBlock(int block);
 	int DrainMana(int manaDrained);
-	int ModStat(int bonus, string stat);
+	int ModStat(int bonus, string stat, bool battle);
+	int gainEnergy(int energy);
 	void restoreStats();
 	int gainGold(int gold);
 	void checkMax();

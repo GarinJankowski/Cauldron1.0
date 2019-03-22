@@ -90,3 +90,11 @@ int Deck::size() {
 Card Deck::at(int i) {
 	return cardDeck.at(i);
 }
+
+void Deck::setBlackout() {
+	int i = rand() % size();
+	if (!cardDeck.at(i).Void)
+		cardDeck.at(i).blackout = TRUE;
+	else
+		setBlackout();
+}

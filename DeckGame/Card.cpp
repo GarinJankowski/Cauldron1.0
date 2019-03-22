@@ -553,7 +553,7 @@ void Card::setSpell() {
 	}
 	else if (CardName == "Arise") {
 		ManaCost = 0;
-		Description = "-4 max hp for the combat. Deal 1 dmg per turn. +10 Energy.";
+		Description = "-8 max hp for the combat. Deal 2 dmg per turn. +10 Energy.";
 	}
 	else if (CardName == "The Flesh") {
 		ManaCost = 0;
@@ -565,7 +565,7 @@ void Card::setSpell() {
 	}
 	else if (CardName == "Focus") {
 		ManaCost = 0;
-		Description = "Gain (Int) mana. Fill hand with Spells.";
+		Description = "Gain 1+ (Int)/2 mana. Fill hand with Spells.";
 	}
 	else if (CardName == "Horrify") {
 		ManaCost = 7;
@@ -964,7 +964,58 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	if (CardName != "Ghost")
 		guy.ghostinarow = 0;
 
-	//Flurry
+	//Memory Lapse trait
+	if (guy.Memory_Lapse) {
+		memorylapse += 2;
+		if (memorylapse == 3) {
+			int damage = guy.TakeDamage(guy.Skill);
+			string lapse = "-You take #r" + to_string(damage) + "#o damage.";
+			log.PushPop(lapse);
+			memorylapse = 2;
+		}
+	}
+
+	//Concentration trait
+	if (guy.Concentration != -1) {
+		guy.ConcentrationType = CardType;
+		if (guy.ConcentrationType == CardType) {
+			guy.Concentration++;
+		}
+		else {
+			guy.Concentration = 0;
+		}
+		if (guy.Concentration == 3) {
+			string line = "#g-You concentrate.#o";
+			log.PushPop(line);
+			gainEnergy(rtd(guy.Skill, 2), guy, enemy);
+		}
+	}
+	//Combo Breaker trait
+	if (guy.Combo_Breaker) {
+		combobreaker++;
+		if (combobreaker == 5) {
+			naturalBurn = TRUE;
+			string cb = "#r-Your";
+			if (CardType == "Attack") {
+				cb += " #y";
+			}
+			else if (CardType == "Defend") {
+				cb += " #c";
+			}
+			else if (CardType == "Spell") {
+				cb += " #m";
+			}
+			else if (CardType == "BossCard") {
+				cb += " #o";
+			}
+			else if (CardType == "Negative") {
+				cb += " #r";
+			}
+			cb += string(CardName) + modchars() + "#r burns.#o";
+			log.PushPop(cb);
+		}
+	}
+	//Flurry card
 	if (guy.flurry > 0) {
 		int totaldamage = 0;
 		for (int i = 0; i < guy.flurry; i++) {
@@ -983,8 +1034,7 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	//Addiction trait
 	if (guy.Addiction && CardType != "Spell") {
 		if (guy.Intelligence > 0) {
-			guy.ModStat(-1, "Intelligence");
-			guy.intMod++;
+			guy.ModStat(-1, "Intelligence", TRUE);
 		}
 	}
 	//Recycling trait
@@ -1003,6 +1053,13 @@ void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 			string recycle = "#m-You gain " + to_string(mana) + " mana.#o";
 			log.PushPop(recycle);
 		}
+	}
+	//Run trait
+	if (guy.Run) {
+		if (CardType == "Defend")
+			gainEnergy(10, guy, enemy);
+		else
+			gainEnergy(-10, guy, enemy);
 	}
 
 	//check for Copy card
@@ -1289,8 +1346,8 @@ void Card::attackFunction(Character &guy, Enemy &enemy, TextLog &log) {
 
 		log.PushPop(line);
 		if (enemy.CurrentHealth <= 0) {
-			guy.ModStat(1, "MaxHealth");
-			guy.ModStat(1, "MaxMana");
+			guy.ModStat(1, "MaxHealth", FALSE);
+			guy.ModStat(1, "MaxMana", FALSE);
 			log.PushPop(line2);
 		}
 	}
@@ -1323,13 +1380,16 @@ void Card::attackFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 
-	//Horns trait
-	if (CardType == "Attack" && guy.Horns) {
-		if (rand() % 100 < guy.Skill + 7) {
-			guy.Negate++;
-			string horn = "#c-You negate the next attack.#o";
-			log.PushPop(horn);
-		}
+	//Fervor trait
+	if (guy.Fervor != -1) {
+		guy.Fervor += guy.Skill;
+		guy.FervorDamage++;
+	}
+	//Draining Touch trait
+	if (guy.Draining_Touch) {
+		int mana = -guy.DrainMana(-(2 + guy.Skill));
+		string line = "#m-You gain " + to_string(mana) + " mana.#o";
+		log.PushPop(line);
 	}
 }
 void Card::defendFunction(Character &guy, Enemy &enemy, TextLog &log) {
@@ -1523,8 +1583,7 @@ void Card::defendFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	else if (CardName == "Form") {
 		//Gain (Def)+5 max hp and health for the combat
 		int hp = guy.Defense + 5;
-		guy.ModStat(hp, "MaxHealth");
-		guy.hpMod -= hp;
+		guy.ModStat(hp, "MaxHealth", TRUE);
 		int hp2 = guy.TakeDamage(-hp);
 
 		string line = "-You gain #g" + to_string(hp) + " max health#o for the combat and heal for #g" + to_string(-hp2) + "#o.";
@@ -1556,6 +1615,10 @@ void Card::defendFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	if (guy.Dexterous && CardType == "Defend") {
 		int ddamage = guy.Skill;
 		dealDamage(ddamage, guy, enemy, log);
+	}
+	//Fleet of Foot trait
+	if (guy.Fleet_of_Foot) {
+		gainEnergy(3, guy, enemy);
 	}
 }
 void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
@@ -1592,8 +1655,7 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 
 	else if (CardName == "Channel") {
 		//gain (Int) mana
-		int mana = guy.Intelligence;
-		guy.DrainMana(-mana);
+		int mana = -guy.DrainMana(-guy.Intelligence);
 
 		string line = "#m-You regain " + to_string(mana)
 			+ " mana.#o";
@@ -1995,7 +2057,7 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 
 		string line2 = "#m-You extract the " + string(enemy.Name) + "'s Intelligence.#o";
 		if (enemy.CurrentHealth <= 0) {
-			guy.ModStat(1, "Intelligence");
+			guy.ModStat(1, "Intelligence", FALSE);
 			log.PushPop(line2);
 		}
 	}
@@ -2034,10 +2096,9 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Arise") {
-		//-4 max hp for the combat. Deal 1 dmg per turn. +10 Energy.
-		int maxhp = 4;
-		guy.ModStat(-maxhp, "MaxHealth");
-		guy.hpMod += maxhp;
+		//-8 max hp for the combat. Deal 2 dmg per turn. +10 Energy.
+		int maxhp = 8;
+		guy.ModStat(-maxhp, "MaxHealth", TRUE);
 		guy.arise++;
 		gainEnergy(10, guy, enemy);
 
@@ -2049,8 +2110,7 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	else if (CardName == "The Flesh") {
 		//Gain (Int) max hp for the combat.
 		int maxhp = guy.Intelligence;
-		guy.ModStat(maxhp, "MaxHealth");
-		guy.hpMod -= maxhp;
+		guy.ModStat(maxhp, "MaxHealth", TRUE);
 
 		string line = "#m-You gain #g" + to_string(maxhp) + " max health#m for the combat.#o";
 		log.PushPop(line);
@@ -2065,8 +2125,8 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Focus") {
-		//Gain (Int) mana. Fill hand with Spells.
-		int mana = -guy.DrainMana(-guy.Intelligence);
+		//Gain 1+ (Int)/2 mana. Fill hand with Spells.
+		int mana = -guy.DrainMana(-(1 + guy.Intelligence/2));
 		guy.fillType = "Spell";
 
 		string line = "#m-You gain " + to_string(mana) + " mana.#o";
@@ -2077,15 +2137,14 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		int h = guy.Intelligence / 2;
 		guy.horrify += h;
 
-		string line = "#m-You horrify the " + string(enemy.Name) + " for " + to_string(h) + " more turns.";
+		string line = "#m-You horrify the " + string(enemy.Name) + " for " + to_string(h) + " more turns.#o";
 		log.PushPop(line);
 	}
 	else if (CardName == "Lurk") {
 		//Gain 4 mana. +1d2 Int for the combat. +6 Energy.
 		int mana = -guy.DrainMana(-4);
 		int in = rtd(1, 2);
-		guy.ModStat(in, "Intelligence");
-		guy.intMod -= in;
+		guy.ModStat(in, "Intelligence", TRUE);
 		gainEnergy(6, guy, enemy);
 
 		string line = "-You #mgain " + to_string(mana) + " mana#o and #m" + to_string(in) + " Intelligence#o for the combat.";
@@ -2158,6 +2217,10 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		int health = guy.Skill;
 		guy.TakeDamage(-1 * health);
 	}
+	//Archmage trait
+	if (guy.Archmage) {
+		guy.ModStat(1, "Intelligence", TRUE);
+	}
 	//Amplify
 	if (guy.amplify > 0) {
 		guy.amplifyTRUE = TRUE;
@@ -2218,7 +2281,8 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	else if (CardName == "Prepare") {
 		//Fill hand with spells. Full mana. Burn this card
 		guy.fillType = "Spell";
-		guy.CurrentMana = guy.MaxMana;
+		if(guy.CurrentMana <= guy.MaxMana)
+			guy.CurrentMana = guy.MaxMana;
 		string line = "#m-You restore your mana.#o";
 		log.PushPop(line);
 	}
@@ -2232,7 +2296,8 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	}
 	else if (CardName == "Vitalise") {
 		//Full health. Burn this card.
-		guy.CurrentHealth = guy.MaxHealth;
+		if(guy.CurrentHealth <= guy.MaxHealth)
+			guy.CurrentHealth = guy.MaxHealth;
 
 		string line = "#g-You heal to full health.#o";
 		log.PushPop(line);
@@ -2382,18 +2447,12 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	}
 	else if (CardName == "Overdrive") {
 		//All stats +8 for 3 turns, then stats -10. +10 Energy. Burn.
-		guy.ModStat(8, "Strength");
-		guy.ModStat(8, "Defense");
-		guy.ModStat(8, "Intelligence");
-		guy.ModStat(8, "Skill");
-		guy.ModStat(8, "MaxHealth");
-		guy.ModStat(8, "MaxMana");
-		guy.strMod -= 8;
-		guy.defMod -= 8;
-		guy.intMod -= 8;
-		guy.sklMod -= 8;
-		guy.hpMod -= 8;
-		guy.mpMod -= 8;
+		guy.ModStat(8, "Strength", TRUE);
+		guy.ModStat(8, "Defense", TRUE);
+		guy.ModStat(8, "Intelligence", TRUE);
+		guy.ModStat(8, "Skill", TRUE);
+		guy.ModStat(8, "MaxHealth", TRUE);
+		guy.ModStat(8, "MaxMana", TRUE);
 
 		guy.overdrive += 3;
 		guy.overdrivestats += 10;
@@ -2637,6 +2696,11 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		CardType = "BossCard";
 		chaos = FALSE;
 	}
+
+	//Strain trait
+	if (guy.Strain) {
+		gainEnergy(-5, guy, enemy);
+	}
 }
 void Card::negativeFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	if (CardName == "Steam") {
@@ -2680,20 +2744,17 @@ void Card::negativeFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Drain Str") {
-		guy.ModStat(-1, "Strength");
-		guy.strMod++;
+		guy.ModStat(-1, "Strength", TRUE);
 		string line = "-You #rlose 1 Strength.#o";
 		log.PushPop(line);
 	}
 	else if (CardName == "Drain Def") {
-		guy.ModStat(-1, "Defense");
-		guy.defMod++;
+		guy.ModStat(-1, "Defense", TRUE);
 		string line = "-You #rlose 1 Defense.#o";
 		log.PushPop(line);
 	}
 	else if (CardName == "Drain Int") {
-		guy.ModStat(-1, "Intelligence");
-		guy.intMod++;
+		guy.ModStat(-1, "Intelligence", TRUE);
 		string line = "-You #rlose 1 Intelligence.#o";
 		log.PushPop(line);
 	}
@@ -2708,55 +2769,43 @@ void Card::negativeFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		int rng = rand() % 6;
 		switch (rng) {
 		case 0:
-			guy.ModStat(2, "Strength");
-			guy.strMod -= 2;
+			guy.ModStat(2, "Strength", TRUE);
 			break;
 		case 1:
-			guy.ModStat(2, "Defense");
-			guy.defMod -= 2;
+			guy.ModStat(2, "Defense", TRUE);
 			break;
 		case 2:
-			guy.ModStat(2, "Intelligence");
-			guy.intMod -= 2;
+			guy.ModStat(2, "Intelligence", TRUE);
 			break;
 		case 3:
-			guy.ModStat(2, "MaxHealth");
-			guy.hpMod -= 2;
+			guy.ModStat(2, "MaxHealth", TRUE);
 			break;
 		case 4:
-			guy.ModStat(2, "MaxMana");
-			guy.mpMod -= 2;
+			guy.ModStat(2, "MaxMana", TRUE);
 			break;
 		case 5:
-			guy.ModStat(2, "Skill");
-			guy.sklMod -= 2;
+			guy.ModStat(2, "Skill", TRUE);
 			break;
 		}
 		rng = rand() % 6;
 		switch (rng) {
 		case 0:
-			guy.ModStat(-2, "Strength");
-			guy.strMod += 2;
+			guy.ModStat(-2, "Strength", TRUE);
 			break;
 		case 1:
-			guy.ModStat(-2, "Defense");
-			guy.defMod += 2;
+			guy.ModStat(-2, "Defense", TRUE);
 			break;
 		case 2:
-			guy.ModStat(-2, "Intelligence");
-			guy.intMod += 2;
+			guy.ModStat(-2, "Intelligence", TRUE);
 			break;
 		case 3:
-			guy.ModStat(-2, "MaxHealth");
-			guy.hpMod += 2;
+			guy.ModStat(-2, "MaxHealth", TRUE);
 			break;
 		case 4:
-			guy.ModStat(-2, "MaxMana");
-			guy.mpMod += 2;
+			guy.ModStat(-2, "MaxMana", TRUE);
 			break;
 		case 5:
-			guy.ModStat(-2, "Skill");
-			guy.sklMod += 2;
+			guy.ModStat(-2, "Skill", TRUE);
 			break;
 		}
 		gainEnergy(10, guy, enemy);
@@ -2771,6 +2820,13 @@ void Card::negativeFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		gainEnergy(10, guy, enemy);
 
 		string line = "#r Your next card will burn.#o";
+		log.PushPop(line);
+	}
+
+	//Optimist trait
+	if (guy.Optimist) {
+		int damage = dealDamage(guy.Skill * 3, guy, enemy, log);
+		string line = "-You deal #y" + to_string(damage) + "#o damage.";
 		log.PushPop(line);
 	}
 }
@@ -2822,6 +2878,15 @@ int Card::dealDamage(int damage, Character &guy, Enemy &enemy, TextLog &log) {
 	if (damage < 0) {
 		damage2 = 0;
 	}
+	//Reckless trait
+	if (guy.Reckless && damage2 > 0) {
+		guy.TakeDamage(2);
+	}
+	//Technician trait
+	if (guy.Technician && damage2 < 10) {
+		damage2 *= 2;
+	}
+	//pierce
 	if (pierce || guy.sharpen > 0) {
 		enemy.CurrentHealth -= damage2;
 		pierce = FALSE;
@@ -2837,12 +2902,14 @@ int Card::dealDamage(int damage, Character &guy, Enemy &enemy, TextLog &log) {
 			enemy.CurrentBlock = 0;
 		}
 	}
+	//Inject card
 	if (guy.inject > 0) {
 		int health = guy.TakeDamage(-damage2);
 		string line = "-You gain #g" + to_string(-health) + "#o health.";
 		log.PushPop(line);
 		guy.inject--;
 	}
+	//Fuel card
 	if (guy.damageToMana > 0) {
 		int mana = damage2 - enemy.CurrentBlock;
 		if (mana < 0)
@@ -2906,7 +2973,7 @@ int Card::gainBlock(int block, Character &guy, Enemy &enemy) {
 		//Charred Skin trait
 		if (guy.Charred_Skin)
 			guy.TakeDamage(-1 * b);
-		else
+		else if(guy.Overconfidence < 6)
 			guy.CurrentBlock += b;
 	}
 	if (guy.CurrentBlock > 999) {
@@ -2925,7 +2992,7 @@ int Card::gainBlockStrategy(int block, Character &guy, Enemy &enemy) {
 		//Charred Skin trait
 		if (guy.Charred_Skin)
 			guy.TakeDamage(-1 * b);
-		else
+		else if (guy.Overconfidence < 6)
 			guy.CurrentBlock += b;
 	}
 	if (guy.CurrentBlock > 999) {
@@ -2937,7 +3004,15 @@ int Card::gainBlockStrategy(int block, Character &guy, Enemy &enemy) {
 
 int Card::gainEnergy(int energy, Character &guy, Enemy &enemy) {
 	int en = energy;
-	guy.Energy += en;
+	//Stamina trait
+	if (guy.Stamina && guy.Energy < 0)
+		en *= 2;
+	//Heavy trait
+	if (guy.Heavy)
+		gainBlock(en, guy, enemy);
+	else {
+		guy.Energy += en;
+	}
 
 	//Flat Feet trait
 	if (guy.Flat_Feet && guy.Energy <= -5) {
@@ -3024,6 +3099,10 @@ void Card::polymorph(Character &guy, Enemy &enemy) {
 	if (guy.RoomType == "Final Boss") {
 		int rng = rand() % finalboss.size();
 		enemy = finalboss.at(rng);
+
+		//Doomed trait
+		if (guy.Doomed)
+			enemy.MaxHealth *= 1.5;
 	}
 	else if (guy.RoomType == "Boss") {
 		int rng = rand() % boss.size();
@@ -3262,6 +3341,14 @@ bool Card::checkSameMods(Card kard) {
 
 void Card::setStay() {
 	tempStay = Stay;
+}
+
+//functions for specific traits and cards
+//resets card values
+void Card::resetTraitValues() {
+	blackout = FALSE;
+	combobreaker = 0;
+	memorylapse = FALSE;
 }
 
 //sets the type of the card based on the name, used for Chaos

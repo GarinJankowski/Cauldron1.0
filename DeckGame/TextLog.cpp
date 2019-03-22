@@ -85,6 +85,43 @@ void TextLog::printLog() {
 		}
 }
 
+void TextLog::printLogEnd() {
+	//while (Lines.size() > 6) {
+		//Lines.erase(Lines.begin());
+	//}
+	for (int y = 5; y < 15; y++) {
+		mvprintw(y, 28, "                              ");
+	}
+
+	int L = 0;
+	int x = 29;
+	int mx = 28;
+	for (int y = 0; y < Lines.size(); y++) {
+		int size = Lines.at(y).size();
+		for (int i = 0; i < Lines.at(y).size(); i++) {
+			if (Lines.at(y)[i] == '#')
+				size -= 2;
+		}
+		if (L >= 8) {
+			if (size > mx)
+				Lines.erase(Lines.begin());
+			Lines.erase(Lines.begin());
+			printLogEnd();
+			break;
+		}
+
+		const char* toBePrinted = Lines.at(y).c_str();
+		mvprintInSize(L + 6, x, mx, toBePrinted, FALSE, TRUE);
+
+		if (size > mx + 2) {
+			L++;
+			if (size > 2 * (mx + 2))
+				L++;
+		}
+		L++;
+	}
+}
+
 void TextLog::printAllLog(int starti, int endi) {
 	erase();
 	
