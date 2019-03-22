@@ -2845,6 +2845,10 @@ int Card::dealDamage(int damage, Character &guy, Enemy &enemy, TextLog &log) {
 		damage *= 2;
 		guy.steroids = FALSE;
 	}
+	//Technician trait
+	if (guy.Technician && damage < 10) {
+		damage *= 2;
+	}
 	//Empower
 	if (guy.empower > 0 && CardType == "Attack") {
 		damage += guy.empower;
@@ -2881,10 +2885,6 @@ int Card::dealDamage(int damage, Character &guy, Enemy &enemy, TextLog &log) {
 	//Reckless trait
 	if (guy.Reckless && damage2 > 0) {
 		guy.TakeDamage(2);
-	}
-	//Technician trait
-	if (guy.Technician && damage2 < 10) {
-		damage2 *= 2;
 	}
 	//pierce
 	if (pierce || guy.sharpen > 0) {

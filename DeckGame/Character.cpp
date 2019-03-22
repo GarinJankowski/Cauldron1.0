@@ -388,7 +388,7 @@ int Character::TakeDamage(int damageTaken) {
 	//Tumors trait
 	if (Tumors && damageTaken < 0) {
 		ModStat(-1, "MaxHealth", TRUE);
-		if (CurrentHealth > MaxHealth)
+		if (CurrentHealth > MaxHealth && !Engorged)
 			CurrentHealth = MaxHealth;
 		hpMod++;
 	}
@@ -488,9 +488,6 @@ int Character::TakeDamage(int damageTaken) {
 		pierce = FALSE;
 	}
 	else {
-		if ((CurrentHealth - damageTaken) > MaxHealth)
-			CurrentHealth = MaxHealth;
-		else {
 			if (damageTaken >= CurrentBlock) {
 				int damage = damageTaken - CurrentBlock;
 				CurrentHealth -= damage;
@@ -499,7 +496,6 @@ int Character::TakeDamage(int damageTaken) {
 			else {
 				CurrentBlock -= damageTaken;
 			}
-		}
 	}
 	if (mirror > 0 && damageTaken > 0) {
 		mirrorDamage = damageTaken;

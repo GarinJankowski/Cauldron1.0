@@ -67,6 +67,7 @@ void TextLog::printLog() {
 				fuzzy = TRUE;
 
 			const char* toBePrinted = Lines.at(y).c_str();
+			standend();
 			mvprintInSize(L + 1, x, maxx, toBePrinted, fuzzy, TRUE);
 			//x = 44;
 

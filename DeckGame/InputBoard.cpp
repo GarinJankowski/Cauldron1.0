@@ -385,7 +385,6 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsReward.push_back(Gear("Stamina"));
 	AvailableTraitsReward.push_back(Gear("Rested"));
 	AvailableTraitsReward.push_back(Gear("Midas Touch"));
-	AvailableTraitsReward.push_back(Gear("Horns"));
 	AvailableTraitsReward.push_back(Gear("Exhaust Vent"));
 	AvailableTraitsReward.push_back(Gear("Fervor"));
 	AvailableTraitsReward.push_back(Gear("Enlightened"));
@@ -2594,6 +2593,81 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 		if (guy.Unseen) {
 			gainEnergy(9 + rtd(1, guy.Skill), guy, enemy, log);
 		}
+		//Heavyweight trait
+		while (guy.Heavyweight && guy.CurrentBlock >= 50) {
+			guy.loseBlock(50);
+			int damage = enemy.takeDamage(50, guy, log);
+			string hvy = "-You #rlose 50 block#o and deal #y" + to_string(damage) + "#o damage.";
+			log.PushPop(hvy);
+		}
+		//Lightweight trait
+		while (guy.Lightweight && guy.CurrentBlock >= 30) {
+			guy.loseBlock(30);
+			guy.Negate++;
+			string light = "-You #rlose 30 block#o and #cgain 1 Negate#o.";
+			log.PushPop(light);
+		}
+		//Falter trait
+		if (guy.Falter != -1) {
+			while (guy.Falter >= 6) {
+				guy.ModStat(-1, "MaxHealth", TRUE);
+				guy.Falter -= 6;
+			}
+		}
+		//Exposed trait
+		if (guy.Exposed != -1) {
+			while (guy.Exposed >= 8) {
+				int rn = rand() % 6;
+				string loss;
+				int stat;
+				switch (rn) {
+				case 0:
+					stat = -guy.ModStat(-1, "Strength", TRUE);
+					loss = "-You #rlose " + to_string(stat) + " Strength#o.";
+					break;
+				case 1:
+					stat = -guy.ModStat(-1, "Defense", TRUE);
+					loss = "-You #rlose " + to_string(stat) + " Defense#o.";
+					break;
+				case 2:
+					stat = -guy.ModStat(-1, "Intelligence", TRUE);
+					loss = "-You #rlose " + to_string(stat) + " Intelligence#o.";
+					break;
+				case 3:
+					stat = -guy.ModStat(-1, "Skill", TRUE);
+					loss = "-You #rlose " + to_string(stat) + " Skill#o.";
+					break;
+				case 4:
+					stat = -guy.ModStat(-1, "MaxHealth", TRUE);
+					loss = "-You #rlose " + to_string(stat) + " Max Health#o.";
+					break;
+				case 5:
+					stat = -guy.ModStat(-1, "MaxMana", TRUE);
+					loss = "-You #rlose " + to_string(stat) + " Max Mana#o.";
+					break;
+				}
+				guy.Exposed -= 8;
+				log.PushPop(loss);
+			}
+		}
+		//Amass trait
+		while (guy.Amass >= 4) {
+			guy.Amass -= 4;
+			guy.ModStat(1, "Strength", TRUE);
+		}
+		//Naturalist trait
+		if (guy.Naturalist && DecisionCards.size() + Draw.size() + Discard.size() == 0) {
+			int damage = enemy.takeDamage(40, guy, log);
+			string nat = "-You deal #r" + to_string(damage) + "#o damage.";
+			log.PushPop(nat);
+		}
+		//Horns trait
+		while (guy.Horns > 0) {
+			int damage = enemy.takeDamage(5 + rtd(guy.Skill / 2, 2), guy, log);
+			string horn = "-You ram the " + string(enemy.Name) + " with your horns for #y" + to_string(damage) + "#o damage.";
+			log.PushPop(horn);
+			guy.Horns--;
+		}
 		//Adrenaline trait
 		if (guy.Adrenaline != -1) {
 			if (guy.CurrentHealth + guy.CurrentBlock < 15) {
@@ -3021,7 +3095,7 @@ void InputBoard::effectsToEnemy(Character &guy, Enemy &enemy, Deck & deck, TextL
 		}
 	}
 	//Naturalist trait
-	if (guy.Naturalist && DecisionCards.size() == 0) {
+	if (guy.Naturalist &&DecisionCards.size() + Draw.size() + Discard.size() == 0) {
 		int damage = enemy.takeDamage(40, guy, log);
 		string nat = "-You deal #r" + to_string(damage) + "#o damage.";
 		log.PushPop(nat);
@@ -3047,7 +3121,7 @@ void InputBoard::effectsToEnemy(Character &guy, Enemy &enemy, Deck & deck, TextL
 		if (guy.FervorDamage > 0) {
 			int damage = enemy.takeDamage(guy.FervorDamage, guy, log);
 			guy.Fervor--;
-			string fer = "#y-Your fervor deals " + to_string(damage) + " damage.";
+			string fer = "#y-Your fervor deals " + to_string(damage) + " damage.#o";
 			log.PushPop(fer);
 		}
 	}
@@ -3476,7 +3550,6 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 		string shock = "#c-You negate the next " + to_string(neg) + " hits.#o";
 		log.PushPop(shock);
 	}
-
 	//Amass trait
 	while (guy.Amass >= 4) {
 		guy.Amass -= 4;
@@ -3494,6 +3567,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	if (guy.Falter != -1) {
 		while (guy.Falter >= 6) {
 			guy.ModStat(-1, "MaxHealth", TRUE);
+			guy.Falter -= 6;
 		}
 	}
 	//Exposed trait
@@ -3506,21 +3580,27 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 			case 0:
 				stat = -guy.ModStat(-1, "Strength", TRUE);
 				loss = "-You #rlose " + to_string(stat) + " Strength#o.";
+				break;
 			case 1:
 				stat = -guy.ModStat(-1, "Defense", TRUE);
 				loss = "-You #rlose " + to_string(stat) + " Defense#o.";
+				break;
 			case 2:
 				stat = -guy.ModStat(-1, "Intelligence", TRUE);
 				loss = "-You #rlose " + to_string(stat) + " Intelligence#o.";
+				break;
 			case 3:
 				stat = -guy.ModStat(-1, "Skill", TRUE);
 				loss = "-You #rlose " + to_string(stat) + " Skill#o.";
+				break;
 			case 4:
 				stat = -guy.ModStat(-1, "MaxHealth", TRUE);
 				loss = "-You #rlose " + to_string(stat) + " Max Health#o.";
+				break;
 			case 5:
 				stat = -guy.ModStat(-1, "MaxMana", TRUE);
 				loss = "-You #rlose " + to_string(stat) + " Max Mana#o.";
+				break;
 			}
 			guy.Exposed -= 8;
 			log.PushPop(loss);
@@ -3589,7 +3669,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 		guy.Conservation = 0;
 
 		if (guy.Energy < 0) {
-			guy.Conservation += -guy.Energy;
+			guy.Conservation = -guy.Energy;
 			guy.ModStat(guy.Conservation, "Strength", TRUE);
 			guy.ModStat(guy.Conservation, "Defense", TRUE);
 			guy.ModStat(guy.Conservation, "Intelligence", TRUE);
