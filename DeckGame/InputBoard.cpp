@@ -25,7 +25,6 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	hands = Gear("No Weapon");
 	hands.GearOnOrOff(TRUE, guy, deck);
 	body = Gear("No Armor");
-	body = Gear("Chain Mail");
 	body.GearOnOrOff(TRUE, guy, deck);
 	head = Gear("No Headgear");
 	head.GearOnOrOff(TRUE, guy, deck);
