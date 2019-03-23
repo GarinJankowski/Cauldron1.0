@@ -38,6 +38,7 @@ Character::Character()
 	hpMod = 0;
 	mpMod = 0;
 	sklMod = 0;
+	engMod = 0;
 
 	Burn = 0;
 	Stay = 0;
@@ -365,6 +366,11 @@ void Character::checkMax() {
 //take/heal damage
 int Character::TakeDamage(int damageTaken) {
 	int healthBefore = CurrentHealth;
+	//Sore trait
+	if (Sore && damageTaken < 0) {
+		pierce = TRUE;
+		TakeDamage(6);
+	}
 	//Stop card
 	if (stop > 0 && damageTaken > 0) {
 		damageTaken = 0;
@@ -409,15 +415,20 @@ int Character::TakeDamage(int damageTaken) {
 	if (damageTaken >= 0 && intimidate > 0) {
 		damageTaken = int(damageTaken / 2);
 	}
-	//Green Scales trait
-	if (Green_Scales && damageTaken > 0) {
-		damageTaken -= int(Skill/2);
-		if (damageTaken < 0)
-			damageTaken = 0;
-	}
 	//Thick Hide trait
 	if (Thick_Hide && CurrentBlock > 0) {
 		damageTaken = int(damageTaken*.85);
+	}
+	//Green Scales trait
+	if (Green_Scales && damageTaken > 0) {
+		damageTaken -= int(Skill / 2);
+		if (damageTaken < 0)
+			damageTaken = 0;
+	}
+	if (Gold_Scales && damageTaken > 0) {
+		damageTaken -= Gold / 12;
+		if (damageTaken < 0)
+			damageTaken = 0;
 	}
 	//Blue Scales trait
 	if (Blue_Scales && damageTaken <= 5) {
@@ -574,6 +585,11 @@ int Character::DrainMana(int manaDrained) {
 	else
 		CurrentMana -= manaDrained;
 
+	//Short Circuit trait
+	if (Short_Circuit && manaDrained > 0) {
+		TakeDamage(4);
+	}
+
 	checkMax();
 
 	return manaDrained;
@@ -614,6 +630,8 @@ int Character::ModStat(int bonus, string stat, bool battle) {
 				hpMod -= bonus;
 			else if (stat == "MaxMana")
 				mpMod -= bonus;
+			else if (stat == "MaxEnergy")
+				engMod -= bonus;
 			else if (stat == "Strength")
 				strMod -= bonus;
 			else if (stat == "Defense")
@@ -632,6 +650,8 @@ int Character::ModStat(int bonus, string stat, bool battle) {
 			MaxManaBase += bonus;
 			MaxMana += bonus;
 		}
+		else if (stat == "MaxEnergy")
+			MaxEnergy += bonus;
 		else if (stat == "Strength")
 			Strength += bonus;
 		else if (stat == "Defense")
@@ -656,6 +676,7 @@ void Character::restoreStats() {
 	Intelligence += intMod;
 	MaxHealth += hpMod;
 	MaxMana += mpMod;
+	MaxEnergy += engMod;
 	Skill += sklMod;
 
 	strMod = 0;
@@ -663,6 +684,7 @@ void Character::restoreStats() {
 	intMod = 0;
 	hpMod = 0;
 	mpMod = 0;
+	engMod = 0;
 	sklMod = 0;
 }
 

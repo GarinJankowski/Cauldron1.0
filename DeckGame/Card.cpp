@@ -85,7 +85,8 @@ Card::Card(const char *name):CardName(name)
 		CardName == "Form" ||
 		CardName == "Tear" ||
 		CardName == "Barrier" ||
-		CardName == "Defend") {
+		CardName == "Defend" ||
+		CardName == "Stumble") {
 		CardType = "Defend";
 		setDefend();
 	}
@@ -180,6 +181,7 @@ Card::Card(const char *name):CardName(name)
 		CardName == "Deflect" ||
 		CardName == "Save" ||
 		CardName == "Stop" ||
+		CardName == "Mend" ||
 		CardName == "Chaos") {
 		CardType = "BossCard";
 		setboss();
@@ -366,6 +368,9 @@ void Card::setDefend() {
 	}
 	else if (CardName == "Barrier") {
 		Description = "Lose all of your mana. Gain 4 block for each.";
+	}
+	else if (CardName == "Stumble") {
+		Description = "Gain 10 Energy then lose 8.";
 	}
 }
 void Card::setSpell() {
@@ -664,7 +669,7 @@ void Card::setboss() {
 	}
 	else if (CardName == "Cleanse") {
 		Description = "Burn your entire hand. +10 Energy.";
-		naturalBurn = TRUE;
+		//naturalBurn = TRUE;
 	}
 	else if (CardName == "Teleport") {
 		Description = "End combat. Go to a random nearby tile.";
@@ -719,6 +724,10 @@ void Card::setboss() {
 	}
 	else if (CardName == "Stop") {
 		Description = "You will not take damage next turn. Burn.";
+		naturalBurn = TRUE;
+	}
+	else if (CardName == "Mend") {
+		Description = "Reduce damage over time by 5. +10 Energy. Burn.";
 		naturalBurn = TRUE;
 	}
 	else if (CardName == "Chaos") {
@@ -1382,7 +1391,7 @@ void Card::attackFunction(Character &guy, Enemy &enemy, TextLog &log) {
 
 	//Fervor trait
 	if (guy.Fervor != -1) {
-		guy.Fervor += guy.Skill;
+		guy.Fervor = guy.Skill;
 		guy.FervorDamage++;
 	}
 	//Draining Touch trait
@@ -1608,6 +1617,14 @@ void Card::defendFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		}
 
 		string line = "-You gain block #c" + to_string(times) + " times#o for a total of #c" + to_string(block) + "#o block.";
+		log.PushPop(line);
+	}
+	else if (CardName == "Stumble") {
+		//Gain 10 Energy then lose 8.
+		gainEnergy(10, guy, enemy);
+		guy.stumble++;
+
+		string line = "#r-You stumble.#o";
 		log.PushPop(line);
 	}
 
@@ -2537,6 +2554,15 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		string line = "#r-You feel invincible.#o";
 		log.PushPop(line);
 	}
+	else if (CardName == "Mend") {
+		//Reduce damage over time by 5. +10 Energy. Burn.
+		guy.dotDamage -= 5;
+		if (guy.dotDamage < 0)
+			guy.dotDamage = 0;
+
+		string line = "#c-You mend your wounds.#o";
+		log.PushPop(line);
+	}
 	else if (CardName == "Chaos") {
 		//play a random card
 		vector<const char*> cards;
@@ -2591,6 +2617,7 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		cards.push_back("Form");
 		cards.push_back("Tear");
 		cards.push_back("Barrier");
+		cards.push_back("Stumble");
 
 		cards.push_back("Ponder");
 		cards.push_back("Channel");
@@ -2676,6 +2703,7 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		cards.push_back("Deflect");
 		cards.push_back("Save");
 		cards.push_back("Stop");
+		cards.push_back("Mend");
 
 		cards.push_back("Steam");
 		cards.push_back("Scalding Steam");
@@ -2858,6 +2886,10 @@ int Card::dealDamage(int damage, Character &guy, Enemy &enemy, TextLog &log) {
 	if (guy.Sharp_Claws) {
 		int claw = rtd(1, guy.Skill);
 		damage += claw;
+	}
+	//Gold Claws trait
+	if (guy.Gold_Claws) {
+		damage += rtd(1, guy.Gold / 10);
 	}
 	//Muscle Mass trait
 	if (guy.Muscle_Mass != -1) {
@@ -3405,7 +3437,8 @@ void Card::setType() {
 		CardName == "Restore" ||
 		CardName == "Form" ||
 		CardName == "Tear" ||
-		CardName == "Barrier") {
+		CardName == "Barrier" ||
+		CardName == "Stumble") {
 		CardType = "Defend";
 	}
 	//Spells
@@ -3498,6 +3531,7 @@ void Card::setType() {
 		CardName == "Deflect" ||
 		CardName == "Save" ||
 		CardName == "Stop" ||
+		CardName == "Mend" ||
 		CardName == "Chaos") {
 		CardType = "BossCard";
 	}

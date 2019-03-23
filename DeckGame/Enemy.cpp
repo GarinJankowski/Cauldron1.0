@@ -2157,18 +2157,18 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			else if (numA == 2) {
 				string line;
 				int r = rand() % 5;
-				if (r == 0 && tier > 2 && numE < numF*(1+(tier*.25))) {
+				if (r == 0 && tier > 2 && numE < numF) {
 					guy.ADDScalding_Steam++;
 					line = " Turret A #rreleases some steam.#o";
 					numE++;
 				}
-				else if (r > 0 && r <= 3 && dot < numF*(1 + tier)) {
+				else if (r > 0 && r <= 3 && dot < numF + 1 + tier*.25) {
 					guy.ADDSteam++;
 					line = " Turret A #rreleases some steam.#o";
 					dot++;
 				}
 				else {
-					int damage = guy.TakeDamage(rtd(1, tier));
+					int damage = guy.TakeDamage(rtd(1, 1 + tier/3));
 					line = " Turret A deals #r" + to_string(damage) + "#o steam damage.";
 				}
 				log.PushPop(line);
@@ -2200,18 +2200,18 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			else if (numB == 2) {
 				string line;
 				int r = rand() % 5;
-				if (r == 0 && tier > 2 && numE < numF*(1 + (tier*.25))) {
+				if (r == 0 && tier > 2 && numE < numF) {
 					guy.ADDScalding_Steam++;
 					line = " Turret B #rreleases some steam.#o";
 					numE++;
 				}
-				else if (r > 0 && r <= 3 && dot < numF*(1 + tier)) {
+				else if (r > 0 && r <= 3 && dot < numF + 1 + tier*.25) {
 					guy.ADDSteam++;
 					line = " Turret B #rreleases some steam.#o";
 					dot++;
 				}
 				else {
-					int damage = guy.TakeDamage(rtd(1, tier));
+					int damage = guy.TakeDamage(rtd(1, 1 + tier/3));
 					line = " Turret B deals #r" + to_string(damage) + "#o steam damage.";
 				}
 				log.PushPop(line);
@@ -2243,18 +2243,18 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			else if (numC == 2) {
 				string line;
 				int r = rand() % 5;
-				if (r == 0 && tier > 2 && numE < numF*(1 + (tier*.25))) {
+				if (r == 0 && tier > 2 && numE < numF) {
 					guy.ADDScalding_Steam++;
 					line = " Turret C #rreleases some steam.#o";
 					numE++;
 				}
-				else if (r > 0 && r <= 3 && dot < numF*(1 + tier)) {
+				else if (r > 0 && r <= 3 && dot < numF + 1 + tier*.25) {
 					guy.ADDSteam++;
 					line = " Turret C #rreleases some steam.#o";
 					dot++;
 				}
 				else {
-					int damage = guy.TakeDamage(rtd(1, tier));
+					int damage = guy.TakeDamage(rtd(1, 1 +  tier/3));
 					line = " Turret C deals #r" + to_string(damage) + "#o steam damage.";
 				}
 				log.PushPop(line);
@@ -2286,18 +2286,18 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			else if (numD == 2) {
 				string line;
 				int r = rand() % 5;
-				if (r == 0 && tier > 2 && numE < numF*(1 + (tier*.25))) {
+				if (r == 0 && tier > 2 && numE < numF) {
 					guy.ADDScalding_Steam++;
 					line = " Turret D #rreleases some steam.#o";
 					numE++;
 				}
-				else if (r > 0 && r <= 3 && dot < numF*(1 + tier)) {
+				else if (r > 0 && r <= 3 && dot < numF + 1 + tier*.25) {
 					guy.ADDSteam++;
 					line = " Turret D #rreleases some steam.#o";
 					dot++;
 				}
 				else {
-					int damage = guy.TakeDamage(rtd(1, tier));
+					int damage = guy.TakeDamage(rtd(1, 1 + tier/2));
 					line = " Turret D deals #r" + to_string(damage) + "#o steam damage.";
 				}
 				log.PushPop(line);
@@ -2933,10 +2933,10 @@ void Enemy::ActivateDOT(Character &guy, TextLog &log) {
 
 int Enemy::takeDamage(int damage, Character &guy, TextLog &log) {
 	int damage2 = damage;
-	if (damage > 0 && guy.Frenzy) {
+	if (damage2 > 0 && guy.Frenzy) {
 		damage2 *= 2;
 	}
-	if (damage < 0) {
+	if (damage2 < 0) {
 		damage2 = 0;
 	}
 	if (enemyNegate > 0) {
@@ -2952,8 +2952,9 @@ int Enemy::takeDamage(int damage, Character &guy, TextLog &log) {
 		if (CurrentBlock > damage2)
 			CurrentBlock -= damage2;
 		else {
-			damage2 -= CurrentBlock;
-			CurrentHealth -= damage2;
+			int d3 = damage2;
+			d3 -= CurrentBlock;
+			CurrentHealth -= d3;
 			CurrentBlock = 0;
 		}
 	}

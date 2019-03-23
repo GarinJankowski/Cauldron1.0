@@ -221,7 +221,12 @@ Gear::Gear(const char *name):GearName(name)
 		GearName == "Materialist" ||
 		GearName == "Run" ||
 		GearName == "Heavy" ||
-		GearName == "Commitment") {
+		GearName == "Commitment" ||
+		GearName == "Wind Down" ||
+		GearName == "Short Circuit" ||
+		GearName == "Empty" ||
+		GearName == "Unsteady" ||
+		GearName == "Sore") {
 		Type = "Trait Sacrifice";
 		TraitSDescription();
 	}
@@ -307,7 +312,13 @@ Gear::Gear(const char *name):GearName(name)
 	GearName == "Optimist" ||
 	GearName == "Stockpile" ||
 	GearName == "Draining Touch" ||
-	GearName == "Fleet of Foot") {
+	GearName == "Fleet of Foot" ||
+	GearName == "Gold Claws" ||
+	GearName == "Gold Scales" ||
+	GearName == "Gold Brain" ||
+	GearName == "Phlogiston" ||
+	GearName == "Momentum" ||
+	GearName == "Dynamic") {
 		Type = "Trait Reward";
 		TraitRDescription();
 	}
@@ -956,6 +967,26 @@ void Gear::TraitSDescription() {
 	Type = "Trait Sacrifice";
 	Description = "Gain/lose block instead of Energy.";
 	}
+	else if (GearName == "Wind Down") {
+	Type = "Trait Sacrifice";
+	Description = "-6 Max Energy. +1 for the combat every Extra Turn.";
+	}
+	else if (GearName == "Short Circuit") {
+	Type = "Trait Sacrifice";
+	Description = "Take 4 damage each time you lose mana.";
+	}
+	else if (GearName == "Empty") {
+	Type = "Trait Sacrifice";
+	Description = "During combat, +1 Max Energy for every Voided card.";
+	}
+	else if (GearName == "Unsteady") {
+	Type = "Trait Sacrifice";
+	Description = "Add a Stumble card to your deck.";
+	}
+	else if (GearName == "Sore") {
+	Type = "Trait Sacrifice";
+	Description = "Lose 6 health before healing.";
+	}
 	else if (GearName == "") {
 	Type = "Trait Sacrifice";
 	Description = "";
@@ -1287,7 +1318,34 @@ void Gear::TraitRDescription() {
 	Type = "Trait Reward";
 	Description = "Defends give 3 Energy.";
 	}
-
+	else if (GearName == "Gold Claws") {
+	Type = "Trait Reward";
+	Description = "Increase damage dealt by 1d(Gold/9).";
+	}
+	else if (GearName == "Gold Scales") {
+	Type = "Trait Reward";
+	Description = "Reduce damage taken by (Gold)/12.";
+	}
+	else if (GearName == "Gold Brain") {
+	Type = "Trait Reward";
+	Description = "+(Gold/15) Int during combat.";
+	}
+	else if (GearName == "Phlogiston") {
+	Type = "Trait Reward";
+	Description = "Burning a card deals (Skl)d2 damage.";
+	}
+	else if (GearName == "Momentum") {
+	Type = "Trait Reward";
+	Description = "Every Extra Turn, +1 random stat for the combat.";
+	}
+	else if (GearName == "Dynamic") {
+	Type = "Trait Reward";
+	Description = "+3d2 Energy when you shuffle or fill your hand.";
+	}
+	else if (GearName == "") {
+	Type = "Trait Reward";
+	Description = "";
+	}
 	else {
 	Type = "";
 	Description = "";
@@ -3260,7 +3318,7 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else if (GearName == "Wasteful") {
 	if (On) {
-		guy.Wasteful = 0;
+		guy.Wasteful = 1;
 	}
 	else {
 		guy.Wasteful = -1;
@@ -3309,6 +3367,49 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 	}
 	else {
 		guy.Commitment = FALSE;
+	}
+	}
+	else if (GearName == "Wind Down") {
+	if (On) {
+		guy.ModStat(-6, "MaxEnergy", FALSE);
+		guy.Wind_Down = TRUE;
+	}
+	else {
+		guy.ModStat(6, "MaxEnergy", FALSE);
+		guy.Wind_Down = FALSE;
+	}
+	}
+	else if (GearName == "Short Circuit") {
+	if (On) {
+		guy.Short_Circuit = TRUE;
+	}
+	else {
+		guy.Short_Circuit = FALSE;
+	}
+	}
+	else if (GearName == "Empty") {
+	if (On) {
+		guy.Empty = TRUE;
+	}
+	else {
+		guy.Empty = FALSE;
+	}
+	}
+	else if (GearName == "Unsteady") {
+	Card stumble("Stumble");
+	if (On) {
+		deck.addCard(stumble);
+	}
+	else {
+		deck.removeCard(stumble, guy);
+	}
+	}
+	else if (GearName == "Sore") {
+	if (On) {
+		guy.Sore = TRUE;
+	}
+	else {
+		guy.Sore = TRUE;
 	}
 	}
 	else if (GearName == "") {
@@ -4060,6 +4161,54 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 		guy.Fleet_of_Foot = FALSE;
 	}
 	}
+	else if (GearName == "Gold Claws") {
+	if (On) {
+		guy.Gold_Claws = TRUE;
+	}
+	else {
+		guy.Gold_Claws = FALSE;
+	}
+	}
+	else if (GearName == "Gold Scales") {
+	if (On) {
+		guy.Gold_Scales = TRUE;
+	}
+	else {
+		guy.Gold_Scales = FALSE;
+	}
+	}
+	else if (GearName == "Gold Brain") {
+	if (On) {
+		guy.Gold_Brain = TRUE;
+	}
+	else {
+		guy.Gold_Brain = FALSE;
+	}
+	}
+	else if (GearName == "Phlogiston") {
+	if (On) {
+		guy.Phlogiston = TRUE;
+	}
+	else {
+		guy.Phlogiston = FALSE;
+	}
+	}
+	else if (GearName == "Momentum") {
+	if (On) {
+		guy.Momentum = TRUE;
+	}
+	else {
+		guy.Momentum = FALSE;
+	}
+	}
+	else if (GearName == "Dynamic") {
+	if (On) {
+		guy.Dynamic = 0;
+	}
+	else {
+		guy.Dynamic = -1;
+	}
+	}
 	else if (GearName == "") {
 	if (On) {
 
@@ -4104,6 +4253,7 @@ void Gear::CardOnOrOff(bool On, Character &guy, Deck &deck) {
 	bosss.push_back(Card("Deflect"));
 	bosss.push_back(Card("Save"));
 	bosss.push_back(Card("Stop"));
+	bosss.push_back(Card("Mend"));
 	bosss.push_back(Card("Chaos"));
 
 	int index = 0;

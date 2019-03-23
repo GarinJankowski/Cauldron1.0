@@ -107,6 +107,7 @@ public:
 	int burncard = 0;
 	bool burnPlayed = FALSE;
 	int burninarow = 0;
+	int stumble = 0;
 
 
 	int strMod;
@@ -115,6 +116,7 @@ public:
 	int hpMod;
 	int mpMod;
 	int sklMod;
+	int engMod;
 	
 	char tier;
 	bool Alive;
@@ -219,6 +221,10 @@ public:
 		bool Run = FALSE;
 		bool Commitment = FALSE;
 		bool Heavy = FALSE;
+		bool Wind_Down = FALSE;
+		bool Short_Circuit = FALSE;
+		bool Empty = FALSE;
+		bool Sore = FALSE;
 	//Reward
 		bool Mending_Flesh = FALSE;
 		bool Gymnast = FALSE;
@@ -300,6 +306,12 @@ public:
 		bool Stockpile = FALSE;
 		bool Draining_Touch = FALSE;
 		bool Fleet_of_Foot = FALSE;
+		bool Gold_Claws = FALSE;
+		bool Gold_Scales = FALSE;
+		bool Gold_Brain = FALSE;
+		bool Phlogiston = FALSE;
+		bool Momentum = FALSE;
+		int Dynamic = -1;
 
 	//change stats
 	int TakeDamage(int damageTaken);

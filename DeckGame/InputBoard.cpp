@@ -183,6 +183,7 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	bossNorm.push_back(Card("Deflect"));
 	bossNorm.push_back(Card("Save"));
 	bossNorm.push_back(Card("Stop"));
+	bossNorm.push_back(Card("Mend"));
 	bossNorm.push_back(Card("Chaos"));
 
 	bossNormREFILL = bossNorm;
@@ -320,6 +321,11 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsSacrifice.push_back(Gear("Run"));
 	AvailableTraitsSacrifice.push_back(Gear("Heavy"));
 	AvailableTraitsSacrifice.push_back(Gear("Commitment"));
+	AvailableTraitsSacrifice.push_back(Gear("Wind Down"));
+	AvailableTraitsSacrifice.push_back(Gear("Short Circuit"));
+	AvailableTraitsSacrifice.push_back(Gear("Empty"));
+	AvailableTraitsSacrifice.push_back(Gear("Unsteady"));
+	AvailableTraitsSacrifice.push_back(Gear("Sore"));
 
 	AvailableTraitsSacrificeREFILL = AvailableTraitsSacrifice;
 
@@ -401,6 +407,12 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsReward.push_back(Gear("Stockpile"));
 	AvailableTraitsReward.push_back(Gear("Draining Touch"));
 	AvailableTraitsReward.push_back(Gear("Fleet of Foot"));
+	AvailableTraitsReward.push_back(Gear("Gold Claws"));
+	AvailableTraitsReward.push_back(Gear("Gold Scales"));
+	AvailableTraitsReward.push_back(Gear("Gold Brain"));
+	AvailableTraitsReward.push_back(Gear("Phlogiston"));
+	AvailableTraitsReward.push_back(Gear("Momentum"));
+	AvailableTraitsReward.push_back(Gear("Dynamic"));
 
 	AvailableTraitsRewardREFILL = AvailableTraitsReward;
 
@@ -2004,6 +2016,13 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 		mvprintInSize(y, 62, 11, "5) Negotiate", FALSE);
 	}
 
+	//Wasteful trait
+	if (guy.Wasteful == 10) {
+		guy.Wasteful = 0;
+		guy.cleanse = TRUE;
+		string line = "#r-You burn your hand.#o";
+		log.PushPop(line);
+	}
 
 	char choose = getch();
 	//if you press 1-3, play the corresponding card
@@ -2036,15 +2055,23 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 			}
 			//Cleanse card
 			if (guy.cleanse) {
-				for (int j = handSize-1; j >= 0; j--) {
-					if (!(guy.ghost == 0 || j != in)) {
-						Discard.push_back(DecisionCards.at(in));
-					}
-					if(j < DecisionCards.size())
-						DecisionCards.erase(DecisionCards.begin() + j);
-				}
-				if (guy.ghost > 0)
+				int phlog = 0;
+				if (guy.ghost > 0) {
+					Discard.push_back(DecisionCards.at(in));
 					guy.ghost--;
+					phlog--;
+				}
+				while (DecisionCards.size() > 0) {
+					DecisionCards.pop_back();
+					phlog++;
+				}
+				//Phlogiston trait
+				while (guy.Phlogiston && phlog > 0) {
+					int damage = enemy.takeDamage(rtd(guy.Skill, 2), guy, log);
+					string line = "-You deal #y" + to_string(damage) + "#o damage.";
+					log.PushPop(line);
+					phlog--;
+				}
 				guy.cleanse = FALSE;
 				return;
 			}
@@ -2073,6 +2100,14 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 			if (dontstay || ((DecisionCards.at(in).Burn || DecisionCards.at(in).naturalBurn || (guy.burncard > 0 && (!guy.burnPlayed || guy.burninarow > 1)) || guy.Burnout > 0) && guy.ghost == 0 && (!guy.ghostPlayed || guy.ghostinarow > 1))) {
 				/*if (!DecisionCards.at(in).Burn && !DecisionCards.at(in).naturalBurn)
 					Discard.push_back(DecisionCards.at(in));*/
+
+				//Phlogiston trait
+				if (guy.Phlogiston && ((DecisionCards.at(in).Burn || DecisionCards.at(in).naturalBurn || (guy.burncard > 0 && (!guy.burnPlayed || guy.burninarow > 1)) || guy.Burnout > 0) && guy.ghost == 0 && (!guy.ghostPlayed || guy.ghostinarow > 1))) {
+					int damage = enemy.takeDamage(rtd(guy.Skill, 2), guy, log);
+					string line = "-You deal #y" + to_string(damage) + "#o damage.";
+					log.PushPop(line);
+				}
+
 				DecisionCards.erase(DecisionCards.begin() + in);
 			}
 			if (guy.ghost > 0 && (!guy.ghostPlayed || guy.ghostinarow > 1))
@@ -2523,15 +2558,27 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 			black += string(bo.CardName) + bo.modchars() + "#r is removed from you deck.#o";
 			log.PushPop(black);
 		}
+		//Empty trait
+		if (guy.Empty) {
+			int voided = 0;
+			for (int i = 0; i < deck.cardDeck.size(); i++) {
+				if (deck.cardDeck.at(i).Void)
+					voided++;
+			}
+			if (guy.Blackout && voided < deck.cardDeck.size())
+				voided++;
+			guy.ModStat(voided, "MaxEnergy", TRUE);
+		}
+		//Gold Brain trait
+		if (guy.Gold_Brain) {
+			guy.ModStat(guy.Gold / 15, "Intelligence", TRUE);
+		}
 		//Early Riser trait
 		if (guy.Early_Riser != -1) {
 			guy.Early_Riser = 1;
 			guy.ModStat(5, "Strength", TRUE);
-			guy.strMod -= 5;
 			guy.ModStat(5, "Defense", TRUE);
-			guy.defMod -= 5;
 			guy.ModStat(5, "Intelligence", TRUE);
-			guy.intMod -= 5;
 
 			string rise = "#y-You feel a boost.#o";
 			log.PushPop(rise);
@@ -2698,7 +2745,13 @@ void InputBoard::startBattle(Character &guy, Deck &deck, TextLog &log) {
 			guy.fillType = "Spell";
 			fillHand(guy);
 			//guy.Foresight = 0;
-		}  
+		}
+
+		//Dynamic trait
+		while (guy.Dynamic > 0) {
+			gainEnergy(rtd(3, 2), guy, enemy, log);
+			guy.Dynamic--;
+		}
 
 		//battle loop
 		while (enemy.Alive) {
@@ -2999,6 +3052,43 @@ void InputBoard::checkEnergy(Character &guy, Enemy &enemy, TextLog &log) {
 			}
 			log.PushPop(et);
 			log.printLog();
+
+			//Momentum trait
+			if (guy.Momentum) {
+				int rn = rand() % 6;
+				string loss;
+				int stat;
+				switch (rn) {
+				case 0:
+					stat = guy.ModStat(1, "Strength", TRUE);
+					loss = "-You #rlose " + to_string(stat) + " Strength#o.";
+					break;
+				case 1:
+					stat = guy.ModStat(1, "Defense", TRUE);
+					loss = "-You #rlose " + to_string(stat) + " Defense#o.";
+					break;
+				case 2:
+					stat = guy.ModStat(1, "Intelligence", TRUE);
+					loss = "-You #rlose " + to_string(stat) + " Intelligence#o.";
+					break;
+				case 3:
+					stat = guy.ModStat(1, "Skill", TRUE);
+					loss = "-You #rlose " + to_string(stat) + " Skill#o.";
+					break;
+				case 4:
+					stat = guy.ModStat(1, "MaxHealth", TRUE);
+					loss = "-You #rlose " + to_string(stat) + " Max Health#o.";
+					break;
+				case 5:
+					stat = guy.ModStat(1, "MaxMana", TRUE);
+					loss = "-You #rlose " + to_string(stat) + " Max Mana#o.";
+					break;
+				}
+			}
+			//Wind Down trait
+			if (guy.Wind_Down) {
+				guy.ModStat(1, "MaxEnergy", TRUE);
+			}
 		}
 		for (guy.Energy; guy.Energy <= -guy.MaxEnergy; guy.Energy += guy.MaxEnergy) {
 			guy.extraTurns--;
@@ -3020,6 +3110,12 @@ void InputBoard::checkEnergy(Character &guy, Enemy &enemy, TextLog &log) {
 
 			log.printLog();
 		}
+	}
+
+	//Stumble card
+	while (guy.stumble > 0) {
+		guy.stumble--;
+		gainEnergy(-8, guy, enemy, log);
 	}
 }
 
@@ -3117,13 +3213,11 @@ void InputBoard::effectsToEnemy(Character &guy, Enemy &enemy, Deck & deck, TextL
 	//Fervor trait
 	if (guy.Fervor == 0)
 		guy.FervorDamage = 0;
-	if (guy.Fervor > 0) {
-		if (guy.FervorDamage > 0) {
-			int damage = enemy.takeDamage(guy.FervorDamage, guy, log);
-			guy.Fervor--;
-			string fer = "#y-Your fervor deals " + to_string(damage) + " damage.#o";
-			log.PushPop(fer);
-		}
+	if (guy.Fervor > 0 && guy.FervorDamage > 0) {
+		int damage = enemy.takeDamage(guy.FervorDamage, guy, log);
+		guy.Fervor--;
+		string fer = "#y-Your fervor deals " + to_string(damage) + " damage.#o";
+		log.PushPop(fer);
 	}
 	//Curved Tusks trait
 	if (guy.Curved_Tusks && guy.CurrentBlock == 0) {
@@ -3149,10 +3243,10 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 
 	//Stuck trait
 	if (guy.Stuck != -1) {
-		if (guy.Stuck == 0)
-			guy.Stuck++;
-		else
+		if (guy.Stuck == 1)
 			guy.Stuck--;
+		else
+			guy.Stuck++;
 	}
 
 	//Early Riser trait
@@ -3372,18 +3466,17 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	}
 	//Jittery trait
 	if (guy.Jittery != -1) {
-		if (guy.CurrentBlock == 0 && guy.Negate == 0) {
+		if (guy.CurrentBlock == 0) {
 			guy.Jittery = 0;
 		}
 		if (guy.Jittery == 3) {
 			guy.CurrentBlock = 0;
-			guy.Negate = 0;
 			guy.Jittery = 0;
 
 			string jitter = "#r-You lose all of your defenses.#o";
 			log.PushPop(jitter);
 		}
-		else if (guy.CurrentBlock > 0 || guy.Negate > 0) {
+		else if (guy.CurrentBlock > 0) {
 			guy.Jittery++;
 		}
 	}
@@ -3680,13 +3773,6 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	//Wasteful trait
 	if (guy.Wasteful != -1) {
 		guy.Wasteful++;
-		if (guy.Wasteful == 10) {
-			guy.Wasteful = 0;
-			while (DecisionCards.size() > 0)
-				DecisionCards.pop_back();
-			string line = "#r-You burn your hand.#o";
-			log.PushPop(line);
-		}
 	}
 
 	if (guy.Paranoia) {
@@ -3710,6 +3796,12 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	if (guy.shuffle) {
 		shuffleHand(guy);
 		guy.shuffle = FALSE;
+	}
+
+	//Dynamic trait
+	while (guy.Dynamic > 0) {
+		gainEnergy(rtd(3, 2), guy, enemy, log);
+		guy.Dynamic--;
 	}
 
 	//fills hand with certain cards if requested
@@ -3966,7 +4058,7 @@ void InputBoard::restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, Te
 	if (guy.Stuck != -1)
 		guy.Stuck = 0;
 	if (guy.Wasteful != -1)
-		guy.Wasteful = 0;
+		guy.Wasteful = 1;
 	if (guy.Exhaust_Vent != -1)
 		guy.Exhaust_Vent = 0;
 	if (guy.Fervor != -1) {
@@ -3981,6 +4073,8 @@ void InputBoard::restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, Te
 		guy.Amass = 0;
 	if (guy.Horns != -1)
 		guy.Horns = 0;
+	if (guy.Dynamic != -1)
+		guy.Dynamic = 0;
 
 	pushthisturn = FALSE;
 	linkdraw = 0;
@@ -5904,6 +5998,7 @@ void InputBoard::restoreStats(Character &guy) {
 	guy.Intelligence += guy.intMod;
 	guy.MaxHealth += guy.hpMod;
 	guy.MaxMana += guy.mpMod;
+	guy.MaxEnergy += guy.engMod;
 	guy.Skill += guy.sklMod;
 
 	guy.strMod = 0;
@@ -5911,6 +6006,7 @@ void InputBoard::restoreStats(Character &guy) {
 	guy.intMod = 0;
 	guy.hpMod = 0;
 	guy.mpMod = 0;
+	guy.engMod = 0;
 	guy.sklMod = 0;
 }
 
@@ -5934,6 +6030,10 @@ void InputBoard::AddRemoveTrait(int pm, const char *Name){
 //idk how i want this to work yet
 void InputBoard::fillHand(Character &guy) {
 	if (!Tail) {
+		//Dynamic trait
+		if (guy.Dynamic != -1)
+			guy.Dynamic++;
+
 		if (guy.fillType != " ") {
 			while (DecisionCards.size() > 0) {
 				Discard.push_back(DecisionCards.back());
@@ -5998,6 +6098,10 @@ void InputBoard::updateDeck(Character &guy, Deck &deck) {
 void InputBoard::shuffleHand(Character &guy) {
 	//Tail trait
 	if (!Tail) {
+		//Dynamic trait
+		if (guy.Dynamic != -1)
+			guy.Dynamic++;
+
 		//put everything in the discard pile
 		while (DecisionCards.size() > 0) {
 			Discard.push_back(DecisionCards.back());
