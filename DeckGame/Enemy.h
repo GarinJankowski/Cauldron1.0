@@ -6,6 +6,11 @@
 #include <curses.h>
 #include <string>
 
+/*
+#include "Character.h"
+#include "TextLog.h"
+*/
+
 #include "Character.h"
 #include "TextLog.h"
 

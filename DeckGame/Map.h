@@ -1,8 +1,17 @@
 #pragma once
 #ifndef MAP_H
 #define MAP_H
+/*
+#include "Character.h"
 #include "Room.h"
 #include "InputBoard.h"
+*/
+
+#include "Character.h"
+#include "InputBoard.h"
+#include "Room.h"
+
+class InputBoard;
 
 class Map
 {
@@ -20,13 +29,14 @@ public:
 	vector<Room> roomList;
 	const char* terrainGrid[26][8];
 
-	void PrintWholeMap(Character &guy, InputBoard &board);
+	void PrintWholeMap(Character &guy);
+	void PrintMapNoUpdate(Character &guy);
 	void generateSingleTerrain(const char* terrain);
 	int generateSurroundingTerrain(int x, int y);
 	void generateCity();
 	void generateCity(int px, int py);
 	void generateTerrain();
-	void UpdateMap(Character &guy, InputBoard &board);
+	void UpdateMap(Character &guy);
 	void checkPosition(Character &guy, InputBoard &board);
 	char getTier(int posx, int posy);
 	Room at(int i);

@@ -2,7 +2,13 @@
 #ifndef ROOM_H
 #define ROOM_H
 
+/*
 #include "InputBoard.h"
+*/
+
+#include "InputBoard.h"
+
+class InputBoard;
 
 class Room
 {

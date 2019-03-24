@@ -658,8 +658,17 @@ int Character::ModStat(int bonus, string stat, bool battle) {
 			Defense += bonus;
 		else if (stat == "Intelligence")
 			Intelligence += bonus;
-		else if (stat == "Skill")
+		else if (stat == "Skill") {
 			Skill += bonus;
+			//Mind trait
+			if (Mind) {
+				ModStat(bonus, "MaxMana", FALSE);
+			}
+			//Matter trait
+			if (Matter) {
+				ModStat(bonus * 2, "MaxHealth", FALSE);
+			}
+		}
 	}
 	checkMax();
 

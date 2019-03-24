@@ -1569,7 +1569,7 @@ void Card::defendFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	else if (CardName == "Inspire") {
 		//Gain (Def)+4 block. Gain 3 mana.
 		int block = gainBlock(guy.Defense + 4, guy, enemy);
-		int mana = guy.DrainMana(-3);
+		int mana = -guy.DrainMana(-3);
 
 		string line = "-You gain #c" + to_string(block) + "#o block and #m" + to_string(mana) + "#o mana.";
 		log.PushPop(line);

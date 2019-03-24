@@ -8,6 +8,12 @@
 #include <string>
 #include <vector>
 
+/*
+#include "Character.h"
+#include "TextLog.h"
+#include "Enemy.h"
+*/
+
 #include "Character.h"
 #include "TextLog.h"
 #include "Enemy.h"

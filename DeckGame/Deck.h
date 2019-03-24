@@ -7,6 +7,12 @@
 #include <string>
 #include <vector>
 
+/*
+#include "Character.h"
+#include "Card.h"
+*/
+
+#include "Character.h"
 #include "Card.h"
 
 

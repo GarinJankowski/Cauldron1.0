@@ -7,14 +7,22 @@
 #include <string>
 #include <vector>
 
+/*
 #include "Character.h"
 #include "TextLog.h"
 #include "Enemy.h"
 #include "Card.h"
 #include "Deck.h"
 #include "Gear.h"
+*/
 
-using namespace std;
+#include "Character.h"
+#include "TextLog.h"
+#include "Enemy.h"
+#include "Card.h"
+#include "Deck.h"
+#include "Gear.h"
+#include "Map.h"
 
 class InputBoard
 {
@@ -157,18 +165,18 @@ public:
 	void ShuffleAddPrint(Character &guy);
 	Card removeCard();
 	void getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
-	void getchDecision(Character &guy, Deck &deck, TextLog &log);
+	void getchDecision(Character &guy, Deck &deck, TextLog &log, Map &map);
 	void printDecision(Character &guy, TextLog &log);
 	bool checkUsable(Character &guy, Enemy &enemy);
 	bool checkUsable(int i, Character &guy, Enemy &enemy);
 
 	Enemy generateEnemy(Character &guy);
 	bool aftercombat = FALSE;
-	void startBattle(Character &guy, Deck &deck, TextLog &log);
+	void startBattle(Character &guy, Deck &deck, TextLog &log, Map &map);
 	void effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 	void effectsToEnemy(Character &guy, Enemy &enemy, Deck & deck, TextLog &log);
 	void restoreAfterBattle(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
-	bool checkEnemyLife(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
+	bool checkEnemyLife(Character &guy, Enemy &enemy, Deck &deck, TextLog &log, Map &map);
 	bool checkDead(Character &guy, Enemy &enemy, TextLog &log);
 	void printDisplayStats(Character &guy, Enemy &enemy, Deck &deck, TextLog &log);
 
@@ -217,11 +225,11 @@ public:
 	Gear generateGear(string GearType);
 	void generateShop();
 	void printShop(Character &guy);
-	void getchShop(Character &guy, Deck &deck, TextLog &log);
+	void getchShop(Character &guy, Deck &deck, TextLog &log, Map &map);
 
 	bool restart = FALSE;
 	bool quit = FALSE;
-	string currentEnemyName;
+	string currentEnemyName = "";
 	bool youdie = FALSE;
 	bool endprinted = FALSE;
 	void win(Character &guy, Deck &deck, TextLog &log, bool gamewin);

@@ -174,13 +174,13 @@ Gear::Gear(const char *name):GearName(name)
 		GearName == "Inefficient" ||
 		GearName == "Brain Worm" ||
 		GearName == "Gold Flesh" ||
-		GearName == "Terraform" || //not in pool
+		GearName == "Terraform" ||
 		GearName == "Psychosis" ||
 		GearName == "Dazed" ||
 		GearName == "Strategy" ||
 		GearName == "Doomed" ||
-		GearName == "The Floor is Lava" || //not in pool
-		GearName == "Slippery" || //not in pool
+		GearName == "Eruption" ||
+		GearName == "Flash Freeze" ||
 		GearName == "Scented" ||
 		GearName == "Colossus" ||
 		GearName == "Timer" ||
@@ -226,7 +226,8 @@ Gear::Gear(const char *name):GearName(name)
 		GearName == "Short Circuit" ||
 		GearName == "Empty" ||
 		GearName == "Unsteady" ||
-		GearName == "Sore") {
+		GearName == "Sore" ||
+		GearName == "Earthquake") {
 		Type = "Trait Sacrifice";
 		TraitSDescription();
 	}
@@ -799,13 +800,13 @@ void Gear::TraitSDescription() {
 		Type = "Trait Sacrifice";
 		Description = "The final boss will have 50% more hp.";
 	}
-	else if (GearName == "The Floor is Lava") {
+	else if (GearName == "Eruption") {
 		Type = "Trait Sacrifice";
-		Description = "All land ahead of you will become lava.";
+		Description = "Many of the tiles around you become Lava.";
 	}
-	else if (GearName == "Slippery") {
+	else if (GearName == "Flash Freeze") {
 		Type = "Trait Sacrifice";
-		Description = "All land directly above and right will become ice.";
+		Description = "10 tiles in each direction from you will become Ice.";
 	}
 	else if (GearName == "Scented") {
 		Type = "Trait Sacrifice";
@@ -986,6 +987,10 @@ void Gear::TraitSDescription() {
 	else if (GearName == "Sore") {
 	Type = "Trait Sacrifice";
 	Description = "Lose 6 health before healing.";
+	}
+	else if (GearName == "Earthquake") {
+	Type = "Trait Sacrifice";
+	Description = "All City becomes Wasteland.";
 	}
 	else if (GearName == "") {
 	Type = "Trait Sacrifice";
@@ -2542,21 +2547,21 @@ void Gear::HeadOnOrOff(bool On, Character &guy, Deck &deck) {
 }
 
 
-void Gear::TraitOnOrOff(bool On, Character &guy, Deck &deck) {
+void Gear::TraitOnOrOff(bool On, Character &guy, Deck &deck, Map &map) {
 	//Trait Sacrifice
 	if (Type == "Trait Sacrifice") {
-		SacrificeOnOrOff(On, guy, deck);
+		SacrificeOnOrOff(On, guy, deck, map);
 	}
 
 	//Trait Reward
 	else if (Type == "Trait Reward") {
-		RewardOnOrOff(On, guy, deck);
+		RewardOnOrOff(On, guy, deck, map);
 	}
 
 	guy.printStats();
 }
 
-void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
+void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck, Map &map) {
 	if (GearName == "Anemia") {
 		if (On) {
 			guy.Anemia = TRUE;
@@ -3019,20 +3024,76 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 			guy.Doomed = FALSE;
 		}
 	}
-	else if (GearName == "The Floor is Lava") {
+	else if (GearName == "Eruption") {
 		if (On) {
-			guy.The_Floor_is_Lava = TRUE;
+			/*
+			   ooooo
+			  ooooooo
+			 ooooooooo
+			 ooooooooo
+			 oooo@oooo
+			 ooooooooo
+			 ooooooooo
+			  ooooooo
+			   ooooo
+			*/
+			for (int x = guy.posx-3; x <= guy.posx+3; x++) {
+				for (int y = guy.posy-3; y <= guy.posy+3; y++) {
+					if (x <= 25 && x >= 0 && y <= 7 && y >= 0 &&
+						(x != 25 || y != 7) &&
+						rand() % 3 != 0) {
+						map.terrainGrid[x][y] = "Lava";
+					}
+				}
+			}
+			for (int x = guy.posx - 2; x <= guy.posx + 2; x++) {
+				if (x <= 25 && x >= 0 && guy.posy-4 <= 7 && guy.posy-4 >= 0 && rand() % 3 != 0) {
+					map.terrainGrid[x][guy.posy - 4] = "Lava";
+				}
+				if (x <= 25 && x >= 0 && guy.posy+4 <= 7 && guy.posy+4 >= 0 && rand() % 3 != 0) {
+					map.terrainGrid[x][guy.posy + 4] = "Lava";
+				}
+			}
+			for (int y = guy.posy - 2; y <= guy.posy + 2; y++) {
+				if (guy.posx-4 <= 25 && guy.posx-4 >= 0 && y <= 7 && y >= 0 && rand() % 3 != 0) {
+					map.terrainGrid[guy.posx - 4][y] = "Lava";
+				}
+				if (guy.posx+4 <= 25 && guy.posx+4 >= 0 && y <= 7 && y >= 0 && rand() % 3 != 0) {
+					map.terrainGrid[guy.posx + 4][y] = "Lava";
+				}
+			}
+			int i = 0;
+			for (int x = 0; x < 26; x++) {
+				for (int y = 0; y < 8; y++) {
+					map.roomList.at(i).Terrain = map.terrainGrid[x][y];
+					i++;
+				}
+			}
+			map.PrintWholeMap(guy);
 		}
 		else {
-			guy.The_Floor_is_Lava = FALSE;
 		}
 	}
-	else if (GearName == "Slippery") {
+	else if (GearName == "Flash Freeze") {
 		if (On) {
-			guy.Slippery = TRUE;
+				for (int x = guy.posx-10; x <= guy.posx+10; x++) {
+					if (x <= 25 && x >= 0 && (x != 25 || guy.posy != 7))
+						map.terrainGrid[x][guy.posy] = "Ice";
+				}
+				for (int y = guy.posy-10; y <= guy.posy+10; y++) {
+					if (y <= 7 && y >= 0 && (guy.posx != 25 || y != 7))
+						map.terrainGrid[guy.posx][y] = "Ice";
+				}
+				int i = 0;
+				for (int x = 0; x < 26; x++) {
+					for (int y = 0; y < 8; y++) {
+						map.roomList.at(i).Terrain = map.terrainGrid[x][y];
+						i++;
+					}
+				}
+				map.PrintWholeMap(guy);
 		}
 		else {
-			guy.Slippery = FALSE;
 		}
 	}
 	else if (GearName == "Scented") {
@@ -3412,6 +3473,27 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 		guy.Sore = TRUE;
 	}
 	}
+	else if (GearName == "Earthquake") {
+	if (On) {
+		for (int x = 0; x < 26; x++) {
+			for (int y = 0; y < 8; y++) {
+				if (map.terrainGrid[x][y] == "City")
+					map.terrainGrid[x][y] = "Wasteland";
+			}
+		}
+
+		int i = 0;
+		for (int x = 0; x < 26; x++) {
+			for (int y = 0; y < 8; y++) {
+				map.roomList.at(i).Terrain = map.terrainGrid[x][y];
+				i++;
+			}
+		}
+		map.PrintWholeMap(guy);
+	}
+	else {
+	}
+	}
 	else if (GearName == "") {
 	if (On) {
 
@@ -3423,7 +3505,7 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck) {
 
 }
 
-void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
+void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck, Map &map) {
 	if (GearName == "Mending Flesh") {
 		if (On) {
 			guy.Mending_Flesh = TRUE;
@@ -3467,17 +3549,21 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck) {
 	else if (GearName == "Mind") {
 		if (On) {
 			guy.Mind = TRUE;
+			guy.ModStat(guy.Skill, "MaxMana", FALSE);
 		}
 		else {
 			guy.Mind = FALSE;
+			guy.ModStat(-guy.Skill, "MaxMana", FALSE);
 		}
 	}
 	else if (GearName == "Matter") {
 		if (On) {
 			guy.Matter = TRUE;
+			guy.ModStat(guy.Skill * 2, "MaxHealth", FALSE);
 		}
 		else {
 			guy.Matter = FALSE;
+			guy.ModStat(-guy.Skill * 2, "MaxHealth", FALSE);
 		}
 	}
 	else if (GearName == "Sharp Claws") {

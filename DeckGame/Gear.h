@@ -8,9 +8,15 @@
 #include <string>
 #include <vector>
 
+/*
 #include "Character.h"
 #include "Card.h"
 #include "Deck.h"
+*/
+
+#include "Character.h"
+#include "Deck.h"
+#include "Map.h"
 
 class Gear
 {
@@ -36,9 +42,9 @@ public:
 	void BodyOnOrOff(bool On, Character &guy, Deck &deck);
 	void HeadOnOrOff(bool On, Character &guy, Deck &deck);
 
-	void TraitOnOrOff(bool On, Character &guy, Deck &deck);
-	void SacrificeOnOrOff(bool On, Character &guy, Deck &deck);
-	void RewardOnOrOff(bool On, Character &guy, Deck &deck);
+	void TraitOnOrOff(bool On, Character &guy, Deck &deck, Map &map);
+	void SacrificeOnOrOff(bool On, Character &guy, Deck &deck, Map &map);
+	void RewardOnOrOff(bool On, Character &guy, Deck &deck, Map &map);
 
 	void CardOnOrOff(bool On, Character &guy, Deck &deck);
 	void printGear(int position, Character &guy);

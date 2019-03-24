@@ -7,8 +7,6 @@
 #include <curses.h>
 #include <string>
 
-
-
 using namespace std;
 
 class Character
@@ -182,8 +180,6 @@ public:
 		bool Dazed = FALSE;
 		bool Strategy = FALSE;
 		bool Doomed = FALSE;
-		bool The_Floor_is_Lava = FALSE;
-		bool Slippery = FALSE;
 		int Scented = -1;
 		bool Timer = FALSE;
 		bool Sacrificial = FALSE;
