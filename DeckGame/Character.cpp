@@ -5,7 +5,7 @@ int rtd(int multiplier, int power);
 void mvprintInSize(int starty, int startx, int maxx, const char* toBePrinted, bool Fuzzy);
 void manualBox(string typebox, int colorpair);
 
-Character::Character()
+Character::Character(bool inf, int itier, int ifloor):infinite(inf), infiniteTier(itier), infiniteFloor(ifloor)
 {
 	//default stats
 	Alive = TRUE;
@@ -111,6 +111,18 @@ void Character::printStats() {
 //get tier of room of character
 char Character::getTier(int posx, int posy) {
 	char tier = ' ';
+
+	if (infinite) {
+		if (infiniteFloor == 1)
+			tier = 'B';
+		else if (infiniteFloor == 2)
+			tier = 'D';
+		else
+			tier = 'F';
+
+		return tier;
+	}
+
 	if (posy == 0) {
 		if (posx > 0 && posx < 7)
 			tier = 'A';
@@ -224,6 +236,18 @@ char Character::getTier(int posx, int posy) {
 
 char Character::getTier() {
 	char tier = ' ';
+
+	if (infinite) {
+		if (infiniteFloor == 1)
+			tier = 'B';
+		else if (infiniteFloor == 2)
+			tier = 'D';
+		else
+			tier = 'F';
+
+		return tier;
+	}
+
 	if (posy == 0) {
 		if (posx > 0 && posx < 7)
 			tier = 'A';

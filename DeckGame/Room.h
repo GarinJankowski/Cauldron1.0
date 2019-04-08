@@ -14,7 +14,7 @@ class Room
 {
 public:
 	Room();
-	Room(const char *type, int x, int y);
+	Room(const char *type, int x, int y, bool inf);
 	~Room();
 	
 	const char *RoomType;
@@ -24,6 +24,9 @@ public:
 	bool clear;
 	char tier;
 	bool fogged = TRUE;
+	bool amnesia = FALSE;
+
+	bool infinite;
 
 	void getTileColor();
 	void setXY(int x, int y);

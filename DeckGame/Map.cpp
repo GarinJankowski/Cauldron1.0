@@ -2,154 +2,285 @@
 #include "Map.h"
 
 
-Map::Map()
+Map::Map(bool inf, int itier, int ifloor) :infinite(inf), infiniteTier(itier), infiniteFloor(ifloor)
 {
-	int cauldron = 12;
-	int gearbody = 30;
-	int gearhands = 30;
-	int gearhead = 15;
-	int boss = 10;
-
-	int cauldronCounter = 0;
-	int cauldronx = 0;
-	int cauldrony = 2;
-	int shopCounter = 0;
-
-	generateTerrain();
-
-	for (int x = 0; x < 26; x++) {
-		for (int y = 0; y < 8; y++) {
-			if (x == 0 && y == 0) {
-				//Room start("First", 0, 0);
-				Room start("First", 0, 0);
-				start.Terrain = "";
-				roomList.push_back(start);
-			}
-			else if (x == 25 && y == 7) {
-				Room fboss("Final Boss", 25, 7);
-				fboss.Terrain = "";
-				roomList.push_back(fboss);
-			}
-			else {
-				int rng;
-				if(getTier(x, y) == 'A'){
-					//combat, hands, body
-					rng = rand() % 14;
-					Room a;
-					if (rng == 0 || rng == 1) {
-						a = Room("Gear Hands", x, y);
-					}
-					else if (rng == 2 || rng == 3) {
-						a = Room("Gear Body", x, y);
-					}
-					else if (rng == 4 || rng == 5) {
-						a = Room("Gear Head", x, y);
-					}
-					else if (rng == 6) {
-						a = Room("Cauldron", x, y);
-						cauldronCounter++;
-					}
-					else if (rng > 7 && rng <= 8) {
-						a = Room("Mod", x, y);
-					}
-					else {
-						a = Room("Combat", x, y);
-					}
-					a.Terrain = terrainGrid[x][y];
-					roomList.push_back(a);
-				}
-				else if (getTier(x, y) == 'B' || getTier(x, y) == 'C' || getTier(x, y) == 'D') {
-					//combat, hands, body, head, cauldron, boss(very small chance)
-					rng = rand() % 22;
-					Room bcd;
-					if (rng == 0) {
-						bcd = Room("Gear Head", x, y);
-					}
-					else if (cauldronCounter < 12 && rng > 1 && rng <= 3) {
-						bcd = Room("Cauldron", x, y);
-						cauldronCounter++;
-					}
-					else if (rng > 4 && rng <= 7) {
-						bcd = Room("Gear Body", x, y);
-					}
-					else if (rng > 9 && rng <= 12) {
-						bcd = Room("Gear Hands", x, y);
-					}
-					else if (rng > 14 && rng <= 15) {
-						bcd = Room("Mod", x, y);
-					}
-					else if (rng == 20 && getTier(x, y) != 'B' && rand() % 8 < 6) {
-						bcd = Room("Shop", x, y);
-					}
-					else if (rng == 21) {
-						bcd = Room("Boss", x, y);
-					}
-					else {
-						bcd = Room("Combat", x, y);
-					}
-					bcd.Terrain = terrainGrid[x][y];
-					roomList.push_back(bcd);
-				}
-				else if (getTier(x, y) == 'E') {
-					//combat, hands, body, head, cauldron, boss
-					rng = rand() % 22;
-					Room e;
-					if (cauldronCounter < 18 && (rng == 0 || rng == 21)) {
-						e = Room("Cauldron", x, y);
-						cauldronCounter++;
-					}
-					else if (rng > 0 && rng <= 3) {
-						e = Room("Gear Hands", x, y);
-					}
-					else if (rng > 3 && rng <= 6) {
-						e = Room("Gear Body", x, y);
-					}
-					else if (rng > 6 && rng <= 7) {
-						e = Room("Mod", x, y);
-					}
-					else if (rng > 16 && rng <= 18) {
-						e = Room("Boss", x, y);
-					}
-					else if (rng == 19 && rand() % 5 < 3) {
-						e = Room("Shop", x, y);
-					}
-					else {
-						e = Room("Combat", x, y);
-					}
-					e.Terrain = terrainGrid[x][y];
-					roomList.push_back(e);
-				}
-				else if (getTier(x, y) == 'F') {
-					//combat, boss
-					rng = rand() % 21;
-					Room f;
-					if (rng == 0 && cauldronCounter < 22) {
-						f = Room("Cauldron", x, y);
-						cauldronCounter++;
-					}
-					else if (rng > 0 && rng <= 4) {
-						f = Room("Boss", x, y);
-					}
-					else if (rng == 5 && rand() % 2 == 0) {
-						f = Room("Shop", x, y);
-						shopCounter++;
-					}
-					else {
-						f = Room("Combat", x, y);
-					}
-
-					if (x > 21 && y > 4 && shopCounter < 2 && !(x == 22 && y == 5) && rand() % 3 == 0) {
-						f = Room("Shop", x, y);
-						shopCounter++;
-					}
-					if (x > 21 && y > 4 && !(x == 22 && y == 5)) {
-						if (rand() % 7 > 3 && f.RoomType != "Shop") {
-							f = Room("Boss", x, y);
+	if (infinite) {
+		generateTerrain();
+		if (infiniteFloor == 1) {
+			for (int x = 0; x < 13; x++) {
+				for (int y = 0; y < 4; y++) {
+					if (x == 0 && y == 0) {
+						if (infiniteTier == 1) {
+							Room start("First", 0, 0, TRUE);
+							start.Terrain = "";
+							roomList.push_back(start);
+						}
+						else {
+							Room start("Empty", 0, 0, TRUE);
+							start.Terrain = "";
+							roomList.push_back(start);
 						}
 					}
+					else if (x == 12 && y == 3) {
+						Room boss("Boss", 12, 3, TRUE);
+						boss.Terrain = "";
+						roomList.push_back(boss);
+					}
+					else {
+						Room r;
+						int rng = rand() % 13;
+						if (rng == 0) {
+							r = Room("Mod", x, y, TRUE);
+						}
+						else if (rng == 1) {
+							r = Room("Gear Head", x, y, TRUE);
+						}
+						else if (rng >= 2 && rng < 4) {
+							r = Room("Gear Body", x, y, TRUE);
+						}
+						else if (rng >= 4 && rng < 6) {
+							r = Room("Gear Hands", x, y, TRUE);
+						}
+						else {
+							r = Room("Combat", x, y, TRUE);
+						}
+						r.Terrain = terrainGridInfinite[x][y];
+						roomList.push_back(r);
+					}
+				}
+			}
+		}
+		else if (infiniteFloor == 2) {
+			for (int x = 0; x < 13; x++) {
+				for (int y = 0; y < 4; y++) {
+					if (x == 0 && y == 0) {
+						Room start("Empty", 0, 0, TRUE);
+						start.Terrain = "";
+						roomList.push_back(start);
+					}
+					else if (x == 12 && y == 3) {
+						Room boss("Boss", 12, 3, TRUE);
+						boss.Terrain = "";
+						roomList.push_back(boss);
+					}
+					else if ((x == 11 && y == 3) || (x == 12 && y == 2)) {
+						Room shop("Shop", x, y, TRUE);
+						shop.Terrain = terrainGridInfinite[x][y];
+						roomList.push_back(shop);
+					}
+					else {
+						Room r;
+						int rng = rand() % 13;
+						if (rng == 0) {
+							r = Room("Mod", x, y, TRUE);
+						}
+						else if (rng == 1) {
+							r = Room("Gear Head", x, y, TRUE);
+						}
+						else if (rng >= 2 && rng < 4) {
+							r = Room("Gear Body", x, y, TRUE);
+						}
+						else if (rng >= 4 && rng < 6) {
+							r = Room("Gear Hands", x, y, TRUE);
+						}
+						else {
+							r = Room("Combat", x, y, TRUE);
+						}
+						r.Terrain = terrainGridInfinite[x][y];
+						roomList.push_back(r);
+					}
+				}
+			}
 
-					f.Terrain = terrainGrid[x][y];
-					roomList.push_back(f);
+		}
+		else {
+			for (int x = 0; x < 13; x++) {
+				for (int y = 0; y < 4; y++) {
+					if (x == 0 && y == 0) {
+						Room start("Empty", 0, 0, TRUE);
+						start.Terrain = "";
+						roomList.push_back(start);
+					}
+					else if (x == 12 && y == 3) {
+						Room boss("Final Boss", 12, 3, TRUE);
+						boss.Terrain = "";
+						roomList.push_back(boss);
+					}
+					else if ((x == 11 && y == 3) || (x == 12 && y == 2)) {
+						Room boss("Boss", x, y, TRUE);
+						boss.Terrain = terrainGridInfinite[x][y];
+						roomList.push_back(boss);
+					}
+					else {
+						Room r;
+						int rng = rand() % 13;
+						if (rng == 0 || rng == 1) {
+							r = Room("Mod", x, y, TRUE);
+						}
+						else if (rng >= 2 && rng < 4) {
+							r = Room("Gear Body", x, y, TRUE);
+						}
+						else if (rng >= 4 && rng < 6) {
+							r = Room("Gear Hands", x, y, TRUE);
+						}
+						else {
+							r = Room("Combat", x, y, TRUE);
+						}
+						r.Terrain = terrainGridInfinite[x][y];
+						roomList.push_back(r);
+					}
+				}
+			}
+		}
+	}
+	else {
+		int cauldron = 12;
+		int gearbody = 30;
+		int gearhands = 30;
+		int gearhead = 15;
+		int boss = 10;
+
+		int cauldronCounter = 0;
+		int cauldronx = 0;
+		int cauldrony = 2;
+		int shopCounter = 0;
+
+		generateTerrain();
+
+		for (int x = 0; x < 26; x++) {
+			for (int y = 0; y < 8; y++) {
+				if (x == 0 && y == 0) {
+					//Room start("First", 0, 0);
+					Room start("First", 0, 0, FALSE);
+					start.Terrain = "";
+					roomList.push_back(start);
+				}
+				else if (x == 25 && y == 7) {
+					Room fboss("Final Boss", 25, 7, FALSE);
+					fboss.Terrain = "";
+					roomList.push_back(fboss);
+				}
+				else {
+					int rng;
+					if (getTier(x, y) == 'A') {
+						//combat, hands, body
+						rng = rand() % 14;
+						Room a;
+						if (rng == 0 || rng == 1) {
+							a = Room("Gear Hands", x, y, FALSE);
+						}
+						else if (rng == 2 || rng == 3) {
+							a = Room("Gear Body", x, y, FALSE);
+						}
+						else if (rng == 4 || rng == 5) {
+							a = Room("Gear Head", x, y, FALSE);
+						}
+						else if (rng == 6) {
+							a = Room("Cauldron", x, y, FALSE);
+							cauldronCounter++;
+						}
+						else if (rng > 7 && rng <= 8) {
+							a = Room("Mod", x, y, FALSE);
+						}
+						else {
+							a = Room("Combat", x, y, FALSE);
+						}
+						a.Terrain = terrainGrid[x][y];
+						roomList.push_back(a);
+					}
+					else if (getTier(x, y) == 'B' || getTier(x, y) == 'C' || getTier(x, y) == 'D') {
+						//combat, hands, body, head, cauldron, boss(very small chance)
+						rng = rand() % 22;
+						Room bcd;
+						if (rng == 0) {
+							bcd = Room("Gear Head", x, y, FALSE);
+						}
+						else if (cauldronCounter < 12 && rng > 1 && rng <= 3) {
+							bcd = Room("Cauldron", x, y, FALSE);
+							cauldronCounter++;
+						}
+						else if (rng > 4 && rng <= 7) {
+							bcd = Room("Gear Body", x, y, FALSE);
+						}
+						else if (rng > 9 && rng <= 12) {
+							bcd = Room("Gear Hands", x, y, FALSE);
+						}
+						else if (rng > 14 && rng <= 15) {
+							bcd = Room("Mod", x, y, FALSE);
+						}
+						else if (rng == 20 && getTier(x, y) != 'B' && rand() % 8 < 6) {
+							bcd = Room("Shop", x, y, FALSE);
+						}
+						else if (rng == 21) {
+							bcd = Room("Boss", x, y, FALSE);
+						}
+						else {
+							bcd = Room("Combat", x, y, FALSE);
+						}
+						bcd.Terrain = terrainGrid[x][y];
+						roomList.push_back(bcd);
+					}
+					else if (getTier(x, y) == 'E') {
+						//combat, hands, body, head, cauldron, boss
+						rng = rand() % 22;
+						Room e;
+						if (cauldronCounter < 18 && (rng == 0 || rng == 21)) {
+							e = Room("Cauldron", x, y, FALSE);
+							cauldronCounter++;
+						}
+						else if (rng > 0 && rng <= 3) {
+							e = Room("Gear Hands", x, y, FALSE);
+						}
+						else if (rng > 3 && rng <= 6) {
+							e = Room("Gear Body", x, y, FALSE);
+						}
+						else if (rng > 6 && rng <= 7) {
+							e = Room("Mod", x, y, FALSE);
+						}
+						else if (rng > 16 && rng <= 18) {
+							e = Room("Boss", x, y, FALSE);
+						}
+						else if (rng == 19 && rand() % 5 < 3) {
+							e = Room("Shop", x, y, FALSE);
+						}
+						else {
+							e = Room("Combat", x, y, FALSE);
+						}
+						e.Terrain = terrainGrid[x][y];
+						roomList.push_back(e);
+					}
+					else if (getTier(x, y) == 'F') {
+						//combat, boss
+						rng = rand() % 21;
+						Room f;
+						if (rng == 0 && cauldronCounter < 22) {
+							f = Room("Cauldron", x, y, FALSE);
+							cauldronCounter++;
+						}
+						else if (rng > 0 && rng <= 4) {
+							f = Room("Boss", x, y, FALSE);
+						}
+						else if (rng == 5 && rand() % 2 == 0) {
+							f = Room("Shop", x, y, FALSE);
+							shopCounter++;
+						}
+						else {
+							f = Room("Combat", x, y, FALSE);
+						}
+
+						if (x > 21 && y > 4 && shopCounter < 2 && !(x == 22 && y == 5) && rand() % 3 == 0) {
+							f = Room("Shop", x, y, FALSE);
+							shopCounter++;
+						}
+						if (x > 21 && y > 4 && !(x == 22 && y == 5)) {
+							if (rand() % 7 > 3 && f.RoomType != "Shop") {
+								f = Room("Boss", x, y, FALSE);
+							}
+						}
+
+						f.Terrain = terrainGrid[x][y];
+						roomList.push_back(f);
+					}
 				}
 			}
 		}
@@ -166,46 +297,6 @@ Room Map::at(int i) {
 }
 
 void Map::checkPosition(Character &guy, InputBoard &board) {
-	//Floor is Lava trait
-	/*if (guy.Eruption) {
-		for (int x = guy.posx; x < 26; x++) {
-			for (int y = guy.posy; y < 8; y++) {
-				if (x != 25 || y != 7) {
-					terrainGrid[x][y] = "Lava";
-				}
-			}
-		}
-		int i = 0;
-		for (int x = 0; x < 26; x++) {
-			for (int y = 0; y < 8; y++) {
-				roomList.at(i).Terrain = terrainGrid[x][y];
-				i++;
-			}
-		}
-		guy.Eruption = FALSE;
-		PrintWholeMap(guy);
-	}
-	//Flash Freeze trait
-	if (guy.Flash Freeze) {
-		for (int x = guy.posx; x < 26; x++) {
-			if (x != 25 || guy.posy != 7)
-				terrainGrid[x][guy.posy] = "Ice";
-		}
-		for (int y = guy.posy; y < 8; y++) {
-			if (guy.posx != 25 || y != 7)
-				terrainGrid[guy.posx][y] = "Ice";
-		}
-		int i = 0;
-		for (int x = 0; x < 26; x++) {
-			for (int y = 0; y < 8; y++) {
-				roomList.at(i).Terrain = terrainGrid[x][y];
-				i++;
-			}
-		}
-		guy.Flash Freeze = FALSE;
-		PrintWholeMap(guy);
-	}*/
-	
 
 	for (int i = 0; i < roomList.size(); i++) {
 		if (roomList.at(i).checkXY(guy.posx, guy.posy)) {
@@ -225,8 +316,15 @@ void Map::checkPosition(Character &guy, InputBoard &board) {
 }
 
 void Map::PrintMapNoUpdate(Character &guy) {
-	for (int x = 0; x < 26; x++) {
-		for (int y = 0; y < 8; y++) {
+	int maxx = 26;
+	int maxy = 8;
+	if (infinite) {
+		maxx = 13;
+		maxy = 4;
+	}
+
+	for (int x = 0; x < maxx; x++) {
+		for (int y = 0; y < maxy; y++) {
 			for (int i = 0; i < roomList.size(); i++) {
 				if (roomList.at(i).checkXY(x, y)) {
 					//TERRAIN: Fog
@@ -259,8 +357,15 @@ void Map::PrintWholeMap(Character &guy) {
 	guy.RoomUp = FALSE;
 	guy.RoomRight = FALSE;
 
-	for (int x = 0; x < 26; x++) {
-		for (int y = 0; y < 8; y++) {
+	int maxx = 26;
+	int maxy = 8;
+	if (infinite) {
+		maxx = 13;
+		maxy = 4;
+	}
+
+	for (int x = 0; x < maxx; x++) {
+		for (int y = 0; y < maxy; y++) {
 			for (int i = 0; i < roomList.size(); i++) {
 				if (roomList.at(i).checkXY(x, y)) {
 					//TERRAIN: Fog
@@ -298,150 +403,301 @@ void Map::PrintWholeMap(Character &guy) {
 
 	//checkPosition(guy, board);
 
+	int inf = 0;
+	int inf2 = 0;
+	if (infinite) {
+		inf = 2;
+		inf2 = 7;
+	}
+
 	attron(COLOR_PAIR(9));
-	mvprintw(13 - guy.posy, 1 + guy.posx, "@");
+	mvprintw(13 - guy.posy - inf, 1 + guy.posx + inf2, "@");
 	attroff(COLOR_PAIR(9));
+
+	if (infinite) {
+		string floor = "Floor: " + to_string(infiniteFloor+((infiniteTier-1)*3));
+		string difficulty = "Difficulty: " + to_string(infiniteTier);
+
+		int px = 10;
+		if (infiniteFloor+((infiniteTier-1)*3) > 99)
+			px++;
+		if (infiniteFloor+((infiniteTier-1)*3) > 9999)
+			px++;
+		mvprintInSize(7, px, 0, floor.c_str(), FALSE);
+
+		px = 8;
+		if (infiniteFloor+((infiniteTier-1)*3) > 99)
+			px++;
+		if (infiniteFloor+((infiniteTier-1)*3) > 9999)
+			px++;
+		mvprintInSize(12, px, 0, difficulty.c_str(), FALSE);
+	}
+
 	standend();
 }
 
 void Map::generateTerrain() {
-	
-	for (int x = 0; x < 26; x++) {
-		for (int y = 0; y < 8; y++) {
-			terrainGrid[x][y] = "Fog";
-		}
-	}
-
-	for (int i = 0; i < 3; i++) {
-		if (rand() % 2 == 0) {
-			generateCity();
-		}
-	}
-
-	for (int i = 0; i < 8; i++) {
-		if (rand() % 3 > 1) {
-			generateSingleTerrain("Ice");
-		}
-		if (rand() % 3 > 1) {
-			generateSingleTerrain("Forest");
-		}
-		if (rand() % 8 > 1) {
-			generateSingleTerrain("Lava");
-		}
-		if (rand() % 7 > 4) {
-			generateSingleTerrain("Wasteland");
-		}
-	}
-
-	generateSingleTerrain("Ice");
-	generateSingleTerrain("Forest");
-	generateSingleTerrain("Lava");
-	generateSingleTerrain("Wasteland");
-	generateSingleTerrain("Ice");
-	generateSingleTerrain("Forest");
-	generateSingleTerrain("Lava");
-	generateSingleTerrain("Wasteland");
-
-	int iter = 4;
-	if (rand() % 4 == 0) {
-		if (rand() % 2 == 0) {
-			iter++;
-			if (rand() % 15 == 0) {
-				iter++;
+	if (infinite) {
+		for (int x = 0; x < 13; x++) {
+			for (int y = 0; y < 4; y++) {
+				terrainGridInfinite[x][y] = "Fog";
 			}
 		}
-		else {
-			iter--;
-			if (rand() % 15 == 0) {
+
+		for (int i = 0; i < 2; i++) {
+			if (rand() % 2 == 0) {
+				generateCity();
+			}
+		}
+
+		for (int i = 0; i < 7; i++) {
+			if (rand() % 3 > 1) {
+				generateSingleTerrain("Ice");
+			}
+			if (rand() % 3 > 1) {
+				generateSingleTerrain("Forest");
+			}
+			if (rand() % 8 > 1) {
+				generateSingleTerrain("Lava");
+			}
+			if (rand() % 7 > 4) {
+				generateSingleTerrain("Wasteland");
+			}
+		}
+
+		generateSingleTerrain("Ice");
+		generateSingleTerrain("Forest");
+		generateSingleTerrain("Lava");
+		generateSingleTerrain("Wasteland");
+
+		int iter = 6;
+		if (rand() % 4 == 0) {
+			if (rand() % 2 == 0) {
+				iter++;
+			}
+			else {
 				iter--;
 			}
 		}
-	}
-	for (int i = 0; i < iter; i++) {
-		for (int x = 0; x < 26; x++) {
-			for (int y = 0; y < 8; y++) {
-				generateSurroundingTerrain(x, y);
+		for (int i = 0; i < iter; i++) {
+			for (int x = 0; x < 13; x++) {
+				for (int y = 0; y < 4; y++) {
+					generateSurroundingTerrain(x, y);
+				}
 			}
 		}
-	}
 
-	for (int i = 0; i < 6; i++) {
-		if (rand() % 2 > 0) {
-			generateCity();
+		int citycount = 0;
+		if (rand() % 5 == 0)
+			citycount--;
+
+		for (int i = 0; i < 5; i++) {
+			if (rand() % 3 == 0 && citycount < 3) {
+				generateCity();
+				citycount++;
+			}
 		}
-	}
 
-	for (int x = 0; x < 26; x++) {
-		for (int y = 0; y < 8; y++) {
-			if (rand() % 10 == 0 && !(x == 0 && y == 0) && !(x == 25 && y == 7)) {
+		for (int x = 0; x < 13; x++) {
+			for (int y = 0; y < 4; y++) {
+				if (rand() % 10 == 0 && !(x == 0 && y == 0) && !(x == 12 && y == 3)) {
+					terrainGrid[x][y] = "Fog";
+				}
+			}
+		}
+
+		int treasurecount = rand() % 3 - 1;
+		while (treasurecount < 2) {
+			for (int x = 0; x < 13; x++) {
+				for (int y = 0; y < 4; y++) {
+					if (rand() % 80 == 0 && !(x == 0 && y == 0) && !(x == 12 && y == 3)) {
+						terrainGridInfinite[x][y] = "Treasure";
+						treasurecount++;
+						if (treasurecount > 1)
+							break;
+					}
+					if (treasurecount > 1)
+						break;
+				}
+				if (treasurecount > 1)
+					break;
+			}
+		}
+
+		terrainGridInfinite[0][0] = " ";
+		terrainGridInfinite[12][3] = " ";
+	}
+	else {
+		for (int x = 0; x < 26; x++) {
+			for (int y = 0; y < 8; y++) {
 				terrainGrid[x][y] = "Fog";
 			}
 		}
-	}
 
-	int treasurecount = 0;
-	while (treasurecount < 5) {
+		for (int i = 0; i < 3; i++) {
+			if (rand() % 2 == 0) {
+				generateCity();
+			}
+		}
+
+		for (int i = 0; i < 8; i++) {
+			if (rand() % 3 > 1) {
+				generateSingleTerrain("Ice");
+			}
+			if (rand() % 3 > 1) {
+				generateSingleTerrain("Forest");
+			}
+			if (rand() % 8 > 1) {
+				generateSingleTerrain("Lava");
+			}
+			if (rand() % 7 > 4) {
+				generateSingleTerrain("Wasteland");
+			}
+		}
+
+		generateSingleTerrain("Ice");
+		generateSingleTerrain("Forest");
+		generateSingleTerrain("Lava");
+		generateSingleTerrain("Wasteland");
+		generateSingleTerrain("Ice");
+		generateSingleTerrain("Forest");
+		generateSingleTerrain("Lava");
+		generateSingleTerrain("Wasteland");
+
+		int iter = 4;
+		if (rand() % 4 == 0) {
+			if (rand() % 2 == 0) {
+				iter++;
+				if (rand() % 15 == 0) {
+					iter++;
+				}
+			}
+			else {
+				iter--;
+				if (rand() % 15 == 0) {
+					iter--;
+				}
+			}
+		}
+		for (int i = 0; i < iter; i++) {
+			for (int x = 0; x < 26; x++) {
+				for (int y = 0; y < 8; y++) {
+					generateSurroundingTerrain(x, y);
+				}
+			}
+		}
+
+		for (int i = 0; i < 6; i++) {
+			if (rand() % 2 > 0) {
+				generateCity();
+			}
+		}
+
 		for (int x = 0; x < 26; x++) {
 			for (int y = 0; y < 8; y++) {
-				if (rand() % 80 == 0 && !(x == 0 && y == 0) && !(x == 25 && y == 7)) {
-					terrainGrid[x][y] = "Treasure";
-					treasurecount++;
+				if (rand() % 10 == 0 && !(x == 0 && y == 0) && !(x == 25 && y == 7)) {
+					terrainGrid[x][y] = "Fog";
+				}
+			}
+		}
+
+		int treasurecount = 0;
+		while (treasurecount < 5) {
+			for (int x = 0; x < 26; x++) {
+				for (int y = 0; y < 8; y++) {
+					if (rand() % 80 == 0 && !(x == 0 && y == 0) && !(x == 25 && y == 7)) {
+						terrainGrid[x][y] = "Treasure";
+						treasurecount++;
+						if (treasurecount > 4)
+							break;
+					}
 					if (treasurecount > 4)
 						break;
 				}
 				if (treasurecount > 4)
 					break;
 			}
-			if (treasurecount > 4)
-				break;
 		}
-	}
 
-	terrainGrid[0][0] = " ";
-	terrainGrid[25][7] = " ";
+		terrainGrid[0][0] = " ";
+		terrainGrid[25][7] = " ";
+	}
 }
 
 void Map::generateSingleTerrain(const char* terrain) {
-	int randx = rand() % 26;
-	int randy = rand() % 8;
+	int maxx = 26;
+	int maxy = 8;
+	if (infinite) {
+		maxx = 13;
+		maxy = 4;
+	}
 
-	if (terrainGrid[randx][randy] != "Fog" ||
+	int randx = rand() % maxx;
+	int randy = rand() % maxy;
+	
+	const char* terr = terrainGrid[randx][randy];
+	if (infinite)
+		terr = terrainGridInfinite[randx][randy];
+
+	if (terr != "Fog" ||
 		(randx == 0 && randy == 0) ||
-		(randx == 25 && randy == 7) ||
-		(terrain == "Forest" && randx < 12 && randy < 4)){
+		(randx == maxx-1 && randy == maxy-1) ||
+		(terrain == "Forest" && randx < 12 && randy < 4 && !infinite)){
 		return;
 		generateSingleTerrain(terrain);
 	}
 	else {
-		terrainGrid[randx][randy] = terrain;
+		if (infinite)
+			terrainGridInfinite[randx][randy] = terrain;
+		else
+			terrainGrid[randx][randy] = terrain;
 	}
 }
 
 int Map::generateSurroundingTerrain(int x, int y) {
 	int num = 0;
 	const char* terr = " ";
-	if(terrainGrid[x][y] != "Fog" && terrainGrid[x][y] != "City")
-		 terr = terrainGrid[x][y];
-	if (terrainGrid[x][y] == terr && terr != " ") {
+
+	const char* ter1 = terrainGrid[x][y];
+	if (infinite)
+		ter1 = terrainGridInfinite[x][y];
+
+	if (ter1 != "Fog" && ter1 != "City") {
+		terr = ter1;
+	}
+	if (ter1 == terr && terr != " ") {
 		int chance = 17;
 		if (terr == "Lava")
 			chance += 3;
 		if (terr == "Wasteland")
 			chance += 3;
+
+		if (infinite) {
+			chance += 3;
+			if (terr == "Forest")
+				chance+=3;
+			if (terr == "Ice")
+				chance++;
+		}
+
 		if (y > 0 && rand() % 25 > chance) {
 			terrainGrid[x][y - 1] = terr;
+			terrainGridInfinite[x][y - 1] = terr;
 			num++;
 		}
 		if (x > 0 && rand() % 25 > chance) {
 			terrainGrid[x - 1][y] = terr;
+			terrainGridInfinite[x - 1][y] = terr;
 			num++;
 		}
 		if (y < 7 && rand() % 25 > chance) {
 			terrainGrid[x][y + 1] = terr;
+			terrainGridInfinite[x][y + 1] = terr;
 			num++;
 		}
 		if (x < 25 && rand() % 25 > chance) {
 			terrainGrid[x + 1][y] = terr;
+			terrainGridInfinite[x + 1][y] = terr;
 			num++;
 		}
 		//numIce += num;
@@ -450,6 +706,13 @@ int Map::generateSurroundingTerrain(int x, int y) {
 }
 
 void Map::generateCity() {
+	int maxx = 26;
+	int maxy = 8;
+	if (infinite) {
+		maxx = 13;
+		maxy = 4;
+	}
+
 	int sizex = rand() % 4 + 2;
 	int sizey = rand() % 1 + 3;
 
@@ -465,24 +728,33 @@ void Map::generateCity() {
 	else if (rand() % 80 == 0)
 		sizey = 7;
 
-	int posx = rand() % 26;
-	int posy = rand() % 8;
-
-	if (posx + sizex > 25) {
-		posx = 25 - sizex;
+	if (infinite) {
+		sizex /= 2;
+		sizex++;
+		sizey /= 2;
+		sizey++;
 	}
-	if (posy + sizey > 7) {
-		posy = 7 - sizey;
+
+	int posx = rand() % maxx;
+	int posy = rand() % maxy;
+
+	if (posx + sizex > maxx-1) {
+		posx = maxx-1 - sizex;
+	}
+	if (posy + sizey > maxy-1) {
+		posy = maxy-1 - sizey;
 	}
 
 	for (int x = posx; x < sizex+posx; x++) {
 		for (int y = posy; y < sizey+posy; y++) {
-			if(!(x == 0 && (y == 0 || y == 1)) && !(x == 1 && y == 0))
+			if (!(x == 0 && (y == 0 || y == 1)) && !(x == 1 && y == 0)) {
 				terrainGrid[x][y] = "City";
+				terrainGridInfinite[x][y] = "City";
+			}
 		}
 	}
 
-	if (rand() % 2 == 0) {
+	if (rand() % 2 == 0 && !infinite) {
 		int px = rand() % sizex + posx + 1;
 		int py = rand() % sizey + posy + 1;
 
@@ -668,9 +940,35 @@ void Map::UpdateMap(Character &guy) {
 		}
 	}
 
+	int inf = 0;
+	int inf2 = 0;
+	if (infinite) {
+		inf = 2;
+		inf2 = 7;
+	}
+
 	attron(COLOR_PAIR(9));
-	mvprintw(13 - guy.posy, 1 + guy.posx, "@");
+	mvprintw(13 - guy.posy - inf, 1 + guy.posx + inf2, "@");
 	attroff(COLOR_PAIR(9));
+
+	if (infinite) {
+		string floor = "Floor: " + to_string(infiniteFloor+((infiniteTier-1)*3));
+		string difficulty = "Difficulty: " + to_string(infiniteTier);
+
+		int px = 10;
+		if (infiniteFloor+((infiniteTier-1)*3) > 99)
+			px++;
+		if (infiniteFloor+((infiniteTier-1)*3) > 9999)
+			px++;
+		mvprintInSize(7, px, 0, floor.c_str(), FALSE);
+
+		px = 8;
+		if (infiniteFloor+((infiniteTier-1)*3) > 99)
+			px++;
+		if (infiniteFloor+((infiniteTier-1)*3) > 9999)
+			px++;
+		mvprintInSize(12, px, 0, difficulty.c_str(), FALSE);
+	}
 
 	standend();
 }

@@ -209,16 +209,13 @@ Card::~Card()
 
 void Card::setAttack() {
 	if (CardName == "Smack") {
-		//2d(Str)
 		Description = "Deal 2d(Str) damage.";
 	}
 	else if (CardName == "Magic Smack") {
-		//2d(Int)
 		Description = "Deal 2d(Int) damage.";
 	}
 	else if (CardName == "Charge") {
-		//7d(Str-5) damage, remove your block
-		Description = "Deal 6d(Str-5) damage. Remove all your block. -2 Energy.";
+		Description = "Deal 6d(Str/2) damage. Remove all your block. -4 Energy.";
 	}
 	else if (CardName == "Pierce") {
 		Description = "Deal 2d(Str) damage. Ignores block.";
@@ -233,7 +230,7 @@ void Card::setAttack() {
 		Description = "Only usable for a killing blow. Deal 3x(Str) damage.";
 	}
 	else if (CardName == "Parry") {
-		Description = "Deal (Str) damage. Negate the next attack.";
+		Description = "Deal (Str) damage. Negate the next attack. -3 Energy.";
 	}
 	else if (CardName == "Feint") {
 		Description = "Deal 2d(Str). Fill hand with Defends. +3 Energy.";
@@ -242,10 +239,10 @@ void Card::setAttack() {
 		Description = "Deal (Str)d2 damage.";
 	}
 	else if (CardName == "Crush") {
-		Description = "Deal 3d(Str) damage. -2 Energy.";
+		Description = "Deal 3d(Str) damage. -4 Energy.";
 	}
 	else if (CardName == "Demolish") {
-		Description = "Deal 3x(Str) damage. -12 Energy.";
+		Description = "Deal 3x(Str) damage. -15 Energy.";
 	}
 	else if (CardName == "Bleed") {
 		Description = "Deal 2d(Str/2) damage for 4 rounds.";
@@ -266,16 +263,16 @@ void Card::setAttack() {
 		Description = "Deal 2d(Str) damage. Deal (Str/2) damage for 3 turns.";
 	}
 	else if (CardName == "Slash") {
-		Description = "Deal (Str)d2 damage. Fill hand with Attacks. -2 Energy.";
+		Description = "Deal (Str)d2 damage. Fill hand with Attacks. -4 Energy.";
 	}
 	else if (CardName == "Lash") {
-		Description = "Deal (Str)d3 damage. Take 6d2 damage.";
+		Description = "Deal (Str)d3 damage. Take (Str/2) damage.";
 	}
 	else if (CardName == "Pummel") {
 		Description = "Deal 2 damage. Increase this by 2d(Str/2). +2 Energy.";
 	}
 	else if (CardName == "Rend") {
-		Description = "Halve the enemy's hp. -5 Energy.";
+		Description = "Halve the enemy's hp. -7 Energy.";
 	}
 	else if (CardName == "Ritual") {
 		Description = "Deal 5 damage. If it kills, +1 max hp and max mana.";
@@ -550,7 +547,7 @@ void Card::setSpell() {
 	}
 	else if (CardName == "Soldier") {
 		ManaCost = 3;
-		Description = "Gain 2d2 block every turn.";
+		Description = "Gain 1d3 block every turn.";
 	}
 	else if (CardName == "Attack") {
 		ManaCost = 0;
@@ -947,23 +944,118 @@ void Card::printCard(int position, Character &guy) {
 void Card::cardFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	//attacks
 	if (CardType == "Attack") {
+		//function
 		attackFunction(guy, enemy, log);
+
+		//Fervor trait
+		if (guy.Fervor != -1) {
+			guy.Fervor = guy.Skill;
+			guy.FervorDamage++;
+		}
+		//Therapy trait
+		if (guy.Therapy) {
+			int mana = -guy.DrainMana(-(2 + guy.Skill));
+			string line = "#m-You gain " + to_string(mana) + " mana.#o";
+			log.PushPop(line);
+		}
 	}
 	//defends
 	if (CardType == "Defend") {
+		//function
 		defendFunction(guy, enemy, log);
+
+		//Dexterous trait
+		if (guy.Dexterous && CardType == "Defend") {
+			int ddamage = guy.Skill;
+			dealDamage(ddamage, guy, enemy, log);
+		}
+		//Fleet of Foot trait
+		if (guy.Fleet_of_Foot) {
+			gainEnergy(3, guy, enemy);
+		}
 	}
 	//spells (sorted by headgear)
 	if (CardType == "Spell") {
+		//lose mana if the spell has a cost
+		//Sacrificial trait
+		//Dazed trait
+		//makes sure you dont lose mana while using chaos
+		if (!chaos && !guy.amplifyTRUE && guy.cell == 0 && !guy.Psychosis == 0) {
+			int cost = ManaCost;
+			if (guy.Dazed)
+				cost++;
+			if (guy.Psychosis != -1)
+				cost *= 2;
+
+			if (guy.Sacrificial) {
+				guy.TakeDamage(cost);
+			}
+			else {
+				guy.DrainMana(cost);
+			}
+		}
+		//Cell card
+		if ((ManaCost > 0 || guy.Dazed) && guy.cell > 0) {
+			guy.cell--;
+		}
+		//Amplify card
+		if (guy.amplifyTRUE)
+			guy.amplifyTRUE = FALSE;
+
+		//function
 		spellFunction(guy, enemy, log);
+
+		//Photosynthesis trait
+		if (guy.Photosynthesis) {
+			int health = guy.Skill;
+			guy.TakeDamage(-1 * health);
+		}
+		//Archmage trait
+		if (guy.Archmage) {
+			guy.ModStat(1, "Intelligence", TRUE);
+		}
+		//Amplify
+		if (guy.amplify > 0) {
+			guy.amplifyTRUE = TRUE;
+			guy.amplify--;
+			cardFunction(guy, enemy, log);
+		}
+		//Psychosis trait
+		if (guy.Psychosis != -1) {
+			if (guy.Psychosis == 1 && (ManaCost > 0 || guy.Dazed)) {
+				guy.Psychosis = 0;
+				cardFunction(guy, enemy, log);
+			}
+			else if (guy.Psychosis == 0) {
+				guy.Psychosis = 1;
+			}
+		}
 	}
 	//bosss
 	if (CardType == "BossCard") {
+		//function
 		bossFunction(guy, enemy, log);
+
+		//Strain trait
+		if (guy.Strain) {
+			gainEnergy(-5, guy, enemy);
+		}
 	}
 	//negatives
 	if (CardType == "Negative") {
+		//function
 		negativeFunction(guy, enemy, log);
+
+		//Optimist trait
+		if (guy.Optimist) {
+			int damage = dealDamage(guy.Skill * 3, guy, enemy, log);
+			string line = "-You deal #y" + to_string(damage) + "#o damage.";
+			log.PushPop(line);
+		}
+		//Resistant trait
+		if (guy.Resistant) {
+			naturalBurn = TRUE;
+		}
 	}
 
 	//used for consecutive Burn uses
@@ -1109,10 +1201,10 @@ void Card::attackFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Charge") {
-		//6d(Str-5) damage, remove your block. -2 Energy
-		int damage = dealDamage(rtd(6, guy.Strength - 5), guy, enemy, log);
+		//6d(Str/2) damage, remove your block. -4 Energy
+		int damage = dealDamage(rtd(6, guy.Strength/2), guy, enemy, log);
 		guy.CurrentBlock = 0;
-		gainEnergy(-2, guy, enemy);
+		gainEnergy(-4, guy, enemy);
 
 		string line = "-You charge at the " + string(enemy.Name)
 			+ " for #y" + to_string(damage)
@@ -1158,9 +1250,11 @@ void Card::attackFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Parry") {
+		//deal (Str) damage. Negate the next attack. -3 Energy
 		int damage = guy.Strength;
 		damage = dealDamage(damage, guy, enemy, log);
 		guy.Negate++;
+		gainEnergy(-3, guy, enemy);
 
 		string line = "-You #cnegate#o the next attack and parry for #y" + to_string(damage) + "#o damage.";
 		log.PushPop(line);
@@ -1183,9 +1277,9 @@ void Card::attackFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Crush") {
-		//do 3d(Str) dmg
+		//do 3d(Str) dmg. -4 Energy
 		int damage = dealDamage(rtd(3, guy.Strength), guy, enemy, log);
-		gainEnergy(-2, guy, enemy);
+		gainEnergy(-4, guy, enemy);
 
 		string line = "-You crush the " + string(enemy.Name)
 			+ " for #y" + to_string(damage)
@@ -1193,9 +1287,9 @@ void Card::attackFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Demolish") {
-		//do 3*(Str) dmg, lose 12 energy
+		//do 3*(Str) dmg, lose 15 energy
 		int damage = dealDamage(3 * guy.Strength, guy, enemy, log);
-		gainEnergy(-12, guy, enemy);
+		gainEnergy(-15, guy, enemy);
 
 		string line = "-You demolish the " + string(enemy.Name)
 			+ " for #y" + to_string(damage)
@@ -1300,11 +1394,11 @@ void Card::attackFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Slash") {
-		//Deal (Str)d2 damage. Fill your hand with attacks
+		//Deal (Str)d2 damage. Fill your hand with attacks. -4 Energy
 		int damage = rtd(guy.Strength, 2);
 		damage = dealDamage(damage, guy, enemy, log);
 		guy.fillType = "Attack";
-		gainEnergy(-2, guy, enemy);
+		gainEnergy(-4, guy, enemy);
 
 		string line = "-You slash the " + string(enemy.Name)
 			+ " for #y" + to_string(damage)
@@ -1312,9 +1406,9 @@ void Card::attackFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Lash") {
-		//Deal (Str)d3 damage. Take 6d2 damage
+		//Deal (Str)d3 damage. Take (Str/2) damage
 		int damage = rtd(guy.Strength, 3);
-		int sd = rtd(6, 2);
+		int sd = guy.Strength/2;
 
 		damage = dealDamage(damage, guy, enemy, log);
 		sd = guy.TakeDamage(sd);
@@ -1338,10 +1432,10 @@ void Card::attackFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Rend") {
-		//Halve the enemy's hp. -5 Energy.
+		//Halve the enemy's hp. -7 Energy.
 		if (enemy.CurrentHealth > 1)
 			enemy.CurrentHealth /= 2;
-		gainEnergy(-5, guy, enemy);
+		gainEnergy(-7, guy, enemy);
 
 		string line = "#y-You rend the " + string(enemy.Name) + ".#o";
 		log.PushPop(line);
@@ -1389,17 +1483,6 @@ void Card::attackFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 
-	//Fervor trait
-	if (guy.Fervor != -1) {
-		guy.Fervor = guy.Skill;
-		guy.FervorDamage++;
-	}
-	//Draining Touch trait
-	if (guy.Draining_Touch) {
-		int mana = -guy.DrainMana(-(2 + guy.Skill));
-		string line = "#m-You gain " + to_string(mana) + " mana.#o";
-		log.PushPop(line);
-	}
 }
 void Card::defendFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	if (CardName == "Endure") {
@@ -1627,42 +1710,8 @@ void Card::defendFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		string line = "#r-You stumble.#o";
 		log.PushPop(line);
 	}
-
-	//Dexterous trait
-	if (guy.Dexterous && CardType == "Defend") {
-		int ddamage = guy.Skill;
-		dealDamage(ddamage, guy, enemy, log);
-	}
-	//Fleet of Foot trait
-	if (guy.Fleet_of_Foot) {
-		gainEnergy(3, guy, enemy);
-	}
 }
 void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
-	//lose mana if the spell has a cost
-	//Sacrificial trait
-	//Dazed trait
-	//makes sure you dont lose mana while using chaos
-	if (!chaos && !guy.amplifyTRUE && guy.cell == 0 && !guy.Psychosis == 0) {
-		int cost = ManaCost;
-		if (guy.Dazed)
-			cost++;
-		if (guy.Psychosis != -1)
-			cost *= 2;
-
-		if (guy.Sacrificial) {
-			guy.TakeDamage(cost);
-		}
-		else {
-			guy.DrainMana(cost);
-		}
-	}
-	if ((ManaCost > 0 || guy.Dazed) && guy.cell > 0) {
-		guy.cell--;
-	}
-	if (guy.amplifyTRUE)
-		guy.amplifyTRUE = FALSE;
-
 	//no headgear
 	if (CardName == "Ponder") {
 		int mana = 2;
@@ -2065,11 +2114,11 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	}
 	else if (CardName == "Extract") {
 		//+8 mana. Deal 10 damage. -5 Energy. +1 Int on kill.
-		int mana = guy.DrainMana(-8);
+		int mana = -guy.DrainMana(-8);
 		int damage = dealDamage(10, guy, enemy, log);
 		gainEnergy(-5, guy, enemy);
 
-		string line = "-You deal #y" + to_string(damage) + "#o and gain #m" + to_string(mana) + "#o mana.";
+		string line = "-You deal #y" + to_string(damage) + "#o damage and gain #m" + to_string(mana) + "#o mana.";
 		log.PushPop(line);
 
 		string line2 = "#m-You extract the " + string(enemy.Name) + "'s Intelligence.#o";
@@ -2090,7 +2139,7 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 	else if (CardName == "Soldier") {
-		//Gain 2d2 block every turn.
+		//Gain 1d3 block every turn.
 		guy.soldier++;
 
 		string line = "#m-You summon a solder.#o";
@@ -2229,31 +2278,6 @@ void Card::spellFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		log.PushPop(line);
 	}
 
-	//Photosynthesis trait
-	if (guy.Photosynthesis && CardType == "Spell") {
-		int health = guy.Skill;
-		guy.TakeDamage(-1 * health);
-	}
-	//Archmage trait
-	if (guy.Archmage) {
-		guy.ModStat(1, "Intelligence", TRUE);
-	}
-	//Amplify
-	if (guy.amplify > 0) {
-		guy.amplifyTRUE = TRUE;
-		guy.amplify--;
-		spellFunction(guy, enemy, log);
-	}
-	//Psychosis trait
-	if (guy.Psychosis != -1) {
-		if (guy.Psychosis == 1 && (ManaCost > 0 || guy.Dazed)) {
-			guy.Psychosis = 0;
-			spellFunction(guy, enemy, log);
-		}
-		else if (guy.Psychosis == 0) {
-			guy.Psychosis = 1;
-		}
-	}
 }
 void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	if (CardName == "Haste") {
@@ -2724,11 +2748,6 @@ void Card::bossFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		CardType = "BossCard";
 		chaos = FALSE;
 	}
-
-	//Strain trait
-	if (guy.Strain) {
-		gainEnergy(-5, guy, enemy);
-	}
 }
 void Card::negativeFunction(Character &guy, Enemy &enemy, TextLog &log) {
 	if (CardName == "Steam") {
@@ -2848,13 +2867,6 @@ void Card::negativeFunction(Character &guy, Enemy &enemy, TextLog &log) {
 		gainEnergy(10, guy, enemy);
 
 		string line = "#r Your next card will burn.#o";
-		log.PushPop(line);
-	}
-
-	//Optimist trait
-	if (guy.Optimist) {
-		int damage = dealDamage(guy.Skill * 3, guy, enemy, log);
-		string line = "-You deal #y" + to_string(damage) + "#o damage.";
 		log.PushPop(line);
 	}
 }
@@ -3072,59 +3084,59 @@ void Card::polymorph(Character &guy, Enemy &enemy) {
 	vector<Enemy> boss;
 	vector<Enemy> finalboss;
 
-	early.push_back(Enemy("Rat"));
-	early.push_back(Enemy("Crab"));
-	early.push_back(Enemy("Hound"));
-	early.push_back(Enemy("Zombie"));
-	early.push_back(Enemy("Kobold"));
-	mid.push_back(Enemy("Giant Rat"));
-	mid.push_back(Enemy("Wild Buffalo"));
-	mid.push_back(Enemy("Harpy"));
-	mid.push_back(Enemy("Brown Recluse"));
-	late.push_back(Enemy("Adventurer"));
-	late.push_back(Enemy("Adventurer"));
-	late.push_back(Enemy("Troll"));
-	late.push_back(Enemy("Elemental"));
+	early.push_back(Enemy("Rat", guy.infiniteTier));
+	early.push_back(Enemy("Crab", guy.infiniteTier));
+	early.push_back(Enemy("Hound", guy.infiniteTier));
+	early.push_back(Enemy("Zombie", guy.infiniteTier));
+	early.push_back(Enemy("Kobold", guy.infiniteTier));
+	mid.push_back(Enemy("Giant Rat", guy.infiniteTier));
+	mid.push_back(Enemy("Wild Buffalo", guy.infiniteTier));
+	mid.push_back(Enemy("Harpy", guy.infiniteTier));
+	mid.push_back(Enemy("Brown Recluse", guy.infiniteTier));
+	late.push_back(Enemy("Adventurer", guy.infiniteTier));
+	late.push_back(Enemy("Adventurer", guy.infiniteTier));
+	late.push_back(Enemy("Troll", guy.infiniteTier));
+	late.push_back(Enemy("Elemental", guy.infiniteTier));
 
-	early.push_back(Enemy("Hatchling"));
-	mid.push_back(Enemy("Molten Jelly"));
-	late.push_back(Enemy("Knight"));
-	late.push_back(Enemy("Drake"));
-	early.push_back(Enemy("Slave"));
-	mid.push_back(Enemy("Soldier"));
-	late.push_back(Enemy("Guard"));
-	late.push_back(Enemy("Jester"));
-	early.push_back(Enemy("Eyeball"));
-	mid.push_back(Enemy("Apprentice"));
-	late.push_back(Enemy("Monster"));
-	late.push_back(Enemy("Brain"));
-	early.push_back(Enemy("Cultist"));
-	mid.push_back(Enemy("Imp"));
-	late.push_back(Enemy("Weeping Soul"));
-	late.push_back(Enemy("Hellhound"));
-	early.push_back(Enemy("Robot"));
-	mid.push_back(Enemy("Golem"));
-	late.push_back(Enemy("Merchant"));
-	late.push_back(Enemy("Turret"));
+	early.push_back(Enemy("Hatchling", guy.infiniteTier));
+	mid.push_back(Enemy("Molten Jelly", guy.infiniteTier));
+	late.push_back(Enemy("Knight", guy.infiniteTier));
+	late.push_back(Enemy("Drake", guy.infiniteTier));
+	early.push_back(Enemy("Slave", guy.infiniteTier));
+	mid.push_back(Enemy("Soldier", guy.infiniteTier));
+	late.push_back(Enemy("Guard", guy.infiniteTier));
+	late.push_back(Enemy("Jester", guy.infiniteTier));
+	early.push_back(Enemy("Eyeball", guy.infiniteTier));
+	mid.push_back(Enemy("Apprentice", guy.infiniteTier));
+	late.push_back(Enemy("Monster", guy.infiniteTier));
+	late.push_back(Enemy("Brain", guy.infiniteTier));
+	early.push_back(Enemy("Cultist", guy.infiniteTier));
+	mid.push_back(Enemy("Imp", guy.infiniteTier));
+	late.push_back(Enemy("Weeping Soul", guy.infiniteTier));
+	late.push_back(Enemy("Hellhound", guy.infiniteTier));
+	early.push_back(Enemy("Robot", guy.infiniteTier));
+	mid.push_back(Enemy("Golem", guy.infiniteTier));
+	late.push_back(Enemy("Merchant", guy.infiniteTier));
+	late.push_back(Enemy("Turret", guy.infiniteTier));
 
-	boss.push_back(Enemy("Paladin"));
-	boss.push_back(Enemy("Juggernaut"));
-	boss.push_back(Enemy("Vampire"));
-	boss.push_back(Enemy("Hydra"));
-	boss.push_back(Enemy("Demigod"));
-	boss.push_back(Enemy("Hunter"));
-	boss.push_back(Enemy("Exorcist"));
-	boss.push_back(Enemy("Wolf"));
-	boss.push_back(Enemy("Druid"));
-	boss.push_back(Enemy("Serpent"));
-	boss.push_back(Enemy("Spirit"));
-	boss.push_back(Enemy("Artificer"));
+	boss.push_back(Enemy("Paladin", guy.infiniteTier));
+	boss.push_back(Enemy("Juggernaut", guy.infiniteTier));
+	boss.push_back(Enemy("Vampire", guy.infiniteTier));
+	boss.push_back(Enemy("Hydra", guy.infiniteTier));
+	boss.push_back(Enemy("Demigod", guy.infiniteTier));
+	boss.push_back(Enemy("Hunter", guy.infiniteTier));
+	boss.push_back(Enemy("Exorcist", guy.infiniteTier));
+	boss.push_back(Enemy("Wolf", guy.infiniteTier));
+	boss.push_back(Enemy("Druid", guy.infiniteTier));
+	boss.push_back(Enemy("Serpent", guy.infiniteTier));
+	boss.push_back(Enemy("Spirit", guy.infiniteTier));
+	boss.push_back(Enemy("Artificer", guy.infiniteTier));
 
-	finalboss.push_back(Enemy("King"));
-	finalboss.push_back(Enemy("Demon"));
-	finalboss.push_back(Enemy("Witch"));
-	finalboss.push_back(Enemy("Dragon"));
-	finalboss.push_back(Enemy("Machine"));
+	finalboss.push_back(Enemy("King", guy.infiniteTier));
+	finalboss.push_back(Enemy("Demon", guy.infiniteTier));
+	finalboss.push_back(Enemy("Witch", guy.infiniteTier));
+	finalboss.push_back(Enemy("Dragon", guy.infiniteTier));
+	finalboss.push_back(Enemy("Machine", guy.infiniteTier));
 
 	char tier = guy.getTier();
 

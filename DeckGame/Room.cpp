@@ -77,7 +77,7 @@ Room::Room() {
 	posx = 0;
 	posy = 0;
 }
-Room::Room(const char *type, int x, int y):RoomType(type)
+Room::Room(const char *type, int x, int y, bool inf):RoomType(type), infinite(inf)
 {
 	RoomType = type;
 	clear = FALSE;
@@ -117,11 +117,18 @@ void Room::PrintRoom(bool gray) {
 		gray = TRUE;
 	else
 		gray = FALSE;
+
+	int inf = 0;
+	int inf2 = 0;
+	if (infinite) {
+		inf = 2;
+		inf2 = 7;
+	}
 	
 	if (RoomType == "First") {
 		if (gray)
 			attron(COLOR_PAIR(8));
-		mvprintw(13 - posy, 1 + posx, " "); // i want this --> ∩ <-- eventually
+		mvprintw(13 - posy - inf, 1 + posx + inf2, " "); // i want this --> ∩ <-- eventually
 	}
 	else if (RoomType == "Combat") {
 		if (gray)
@@ -154,7 +161,7 @@ void Room::PrintRoom(bool gray) {
 			else
 				attron(COLOR_PAIR(5));
 		}
-		mvprintw(13 - posy, 1 + posx, "!");
+		mvprintw(13 - posy - inf, 1 + posx + inf2, "!");
 	}
 	else if (RoomType == "Gear Head") {
 		if (gray)
@@ -187,7 +194,7 @@ void Room::PrintRoom(bool gray) {
 			else
 				attron(COLOR_PAIR(2));
 		}
-		mvprintw(13 - posy, 1 + posx, "^");
+		mvprintw(13 - posy - inf, 1 + posx + inf2, "^");
 	}
 	else if (RoomType == "Gear Body") {
 		if (gray)
@@ -220,7 +227,7 @@ void Room::PrintRoom(bool gray) {
 			else
 				attron(COLOR_PAIR(2));
 		}
-		mvprintw(13 - posy, 1 + posx, "#");
+		mvprintw(13 - posy - inf, 1 + posx + inf2, "#");
 	}
 	else if (RoomType == "Gear Hands") {
 		if (gray)
@@ -253,7 +260,7 @@ void Room::PrintRoom(bool gray) {
 			else
 				attron(COLOR_PAIR(2));
 		}
-		mvprintw(13 - posy, 1 + posx, "/");
+		mvprintw(13 - posy - inf, 1 + posx + inf2, "/");
 	}
 	else if (RoomType == "Mod") {
 		if (gray)
@@ -286,7 +293,7 @@ void Room::PrintRoom(bool gray) {
 			else
 				attron(COLOR_PAIR(6));
 		}
-		mvprintw(13 - posy, 1 + posx, "=");
+		mvprintw(13 - posy - inf, 1 + posx + inf2, "=");
 	}
 	else if (RoomType == "Shop") {
 		if (gray)
@@ -319,7 +326,7 @@ void Room::PrintRoom(bool gray) {
 			else
 				attron(COLOR_PAIR(10));
 		}
-		mvprintw(13 - posy, 1 + posx, "$");
+		mvprintw(13 - posy - inf, 1 + posx + inf2, "$");
 	}
 	else if (RoomType == "Cauldron") {
 		if (gray)
@@ -352,7 +359,7 @@ void Room::PrintRoom(bool gray) {
 			else
 				attron(COLOR_PAIR(3));
 		}
-		mvprintw(13 - posy, 1 + posx, "+");
+		mvprintw(13 - posy - inf, 1 + posx + inf2, "+");
 	}
 	else if (RoomType == "Boss") {
 		if (gray)
@@ -385,23 +392,35 @@ void Room::PrintRoom(bool gray) {
 			else
 				attron(COLOR_PAIR(7));
 		}
-		mvprintw(13 - posy, 1 + posx, "o");
+		mvprintw(13 - posy - inf, 1 + posx + inf2, "o");
 	}
 	else if (RoomType == "Final Boss") {
 		if (gray)
 			attron(COLOR_PAIR(8));
 		else
 			attron(COLOR_PAIR(7));
-		mvprintw(13 - posy, 1 + posx, "&");
+		mvprintw(13 - posy - inf, 1 + posx + inf2, "&");
 	}
 	else if (RoomType == "Empty") {
 		if (gray)
 			attron(COLOR_PAIR(8));
 		else
 			standend();
-		mvprintw(13 - posy, 1 + posx, ".");
+		if(infinite)
+			mvprintw(13 - posy - inf, 1 + posx + inf2, "o");
+		else
+			mvprintw(13 - posy - inf, 1 + posx + inf2, ".");
 	}
+
 	standend();
+
+	if (amnesia && !clear) {
+		if (infinite)
+			mvprintw(13 - posy - inf, 1 + posx + inf2, "?");
+		else
+			mvprintw(13 - posy - inf, 1 + posx + inf2, "?");
+	}
+
 	//init_color(COLOR_WHITE, 700, 700, 700);
 }
 

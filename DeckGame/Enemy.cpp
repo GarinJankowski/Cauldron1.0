@@ -7,7 +7,7 @@ int rtd(int multiplier, int power);
 Enemy::Enemy() {
 	Name = "";
 }
-Enemy::Enemy(const char *name):Name(name)
+Enemy::Enemy(const char *name, int itier):Name(name),infiniteTier(itier)
 {
 	Name = name;
 	MaxHealth = 0;
@@ -20,6 +20,10 @@ Enemy::Enemy(const char *name):Name(name)
 	invisible = 0;
 	type = 0;
 	enemyNegate = 0;
+
+	//these variables just make things easier
+	i1 = infiniteTier;
+	im1 = infiniteTier - 1;
 
 	numA = 0;
 	numB = 0;
@@ -43,40 +47,40 @@ Enemy::Enemy(const char *name):Name(name)
 //----------------Basic----------------
 	//Rat (does damage)
 	if (Name == "Rat") {
-		MaxHealth = 20;
+		MaxHealth = 20 + (im1*40);
 		goldreward = 2;
 	}
 	else if (Name == "Crab") {
-		MaxHealth = 11;
+		MaxHealth = 11 * i1;
 		goldreward = 3;
 	}
 	else if (Name == "Kobold") {
-		MaxHealth = 25;
+		MaxHealth = 25 + (im1*50);
 		goldreward = 3;
 	}
 	else if (Name == "Zombie") {
-		MaxHealth = 30;
+		MaxHealth = 30 + (im1*i1*10);
 		goldreward = 3;
 	}
 	else if (Name == "Hound") {
-		MaxHealth = 35;
+		MaxHealth = 35 * i1;
 		goldreward = 3;
 	}
 //-----------------Mid-----------------
 	else if (Name == "Giant Rat") {
-		MaxHealth = 50;
+		MaxHealth = 50 + (im1*100);
 		goldreward = 5;
 	}
 	else if (Name == "Wild Buffalo") {
-		MaxHealth = 50;
+		MaxHealth = 50 + (im1*110);
 		goldreward = 5;
 	}
 	else if (Name == "Harpy") {
-		MaxHealth = 45;
+		MaxHealth = 45 * i1;
 		goldreward = 5;
 	}
 	else if (Name == "Brown Recluse") {
-		MaxHealth = 65;
+		MaxHealth = 65 + (im1*125);
 		goldreward = 5;
 	}
 	else if (Name == "Fairy") {
@@ -85,104 +89,104 @@ Enemy::Enemy(const char *name):Name(name)
 	}
 //----------------High-----------------
 	else if (Name == "Elemental") {
-		MaxHealth = 100;
+		MaxHealth = 100 + (im1*200);
 		goldreward = 8;
 	}
 	else if (Name == "Adventurer") {
-		MaxHealth = 80;
+		MaxHealth = 80 + (im1*(80+im1*5));
 		goldreward = 7;
 		type = rand() % 4;
 	}
 	else if (Name == "Troll") {
-		MaxHealth = 140;
+		MaxHealth = 140 + (im1*i1*20);
 		goldreward = 7;
 	}
 //---------------Themed----------------
 	//------Dragon:
 	else if (Name == "Hatchling") {
-		MaxHealth = 30;
+		MaxHealth = 30 * i1;
 		goldreward = 3;
 	}
 	else if (Name == "Molten Jelly") {
-		MaxHealth = 55;
+		MaxHealth = 55 * i1;
 		goldreward = 5;
 	}
 	else if (Name == "Knight") {
-		MaxHealth = 60;
+		MaxHealth = 60 + (im1*(200+i1*5));
 		goldreward = 8;
 	}
 	else if (Name == "Drake") {
-		MaxHealth = 75;
+		MaxHealth = 75 * i1;
 		goldreward = 8;
 	}
 	//------King:
 	else if (Name == "Slave") {
-		MaxHealth = 30;
+		MaxHealth = 30 + (im1 * (30+i1*5));
 		goldreward = 3;
 	}
 	else if (Name == "Soldier") {
-		MaxHealth = 40;
+		MaxHealth = 40 + (im1*(40+i1*5));
 		goldreward = 5;
 	}
 	else if (Name == "Guard") {
-		MaxHealth = 60;
+		MaxHealth = 60 * i1;
 		goldreward = 8;
 	}
 	else if (Name == "Jester") {
-		MaxHealth = 60;
+		MaxHealth = 60 + (im1 * rand()%100);
 		goldreward = 8;
 	}
 	//------Witch:
 	else if (Name == "Eyeball") {
-		MaxHealth = 25;
+		MaxHealth = 25 * i1;
 		goldreward = 3;
 	}
 	else if (Name == "Apprentice") {
-		MaxHealth = 45;
+		MaxHealth = 45 * i1;
 		goldreward = 5;
 	}
 	else if (Name == "Monster") {
-		MaxHealth = 60;
+		MaxHealth = 60 + (im1*(70 + i1*5));
 		goldreward = 8;
 	}
 	else if (Name == "Brain") {
-		MaxHealth = 120;
+		MaxHealth = 120 + (im1*(140+i1*5));
 		goldreward = 8;
 	}
 	//------Demon:
 	else if (Name == "Cultist") {
-		MaxHealth = 30;
+		MaxHealth = 30 + (im1*45);
 		goldreward = 3;
 	}
 	else if (Name == "Imp") {
-		MaxHealth = 25;
+		MaxHealth = 25 * i1;
 		goldreward = 5;
 		charge = TRUE;
 	}
 	else if (Name == "Weeping Soul") {
-		MaxHealth = 60;
+		MaxHealth = 60 + (im1*(100+im1*10));
 		goldreward = 8;
 	}
 	else if (Name == "Hellhound") {
-		MaxHealth = 70;
+		MaxHealth = 70 * i1;
 		goldreward = 8;
 	}
 	//------Machine:
 	else if (Name == "Robot") {
-		MaxHealth = 25;
+		MaxHealth = 25 * i1;
 		goldreward = 3;
 	}
 	else if (Name == "Golem") {
-		MaxHealth = 60;
+		MaxHealth = 60 + (im1*(60+im1*10));
 		goldreward = 5;
 	}
 	else if (Name == "Merchant") {
-		MaxHealth = 70;
-		goldreward = 15;
+		MaxHealth = 70 * i1;
+		goldreward = 15 * i1;
 		type = rtd(1, 3);
 	}
 	else if (Name == "Turret") {
-		MaxHealth = 80;
+		MaxHealth = 80 * i1;
 		goldreward = 8;
 	}
 //----------------Boss-----------------
@@ -229,24 +233,24 @@ Enemy::Enemy(const char *name):Name(name)
 	}
 //-------------Final Boss--------------
 	else if (Name == "Dragon") {
-		MaxHealth = 275;
-		goldreward = 50;
+		MaxHealth = 275 + (im1*i1*275);
+		goldreward = 50*i1;
 	}
 	else if (Name == "King") {
-		MaxHealth = 150;
-		goldreward = 50;
+		MaxHealth = 150 + (im1*i1 * 150);
+		goldreward = 50*i1;
 	}
 	else if (Name == "Witch") {
-		MaxHealth = 150;
-		goldreward = 50;
+		MaxHealth = 150 + (im1*i1 * 150);
+		goldreward = 50*i1;
 	}
 	else if (Name == "Demon") {
-		MaxHealth = 200;
-		goldreward = 50;
+		MaxHealth = 200 + (im1*i1 * 200);
+		goldreward = 50*i1;
 	}
 	else if (Name == "Machine") {
-		MaxHealth = 300;
-		goldreward = 50;
+		MaxHealth = 300 + (im1*i1 * 300);
+		goldreward = 50*i1;
 		numA = MaxHealth / 3;
 		dot = numA * 2;
 	}
@@ -261,42 +265,54 @@ Enemy::~Enemy()
 //used for scaling bosses
 void Enemy::setStats(Character &guy) {
 	if (Name == "Paladin") {
-		MaxHealth = 60 + (10*tier);
+		MaxHealth = 60 + (10*tier) + (im1*im1*60);
+		goldreward = 10 + (2 * tier);
 	}
 	else if (Name == "Hunter") {
-		MaxHealth = 50 + (15*tier);
+		MaxHealth = 50 + (15*tier) + (im1*im1 * 50);
+		goldreward = 10 + (2 * tier);
 	}
 	else if (Name == "Juggernaut") {
-		MaxHealth = 120 + (20 * tier);
+		MaxHealth = 120 + (20 * tier) + (im1*im1 * 120);
+		goldreward = 10 + (2 * tier);
 	}
 	else if (Name == "Vampire") {
-		MaxHealth = 35 + (10 * tier);
+		MaxHealth = 35 + (10 * tier) + (im1*im1 * 35);
+		goldreward = 10 + (2 * tier);
 	}
 	else if (Name == "Druid") {
-		MaxHealth = 95 + (5 * tier);
+		MaxHealth = 95 + (5 * tier) + (im1*im1 * 95);
+		goldreward = 10 + (2 * tier);
 	}
 	else if (Name == "Thief") {
 	}
 	else if (Name == "Hydra") {
-		MaxHealth = 55 + (11 * tier);
+		MaxHealth = 55 + (11 * tier) + (im1*im1 * 55);
+		goldreward = 10 + (2 * tier) * i1;
 	}
 	else if (Name == "Wolf") {
-		MaxHealth = 70 + (10 * tier);
+		MaxHealth = 70 + (10 * tier) + (im1*im1 * 70);
+		goldreward = 10 + (2 * tier) * i1;
 	}
 	else if (Name == "Exorcist") {
-		MaxHealth = 90 + (15 * tier);
+		MaxHealth = 90 + (15 * tier) + (im1*im1 * 90);
+		goldreward = 10 + (2 * tier) * i1;
 	}
 	else if (Name == "Demigod") {
-		MaxHealth = 90 + (15 * tier);
+		MaxHealth = 90 + (15 * tier) + (im1*im1 * 90);
+		goldreward = 10 + (2 * tier) * i1;
 	}
 	else if (Name == "Serpent") {
-		MaxHealth = 70 + (10 * tier);
+		MaxHealth = 70 + (10 * tier) + (im1*im1 * 70);
+		goldreward = 10 + (2 * tier) * i1;
 	}
 	else if (Name == "Spirit") {
-		MaxHealth = 70 + (7 * tier);
+		MaxHealth = 70 + (7 * tier) + (im1*im1 * 77);
+		goldreward = 10 + (2 * tier) * i1;
 	}
 	else if (Name == "Artificer") {
-		MaxHealth = 55 + (15 * tier);
+		MaxHealth = 55 + (15 * tier) + (im1*im1 * 60);
+		goldreward = 10 + (2 * tier) * i1;
 	}
 
 	CurrentHealth = MaxHealth;
@@ -389,7 +405,10 @@ void Kobold::Turn(Character &guy, TextLog &log) {
 
 void Enemy::Turn(Character &guy, TextLog &log) {
 	//non final boss enemy's basic attacks deal more damage as the fight goes on
-	int td = int(TurnCount / 25);
+	int tdi = 25;
+	if (guy.infinite)
+		tdi *= 2;
+	int td = int(TurnCount / tdi);
 
 	//check if the enemy is DOT
 	if (guy.Toxic_Release) {
@@ -466,7 +485,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 		//for the Druid coming back to life
 		if (Name == "Druid" && charge) {
 			charge = FALSE;
-			MaxHealth = 95 + (5 * tier);
+			MaxHealth = 95 + (5 * tier) + (i1*im1*95);
 			CurrentHealth = MaxHealth/3;
 			string rev = "#r-The Druid restores its life!#o";
 			log.PushPop(rev);
@@ -480,28 +499,28 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 //----------------Basic----------------
 	//Rat: just some damage
 		if (Name == "Rat") {
-				int damage = rtd(3+td, 4);
-
-				damage = guy.TakeDamage(damage);
-				string line = string("-The Rat bites you for #r") + to_string(damage)
-					+ string("#o damage.");
-				log.PushPop(line);
+			
+			int damage = rtd(3+td+(im1*7), 4);
+			damage = guy.TakeDamage(damage);
+			string line = string("-The Rat bites you for #r") + to_string(damage)
+				+ string("#o damage.");
+			log.PushPop(line);
 		}
 	//Crab: lots of block first turn
 		else if (Name == "Crab") {
 				string line;
 				if (TurnCount == 0) {
-					int block = gainBlock(20, guy, log);
+					int block = gainBlock(20 + (im1*(15+im1*5)), guy, log);
 					line = "-The Crab hides in its shell and gains #b" + to_string(block) + "#o block.";
 				}
 				else {
 					int rng = rand() % 4;
 					if (rng == 0) {
-						int block = gainBlock(rtd(3, 3), guy, log);
+						int block = gainBlock(rtd(3 + (im1), 3), guy, log);
 						line = "-The Crab gains #b" + to_string(block) + "#o block.";
 					}
 					else {
-						int damage = rtd(2, 5+td);
+						int damage = rtd(2 + (im1*3), 5+td);
 						damage = guy.TakeDamage(damage);
 						line = "-The Crab pinches you for #r" + to_string(damage) + "#o damage.";
 					}
@@ -515,19 +534,19 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				string line;
 				int rng = rand() % 5;
 				if (rng == 0) {
-					int block = gainBlock(rtd(4, 2), guy, log);
+					int block = gainBlock(rtd(4*i1, 2), guy, log);
 					line = "-The Kobold gains #b" + to_string(block) + "#o block.";
 				}
 				else if (rng == 1 && guy.CurrentHealth > 1) {
 					guy.pierce = TRUE;
-					int damage = rtd(6, 2);
-					if (guy.CurrentHealth < 12)
+					int damage = rtd(6*i1, 2);
+					if (guy.CurrentHealth < 12*i1)
 						damage = guy.CurrentHealth - 1;
 					damage = guy.TakeDamage(damage);
 					line = "-The Kobold #rpierces your armor#o and stabs you for #r" + to_string(damage) + "#o damage.";
 				}
 				else {
-					int damage = rtd(3 + td, 4);
+					int damage = rtd(3 + td + (im1*3), 4);
 					damage = guy.TakeDamage(damage);
 					line = "-The Kobold slices you for #r" + to_string(damage) + "#o damage.";
 				}
@@ -538,7 +557,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 		else if (Name == "Zombie") {
 				string line;
 
-				int damage = rtd(3 + td, 2);
+				int damage = rtd(3 + td + (im1*3), 2);
 				int health = damage;
 				if (health < guy.CurrentBlock || guy.Negate > 0)
 					health = 0;
@@ -557,17 +576,17 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				string line;
 
 				if (guy.dotDamage == 0) {
-					guy.dotDamage += 2;
+					guy.dotDamage += 2*i1;
 					line = "#r-The Hound tears your flesh, causing you to bleed out.#o";
 				}
 				else {
 					int rng = rand() % 4;
 					if (rng == 0) {
-						guy.dotDamage += 2;
+						guy.dotDamage += 2*i1;
 						line = "#r-The Hound tears your flesh, causing you to bleed out.#o";
 					}
 					else {
-						int damage = rtd(3 + td, 3);
+						int damage = rtd(3 + td + (im1*2), 3);
 						damage = guy.TakeDamage(damage);
 						line = "-The Hound bites you for #r" + to_string(damage) + "#o damage.";
 					}
@@ -581,7 +600,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 		else if (Name == "Giant Rat") {
 			string line;
 
-			int damage = rtd(3 + td, 4)+2;
+			int damage = rtd(3 + td + (im1*3), 4)+2*i1;
 			damage = guy.TakeDamage(damage);
 
 			line = string("-The Giant Rat bites you for #r") + to_string(damage)
@@ -606,7 +625,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 						line = "#r-The Wild Buffalo charges at you and removes your block.#o";
 					}
 					else {
-						int damage = rtd(9, 4);
+						int damage = rtd(9 + (im1*im1), 4);
 						damage = guy.TakeDamage(damage);
 						line = "-The Wild Buffalo charges at you and does #r" + to_string(damage) + "#o damage.";
 					}
@@ -615,7 +634,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 
 			}
 			else {
-				int damage = rtd(3 + td, 5);
+				int damage = rtd(3 + td + (im1), 5);
 				damage = guy.TakeDamage(damage);
 				line = "-The Wild Buffalo slams you for #r" + to_string(damage) + "#o damage.";
 			}
@@ -629,11 +648,11 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 
 			int rng = rand() % 3;
 			if (rng == 0) {
-				int block = gainBlock(rtd(1, 7), guy, log);
+				int block = gainBlock(rtd(1, 7 + (im1*2)), guy, log);
 				line = "-The Harpy gains #b" + to_string(block) + "#o block.";
 			}
 			else {
-				int damage = rtd(1 + td, 11);
+				int damage = rtd(1 + td, 11 + (im1*2));
 				damage = guy.TakeDamage(damage);
 				line = "-The Harpy scratches you for #r" + to_string(damage) + "#o damage.";
 			}
@@ -648,7 +667,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				charge = FALSE;
 			}
 			else if(!charge){
-				int turns = rand() % 3;
+				int turns = rand() % 3 + im1;
 				extraTurns += turns;
 			}
 
@@ -660,18 +679,18 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			string line;
 
 			if (TurnCount == 0) {
-				guy.ADDWebbed++;
+				guy.ADDWebbed+=i1;
 				line = "#r-The Brown Recluse spews a web at you.#o";
 				//TurnCount++;
 			}
 			else {
 				int rng = rand() % 4;
 				if (rng == 0 && guy.dotDamage < 4) {
-					guy.dotDamage += 2;
+					guy.dotDamage += 2 + (im1*3);
 					line = "#r-The Brown Recluse injects you with venom.#o";
 				}
 				else {
-					int damage = rtd(6 + td, 2);
+					int damage = rtd(6 + td + im1, 2);
 					damage = guy.TakeDamage(damage);
 					line = "-The Brown Recluse bites you for #r" + to_string(damage) + "#o damage.";
 				}
@@ -690,63 +709,66 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			int rng = rand() % 14;
 			if (rng == 0 && !cardAdded) {
 				//add card
-				guy.ADDScalding_Steam++;
+				guy.ADDScalding_Steam+= 1 + im1/2;
 				line = "#r-The Elemental sprays you with steam.#o";
 				cardAdded = TRUE;
 			}
 			else if (rng > 0 && rng <= 2) {
 				//dot
-				guy.dotDamage += 2;
+				guy.dotDamage += 2*i1;
 				line = "#r-The Elemental releases toxic fumes.#o";
 			}
 			else if (rng > 2 && rng <= 4) {
 				//leech
-				int damage = rtd(3, 2);
+				int damage = rtd(3*i1, 2);
 				damage = guy.TakeDamage(damage);
 				heal(damage, guy, log);
 				line = "-The Elemental #rsteals " + to_string(damage) + " health#o from you.";
 			}
 			else if (rng > 4 && rng <= 6) {
 				//heal
-				int health = rtd(6, 2);
+				int health = rtd(6*i1, 2);
 				heal(health, guy, log);
 				line = "-The Elemental gains #b" + to_string(health) + "#o health.";
 			}
 			else if (rng > 6 && rng <= 7) {
 				//stat drain
 				int rng2 = rand() % 8;
+				int stat1 = i1;
+				int stat2 = i1 * 2;
+				int stat3 = 1 + (im1 / 2);
 				if (rng2 >= 0 && rng2 < 2 && guy.Strength > 1) {
 					//str
-					guy.ModStat(-1, "Strength", TRUE);
-					line = "-The Elemental drains #r1 strength#o from you.";
+					guy.ModStat(-stat1, "Strength", TRUE);
+					line = "-The Elemental drains #r" + to_string(stat1) + " Strength#o from you.";
 				}
 				else if (rng2 >= 2 && rng2 < 4 && guy.Defense > 1) {
 					//def
-					guy.ModStat(-1, "Defense", TRUE);
-					line = "-The Elemental drains #r1 defense#o from you.";
+					guy.ModStat(-stat1, "Defense", TRUE);
+					line = "-The Elemental drains #r" + to_string(stat1) + " Defense#o from you.";
 				}
 				else if (rng2 >= 4 && rng2 < 6 && guy.Intelligence > 1) {
 					//int
-					guy.ModStat(-1, "Intelligence", TRUE);
-					line = "-The Elemental drains #r1 intelligence#o from you.";
+					guy.ModStat(-stat1, "Intelligence", TRUE);
+					line = "-The Elemental drains #r" + to_string(stat1) + " Intelligence#o from you.";
 				}
 				else if (rng2 >= 6 && rng2 < 7 && guy.MaxHealth > 10) {
 					//hp
-					guy.ModStat(-1, "MaxHealth", TRUE);
+					guy.ModStat(-stat2, "MaxHealth", TRUE);
 					if (guy.CurrentHealth > guy.MaxHealth)
 						guy.MaxHealth--;
-					line = "-The Elemental drains #r1 max health#o from you.";
+					line = "-The Elemental drains #r" + to_string(stat2) + " Max Health#o from you.";
 				}
 				else if (rng2 == 7 && guy.MaxMana > 3) {
 					//mp
-					guy.ModStat(-1, "MaxMana", TRUE);
+					guy.ModStat(-stat3, "MaxMana", TRUE);
 					if (guy.CurrentMana > guy.MaxMana)
 						guy.CurrentMana--;
-					line = "-The Elemental drains #r1 max mana#o from you.";
+					line = "-The Elemental drains #r" + to_string(stat3) + " Max Mana#o from you.";
 				}
 				else {
 					//small attack
-					int damage = 1;
+					int damage = i1;
 					damage = guy.TakeDamage(damage);
 					line = "-The Elemental hits you for #r1#o damage.";
 				}
@@ -754,15 +776,14 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			else {
 				//damage
 				int rng2 = rand() % 4;
-				int damage = rtd(10, 2);
-				if (rng2 == 0 && guy.CurrentHealth > 16) {
+				if (rng2 == 0 && guy.CurrentHealth > 16 + (im1*8)) {
 					guy.pierce = TRUE;
-					int damage = rtd(8, 2);
+					int damage = rtd(8, 2*i1);
 					damage = guy.TakeDamage(damage);
 					line = "-The Elemental #rpierces your armor#o and hits you for #r" + to_string(damage) + "#o damage.";
 				}
 				else {
-					int damage = rtd(3 + td, 12);
+					int damage = rtd(3 + td + i1/2, 12 + (im1*3));
 					damage = guy.TakeDamage(damage);
 					line = "-The Elemental hits you for #r" + to_string(damage) + "#o damage.";
 				}
@@ -783,20 +804,20 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			if (rng1 == 0) {
 				if (type == 0) {
 					int rng2 = rand() % 3;
-					if (rng2 == 0 && guy.CurrentHealth > 12) {
-						int damage = 12;
+					if (rng2 == 0 && guy.CurrentHealth > 12*i1) {
+						int damage = 12*i1;
 						guy.pierce = TRUE;
 						damage = guy.TakeDamage(damage);
 						line = "-The Adventurer pierces your armor and deals #r" + to_string(damage) + "#o damage.";
 					}
 					else {
-						int damage = rtd(12 + td, 3);
+						int damage = rtd(12 + td + im1, 3 + im1/2);
 						damage = guy.TakeDamage(damage);
 						line = "-The Adventurer crushes you for #r" + to_string(damage) + "#o damage.";
 					}
 				}
 				else if (type == 1) {
-					int damage = rtd(5 + td, 3);
+					int damage = rtd(5 + td, 3*i1) + (im1*2);
 					damage = guy.TakeDamage(damage);
 					line = "-The Adventurer slices you for #r" + to_string(damage) + "#o damage.";
 					charge = FALSE;
@@ -806,32 +827,32 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					line = "#r-The Adventurer is charging up.#o";
 				}
 				else if (type == 3) {
-					int damage = rtd(12 + td, 2);
+					int damage = rtd(12 + td, 2+im1);
 					damage = guy.TakeDamage(damage);
 					line = "-The Adventurer stabs you for #r" + to_string(damage) + "#o damage.";
-					int hp = heal(2, guy, log);
+					int hp = heal(2 + (im1), guy, log);
 					string line2 = "-The Adventurer regenerates #r" + to_string(hp) + "#o health.";
 					log.PushPop(line2);
 				}
 			}
 			else if (rng1 == 1) {
 				if (type == 0) {
-					int block = gainBlock(rtd(3, 6), guy, log);
+					int block = gainBlock(rtd(3*i1, 6), guy, log);
 					line = "-The Adventurer gains #b" + to_string(block) + "#o block.";
 				}
 				else if (type == 1) {
-					int block = gainBlock(rtd(8, 3), guy, log);
+					int block = gainBlock(rtd(8 + (im1*3), 3), guy, log);
 					line = "-The Adventurer gains #b" + to_string(block) + "#o block.";
 					charge = FALSE;
 				}
 				else if (type == 2) {
-					int block = gainBlock(rtd(3, 6), guy, log);
+					int block = gainBlock(rtd(3, 6 + (im1*2)), guy, log);
 					line = "-The Adventurer gains #b" + to_string(block) + "#o block.";
 				}
 				else if (type == 3) {
-					int block = gainBlock(rtd(2, 5), guy, log);
+					int block = gainBlock(rtd(2*i1, 5), guy, log);
 					line = "-The Adventurer gains #b" + to_string(block) + "#o block.";
-					int hp = heal(2, guy, log);
+					int hp = heal(2 + (im1), guy, log);
 					string line2 = "-The Adventurer regenerates #r" + to_string(hp) + "#o health.";
 					log.PushPop(line2);
 				}
@@ -844,21 +865,21 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 						line = "#r-The Adventurer destroys all your block.#o";
 					}
 					else {
-						int health = rtd(4, 3);
+						int health = rtd(4, 3 + (im1));
 						heal(health, guy, log);
 						line = "-The Adventurer heals for #r" + to_string(health) + "#o health.";
 					}
 				}
 				else if (type == 1) {
 					if (!charge) {
-						int damage = rtd(4, 5);
+						int damage = rtd(4, 5+im1);
 						damage = guy.TakeDamage(damage);
 						line = "-The Adventurer zaps you for #r" + to_string(damage) + "#o damage.";
 						charge = TRUE;
 						Turn(guy, log);
 					}
 					else {
-						int damage = rtd(4, 5);
+						int damage = rtd(4+im1, 5);
 						damage = guy.TakeDamage(damage);
 						line = "-The Adventurer zaps you for #r" + to_string(damage) + "#o damage.";
 					}
@@ -869,7 +890,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					}
 					else {
 						for (int i = 0; i < dot; i++) {
-							int damage = guy.TakeDamage(rtd(10 + td, 3));
+							int damage = guy.TakeDamage(rtd(10 + td, 3 + im1));
 							string line2 = "-The Adventurer electrocutes you for #r" + to_string(damage) + "#o damage.";
 							log.PushPop(line2);
 						}
@@ -877,10 +898,10 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					}
 				}
 				else if (type == 3) {
-					int health = rtd(5, 2);
+					int health = rtd(5, 2 + (im1));
 					heal(health, guy, log);
 					line = "-The Adventurer heals for #r" + to_string(health) + "#o health.";
-					int hp = heal(2, guy, log);
+					int hp = heal(2 + (im1), guy, log);
 					string line2 = "-The Adventurer regenerates #r" + to_string(hp) + "#o health.";
 					log.PushPop(line2);
 				}
@@ -894,7 +915,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			string line;
 
 			if (charge) {
-				int damage = rtd(16 + td, 2);
+				int damage = rtd(16 + td * i1, 2 + im1);
 				damage = guy.TakeDamage(damage);
 				line = "-The Troll bludgeons you for #r" + to_string(damage) + "#o damage.";
 				charge = FALSE;
@@ -906,7 +927,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					line = "#r-The Troll readies its swing.#o";
 				}
 				else {
-					int block = gainBlock(rtd(2, 6), guy, log);
+					int block = gainBlock(rtd(2 + (i1/2), 6), guy, log);
 					line = "-The Troll gains #b" + to_string(block) + "#o block.";
 				}
 			}
@@ -924,7 +945,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				int damage = 0;
 				damage -= rtd(dot, 2);
 				for (int i = 0; i < dot; i++) {
-					damage += rtd(1, 7) + 11 + td;
+					damage += rtd(i1, 7) + 11 + td + (im1*2);
 				}
 				damage = guy.TakeDamage(damage);
 				dot = 0;
@@ -942,8 +963,8 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			string line;
 
 			int rng = rand() % 3;
-			if (guy.dotDamage == 0 || (rng < 2 && guy.dotDamage < 8+2*td)) {
-				guy.dotDamage += 2;
+			if (guy.dotDamage == 0 || (rng < 2 && guy.dotDamage < 8+2*td*i1)) {
+				guy.dotDamage += 2 + (im1*3);
 				line = "#r-The Molten Jelly sprays you with embers.#o";
 			}
 			else {
@@ -957,13 +978,13 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 		else if (Name == "Knight") {
 			string line;
 
-			if (CurrentBlock < 40) {
-				int pblock = gainBlock(rtd(3, 2), guy, log);
+			if (CurrentBlock < 40*i1) {
+				int pblock = gainBlock(rtd(3, 2 + (im1)), guy, log);
 				string line2 = "-The Knight gains #b" + to_string(pblock) + "#o block.";
 				log.PushPop(line2);
 			}
 
-			int damage = rtd(3 + td, 6);
+			int damage = rtd(3 + td + (im1*2), 6);
 			damage = guy.TakeDamage(damage);
 			line = "-The Knight slices you for #r" + to_string(damage) + "#o damage.";
 
@@ -975,11 +996,11 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 
 			int rng = rand() % 3;
 			if (rng == 0) {
-				int block = gainBlock(rtd(3, 4), guy, log);
+				int block = gainBlock(rtd(3, 4 + (im1*2)), guy, log);
 				line = "-The Drake gains #b" + to_string(block) + "#o block.";
 			}
 			else {
-				int damage = rtd(2 + td, 7);
+				int damage = rtd(2 + td + (im1/5), 7 + (im1*4));
 				damage = guy.TakeDamage(damage);
 				line = "-The Drake burns you for #r" + to_string(damage) + "#o damage.";
 			}
@@ -1006,21 +1027,21 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 
 			int rng = rand() % 5;
 
-			if (CurrentBlock > 6 && CurrentHealth < 15) {
+			if (CurrentBlock > 6*i1 && CurrentHealth < 15*i1) {
 				int health = CurrentBlock;
 				CurrentBlock = 0;
 				heal(health, guy, log);
 
 				line = "-The Slave consumes their block and heals for #b" + to_string(health) + "#o health.";
 			}
-			else if (rng < 2 && CurrentBlock < 10) {
-				int block = rtd(1, 4) + 1 + ((MaxHealth - CurrentHealth)/5);
+			else if (rng < 2 && CurrentBlock < 10*i1) {
+				int block = rtd(1 + (im1/2), 4) + 1 + ((MaxHealth - CurrentHealth)/5);
 				block = gainBlock(block, guy, log);
 
 				line = "-The Slave gains #b" + to_string(block) + "#o block.";
 			}
 			else{
-				int damage = rtd(3+td, 4);
+				int damage = rtd(3+td*i1, 4);
 				damage = guy.TakeDamage(damage);
 
 				line = "-The Slave hits you for #r" + to_string(damage) + "#o damage.";
@@ -1032,11 +1053,11 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 		else if (Name == "Soldier") {
 			string line;
 
-			int pblock = gainBlock(rtd(2, 2), guy, log);
+			int pblock = gainBlock(rtd(2 + (im1), 2), guy, log);
 			string line2 = "-The Soldier gains #b" + to_string(pblock) + "#o block.";
 			log.PushPop(line2);
 
-			int damage = rtd(2+td, 5) + 2;
+			int damage = rtd(2+td + (im1), 5) + 2*i1;
 			damage = guy.TakeDamage(damage);
 			line = "-The Soldier slices you for #r" + to_string(damage) + "#o damage.";
 
@@ -1049,17 +1070,17 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			int rng = rand() % 3;
 
 			if (rng == 0) {
-				int damage = (3+td, 3);
+				int damage = (3+td + (im1), 3);
 				damage = guy.TakeDamage(damage);
 				line = "-The Guard hits you for #r" + to_string(damage) + "#o damage.";
 			}
-			else if (CurrentBlock > 15 && rng == 1) {
+			else if (CurrentBlock > 15*i1 && rng == 1) {
 				int damage = guy.TakeDamage(CurrentBlock);
 				CurrentBlock = 0;
 				line = "-The Guard #buses their block#o to crush you for #r" + to_string(damage) + "#o damage.";
 			}
 			else {
-				int block = gainBlock(rtd(6, 4), guy, log);
+				int block = gainBlock(rtd(6*i1, 4), guy, log);
 				line = "-The Guard gains #b" + to_string(block) + "#o block.";
 			}
 
@@ -1069,35 +1090,35 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 		else if (Name == "Jester") {
 			string line;
 
-			if (guy.CurrentBlock > 80) {
+			if (guy.CurrentBlock > 80*i1) {
 				CurrentBlock += guy.CurrentBlock;
 				guy.CurrentBlock = 0;
 				string line2 = "-The Jester decides to #rsteal your block#o.";
 				log.PushPop(line2);
 			}
-			if (guy.Strength > 20) {
+			if (guy.Strength > 20*i1) {
 				guy.ModStat(-12, "Strength", TRUE);
 				string line2 = "-#yYou #bfeel #gweak.";
 				log.PushPop(line2);
 			}
-			if (guy.Intelligence > 20) {
+			if (guy.Intelligence > 20*i1) {
 				guy.ModStat(-12, "Intelligence", TRUE);
 				string line2 = "-#cYou #yfeel #mdumb.";
 				log.PushPop(line2);
 			}
-			if (guy.Skill > 20) {
+			if (guy.Skill > 20*i1) {
 				guy.ModStat(-15, "Skill", TRUE);
 				string line2 = "-#mYou #rfeel #bslow.";
 				log.PushPop(line2);
 			}
 			if (guy.Strength <= 0 && guy.Intelligence <= 0) {
 				guy.ModStat(30, "Strength", TRUE);
-				string line2 = "-#yYou #bfeel #gweak.";
+				string line2 = "-#yYou #bfeel #gstrong.";
 				log.PushPop(line2);
 			}
 			int rng = rand() % 8;
 			if (rng < 2) {
-				int statchange = rtd(10, 2);
+				int statchange = rtd(10, 2 + (im1/5));
 				int statrng = rand() % 6;
 				switch (statrng) {
 				case 0:
@@ -1120,7 +1141,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					break;
 				}
 
-				statchange += rtd(1, 5) - 10;
+				statchange += rtd(1, 5 + (im1*2)) - 10;
 				statchange *= -1;
 				statrng = rand() % 6;
 				switch (statrng) {
@@ -1173,11 +1194,11 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				line = "#r-The Jester #ymesses #mwith #cyour #gstats#r.#o";
 			}
 			else if (rng == 5 || rng == 6) {
-				int block = gainBlock(rtd(10, 2), guy, log);
+				int block = gainBlock(rtd(10 + (im1*3), 2), guy, log);
 				line = "-The Jester gains #b" + to_string(block) + "#o block.";
 			}
 			else {
-				int damage = rtd(7, 4);
+				int damage = rtd(7, 4 + (im1*2));
 				damage = guy.TakeDamage(damage);
 				line = "-The Jester shanks you for #r" + to_string(damage) + "#o damage.";
 			}
@@ -1192,25 +1213,25 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			int rng = rand() % 4;
 
 			if (rng == 0 && guy.MaxMana > 1) {
-				int mana = 2;
+				int mana = 2 + (im1/3);
 				guy.ModStat(-1 * mana, "MaxMana", TRUE);
 
 				line = "-The Eyeball #mdrains #r" + to_string(mana) + "#m of your max mana#o.";
 			}
 			else if (guy.MaxHealth > 1) {
 				int health;
-				if (guy.MaxHealth <= 24) {
+				if (guy.MaxHealth <= 24*i1) {
 					health = guy.MaxHealth - 1;
 				}
 				else {
-					health = rtd(12, 2);
+					health = rtd(12*i1, 2);
 				}
 				guy.ModStat(-1 * health, "MaxHealth", TRUE);
 
 				line = "-The Eyeball drains #r" + to_string(health) + "#o of your max health.";
 			}
 			else {
-				int damage = rtd(3+td, 2);
+				int damage = rtd(3+td, 2 + (im1*4));
 				damage = guy.TakeDamage(damage);
 
 				line = "-The Eyeball zaps you for #r" + to_string(damage) + "#o damage.";
@@ -1223,7 +1244,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			string line;
 
 			if (!charge) {
-				int damage = rtd(6+td, 3);
+				int damage = rtd(6+td + (im1*4), 3);
 				damage = guy.TakeDamage(damage);
 				line = "-The Apprentice blasts you for #r" + to_string(damage) + "#o damage.";
 
@@ -1232,7 +1253,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				}
 			}
 			else {
-				int health = rtd(3, 2);
+				int health = rtd(3, 2 + (im1));
 				heal(health, guy, log);
 				line = "-The Apprentice regains #b" + to_string(health) + "#o health.";
 			
@@ -1247,13 +1268,13 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 		else if (Name == "Monster") {
 			string line;
 
-			if (CurrentBlock < 40) {
-				int pblock = gainBlock(rtd(3, 2), guy, log);
+			if (CurrentBlock < 40*i1) {
+				int pblock = gainBlock(rtd(3, 2*i1), guy, log);
 				string line2 = "-The Monster gains #b" + to_string(pblock) + "#o block.";
 				log.PushPop(line2);
 			}
 
-			int damage = rtd(3 + td, 7);
+			int damage = rtd(3 + td + (im1*2), 7);
 			damage = guy.TakeDamage(damage);
 			line = "-The Monster crushes you for #r" + to_string(damage) + "#o damage.";
 
@@ -1262,24 +1283,26 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 	//Brain: damage over time, drain stats
 		else if (Name == "Brain") {
 
-			if (rand() % 3 == 0 && guy.dotDamage < 7+(td*2)) {
-				guy.dotDamage += 2;
+			if (rand() % 3 == 0 && guy.dotDamage < 7+(td*2)*i1) {
+				guy.dotDamage += 2 + (im1*3);
 			}
+
+			int addd = 1 + (im1 / 3);
 
 			if (TurnCount < 2) {
 				if (rand() % 3 == 0)
-					guy.ADDDrain_Int++;
+					guy.ADDDrain_Int+=addd;
 				else
-					guy.ADDDrain_Str++;
+					guy.ADDDrain_Str+= addd;
 			}
 			else if (dot < 4) {
 				int rng = rand() % 5;
 				if (rng == 0)
-					guy.ADDDrain_Int++;
+					guy.ADDDrain_Int+= addd;
 				else if (rng == 1)
-					guy.dotDamage++;
+					guy.dotDamage += 1 + (im1*2);
 				else
-					guy.ADDDrain_Str++;
+					guy.ADDDrain_Str+= addd;
 				dot++;
 			}
 		}
@@ -1289,20 +1312,21 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			string line;
 
 			int rng = rand() % 5;
+			int drain = 1 + (im1*3);
 			if (rng == 0 && guy.Strength > 1) {
-				guy.ModStat(-1, "Strength", TRUE);
-				line = "-The Cultist drains #r1 strength#o from you.";
+				guy.ModStat(-drain, "Strength", TRUE);
+				line = "-The Cultist drains #r" + to_string(drain) + " Strength#o from you.";
 			}
 			else if (rng == 1 && guy.Defense > 1) {
-				guy.ModStat(-1, "Defense", TRUE);
-				line = "-The Cultist drains #r1 defense#o from you.";
+				guy.ModStat(-drain, "Defense", TRUE);
+				line = "-The Cultist drains #r" + to_string(drain) + " Defense#o from you.";
 			}
 			else if (rng == 2 && guy.Intelligence > 1) {
-				guy.ModStat(-1, "Intelligence", TRUE);
-				line = "-The Cultist drains #r1 intelligence#o from you.";
+				guy.ModStat(-drain, "Intelligence", TRUE);
+				line = "-The Cultist drains #r" + to_string(drain) + " Intelligence#o from you.";
 			}
 			else {
-				int damage = rtd(4+td, 3) + 1;
+				int damage = rtd(4+td * i1, 3) + 1;
 				damage = guy.TakeDamage(damage);
 				line = "-The Cultist stabs you for #r" + to_string(damage) + "#o damage.";
 			}
@@ -1315,23 +1339,25 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			string line;
 
 			int rng = rand() % 3;
-			if (guy.dotDamage < 6 && rng < 2) {
-				guy.dotDamage ++;
-				if (TurnCount == 0)
+			if (guy.dotDamage < 5*i1 && rng < 2) {
+				guy.dotDamage += i1;
+				if (TurnCount == 0) {
+					guy.dotDamage += im1/2;
 					line = "#r-You begin to waste away.#o";
+				}
 				else
 					line = "#r-You waste further.#o";
 				string line2 = "#r-The Imp points at you.#o";
 				log.PushPop(line2);
 			}
-			else if (rng == 2 && guy.CurrentHealth > 12) {
-				int damage = rtd(6, 2);
+			else if (rng == 2 && guy.CurrentHealth > 12 + (im1*12)) {
+				int damage = rtd(6, 2 + (im1*2));
 				guy.pierce = TRUE;
 				damage = guy.TakeDamage(damage);
 				line = "-The Imp #rpierces your block#o and impales you for #r" + to_string(damage) + "#o damage.";
 			}
 			else {
-				int damage = rtd(4+td, 2);
+				int damage = rtd(4+td, 2 * i1);
 				damage = guy.TakeDamage(damage);
 				line = "-The Imp stabs you for #r" + to_string(damage) + "#o damage.";
 			}
@@ -1343,13 +1369,13 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			string line;
 
 			if (TurnCount == 0) {
-				invisible += (1, 5) + 29;
+				invisible += (1, 5) + 29 * i1;
 				line = "#b-The Weeping Soul turns invisible, becoming immune to direct damage.#o";
 				log.PushPop(line);
 			}
 			else {
 				if (invisible > 0) {
-					int damage = rtd(6, 4);
+					int damage = rtd(6 + (im1*3), 4 + im1);
 					damage = guy.TakeDamage(damage);
 					invisible -= damage;
 					line = "-The Weeping Soul wails at you for #r" + to_string(damage) + "#o damage.";
@@ -1361,10 +1387,9 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					}
 				}
 				else {
-					
 					invisible++;
 					if (invisible == 0) {
-						invisible += (1, 10) + 22;
+						invisible += (1, 10 * i1) + 22 + (im1*10);
 						line = "#b-The Weeping Soul turns invisible, becoming immune to direct damage.#o";
 					}
 					else
@@ -1379,8 +1404,8 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			string line;
 
 			int rng = rand() % 3;
-			if (guy.dotDamage == 0 || (rng < 2 && guy.dotDamage < 8 + 2 * td)) {
-				guy.dotDamage += 3;
+			if (guy.dotDamage == 0 || (rng < 2 && guy.dotDamage < (8 + 2 * td) * i1)) {
+				guy.dotDamage += 3 + (im1*5);
 				if (TurnCount == 0)
 					line = "#r-You begin to waste away.";
 				else
@@ -1389,7 +1414,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				log.PushPop(line2);
 			}
 			else if (rng == 2) {
-				int damage = rtd(3+td, 3);
+				int damage = rtd(3+td + (im1*5), 3);
 				damage = guy.TakeDamage(damage);
 				line = "-The Hellhound bites you for #r" + to_string(damage) + "#o damage.";
 			}
@@ -1407,12 +1432,12 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 
 			int rng = rand() % 3;
 			if (rng < 2 && dot < 5+td) {
-				guy.ADDSteam++;
+				guy.ADDSteam += i1;
 				dot++;
 				line = "#r-The Robot expels some steam.#o";
 			}
 			else {
-				int block = gainBlock(rtd(5-dot, 2), guy, log);
+				int block = gainBlock(rtd(5-dot, 2), guy, log) + (im1*5);
 
 				line = "-The Robot gains #b" + to_string(block) + "#o block.";
 			}
@@ -1424,13 +1449,13 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			string line;
 
 			if (CurrentHealth < MaxHealth) {
-				int regen = rtd(1, 3);
+				int regen = rtd(1, 3) + im1;
 				heal(regen, guy, log);
 				string line2 = "-The Golem repairs itself for #b" + to_string(regen) + "#o health.";
 				log.PushPop(line2);
 			}
 
-			int damage = rtd(2 + td, 6);
+			int damage = rtd(2 + td + (im1*2), 6);
 			damage = guy.TakeDamage(damage);
 			line = "-The Golem slams you for #r" + to_string(damage) + "#o damage.";
 
@@ -1454,7 +1479,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					log.PushPop(line2);
 				}
 			}
-			else if (CurrentHealth < 25) {
+			else if (CurrentHealth < MaxHealth * .4) {
 				//guard 60
 				//drake 75
 				//knight 60
@@ -1468,14 +1493,14 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 						line = " A #rGuard#o takes their place!";
 
 						Name = "Guard";
-						MaxHealth = 60;
+						MaxHealth = 60*i1;
 						CurrentHealth = MaxHealth;
 					}
 					else {
 						line = " A #rKnight#o takes their place!";
 
 						Name = "Guard";
-						MaxHealth = 60;
+						MaxHealth = 60*i1;
 						CurrentHealth = MaxHealth;
 					}
 
@@ -1487,14 +1512,14 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 						line = " A #rWeeping Soul#o takes its place!";
 
 						Name = "Weeping Soul";
-						MaxHealth = 60;
+						MaxHealth = 60 + (im1*(100+im1*10));
 						CurrentHealth = MaxHealth;
 					}
 					else {
 						line = " An #rElemental#o takes its place!";
 
 						Name = "Elemental";
-						MaxHealth = 100;
+						MaxHealth = 100 + (im1*200);
 						CurrentHealth = MaxHealth;
 					}
 
@@ -1506,14 +1531,14 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 						line = " A #rDrake#o takes its place!";
 
 						Name = "Drake";
-						MaxHealth = 70;
+						MaxHealth = 70 * i1;
 						CurrentHealth = MaxHealth;
 					}
 					else {
 						line = " A #rHellhound#o takes its place!";
 
 						Name = "Hellhound";
-						MaxHealth = 75;
+						MaxHealth = 75 * i1;
 						CurrentHealth = MaxHealth;
 					}
 
@@ -1523,7 +1548,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				updateEnemy(guy);
 			}
 			else {
-				int damage = rtd(2, 5);
+				int damage = rtd(2*i1, 5);
 				damage = guy.TakeDamage(damage);
 				line = "-The Merchant stabs you for #r" + to_string(damage) + "#o damage.";
 			}
@@ -1535,7 +1560,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			string line;
 
 			if (!charge) {
-				int damage = rtd(13+td, 2);
+				int damage = rtd(13+td + (im1*2), 2 + (im1/2));
 				damage = guy.TakeDamage(damage);
 				dot += rtd(1, 2);
 				line = "-The Turret shoots you for #r" + to_string(damage) + "#o damage.";
@@ -1557,28 +1582,28 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 //----------------Boss-----------------
 	//Paladin: passive block, hits hard, heals
 		else if (Name == "Paladin") {
-			int block = gainBlock(tier*1.3, guy, log);
-			string line2 = "-The Paladin gains #b" + to_string(block) + "#o block";
+			int block = gainBlock(1 + tier*.4, guy, log) + im1;
+			string line2 = "-The Paladin gains #b" + to_string(block) + "#o block.";
 			log.PushPop(line2);
 
 			string line;
 			int rng = rand() % 3;
 			if (rng == 0) {
-				int roll = 1 + (tier / 2);
+				int roll = 1 + (tier / 2) + (im1*2);
 				int health = rtd(3, roll);
 				heal(health, guy, log);
 				line = "-The Paladin heals for #b" + to_string(health) + "#o health.";
 			}
 			else if (rng == 1) {
 				int multi = tier * 1.25;
-				int damage = rtd(3+multi, 2);
+				int damage = rtd(3+multi, 2 * i1);
 				damage = guy.TakeDamage(damage);
-				int block = gainBlock(rtd(1+tier, 2), guy, log);
+				int block = gainBlock(rtd(1+tier/2, 2 * i1), guy, log);
 				line = "-The Paladin slices you for #r" + to_string(damage) + "#o damage and gains #b" + to_string(block) + "#o block.";
 			}
 			else {
 				int multi = tier * 1.5;
-				int damage = rtd(5+multi, 2);
+				int damage = rtd(5+multi + (im1*5), 2 + im1);
 				damage = guy.TakeDamage(damage);
 				line = "-The Paladin bashes you for #r" + to_string(damage) + "#o damage.";
 			}
@@ -1587,9 +1612,9 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 	//Hunter: charges up with block to get multiple turns later
 		else if (Name == "Hunter") {
 			int rng = rand() % 10;
-				if (extraTurns > 2 && (rng < 2 || CurrentHealth < MaxHealth/2)) {
+				if (extraTurns > 2 && (rng < 2 || CurrentHealth < MaxHealth/3)) {
 					while (extraTurns > 0) {
-						int damage = 9 + (1.5*tier);
+						int damage = 9 + (1.5*tier) + (im1*10);
 						damage = guy.TakeDamage(damage);
 
 						string line = "-The Hunter shoots you for #r" + to_string(damage) + "#o damage.";
@@ -1603,13 +1628,13 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					log.PushPop(line);
 				}
 				else if (rng == 5 || rng == 6) {
-					int block = gainBlock(rtd(2, tier), guy, log);
+					int block = gainBlock(rtd(2, tier + (im1)), guy, log);
 					extraTurns++;
 					string line = "#r-The Hunter loads an arrow and gains #b" + to_string(block) + "#r block.#o";
 					log.PushPop(line);
 				}
 				else {
-					int block = gainBlock(rtd(2+tier, 2), guy, log);
+					int block = gainBlock(rtd(2+tier + (im1*2), 2), guy, log);
 					string line = "-The Hunter gains #b" + to_string(block) + "#o block.";
 					log.PushPop(line);
 				}
@@ -1620,7 +1645,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 
 			if (charge) {
 				int multi = tier * 1.4;
-				int damage = rtd(6+tier, 2);
+				int damage = rtd((6+tier)*i1, 2 + i1/2);
 				int damage2 = 0;
 				damage2 += guy.TakeDamage(damage);
 				damage2 += guy.TakeDamage(damage);
@@ -1630,7 +1655,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			else {
 				int rng = rand() % 8;
 				if (rng == 0 || rng == 1) {
-					int block = gainBlock(5+tier, guy, log);
+					int block = gainBlock(5+tier + (im1*2), guy, log);
 					charge = TRUE;
 					line = "#r-The Juggernaut gains #b" + to_string(block) + "#r block and begins to wind up...#o";
 				}
@@ -1638,7 +1663,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					line = "-The Juggernaut rests for a turn.";
 				}
 				else {
-					int block = gainBlock(rtd(2+tier, 2)-(tier*.5), guy, log);
+					int block = gainBlock(rtd(2+tier, 2*i1)-(tier*.5), guy, log);
 					line = "-The Juggernaut gains #b" + to_string(block) + "#o block.";
 				}
 			}
@@ -1665,15 +1690,15 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			if (invisible > 0) {
 				invisible--;
 				if (invisible == 0) {
-					if (CurrentHealth < MaxHealth/2 && CurrentBlock < 5+(4*tier)) {
+					if (CurrentHealth < MaxHealth/2 && CurrentBlock < (5+(4*tier))*i1) {
 						int multi = tier * 1.4;
-						int damage = rtd(5+multi, 2);
+						int damage = rtd(5+multi + (im1*2), 2);
 						damage = guy.TakeDamage(damage);
 						heal(damage, guy, log);
 						line = "-The Vampire suddenly appears and #rsteals " + to_string(damage) + " health#o from you.";
 					}
 					else {
-						int damage = rtd(2+tier, 2);
+						int damage = rtd(2+tier, 2*i1);
 						damage = guy.TakeDamage(damage);
 						line = "-The Vampire suddenly appears and bites you for #r" + to_string(damage) + "#o damage.";
 					}
@@ -1681,11 +1706,11 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				else {
 					int rng = rand() % 4;
 					if (rng == 0) {
-						int block = gainBlock(rtd(tier, 2), guy, log);
+						int block = gainBlock(rtd(tier + (im1), 2), guy, log);
 						line = "-The Vampire gains #b" + to_string(block) + "#o block.";
 					}
 					else {
-						int health = (tier*.6) + 4;
+						int health = (tier*.6) + 4 + (im1*3);
 						heal(health, guy, log);
 						line = "-The Vampire regenerates #b" + to_string(health) + "#o health.";
 					}
@@ -1702,12 +1727,12 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					}
 					else {
 						if (rand() % 2 == 0) {
-							int damage = rtd(5, tier);
+							int damage = rtd(5, tier + (im1*2));
 							damage = guy.TakeDamage(damage);
 							line = "-The Vampire bites you for #r" + to_string(damage) + "#o damage.";
 						}
 						else {
-							int damage = rtd(2+tier, 3);
+							int damage = rtd(2+tier + (im1*4), 3);
 							damage = guy.TakeDamage(damage);
 							heal(damage, guy, log);
 							line = "-The Vampire #rsteals " + to_string(damage) + " health#o from you.";
@@ -1717,17 +1742,17 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				else {
 					int rng = rand() % 4;
 					if (rng == 0) {
-						int damage = rtd(3+tier, 2);
+						int damage = rtd(3+tier, 2*i1);
 						damage = guy.TakeDamage(damage);
 						heal(damage, guy, log);
 						line = "-The Vampire #rsteals " + to_string(damage) + " health#o from you.";
 					}
 					else if (rng == 1) {
-						int block = gainBlock(rtd(tier*3, 2)+5, guy, log);
+						int block = gainBlock(rtd(tier*3, 2 + (im1))+5 + (im1*2), guy, log);
 						line = "-The Vampire gains #b" + to_string(block) + "#o block.";
 					}
 					else {
-						int damage = rtd(3+tier, 4);
+						int damage = rtd(3+tier, 4 + (im1*2));
 						damage = guy.TakeDamage(damage);
 						line = "-The Vampire bites you for #r" + to_string(damage) + "#o damage.";
 					}
@@ -1737,7 +1762,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 		}
 	//Druid: heals, short damage over time, rivial move
 		else if (Name == "Druid") {
-			int health = rtd(1, 2 + tier / 3) - 1;
+			int health = rtd(1, 2 + tier / 3) - 1 + (im1);
 			health = heal(health, guy, log);
 			string regen = "-The Druid regenerates #b" + to_string(health) + "#o health.";
 			if(health > 0)
@@ -1747,11 +1772,6 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				charge = FALSE;
 				string rev = "#b-The revival failed.#o";
 				log.PushPop(rev);
-			}
-			if (CurrentHealth < MaxHealth*.3 && TurnCount % 3 == 0) {
-				string rev = "#r-The Druid prepares for revival.#o";
-				log.PushPop(rev);
-				charge = TRUE;
 			}
 
 			int rng = rand() % 4;
@@ -1765,24 +1785,24 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					vines = "#r-The vines strangle you further.#o";
 					numA += rtd(1, 2);
 				}
-				guy.dotDamage = 4 + (tier * 2);
+				guy.dotDamage = (4 + (tier * 2))*i1;
 				log.PushPop(vines);
 			}
 			else if (rng == 1) {
-				int damage = guy.TakeDamage(rtd(2+(tier/5), 2+(tier/2)));
+				int damage = guy.TakeDamage(rtd(2+(tier/5), 2+(tier/2) + (im1)));
 				heal(damage, guy, log);
 
 				string line = "#b-The Druid saps #r" + to_string(damage) + "#b of your health.#o";
 				log.PushPop(line);
 			}
 			else if (rng == 2) {
-				int damage = guy.TakeDamage(rtd(1, 4) + tier);
+				int damage = guy.TakeDamage(rtd(1, 4) + tier + (im1*2));
 
 				string line = "-The Druid zaps you for #r" + to_string(damage) + "#o damage.";
 				log.PushPop(line);
 			}
 			else {
-				int health = rtd(tier, 3);
+				int health = rtd(tier, 3 + (im1*2));
 				heal(health, guy, log);
 
 				string line = "-The Druid heals for #b" + to_string(health) + "#o.";
@@ -1797,11 +1817,19 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					log.PushPop(vines);
 				}
 			}
+
+			if (CurrentHealth < MaxHealth*.3 && ((i1 <= 3 && TurnCount % 3 == 0) || (i1 > 3 && TurnCount % 2 == 0))) {
+				string rev = "#r-The Druid prepares for revival.#o";
+				log.PushPop(rev);
+				charge = TRUE;
+			}
 		}
-	//Thief:
+	/*
+		//Thief:
 		else if (Name == "Thief") {
 
 		}
+		*/
 	//Hydra: 1 turn at full hp, 2 turns at half, 3 turns at low
 		else if (Name == "Hydra") {
 			if (CurrentHealth > MaxHealth*2/3)
@@ -1827,11 +1855,11 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				string line;
 				int rng = rand() % 2;
 				if (rng == 0) {
-					int block = gainBlock(rtd(2, tier), guy, log);
+					int block = gainBlock(rtd(2, tier + (im1*2)), guy, log);
 					line = "-The Hydra gains #b" + to_string(block) + "#o block.";
 				}
 				else {
-					int damage = rtd(3+tier, 2);
+					int damage = rtd(3+tier, 2 * i1);
 					damage = guy.TakeDamage(damage);
 					line = "-The Hydra bites you for #r" + to_string(damage) +"#o damage.";
 				}
@@ -1843,7 +1871,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			string line;
 
 			if (TurnCount == 0) {
-				guy.dotDamage += 1+tier;
+				guy.dotDamage += 1 + tier + (im1*2);
 				line = "#r-The Wolf tears your flesh, causing you to bleed out.#o";
 			}
 			else {
@@ -1854,15 +1882,15 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					line = "#b-The Wolf retreats for a turn.#o";
 				}
 				else if (rng < 3) {
-					guy.dotDamage += rtd(1, tier);
+					guy.dotDamage += rtd(1, tier) + (im1);
 					line = "#r-The Wolf tears your flesh, causing you to bleed out.#o";
 				}
 				else if (rng == 3 || rng == 4) {
-					int block = gainBlock(rtd(1, 2+tier) + tier + 2, guy, log);
+					int block = gainBlock(rtd(i1, 2+tier) + tier + 2, guy, log);
 					line = "-The Wolf gains #b" + to_string(block) + "#o block.";
  				}
 				else {
-					int damage = rtd(1, 1+tier) + 2*tier;
+					int damage = rtd(1, 1+tier + (im1*2)) + 2*tier;
 					damage = guy.TakeDamage(damage);
 					line = "-The Wolf bites you for #r" + to_string(damage) + "#o damage.";
 				}
@@ -1878,25 +1906,28 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			if (rng == 0) {
 				line = "#r-The Exorcist puntures you, causing bleed.#o";
 				if (type == 0) {
-					guy.dotDamage += tier;
+					guy.dotDamage += tier + (im1*2);
 					if (tier == 1)
 						guy.dotDamage++;
 				}
 				else {
-					guy.dotDamage += 1;
+					guy.dotDamage += 1 + (im1);
 				}
 			}
 			//card
 			else if (rng > 0 && rng <= 2 && !charge) {
 				line = "#r-The Exorcist begins to drain you.#o";
+			
+				int addd = 1 + (im1 / 2);
+
 				if (type == 0) {
-					guy.ADDDrain_Str++;
+					guy.ADDDrain_Str+=addd;
 				}
 				else if (type == 1) {
-					guy.ADDDrain_Def++;
+					guy.ADDDrain_Def+=addd;
 				}
 				else if (type == 2){
-					guy.ADDDrain_Int++;
+					guy.ADDDrain_Int+=addd;
 				}
 				charge = TRUE;
 			}
@@ -1904,10 +1935,10 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			else if (rng > 2 && rng <= 4) {
 				int block;
 				if (type == 1) {
-					block = rtd(4+tier, 2);
+					block = rtd(4+tier, 2 + (im1));
 				}
 				else {
-					block = rtd(tier, 2) + 3;
+					block = rtd(tier, 2) + 3 + (im1*2);
 				}
 				block = gainBlock(block, guy, log);
 				line = "-The Exorcist gains #b" + to_string(block) + "#o block.";
@@ -1916,10 +1947,10 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			else {
 				int damage;
 				if (type == 2) {
-					damage = rtd(2+tier, 3) + 2;
+					damage = rtd(2+tier + (im1*4), 3) + 2;
 				}
 				else {
-					damage = rtd(tier, 2) + 2;
+					damage = rtd(tier + (im1*4), 2) + 2;
 				}
 				damage = guy.TakeDamage(damage);
 				line = "-The Exorcist stabs you for #r" + to_string(damage) + "#o damage.";
@@ -1932,7 +1963,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			string line2;
 			int rngpower = rand() % 9;
 			if (rngpower < 2) {
-				type += 1 + tier/3;
+				type += 1 + tier/3 + (im1*2);
 				line2 = "-The Demigod grows in power.";
 			}
 			else if (rngpower >= 2 && rngpower <= 5) {
@@ -1984,9 +2015,9 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					log.PushPop(line2);
 				}
 				else {
-					int damage = guy.TakeDamage(rtd(10, 1 + tier / 3));
+					int damage = guy.TakeDamage(rtd(10*i1, 1 + tier / 3));
 
-					int mod = 2 + (tier * .4);
+					int mod = 2 + (tier * .4) + (im1*2);
 					guy.ModStat(-mod, "Strength", TRUE);
 					guy.ModStat(-mod, "Defense", TRUE);
 					numB += mod;
@@ -2003,15 +2034,15 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				log.PushPop(line);
 			}
 			else if (rng >= 2 && rng < 5) {
-				int block = rtd(2, tier * 2) + 4;
+				int block = rtd(2, tier * 2 + (im1*2)) + 4;
 				block = gainBlock(block, guy, log);
 
 				string line = "-The Serpent gains #b" + to_string(block) + "#o block.";
 				log.PushPop(line);
 			}
 			else {
-				int damage = rtd(4, 1+tier) + 5;
-				guy.dotDamage++;
+				int damage = rtd(4, 1+tier + (im1)) + 5;
+				guy.dotDamage+= 1 + (im1/2);
 
 				string line = "-The Serpent bites you for #r" + to_string(damage) + "#o and injects you with venom.";
 				log.PushPop(line);
@@ -2020,7 +2051,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 	//Spirit: attacks drain mana, negates, adds a Burn card which burns your next card
 		else if (Name == "Spirit") {
 			int rng = rand() % 7;
-			if (rng == 0 || numA == 8) {
+			if (rng == 0 || numA == 10) {
 				numA = 0;
 				guy.ADDBurn++;
 				string line = "#r-The Spirit blazes.#o";
@@ -2132,12 +2163,12 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				int rng = rand() % 5;
 				string line;
 				if (rng < 2) {
-					int hp = rtd(1, tier);
+					int hp = rtd(1, tier + (im1*2));
 					hp = heal(hp, guy, log);
 					line = "-The Artificer heals for #b" + to_string(hp) + "#o.";
 				}
 				else {
-					int damage = guy.TakeDamage(rtd(2, tier)-1);
+					int damage = guy.TakeDamage(rtd(2*i1, tier)-1);
 					line = "-The Artificer zaps you for #r" + to_string(damage) + "#o damage.";
 				}
 				log.PushPop(line);
@@ -2149,7 +2180,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					line = " Turret A #breloads.#o";
 				}
 				else {
-					int damage = guy.TakeDamage(rtd(3, 2 + tier/3));
+					int damage = guy.TakeDamage(rtd(3 + (im1*2), 2 + tier/3));
 					line = " Turret A shoots you for #r" + to_string(damage) + "#o damage.";
 				}
 				log.PushPop(line);
@@ -2158,12 +2189,12 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				string line;
 				int r = rand() % 5;
 				if (r == 0 && tier > 2 && numE < numF) {
-					guy.ADDScalding_Steam++;
+					guy.ADDScalding_Steam += 1 + (im1/3);
 					line = " Turret A #rreleases some steam.#o";
 					numE++;
 				}
 				else if (r > 0 && r <= 3 && dot < numF + 1 + tier*.25) {
-					guy.ADDSteam++;
+					guy.ADDSteam += 1 + (im1/2);
 					line = " Turret A #rreleases some steam.#o";
 					dot++;
 				}
@@ -2180,7 +2211,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					line = " Turret A #bnegates the next hit.#o";
 				}
 				else {
-					int block = gainBlock(rtd(2, 1 + (tier*.4)) + tier*.35, guy, log);
+					int block = gainBlock(rtd(2, 1 + (tier*.4) + (im1*2)) + tier*.35, guy, log);
 					line = " Turret A gains #b" + to_string(block) + "#o block.";
 				}
 				log.PushPop(line);
@@ -2192,7 +2223,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					line = " Turret B #breloads.#o";
 				}
 				else {
-					int damage = guy.TakeDamage(rtd(3, 2 + tier/3));
+					int damage = guy.TakeDamage(rtd(3 + (im1*2), 2 + tier/3));
 					line = " Turret B shoots you for #r" + to_string(damage) + "#o damage.";
 				}
 				log.PushPop(line);
@@ -2201,12 +2232,12 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				string line;
 				int r = rand() % 5;
 				if (r == 0 && tier > 2 && numE < numF) {
-					guy.ADDScalding_Steam++;
+					guy.ADDScalding_Steam += 1 + (im1/3);
 					line = " Turret B #rreleases some steam.#o";
 					numE++;
 				}
 				else if (r > 0 && r <= 3 && dot < numF + 1 + tier*.25) {
-					guy.ADDSteam++;
+					guy.ADDSteam += 1 + (im1/2);
 					line = " Turret B #rreleases some steam.#o";
 					dot++;
 				}
@@ -2223,7 +2254,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					line = " Turret B #bnegates the next hit.#o";
 				}
 				else {
-					int block = gainBlock(rtd(2, 1 + (tier*.4)) + tier * .35, guy, log);
+					int block = gainBlock(rtd(2, 1 + (tier*.4) + (im1*2)) + tier * .35, guy, log);
 					line = " Turret B gains #b" + to_string(block) + "#o block.";
 				}
 				log.PushPop(line);
@@ -2235,7 +2266,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					line = " Turret C #breloads.#o";
 				}
 				else {
-					int damage = guy.TakeDamage(rtd(3, 2 + tier/3));
+					int damage = guy.TakeDamage(rtd(3 + (im1*2), 2 + tier/3));
 					line = " Turret C shoots you for #r" + to_string(damage) + "#o damage.";
 				}
 				log.PushPop(line);
@@ -2244,12 +2275,12 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				string line;
 				int r = rand() % 5;
 				if (r == 0 && tier > 2 && numE < numF) {
-					guy.ADDScalding_Steam++;
+					guy.ADDScalding_Steam += 1 + (im1/3);
 					line = " Turret C #rreleases some steam.#o";
 					numE++;
 				}
 				else if (r > 0 && r <= 3 && dot < numF + 1 + tier*.25) {
-					guy.ADDSteam++;
+					guy.ADDSteam += 1 + (im1/2);
 					line = " Turret C #rreleases some steam.#o";
 					dot++;
 				}
@@ -2266,7 +2297,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					line = " Turret C #bnegates the next hit.#o";
 				}
 				else {
-					int block = gainBlock(rtd(2, 1 + (tier*.4)) + tier * .35, guy, log);
+					int block = gainBlock(rtd(2, 1 + (tier*.4) + (im1*2)) + tier * .35, guy, log);
 					line = " Turret C gains #b" + to_string(block) + "#o block.";
 				}
 				log.PushPop(line);
@@ -2278,7 +2309,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					line = " Turret D #breloads.#o";
 				}
 				else {
-					int damage = guy.TakeDamage(rtd(3, 2 + tier/3));
+					int damage = guy.TakeDamage(rtd(3 + (im1*2), 2 + tier/3));
 					line = " Turret D shoots you for #r" + to_string(damage) + "#o damage.";
 				}
 				log.PushPop(line);
@@ -2287,12 +2318,12 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				string line;
 				int r = rand() % 5;
 				if (r == 0 && tier > 2 && numE < numF) {
-					guy.ADDScalding_Steam++;
+					guy.ADDScalding_Steam += 1 + (im1/3);
 					line = " Turret D #rreleases some steam.#o";
 					numE++;
 				}
 				else if (r > 0 && r <= 3 && dot < numF + 1 + tier*.25) {
-					guy.ADDSteam++;
+					guy.ADDSteam += 1 + (im1/2);
 					line = " Turret D #rreleases some steam.#o";
 					dot++;
 				}
@@ -2309,7 +2340,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					line = " Turret D #bnegates the next hit.#o";
 				}
 				else {
-					int block = gainBlock(rtd(2, 1 + (tier*.4)) + tier * .35, guy, log);
+					int block = gainBlock(rtd(2, 1 + (tier*.4) + (im1*2)) + tier * .35, guy, log);
 					line = " Turret D gains #b" + to_string(block) + "#o block.";
 				}
 				log.PushPop(line);
@@ -2340,7 +2371,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					}
 				}
 				if (charge) {
-					int damage = rtd(1, 11) + 24;
+					int damage = rtd(1, 11 + (im1*2)) + 24*i1;
 					damage = guy.TakeDamage(damage);
 					line = "-The Dragon blasts flames at you for #r" + to_string(damage) + "#o damage.";
 					dot--;
@@ -2372,15 +2403,15 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					}
 				}
 				else if (rng == 3 && guy.dotDamage < 6) {
-					guy.dotDamage += 2;
+					guy.dotDamage += 2 + (im1*3);
 					line = "#r-The Dragon scorches you, causing you to burn.#o";
 				}
 				else if (rng > 3 && rng <= 7) {
-					int block = gainBlock(rtd(5, 6), guy, log);
+					int block = gainBlock(rtd(5, 6 + (im1*2)), guy, log);
 					line = "-The Dragon gains #b" + to_string(block) + "#o block.";
 				}
 				else {
-					int damage = rtd(7, 3);
+					int damage = rtd(7, 3 + (im1));
 					damage = guy.TakeDamage(damage);
 					line = "-The Dragon claws you for #r" + to_string(damage) + "#o damage.";
 				}
@@ -2392,36 +2423,36 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			string line;
 			int rng = rand() % 7;
 			if (rng == 0) {
-				int damage = rtd(3, 2);
+				int damage = rtd(3*i1, 2);
 				damage = guy.TakeDamage(damage);
 				damage = guy.TakeDamage(damage);
 				line = "-The King slashes you twice for #r" + to_string(damage) + "#o damage each.";
 			}
 			else if (rng == 1) {
-				int block = gainBlock(rtd(25, 3), guy, log);
+				int block = gainBlock(rtd(25*i1, 3), guy, log);
 				line = "-The King gains #b" + to_string(block) + "#o block.";
 			}
 			else if (rng == 2) {
-				if (CurrentHealth < rtd(30, 3) && CurrentBlock > 0) {
+				if (CurrentHealth < rtd(30*i1, 3 + (im1)) && CurrentBlock > 0) {
 					int health = CurrentBlock;
 					heal(health, guy, log);
 					CurrentBlock = 0;
 					line = "-The King uses his #bblock to heal#o for #b" + to_string(health) + "#o health.";
 				}
 				else {
-					int block = gainBlock(rtd(5, 5), guy, log);
+					int block = gainBlock(rtd(5*i1, 5), guy, log);
 					line = "-The King gains #b" + to_string(block) + "#o block.";
 				}
 			}
 			else if (rng == 3) {
-				if (CurrentBlock > rtd(15, 2)) {
+				if (CurrentBlock > rtd(15*i1, 2)) {
 					int damage = CurrentBlock;
 					damage = guy.TakeDamage(damage);
 					CurrentBlock = 0;
 					line = "-The King crushes you for #r" + to_string(damage) + "#o damage and #bloses all his block.#o";
 				}
 				else {
-					int block = gainBlock(rtd(10, 3), guy, log);
+					int block = gainBlock(rtd(10, 3*i1), guy, log);
 					line = "-The King gains #b" + to_string(block) + "#o block.";
 				}
 			}
@@ -2430,8 +2461,8 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 				line = "#b-The King negates the next hit taken.#o";
 			}
 			else {
-				int block = gainBlock(rtd(3, 10), guy, log);
-				line = "-The King gains #r" + to_string(block) + "#o block.";
+				int block = gainBlock(rtd(3, 10*i1), guy, log);
+				line = "-The King gains #b" + to_string(block) + "#o block.";
 			}
 			log.PushPop(line);
 		}
@@ -2441,14 +2472,14 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 
 			if (invisible > 0) {
 				invisible--;
-				int health = rtd(1, 7) + 9;
+				int health = rtd(1, 7) + 9*i1;
 				heal(health, guy, log);
 				line = "-The Witch regenerates #b" + to_string(health) + "#o health.";
 			}
 			else {
 				int rng = rand() % 9;
 				if (TurnCount < 3) {
-					int block = gainBlock(rtd(12, 2), guy, log);
+					int block = gainBlock(rtd(12*i1, 2), guy, log);
 
 					if (guy.Strength > guy.Defense && guy.Strength > guy.Intelligence)
 						dot = 1;
@@ -2463,70 +2494,72 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					else if (guy.Defense == guy.Intelligence && guy.Defense > guy.Strength)
 						dot = 6;
 
+					int addd = 1 + (im1 / 3);
+
 					if (dot == 0) {
 						if (TurnCount == 0) {
-							guy.ADDDrain_Str++;
+							guy.ADDDrain_Str+=addd;
 						}
 						else if (TurnCount == 1) {
-							guy.ADDDrain_Def++;
+							guy.ADDDrain_Def+=addd;
 						}
 						else if (TurnCount == 2) {
-							guy.ADDDrain_Int++;
+							guy.ADDDrain_Int+=addd;
 						}
 					}
 					else if (dot == 1 || dot == 4) {
 						if (TurnCount == 0) {
-							guy.ADDDrain_Str++;
+							guy.ADDDrain_Str+=addd;
 						}
 						else if (TurnCount == 1) {
-							guy.ADDDrain_Def++;
+							guy.ADDDrain_Def+=addd;
 						}
 						else if (TurnCount == 2) {
-							guy.ADDDrain_Str++;
+							guy.ADDDrain_Str+=addd;
 						}
 					}
 					else if (dot == 2) {
 						if (TurnCount == 0) {
-							guy.ADDDrain_Def++;
+							guy.ADDDrain_Def+=addd;
 						}
 						else if (TurnCount == 1) {
-							guy.ADDDrain_Str++;
+							guy.ADDDrain_Str+=addd;
 						}
 						else if (TurnCount == 2) {
-							guy.ADDDrain_Def++;
+							guy.ADDDrain_Def+=addd;
 						}
 					}
 					else if (dot == 3) {
 						if (TurnCount == 0) {
-							guy.ADDDrain_Int++;
+							guy.ADDDrain_Int+=addd;
 						}
 						else if (TurnCount == 1) {
-							guy.ADDDrain_Def++;
+							guy.ADDDrain_Def+=addd;
 						}
 						else if (TurnCount == 2) {
-							guy.ADDDrain_Int++;
+							guy.ADDDrain_Int+=addd;
 						}
 					}
 					else if (dot == 5) {
 						if (TurnCount == 0) {
-							guy.ADDDrain_Str++;
+							guy.ADDDrain_Str+=addd;
 						}
 						else if (TurnCount == 1) {
-							guy.ADDDrain_Int++;
+							guy.ADDDrain_Int+=addd;
 						}
 						else if (TurnCount == 2) {
-							guy.ADDDrain_Str++;
+							guy.ADDDrain_Str+=addd;
 						}
 					}
 					else if (dot == 6) {
 						if (TurnCount == 0) {
-							guy.ADDDrain_Def++;
+							guy.ADDDrain_Def+=addd;
 						}
 						else if (TurnCount == 1) {
-							guy.ADDDrain_Int++;
+							guy.ADDDrain_Int+=addd;
 						}
 						else if (TurnCount == 2) {
-							guy.ADDDrain_Def++;
+							guy.ADDDrain_Def+=addd;
 						}
 					}
 					
@@ -2550,8 +2583,8 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					line = "#b-The Witch turns invisible and becomes immune to direct damage.#o";
 					type++;
 				}
-				else if (rng == 1 && guy.MaxHealth > 15) {
-					int drain = rtd(4, 2);
+				else if (rng == 1 && guy.MaxHealth > 15 + (im1*8)) {
+					int drain = rtd(4*i1, 2);
 					guy.ModStat(-drain, "MaxHealth", TRUE);
 					if (guy.CurrentHealth > guy.MaxHealth && !guy.Engorged) {
 						guy.CurrentHealth = guy.MaxHealth;
@@ -2559,49 +2592,51 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					line = "-The Witch #rdrains " + to_string(drain) + " of your max health.#o";
 				}
 				else if (rng == 2 && guy.MaxMana > 8) {
-					guy.ModStat(-1, "MaxMana", TRUE);
+					int drain = 2 + (im1/3);
+					guy.ModStat(-drain, "MaxMana", TRUE);
 					if (guy.CurrentMana > guy.MaxMana && !guy.Enlightened) {
 						guy.CurrentMana = guy.MaxMana;
 					}
-					line = "-The Witch #rdrains 2 of your max mana.#o";
+					line = "-The Witch #rdrains " + to_string(drain) + " of your max mana.#o";
 				}
 				else if (rng == 3) {
 					guy.fillType = "Negative";
 					line = "#r-The Witch curses you.#o";
 				}
 				else if (rng == 4 && !stepOne) {
+					int addd = 1 + (im1 / 3);
 					switch (dot) {
 					case 0:
-						guy.ADDDrain_Def++;
+						guy.ADDDrain_Def+=addd;
 						break;
 					case 1:
-						guy.ADDDrain_Int++;
+						guy.ADDDrain_Int+=addd;
 						break;
 					case 2:
-						guy.ADDDrain_Int++;
+						guy.ADDDrain_Int+=addd;
 						break;
 					case 3:
-						guy.ADDDrain_Str++;
+						guy.ADDDrain_Str+=addd;
 						break;
 					case 4:
-						guy.ADDDrain_Int++;
+						guy.ADDDrain_Int+=addd;
 						break;
 					case 5:
-						guy.ADDDrain_Def++;
+						guy.ADDDrain_Def+=addd;
 						break;
 					case 6:
-						guy.ADDDrain_Str++;
+						guy.ADDDrain_Str+=addd;
 						break;
 					}
 					stepOne = TRUE;
 					line = "#r-The Witch chants under her breath.#o";
 				}
 				else if (rng >= 5 && rng < 8) {
-				int block = gainBlock(rtd(4, 6), guy, log);
+				int block = gainBlock(rtd(4, 6*i1), guy, log);
 					line = "-The Witch gains #b" + to_string(block) + "#o block.";
 				}
 				else {
-					int damage = rtd(8, 2);
+					int damage = rtd(8*i1, 2);
 					damage = guy.TakeDamage(damage);
 
 					line = "-The Witch stabs you for #r" + to_string(damage) + "#o damage.";
@@ -2610,14 +2645,14 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 
 			log.PushPop(line);
 			if (TurnCount > 2 && rand() % 2 == 0) {
-				int damage = rtd(5, 2);
+				int damage = rtd(5 + (im1*10), 2);
 				damage = guy.TakeDamage(damage);
 
 				string line3 = "-The Witch zaps you for #r" + to_string(damage) + "#o damage.";
 				log.PushPop(line3);
 			}
 			if (TurnCount > 2 && rand() % 3 == 0) {
-				int damage = rtd(5, 2);
+				int damage = rtd(5 + (im1*10), 2);
 				damage = guy.TakeDamage(damage);
 
 				string line3 = "-The Witch zaps you for #r" + to_string(damage) + "#o damage.";
@@ -2628,15 +2663,15 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 		else if (Name == "Demon") {
 			if (stepOne) {
 				stepOne = FALSE;
-				guy.ModStat(8, "Defense", TRUE);
+				guy.ModStat(8*i1, "Defense", TRUE);
 				string line = "-You regain your composure.";
 				log.PushPop(line);
 			}
 
 			if (charge) {
-				if (type > 3 && rand() % 9 < 5) {
+				if (type > 2 && rand() % 9 < 6) {
 					//guy.dotDamage -= 6;
-					guy.dotDamage /= 3;
+					guy.dotDamage /= (3 + (im1 / 3));
 
 					type = 0;
 					charge = FALSE;
@@ -2650,47 +2685,48 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 			else {
 				string line;
 				int rng = rand() % 8;
-				if ((CurrentHealth < 100 && rng < 3) || CurrentHealth < 30) {
-					guy.dotDamage *= 3;
+				if ((CurrentHealth < MaxHealth*.4 && rng < 3) || CurrentHealth < MaxHealth/5) {
+					guy.dotDamage *= (3 + (im1/3));
 					//guy.dotDamage += 6;
 
 					charge = TRUE;
 					line = "#r-The Demon slams the ground and begins to channel.#o";
 				}
 				else if (guy.dotDamage == 0) {
-					guy.dotDamage += 3;
+					guy.dotDamage += 3*i1;
 					line = "#r-The Demon points at you. You begin to waste away.#o";
 				}
 				else if ((rng == 0 || rng == 1) && guy.dotDamage < 5+td) {
-					guy.dotDamage+=2;
+					guy.dotDamage+=2*i1;
 					line = "#r-The Demon points at you. You rot further.#o";
 				}
 				else if ((rng == 2 || rng == 3) && guy.CurrentHealth > 1) {
 					int damage;
-					if (guy.CurrentHealth <= 20)
+					if (guy.CurrentHealth <= 20*i1)
 						damage = rtd(1, guy.CurrentHealth - 1);
 					else
-						damage = rtd(10, 2);
+						damage = rtd(10*i1, 2);
 
 					guy.pierce = TRUE;
 					damage = guy.TakeDamage(damage);
 					line = "-The Demon #rpierces#o your block for #r" + to_string(damage) + "#o damage.";
 				}
 				else if (rng == 4) {
-					guy.ModStat(-8, "Defense", TRUE);
+					int drain = 8 * i1;
+					guy.ModStat(-drain, "Defense", TRUE);
 					guy.fillType = "Defend";
 					string line2 = "#b The Demon stares into your eyes.#o";
 					log.PushPop(line2);
-					line = "#b-You panic, #rlosing 8 Defense#b and filling your hand with Defends.#o";
+					line = "#b-You panic, #rlosing " + to_string(drain) + " Defense#b and filling your hand with Defends.#o";
 					if(!guy.Purple)
 						stepOne = TRUE;
 				}
 				else if (rng == 5) {
-					int block = gainBlock(rtd(15, 2), guy, log);
+					int block = gainBlock(rtd(15, 2*i1), guy, log);
 					line = "-The Demon gains #b" + to_string(block) + "#o block.";
 				}
 				else {
-					int damage = rtd(5, 2) + 7;
+					int damage = rtd(5*i1, 2) + 7 + (im1*3);
 					guy.TakeDamage(damage);
 					line = "-The Demon spears you for #r" + to_string(damage) + "#o damage.";
 				}
@@ -2701,13 +2737,13 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 	//Machine: regen, adds cards that damage and give extra turn, gets more powerful at lower health but loses its maxhealth sometimes
 		else if (Name == "Machine") {
 			if (CurrentHealth < MaxHealth) {
-				int health = 5-type;
+				int health = 5-type + (im1*2);
 				heal(health, guy, log);
 				string line2 = "-The Machine repairs itself for #b" + to_string(health) + "#o health.";
 				log.PushPop(line2);
 			}
 			if (charge) {
-				int damage = rtd(14, 2);
+				int damage = rtd(14*i1, 2 + (im1/3));
 				damage = guy.TakeDamage(damage);
 				string line2 = "-The turrets shoot you for #r" + to_string(damage) + "#o damage.";
 				log.PushPop(line2);
@@ -2718,7 +2754,7 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 
 			string line;
 			if (extraTurns == 0) {
-				guy.ADDScalding_Steam++;
+				guy.ADDScalding_Steam += 1 + (im1/2);
 				line = "#r-The Machine expels clouds of steam.#o";
 				extraTurns+=5;
 			}
@@ -2741,12 +2777,12 @@ void Enemy::Turn(Character &guy, TextLog &log) {
 					stepTwo = TRUE;
 				}
 				else if (rngsteam == 0 && extraTurns < 40) {
-					guy.ADDScalding_Steam++;
+					guy.ADDScalding_Steam += 1 + (im1/2);
 					line = "#r-The Machine expels clouds of steam.#o";
 					extraTurns *= 2;
 				}
 				else {
-					int block = gainBlock(rtd(4, 2+type), guy, log);
+					int block = gainBlock(rtd(4 + (im1), 2+type), guy, log);
 					line = "-The Machine gains #b" + to_string(block) + "#o block.";
 				}
 			}

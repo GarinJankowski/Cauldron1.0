@@ -27,8 +27,11 @@
 class InputBoard
 {
 public:
-	InputBoard(Deck &deck, Character &guy);
+	InputBoard(Deck &deck, Character &guy, bool inf, int itier);
 	~InputBoard();
+
+	bool infinite;
+	int infiniteTier;
 
 	int handSize = 3;
 	vector<Card> Draw;

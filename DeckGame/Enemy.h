@@ -19,12 +19,12 @@ using namespace std;
 void mvprintInSize(int starty, int startx, int maxx, const char* toBePrinted, bool Fuzzy);
 void manualBox(string typebox, int colorpair);
 
-//abstract enemy class
+
 class Enemy
 {
 public:
 	Enemy();
-	Enemy(const char *name);
+	Enemy(const char *name, int itier);
 	~Enemy();
 
 	//enemy stats
@@ -33,6 +33,9 @@ public:
 	int CurrentHealth;
 	int CurrentBlock;
 	bool Alive = TRUE;
+	int infiniteTier;
+	int i1;
+	int im1;
 
 	int TurnCount;
 	int dot;
@@ -96,12 +99,17 @@ public:
 		mvprintInSize(7, 36, 0, stat.c_str(), fuzzy);
 
 		stat = "  (" + to_string(CurrentHealth);
+		int hx = 31;
+		if (CurrentHealth >= 10)
+			hx--;
 		if (CurrentHealth >= 100)
-			mvprintInSize(7, 29, 0, stat.c_str(), fuzzy);
-		else if (CurrentHealth >= 10)
-			mvprintInSize(7, 30, 0, stat.c_str(), fuzzy);
-		else if (CurrentHealth >= 0)
-			mvprintInSize(7, 31, 0, stat.c_str(), fuzzy);
+			hx--;
+		if (CurrentHealth >= 1000)
+			hx--;
+		if (CurrentHealth >= 10000)
+			hx--;
+
+		mvprintInSize(7, hx, 0, stat.c_str(), fuzzy);
 
 		standend();
 

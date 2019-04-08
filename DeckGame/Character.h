@@ -7,12 +7,14 @@
 #include <curses.h>
 #include <string>
 
+#include "TextLog.h"
+
 using namespace std;
 
 class Character
 {
 public:
-	Character();
+	Character(bool inf, int itier, int iFloor);
 	~Character();
 
 	//character stats
@@ -41,6 +43,10 @@ public:
 	bool shuffle = FALSE;
 	const char* fillType = " ";
 	bool cannotUse;
+
+	bool infinite;
+	int infiniteTier;
+	int infiniteFloor;
 
 	//roomtype and terrain reference for functions that are not in the input board
 	const char *RoomType;
@@ -300,7 +306,7 @@ public:
 		bool Technician = FALSE;
 		bool Optimist = FALSE;
 		bool Stockpile = FALSE;
-		bool Draining_Touch = FALSE;
+		bool Therapy = FALSE;
 		bool Fleet_of_Foot = FALSE;
 		bool Gold_Claws = FALSE;
 		bool Gold_Scales = FALSE;
@@ -308,6 +314,8 @@ public:
 		bool Phlogiston = FALSE;
 		bool Momentum = FALSE;
 		int Dynamic = -1;
+		bool Resistant = FALSE;
+		bool Carbon_Copy = FALSE;
 
 	//change stats
 	int TakeDamage(int damageTaken);

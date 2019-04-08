@@ -17,7 +17,7 @@ int wastelandtext = 74;
 int fogtext = 75;
 int citytext = 82;
 
-InputBoard::InputBoard(Deck &deck, Character &guy)
+InputBoard::InputBoard(Deck &deck, Character &guy, bool inf, int itier): infinite(inf), infiniteTier(itier)
 {
 	//no negative cards added yet
 	negative = "";
@@ -38,8 +38,12 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 			deck.at(i).setStay();
 			if (!deck.at(i).Void) {
 				Discard.push_back(deck.at(i));
-				if(deck.at(i).Copy)
+				if (deck.at(i).Copy) {
 					Discard.push_back(deck.at(i));
+					//Carbon Copy trait
+					if(guy.Carbon_Copy)
+						Discard.push_back(deck.at(i));
+				}
 			}
 		}
 	}
@@ -240,7 +244,9 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableSpells.push_back(Card("Aegis"));
 	AvailableSpells.push_back(Card("Steadfast"));
 
+
 	//traits
+	//Negative
 	AvailableTraitsSacrifice.push_back(Gear("Anemia"));
 	AvailableTraitsSacrifice.push_back(Gear("Dumb"));
 	AvailableTraitsSacrifice.push_back(Gear("Mind Flooded"));
@@ -409,7 +415,7 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsReward.push_back(Gear("Technician"));
 	AvailableTraitsReward.push_back(Gear("Optimist"));
 	AvailableTraitsReward.push_back(Gear("Stockpile"));
-	AvailableTraitsReward.push_back(Gear("Draining Touch"));
+	AvailableTraitsReward.push_back(Gear("Therapy"));
 	AvailableTraitsReward.push_back(Gear("Fleet of Foot"));
 	AvailableTraitsReward.push_back(Gear("Gold Claws"));
 	AvailableTraitsReward.push_back(Gear("Gold Scales"));
@@ -417,66 +423,68 @@ InputBoard::InputBoard(Deck &deck, Character &guy)
 	AvailableTraitsReward.push_back(Gear("Phlogiston"));
 	AvailableTraitsReward.push_back(Gear("Momentum"));
 	AvailableTraitsReward.push_back(Gear("Dynamic"));
+	AvailableTraitsReward.push_back(Gear("Resistant"));
+	AvailableTraitsReward.push_back(Gear("Carbon Copy"));
 
 	AvailableTraitsRewardREFILL = AvailableTraitsReward;
 
 	//vector of bosses
-	bosses.push_back(Enemy("Paladin"));
-	bosses.push_back(Enemy("Hunter"));
-	bosses.push_back(Enemy("Juggernaut"));
-	bosses.push_back(Enemy("Vampire"));
-	bosses.push_back(Enemy("Hydra"));
-	bosses.push_back(Enemy("Exorcist"));
-	bosses.push_back(Enemy("Demigod"));
-	bosses.push_back(Enemy("Wolf"));
-	bosses.push_back(Enemy("Druid"));
-	bosses.push_back(Enemy("Serpent"));
-	bosses.push_back(Enemy("Spirit"));
-	bosses.push_back(Enemy("Artificer"));
+	bosses.push_back(Enemy("Paladin", infiniteTier));
+	bosses.push_back(Enemy("Hunter", infiniteTier));
+	bosses.push_back(Enemy("Juggernaut", infiniteTier));
+	bosses.push_back(Enemy("Vampire", infiniteTier));
+	bosses.push_back(Enemy("Hydra", infiniteTier));
+	bosses.push_back(Enemy("Exorcist", infiniteTier));
+	bosses.push_back(Enemy("Demigod", infiniteTier));
+	bosses.push_back(Enemy("Wolf", infiniteTier));
+	bosses.push_back(Enemy("Druid", infiniteTier));
+	bosses.push_back(Enemy("Serpent", infiniteTier));
+	bosses.push_back(Enemy("Spirit", infiniteTier));
+	bosses.push_back(Enemy("Artificer", infiniteTier));
 
 	bossesREFILL = bosses;
 
 	//decide final boss and themed enemies
 	int rngboss = rand() % 5;
 	if (rngboss == 0) {
-		FinalBoss = Enemy("Dragon");
+		FinalBoss = Enemy("Dragon", infiniteTier);
 
-		tierone = Enemy("Hatchling");
-		tiertwo = Enemy("Molten Jelly");
-		tierthree1 = Enemy("Knight");
-		tierthree2 = Enemy("Drake");
+		tierone = Enemy("Hatchling", infiniteTier);
+		tiertwo = Enemy("Molten Jelly", infiniteTier);
+		tierthree1 = Enemy("Knight", infiniteTier);
+		tierthree2 = Enemy("Drake", infiniteTier);
 	}
 	else if (rngboss == 1) {
-		FinalBoss = Enemy("King");
+		FinalBoss = Enemy("King", infiniteTier);
 
-		tierone = Enemy("Slave");
-		tiertwo = Enemy("Soldier");
-		tierthree1 = Enemy("Guard");
-		tierthree2 = Enemy("Jester");
+		tierone = Enemy("Slave", infiniteTier);
+		tiertwo = Enemy("Soldier", infiniteTier);
+		tierthree1 = Enemy("Guard", infiniteTier);
+		tierthree2 = Enemy("Jester", infiniteTier);
 	}
 	else if (rngboss == 2) {
-		FinalBoss = Enemy("Machine");
+		FinalBoss = Enemy("Machine", infiniteTier);
 
-		tierone = Enemy("Robot");
-		tiertwo = Enemy("Golem");
-		tierthree1 = Enemy("Merchant");
-		tierthree2 = Enemy("Turret");
+		tierone = Enemy("Robot", infiniteTier);
+		tiertwo = Enemy("Golem", infiniteTier);
+		tierthree1 = Enemy("Merchant", infiniteTier);
+		tierthree2 = Enemy("Turret", infiniteTier);
 	}
 	else if (rngboss == 3) {
-		FinalBoss = Enemy("Witch");
+		FinalBoss = Enemy("Witch", infiniteTier);
 
-		tierone = Enemy("Eyeball");
-		tiertwo = Enemy("Apprentice");
-		tierthree1 = Enemy("Monster");
-		tierthree2 = Enemy("Brain");
+		tierone = Enemy("Eyeball", infiniteTier);
+		tiertwo = Enemy("Apprentice", infiniteTier);
+		tierthree1 = Enemy("Monster", infiniteTier);
+		tierthree2 = Enemy("Brain", infiniteTier);
 	}
 	else if (rngboss == 4) {
-		FinalBoss = Enemy("Demon");
+		FinalBoss = Enemy("Demon", infiniteTier);
 
-		tierone = Enemy("Cultist");
-		tiertwo = Enemy("Imp");
-		tierthree1 = Enemy("Weeping Soul");
-		tierthree2 = Enemy("Hellhound");
+		tierone = Enemy("Cultist", infiniteTier);
+		tiertwo = Enemy("Imp", infiniteTier);
+		tierthree1 = Enemy("Weeping Soul", infiniteTier);
+		tierthree2 = Enemy("Hellhound", infiniteTier);
 	}
 
 	shopAttacks.push_back(Card("Shoot"));
@@ -2083,6 +2091,9 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 			if (DecisionCards.at(in).tempStay > 0) {
 				DecisionCards.at(in).StayCard = TRUE;
 			}
+			else
+				DecisionCards.at(in).StayCard = FALSE;
+
 			if (DecisionCards.at(in).Push)
 				pushthisturn = TRUE;
 			if (!DecisionCards.at(in).Burn && !DecisionCards.at(in).naturalBurn && (guy.burncard <= 0 || (guy.burnPlayed && guy.burninarow <= 1)) && guy.Burnout < 1 && !DecisionCards.at(in).StayCard) {
@@ -2125,16 +2136,17 @@ void InputBoard::getchCard(Character &guy, Enemy &enemy, Deck &deck, TextLog &lo
 			//check flow
 			int limit2 = 0;
 			while (DecisionCards.size() > limit2) {
-				if (DecisionCards.at(limit2).Stay) {
+				/*if (DecisionCards.at(limit2).Stay) {
 					if (!DecisionCards.at(limit2).Push)
 						DecisionCards.at(limit2).StayCard = FALSE;
 					limit2++;
 				}
-				else if (DecisionCards.at(limit2).Flow) {
+				else */if (DecisionCards.at(limit2).Flow && !DecisionCards.at(limit2).StayCard) {
 					Discard.push_back(DecisionCards.at(limit2));
 					DecisionCards.erase(DecisionCards.begin() + limit2);
 				}
 				else {
+					DecisionCards.at(limit2).StayCard = FALSE;
 					limit2++;
 				}
 			}
@@ -2297,21 +2309,21 @@ bool InputBoard::checkUsable(int i, Character &guy, Enemy &enemy) {
 //decide enemy based on room tier
 Enemy InputBoard::generateEnemy(Character &guy) {
 	Enemy enemy;
-	if ((guy.posx == 1 && guy.posy == 0) || (guy.posx == 0 && guy.posy == 1))
-		enemy = Enemy("Rat");
+	if (((guy.posx == 1 && guy.posy == 0) || (guy.posx == 0 && guy.posy == 1)) && guy.infiniteFloor == 1)
+		enemy = Enemy("Rat", infiniteTier);
 	else {
 		if (guy.getTier() == 'A') {
 			int rng = rand() % 5;
 			if (rng == 0)
-				enemy = Enemy("Kobold");
+				enemy = Enemy("Kobold", infiniteTier);
 			else if (rng > 0 && rng <= 2) {
-				enemy = Enemy("Crab");
+				enemy = Enemy("Crab", infiniteTier);
 			}
 			else if (rng == 3) {
 				enemy = tierone;
 			}
 			else {
-				enemy = Enemy("Rat");
+				enemy = Enemy("Rat", infiniteTier);
 			}
 
 			if (Terrain == "City")
@@ -2320,15 +2332,15 @@ Enemy InputBoard::generateEnemy(Character &guy) {
 		else if (guy.getTier() == 'B') {
 			int rng = rand() % 4;
 			if (rng == 0)
-				enemy = Enemy("Kobold");
+				enemy = Enemy("Kobold", infiniteTier);
 			else if (rng == 1) {
-				enemy = Enemy("Zombie");
+				enemy = Enemy("Zombie", infiniteTier);
 			}
 			else if (rng == 2) {
 				enemy = tierone;
 			}
 			else {
-				enemy = Enemy("Hound");
+				enemy = Enemy("Hound", infiniteTier);
 			}
 
 			if (Terrain == "City")
@@ -2337,16 +2349,16 @@ Enemy InputBoard::generateEnemy(Character &guy) {
 		else if (guy.getTier() == 'C' || guy.getTier() == 'D') {
 			int rng = rand() % 5;
 			if (rng == 0)
-				enemy = Enemy("Giant Rat");
+				enemy = Enemy("Giant Rat", infiniteTier);
 			else if (rng == 1)
-				enemy = Enemy("Wild Buffalo");
+				enemy = Enemy("Wild Buffalo", infiniteTier);
 			else if (rng == 2)
-				enemy = Enemy("Harpy");
+				enemy = Enemy("Harpy", infiniteTier);
 			else if (rng == 3) {
 				enemy = tiertwo;
 			}
 			else
-				enemy = Enemy("Brown Recluse");
+				enemy = Enemy("Brown Recluse", infiniteTier);
 
 			if (Terrain == "City")
 				enemy = tiertwo;
@@ -2354,9 +2366,9 @@ Enemy InputBoard::generateEnemy(Character &guy) {
 		else if (guy.getTier() == 'E') {
 			int rng = rand() % 7;
 			if (rng == 0)
-				enemy = Enemy("Troll");
+				enemy = Enemy("Troll", infiniteTier);
 			else if (rng == 1) {
-				enemy = Enemy("Elemental");
+				enemy = Enemy("Elemental", infiniteTier);
 			}
 			else if (rng == 2) {
 				enemy = tierthree1;
@@ -2365,7 +2377,7 @@ Enemy InputBoard::generateEnemy(Character &guy) {
 				enemy = tierthree2;
 			}
 			else {
-				enemy = Enemy("Adventurer");
+				enemy = Enemy("Adventurer", infiniteTier);
 			}
 
 			if (Terrain == "City") {
@@ -2377,15 +2389,15 @@ Enemy InputBoard::generateEnemy(Character &guy) {
 			}
 
 			if (guy.Circus && rand() % 4 == 0) {
-				enemy = Enemy("Jester");
+				enemy = Enemy("Jester", infiniteTier);
 			}
 		}
 		else if (guy.getTier() == 'F') {
 			int rng = rand() % 13;
 			if (rng < 2)
-				enemy = Enemy("Troll");
+				enemy = Enemy("Troll", infiniteTier);
 			else if (rng >= 2 && rng < 4) {
-				enemy = Enemy("Elemental");
+				enemy = Enemy("Elemental", infiniteTier);
 			}
 			else if (rng >= 4 && rng < 7) {
 				enemy = tierthree1;
@@ -2394,7 +2406,7 @@ Enemy InputBoard::generateEnemy(Character &guy) {
 				enemy = tierthree2;
 			}
 			else {
-				enemy = Enemy("Adventurer");
+				enemy = Enemy("Adventurer", infiniteTier);
 			}
 
 			if (Terrain == "City") {
@@ -2405,8 +2417,8 @@ Enemy InputBoard::generateEnemy(Character &guy) {
 					enemy = tierthree2;
 			}
 
-			if (guy.Circus && rand() % 4 == 0) {
-				enemy = Enemy("Jester");
+			if (guy.Circus && rand() % 2 == 0) {
+				enemy = Enemy("Jester", infiniteTier);
 			}
 		}
 	}
@@ -3021,7 +3033,15 @@ int InputBoard::gainBlock(int block, Character &guy, Enemy &enemy) {
 
 int InputBoard::gainEnergy(int energy, Character &guy, Enemy &enemy, TextLog &log) {
 	int en = energy;
-	guy.Energy += en;
+	//Stamina trait
+	if (guy.Stamina && guy.Energy < 0)
+		en *= 2;
+	//Heavy trait
+	if (guy.Heavy)
+		gainBlock(en, guy, enemy);
+	else {
+		guy.Energy += en;
+	}
 
 	//Flat Feet trait
 	if (guy.Flat_Feet && guy.Energy <= -5) {
@@ -3040,7 +3060,7 @@ void InputBoard::checkEnergy(Character &guy, Enemy &enemy, TextLog &log) {
 	if (guy.Stuck == -1 || guy.Stuck == 1) {
 		for (guy.Energy; guy.Energy >= guy.MaxEnergy; guy.Energy -= guy.MaxEnergy) {
 			if (guy.Joint_Pain) {
-				int damage = guy.TakeDamage(6);
+				int damage = guy.TakeDamage(4);
 				string pain = "#r You take " + to_string(damage) = " damage.#o";
 				log.PushPop(pain);
 			}
@@ -3324,7 +3344,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	if (guy.soldier > 0) {
 		int block = 0;
 		for (int i = 0; i < guy.soldier; i++) {
-			block += gainBlock(rtd(2, 2), guy, enemy);
+			block += gainBlock(rtd(1, 3), guy, enemy);
 		}
 		string line;
 		if (guy.soldier == 1)
@@ -3669,7 +3689,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 	}
 	//Exposed trait
 	if (guy.Exposed != -1) {
-		while (guy.Exposed >= 8) {
+		while (guy.Exposed >= 12) {
 			int rn = rand() % 6;
 			string loss;
 			int stat;
@@ -3699,7 +3719,7 @@ void InputBoard::effectsBeforeTurns(Character &guy, Enemy &enemy, Deck &deck, Te
 				loss = "-You #rlose " + to_string(stat) + " Max Mana#o.";
 				break;
 			}
-			guy.Exposed -= 8;
+			guy.Exposed -= 12;
 			log.PushPop(loss);
 		}
 	}
@@ -3850,7 +3870,30 @@ bool InputBoard::checkEnemyLife(Character &guy, Enemy &enemy, Deck &deck, TextLo
 				mvprintw(6 + i, 29, "             ");
 			clearBoard();
 
-			guy.Win = TRUE;
+			if (!infinite)
+				guy.Win = true;
+			else {
+				//gain gold after battle
+				int gold = enemy.goldreward;
+				//Bounty Hunter trait
+				if (guy.Bounty_Hunter != -1) {
+					if (guy.Bounty_Hunter < 3) {
+						gold *= 5;
+					}
+					guy.Bounty_Hunter = 0;
+				}
+				//Midas Touch trait
+				if (guy.Midas_Touch && enemy.CurrentHealth < 0) {
+					gold -= enemy.CurrentHealth;
+				}
+				gold = guy.gainGold(gold);
+				string goldline = "#$~You gain " + to_string(gold) + " gold.#o";
+				log.PushPop(goldline);
+
+				RoomType = "Cauldron";
+				printDecision(guy, log);
+				getchDecision(guy, deck, log, map);
+			}
 		}
 		//if it is a boss or regular combat, push enemy death line, remove negative cards, restore stats
 		else if (RoomType == "Boss" || RoomType == "Combat") {
@@ -4203,10 +4246,11 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		mvprintw(11, 29, "/");
 		attron(COLOR_PAIR(6));
 		mvprintw(12, 29, "=");
-		attron(COLOR_PAIR(3));
-		mvprintw(13, 29, "+");
 		attron(COLOR_PAIR(10));
-		mvprintw(14, 29, "$");
+		mvprintw(13, 29, "$");
+		attron(COLOR_PAIR(3));
+		if (!infinite)
+			mvprintw(14, 29, "+");
 		standend();
 
 		mvprintw(5, 31, "= Combat");
@@ -4216,8 +4260,9 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		mvprintw(10, 31, "= Armor");
 		mvprintw(11, 31, "= Weapon");
 		mvprintw(12, 31, "= Forge");
-		mvprintw(13, 31, "= Cauldron");
-		mvprintw(14, 31, "= Shop");
+		mvprintw(13, 31, "= Shop");
+		if (!infinite)
+			mvprintw(14, 31, "= Cauldron");
 
 		mvprintw(17, 26, "Which way?");
 		if (guy.posx == 25) {
@@ -4252,10 +4297,11 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		mvprintw(11, 29, "/");
 		attron(COLOR_PAIR(6));
 		mvprintw(12, 29, "=");
-		attron(COLOR_PAIR(3));
-		mvprintw(13, 29, "+");
 		attron(COLOR_PAIR(10));
-		mvprintw(14, 29, "$");
+		mvprintw(13, 29, "$");
+		attron(COLOR_PAIR(3));
+		if (!infinite)
+			mvprintw(14, 29, "+");
 		standend();
 
 		mvprintw(5, 31, "= Combat");
@@ -4265,8 +4311,9 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		mvprintw(10, 31, "= Armor");
 		mvprintw(11, 31, "= Weapon");
 		mvprintw(12, 31, "= Forge");
-		mvprintw(13, 31, "= Cauldron");
-		mvprintw(14, 31, "= Shop");
+		mvprintw(13, 31, "= Shop");
+		if (!infinite)
+			mvprintw(14, 31, "= Cauldron");
 
 		manualBox("Card 1", 0);
 		manualBox("Card 2", 0);
@@ -4337,10 +4384,11 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		mvprintw(11, 29, "/");
 		attron(COLOR_PAIR(6));
 		mvprintw(12, 29, "=");
-		attron(COLOR_PAIR(3));
-		mvprintw(13, 29, "+");
 		attron(COLOR_PAIR(10));
-		mvprintw(14, 29, "$");
+		mvprintw(13, 29, "$");
+		attron(COLOR_PAIR(3));
+		if(!infinite)
+			mvprintw(14, 29, "+");
 		standend();
 
 		mvprintw(5, 31, "= Combat");
@@ -4350,10 +4398,19 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		mvprintw(10, 31, "= Armor");
 		mvprintw(11, 31, "= Weapon");
 		mvprintw(12, 31, "= Forge");
-		mvprintw(13, 31, "= Cauldron");
-		mvprintw(14, 31, "= Shop");
+		mvprintw(13, 31, "= Shop");
+		if(!infinite)
+			mvprintw(14, 31, "= Cauldron");
 
 		mvprintw(17, 26, "Which way?");
+
+		int maxxpos = 25;
+		int maxypos = 7;
+		if (infinite) {
+			maxxpos = 12;
+			maxypos = 3;
+		}
+
 		//print available options
 		//check for Warper trait
 		//also handles TERRAIN: Ice and TERRAIN: Forest
@@ -4371,18 +4428,18 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		}
 		else
 			down = FALSE;
-		if (guy.posy == 7 ||
-			(Terrain == "Ice" && guy.posy <= guy.posyBefore && guy.posx > guy.posxBefore && guy.posx != 25 && !guy.Eight_Legs) ||
-			(Terrain == "Ice" && guy.posy < guy.posyBefore && guy.posx == guy.posxBefore && guy.Warper > 0 && guy.posx != 25 && !guy.Eight_Legs) ||
-			(Terrain == "Forest" && guy.posy > guy.posyBefore && guy.posx != 25 && !guy.Eight_Legs)) {
+		if (guy.posy == maxypos ||
+			(Terrain == "Ice" && guy.posy <= guy.posyBefore && guy.posx > guy.posxBefore && guy.posx != maxxpos && !guy.Eight_Legs) ||
+			(Terrain == "Ice" && guy.posy < guy.posyBefore && guy.posx == guy.posxBefore && guy.Warper > 0 && guy.posx != maxxpos && !guy.Eight_Legs) ||
+			(Terrain == "Forest" && guy.posy > guy.posyBefore && guy.posx != maxxpos && !guy.Eight_Legs)) {
 			up = FALSE;
 		}
 		else
 			up = TRUE;
-		if (guy.posx == 25 ||
-			(Terrain == "Ice" && guy.posx <= guy.posxBefore && guy.posy > guy.posyBefore && guy.posy != 7 && !guy.Eight_Legs) ||
+		if (guy.posx == maxxpos ||
+			(Terrain == "Ice" && guy.posx <= guy.posxBefore && guy.posy > guy.posyBefore && guy.posy != maxypos && !guy.Eight_Legs) ||
 			(Terrain == "Ice" && guy.posy < guy.posyBefore && guy.posx == guy.posxBefore && guy.Warper > 0 && guy.posy != 0 && !guy.Eight_Legs) ||
-			(Terrain == "Forest" && guy.posx > guy.posxBefore && guy.posy != 7 && !guy.Eight_Legs)) {
+			(Terrain == "Forest" && guy.posx > guy.posxBefore && guy.posy != maxypos && !guy.Eight_Legs)) {
 			right = FALSE;
 		}
 		else
@@ -4409,6 +4466,9 @@ void InputBoard::printDecision(Character &guy, TextLog &log) {
 		}
 		if (shopRoom) {
 			mvprintInSize(22, 22, 0, "(Enter) Enter Shop", FALSE);
+		}
+		if (infinite && guy.posx == 12 && guy.posy == 3) {
+			mvprintInSize(19, 25, 0, "1) Continue", FALSE);
 		}
 
 		/*
@@ -5251,9 +5311,16 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log, Map &ma
 				right = FALSE;
 			}*/
 
+			if (infinite && guy.posx == 12 && guy.posy == 3 && choose == '1') {
+				guy.Win = TRUE;
+				return;
+			}
 			if (up && choose == '1') {
+				int maxxy = 6;
+				if (infinite)
+					maxxy = 2;
 				//Long Legs trait
-				if (guy.Long_Legs > 0 && guy.posy < 6) {
+				if (guy.Long_Legs > 0 && guy.posy < maxxy) {
 					space *= 2;
 					guy.Long_Legs--;
 				}
@@ -5269,8 +5336,11 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log, Map &ma
 				}
 			}
 			else if (right && choose == '2') {
+				int maxxy = 24;
+				if (infinite)
+					maxxy = 11;
 				//Long Legs trait
-				if (guy.Long_Legs > 0 && guy.posx < 24) {
+				if (guy.Long_Legs > 0 && guy.posx < 11) {
 					space *= 2;
 					guy.Long_Legs--;
 				}
@@ -5318,138 +5388,73 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log, Map &ma
 			}
 			//Terraform trait
 			if (guy.Terraform && rand() % 5 == 0) {
-
+				int maxx = 26;
+				int maxy = 8;
+				if (infinite) {
+					maxx = 13;
+					maxy = 4;
+				}
 				for (int x = guy.posx-1; x <= guy.posx + 1; x++) {
 					for (int y = guy.posy-1; y <= guy.posy + 1; y++) {
-						if (x < 26 && y < 8 && x >= 0 && y >= 0 && (x != 25 || y != 7) && (x != guy.posx || y != guy.posy)) {
+						if (x < maxx && y < maxy && x >= 0 && y >= 0 && (x != maxx-1 || y != maxy-1) && (x != guy.posx || y != guy.posy)) {
 							int rng = rand() % 19;
 							if (rng >= 0 && rng <= 2) {
-								map.terrainGrid[x][y] = "Ice";
+								if(infinite)
+									map.terrainGridInfinite[x][y] = "Ice";
+								else
+									map.terrainGrid[x][y] = "Ice";
 							}
 							else if (rng > 2 && rng <= 5) {
-								map.terrainGrid[x][y] = "Forest";
+								if (infinite)
+									map.terrainGridInfinite[x][y] = "Forest";
+								else
+									map.terrainGrid[x][y] = "Forest";
 							}
 							else if (rng > 5 && rng <= 8) {
-								map.terrainGrid[x][y] = "Wasteland";
+								if (infinite)
+									map.terrainGridInfinite[x][y] = "Wasteland";
+								else
+									map.terrainGrid[x][y] = "Wasteland";
 							}
 							else if (rng > 8 && rng <= 11) {
-								map.terrainGrid[x][y] = "City";
+								if (infinite)
+									map.terrainGridInfinite[x][y] = "City";
+								else
+									map.terrainGrid[x][y] = "City";
 							}
 							else if (rng > 11 && rng <= 14) {
-								map.terrainGrid[x][y] = "Lava";
+								if (infinite)
+									map.terrainGridInfinite[x][y] = "Lava";
+								else
+									map.terrainGrid[x][y] = "Lava";
 							}
 							else if (rng > 14 && rng <= 17) {
-								map.terrainGrid[x][y] = "Fog";
+								if (infinite)
+									map.terrainGridInfinite[x][y] = "Fog";
+								else
+									map.terrainGrid[x][y] = "Fog";
 							}
 							else {
-								map.terrainGrid[x][y] = "Treasure";
+								if (infinite)
+									map.terrainGridInfinite[x][y] = "Treasure";
+								else
+									map.terrainGrid[x][y] = "Treasure";
 							}
 						}
 					}
 				}
 				int i = 0;
-				for (int x = 0; x < 26; x++) {
-					for (int y = 0; y < 8; y++) {
-						map.roomList.at(i).Terrain = map.terrainGrid[x][y];
+				for (int x = 0; x < maxx; x++) {
+					for (int y = 0; y < maxy; y++) {
+						if(infinite)
+							map.roomList.at(i).Terrain = map.terrainGridInfinite[x][y];
+						else
+							map.roomList.at(i).Terrain = map.terrainGrid[x][y];
 						i++;
 					}
 				}
 				map.PrintMapNoUpdate(guy);
 			}
-
-			/*
-			if (guy.posx == 25) {
-				if (choose == '1') {
-					//Long Legs trait
-					if (guy.Long_Legs > 0 && guy.posy < 6) {
-						space *= 2;
-						guy.Long_Legs--;
-					}
-
-					guy.changePosBefore('y', guy.posy);
-					guy.changePosBefore('x', guy.posx);
-					guy.posy += space;
-				}
-				else if (guy.Warper > 0 && guy.posy > 0 && choose == '2' && guy.posyBefore != guy.posy-1) {
-					//Long Legs trait
-					if (guy.Long_Legs > 0 && guy.posy > 1) {
-						space *= 2;
-						guy.Long_Legs--;
-					}
-
-					guy.changePosBefore('y', guy.posy);
-					guy.changePosBefore('x', guy.posx);
-					guy.posy -= space;
-					guy.Warper--;
-				}
-				else
-					getchDecision(guy, deck, log, map);
-			}
-			else if (guy.posy == 7) {
-				if (choose == '1') {
-					//Long Legs trait
-					if (guy.Long_Legs > 0 && guy.posx < 24) {
-						space *= 2;
-						guy.Long_Legs--;
-					}
-
-					guy.changePosBefore('y', guy.posy);
-					guy.changePosBefore('x', guy.posx);
-					guy.posx += space;
-				}
-				else if (guy.Warper > 0 && guy.posy > 0 && choose == '2' && guy.posyBefore != guy.posy - 1) {
-					//Long Legs trait
-					if (guy.Long_Legs > 0) {
-						space *= 2;
-						guy.Long_Legs--;
-					}
-
-					guy.changePosBefore('y', guy.posy);
-					guy.changePosBefore('x', guy.posx);
-					guy.posy -= space;
-					guy.Warper--;
-				}
-				else
-					getchDecision(guy, deck, log, map);
-			}
-			else {
-				if (choose == '1') {
-					//Long Legs trait
-					if (guy.Long_Legs > 0 && guy.posy < 6) {
-						space *= 2;
-						guy.Long_Legs--;
-					}
-
-					guy.changePosBefore('y', guy.posy);
-					guy.changePosBefore('x', guy.posx);
-					guy.posy += space;
-				}
-				else if (choose == '2') {
-					//Long Legs trait
-					if (guy.Long_Legs > 0 && guy.posx < 24) {
-						space *= 2;
-						guy.Long_Legs--;
-					}
-
-					guy.changePosBefore('y', guy.posy);
-					guy.changePosBefore('x', guy.posx);
-					guy.posx += space;
-				}
-				else if (guy.Warper > 0 && guy.posy > 0 && choose == '3' && guy.posyBefore != guy.posy - 1) {
-					//Long Legs trait
-					if (guy.Long_Legs > 0 && guy.posy > 1) {
-						space *= 2;
-						guy.Long_Legs--;
-					}
-
-					guy.changePosBefore('y', guy.posy);
-					guy.changePosBefore('x', guy.posx);
-					guy.posy -= space;
-					guy.Warper--;
-				}
-				else
-					getchDecision(guy, deck, log, map);
-			}*/
 			
 		}
 		else if (RoomType == "Gear Head" || RoomType == "Gear Body" || RoomType == "Gear Hands") {
@@ -5589,6 +5594,11 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log, Map &ma
 				//Vendor trait
 				else if (guy.Vendor) {
 					RoomType = "Shop";
+				}
+				else if (infinite && guy.posx == 12 && guy.posy == 3) {
+					RoomType = "Cauldron";
+					guy.Win = TRUE;
+					return;
 				}
 				else
 					RoomType = "Empty";
@@ -5876,6 +5886,8 @@ void InputBoard::getchDecision(Character &guy, Deck &deck, TextLog &log, Map &ma
 					}
 					else {
 						RoomType = "Empty";
+						if (infinite)
+							guy.Win = TRUE;
 					}
 
 					//if (RoomType != "Shop") {
@@ -6104,8 +6116,12 @@ void InputBoard::updateDeck(Character &guy, Deck &deck) {
 		deck.at(i).setStay();
 		if (!deck.at(i).Void && !deck.at(i).blackout) {
 			Discard.push_back(deck.at(i));
-			if (deck.at(i).Copy)
+			if (deck.at(i).Copy) {
 				Discard.push_back(deck.at(i));
+				//Carbon Copy trait
+				if(guy.Carbon_Copy)
+					Discard.push_back(deck.at(i));
+			}
 		}
 	}
 }
@@ -6164,31 +6180,31 @@ void InputBoard::generateShop() {
 	shopT = generateCard("BossCard");
 
 	//generate starting prices
-	sA = 12;
-	sB = 12;
-	sC = 12;
+	sA = 12 * infiniteTier;
+	sB = 12 * infiniteTier;
+	sC = 12 * infiniteTier;
 
-	sD = 12;
-	sE = 12;
-	sF = 12;
+	sD = 12 * infiniteTier;
+	sE = 12 * infiniteTier;
+	sF = 12 * infiniteTier;
 
-	sG = 18;
-	sH = 18;
-	sI = 18;
+	sG = 18 * infiniteTier;
+	sH = 18 * infiniteTier;
+	sI = 18 * infiniteTier;
 
-	sJ = 20;
-	sK = 20;
-	sL = 20;
+	sJ = 20 * infiniteTier;
+	sK = 20 * infiniteTier;
+	sL = 20 * infiniteTier;
 
-	sM = 10;
-	sN = 10;
-	sO = 12;
-	sP = 15;
-	sQ = 20;
-	sR = 20;
-	sS = 20;
+	sM = 10 * infiniteTier;
+	sN = 10 * infiniteTier;
+	sO = 12 * infiniteTier;
+	sP = 15 * infiniteTier;
+	sQ = 20 * infiniteTier;
+	sR = 20 * infiniteTier;
+	sS = 20 * infiniteTier;
 
-	sT = 50;
+	sT = 50 * infiniteTier;
 }
 
 //generate card for shop
@@ -6716,6 +6732,8 @@ void InputBoard::win(Character &guy, Deck &deck, TextLog &log, bool gamewin) {
 	else {
 		if (!youdie) {
 			string line = "#r-You die.#o";
+			if (infinite)
+				line = "#r-You die at Floor " + to_string(guy.infiniteFloor+((infiniteTier-1)*3)) + ", Difficulty " + to_string(infiniteTier) + ".#o";
 			log.PushPop(line);
 			log.printLog();
 			youdie = TRUE;
@@ -6951,9 +6969,11 @@ void InputBoard::endscreen(Character &guy, Deck &deck, TextLog &log) {
 	}
 	char go = getch();
 	if (go == 10) {
+		clear();
 		restart = TRUE;
 	}
 	else if (go == 27) {
+		clear();
 		quit = TRUE;
 	}
 	else {
@@ -6977,8 +6997,14 @@ void InputBoard::teleport(Character &guy, Deck &deck, TextLog &log) {
 		tp = FALSE;
 		return;
 	}
-	if (guy.posx + tilesx > 24 || guy.posx + tilesx < 0 ||
-		guy.posy + tilesy > 7 || guy.posy + tilesy < 0) {
+	int maxx = 25;
+	int maxy = 7;
+	if (infinite) {
+		maxx = 12;
+		maxy = 3;
+	}
+	if (guy.posx + tilesx > maxx || guy.posx + tilesx < 0 ||
+		guy.posy + tilesy > maxy || guy.posy + tilesy < 0) {
 		teleport(guy, deck, log);
 		tp = FALSE;
 		return;
@@ -7016,59 +7042,59 @@ void InputBoard::polymorph(Character &guy, Enemy &enemy) {
 	vector<Enemy> boss;
 	vector<Enemy> finalboss;
 
-	early.push_back(Enemy("Rat"));
-	early.push_back(Enemy("Crab"));
-	early.push_back(Enemy("Hound"));
-	early.push_back(Enemy("Zombie"));
-	early.push_back(Enemy("Kobold"));
-	mid.push_back(Enemy("Giant Rat"));
-	mid.push_back(Enemy("Wild Buffalo"));
-	mid.push_back(Enemy("Harpy"));
-	mid.push_back(Enemy("Brown Recluse"));
-	late.push_back(Enemy("Adventurer"));
-	late.push_back(Enemy("Adventurer"));
-	late.push_back(Enemy("Troll"));
-	late.push_back(Enemy("Elemental"));
+	early.push_back(Enemy("Rat", infiniteTier));
+	early.push_back(Enemy("Crab", infiniteTier));
+	early.push_back(Enemy("Hound", infiniteTier));
+	early.push_back(Enemy("Zombie", infiniteTier));
+	early.push_back(Enemy("Kobold", infiniteTier));
+	mid.push_back(Enemy("Giant Rat", infiniteTier));
+	mid.push_back(Enemy("Wild Buffalo", infiniteTier));
+	mid.push_back(Enemy("Harpy", infiniteTier));
+	mid.push_back(Enemy("Brown Recluse", infiniteTier));
+	late.push_back(Enemy("Adventurer", infiniteTier));
+	late.push_back(Enemy("Adventurer", infiniteTier));
+	late.push_back(Enemy("Troll", infiniteTier));
+	late.push_back(Enemy("Elemental", infiniteTier));
 
-	early.push_back(Enemy("Hatchling"));
-	mid.push_back(Enemy("Molten Jelly"));
-	late.push_back(Enemy("Knight"));
-	late.push_back(Enemy("Drake"));
-	early.push_back(Enemy("Slave"));
-	mid.push_back(Enemy("Soldier"));
-	late.push_back(Enemy("Guard"));
-	late.push_back(Enemy("Jester"));
-	early.push_back(Enemy("Eyeball"));
-	mid.push_back(Enemy("Apprentice"));
-	late.push_back(Enemy("Monster"));
-	late.push_back(Enemy("Brain"));
-	early.push_back(Enemy("Cultist"));
-	mid.push_back(Enemy("Imp"));
-	late.push_back(Enemy("Weeping Soul"));
-	late.push_back(Enemy("Hellhound"));
-	early.push_back(Enemy("Robot"));
-	mid.push_back(Enemy("Golem"));
-	late.push_back(Enemy("Merchant"));
-	late.push_back(Enemy("Turret"));
+	early.push_back(Enemy("Hatchling", infiniteTier));
+	mid.push_back(Enemy("Molten Jelly", infiniteTier));
+	late.push_back(Enemy("Knight", infiniteTier));
+	late.push_back(Enemy("Drake", infiniteTier));
+	early.push_back(Enemy("Slave", infiniteTier));
+	mid.push_back(Enemy("Soldier", infiniteTier));
+	late.push_back(Enemy("Guard", infiniteTier));
+	late.push_back(Enemy("Jester", infiniteTier));
+	early.push_back(Enemy("Eyeball", infiniteTier));
+	mid.push_back(Enemy("Apprentice", infiniteTier));
+	late.push_back(Enemy("Monster", infiniteTier));
+	late.push_back(Enemy("Brain", infiniteTier));
+	early.push_back(Enemy("Cultist", infiniteTier));
+	mid.push_back(Enemy("Imp", infiniteTier));
+	late.push_back(Enemy("Weeping Soul", infiniteTier));
+	late.push_back(Enemy("Hellhound", infiniteTier));
+	early.push_back(Enemy("Robot", infiniteTier));
+	mid.push_back(Enemy("Golem", infiniteTier));
+	late.push_back(Enemy("Merchant", infiniteTier));
+	late.push_back(Enemy("Turret", infiniteTier));
 
-	boss.push_back(Enemy("Paladin"));
-	boss.push_back(Enemy("Juggernaut"));
-	boss.push_back(Enemy("Vampire"));
-	boss.push_back(Enemy("Hydra"));
-	boss.push_back(Enemy("Demigod"));
-	boss.push_back(Enemy("Hunter"));
-	boss.push_back(Enemy("Exorcist"));
-	boss.push_back(Enemy("Wolf"));
-	boss.push_back(Enemy("Druid"));
-	boss.push_back(Enemy("Serpent"));
-	boss.push_back(Enemy("Spirit"));
-	boss.push_back(Enemy("Artificer"));
+	boss.push_back(Enemy("Paladin", infiniteTier));
+	boss.push_back(Enemy("Juggernaut", infiniteTier));
+	boss.push_back(Enemy("Vampire", infiniteTier));
+	boss.push_back(Enemy("Hydra", infiniteTier));
+	boss.push_back(Enemy("Demigod", infiniteTier));
+	boss.push_back(Enemy("Hunter", infiniteTier));
+	boss.push_back(Enemy("Exorcist", infiniteTier));
+	boss.push_back(Enemy("Wolf", infiniteTier));
+	boss.push_back(Enemy("Druid", infiniteTier));
+	boss.push_back(Enemy("Serpent", infiniteTier));
+	boss.push_back(Enemy("Spirit", infiniteTier));
+	boss.push_back(Enemy("Artificer", infiniteTier));
 
-	finalboss.push_back(Enemy("King"));
-	finalboss.push_back(Enemy("Demon"));
-	finalboss.push_back(Enemy("Witch"));
-	finalboss.push_back(Enemy("Dragon"));
-	finalboss.push_back(Enemy("Machine"));
+	finalboss.push_back(Enemy("King", infiniteTier));
+	finalboss.push_back(Enemy("Demon", infiniteTier));
+	finalboss.push_back(Enemy("Witch", infiniteTier));
+	finalboss.push_back(Enemy("Dragon", infiniteTier));
+	finalboss.push_back(Enemy("Machine", infiniteTier));
 
 	char tier = guy.getTier();
 
@@ -7817,3 +7843,4 @@ bool InputBoard::NegotiateGive(Character &guy, Enemy &enemy, Deck &deck, TextLog
 	log.printLog();
 	return given;
 }
+

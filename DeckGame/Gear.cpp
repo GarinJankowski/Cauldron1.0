@@ -312,14 +312,16 @@ Gear::Gear(const char *name):GearName(name)
 	GearName == "Technician" ||
 	GearName == "Optimist" ||
 	GearName == "Stockpile" ||
-	GearName == "Draining Touch" ||
+	GearName == "Therapy" ||
 	GearName == "Fleet of Foot" ||
 	GearName == "Gold Claws" ||
 	GearName == "Gold Scales" ||
 	GearName == "Gold Brain" ||
 	GearName == "Phlogiston" ||
 	GearName == "Momentum" ||
-	GearName == "Dynamic") {
+	GearName == "Dynamic" ||
+	GearName == "Resistant" ||
+	GearName == "Carbon Copy") {
 		Type = "Trait Reward";
 		TraitRDescription();
 	}
@@ -686,7 +688,7 @@ void Gear::TraitSDescription() {
 	}
 	else if (GearName == "Amnesia") {
 		Type = "Trait Sacrifice";
-		Description = "Remove half of the map icons.";
+		Description = "Obscure some of the map.";
 	}
 	else if (GearName == "Long Legs") {
 		Type = "Trait Sacrifice";
@@ -866,7 +868,7 @@ void Gear::TraitSDescription() {
 	}
 	else if (GearName == "Joint Pain") {
 	Type = "Trait Sacrifice";
-	Description = "Every time you get an extra turn take 6 damage.";
+	Description = "Every time you get an extra turn take 4 damage.";
 	}
 	else if (GearName == "Daredevil") {
 	Type = "Trait Sacrifice";
@@ -914,7 +916,7 @@ void Gear::TraitSDescription() {
 	}
 	else if (GearName == "Exposed") {
 	Type = "Trait Sacrifice";
-	Description = "Every 8 health lost, reduce a random stat by 1.";
+	Description = "Every 12 health lost, reduce a random stat by 1.";
 	}
 	else if (GearName == "Circus") {
 	Type = "Trait Sacrifice";
@@ -1121,7 +1123,7 @@ void Gear::TraitRDescription() {
 	}
 	else if (GearName == "Triple-Jointed") {
 	Type = "Trait Reward";
-	Description = "Have one more card choice in combat.";
+	Description = "Have 4 card choices in combat.";
 	}
 	else if (GearName == "Blacksmith") {
 	Type = "Trait Reward";
@@ -1315,7 +1317,7 @@ void Gear::TraitRDescription() {
 	Type = "Trait Reward";
 	Description = "The Boss stat reward is doubled.";
 	}
-	else if (GearName == "Draining Touch") {
+	else if (GearName == "Therapy") {
 	Type = "Trait Reward";
 	Description = "Attacks give 2+(Skl) mana.";
 	}
@@ -1346,6 +1348,14 @@ void Gear::TraitRDescription() {
 	else if (GearName == "Dynamic") {
 	Type = "Trait Reward";
 	Description = "+3d2 Energy when you shuffle or fill your hand.";
+	}
+	else if (GearName == "Resistant") {
+	Type = "Trait Reward";
+	Description = "Negative cards burn.";
+	}
+	else if (GearName == "Carbon Copy") {
+	Type = "Trait Reward";
+	Description = "Copy modifiers add another copy. +1 Copy mod.";
 	}
 	else if (GearName == "") {
 	Type = "Trait Reward";
@@ -2757,13 +2767,11 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck, Map &map) {
 	}
 	else if (GearName == "Amnesia") {
 		if (On) {
-			for (int x = 1; x < 27; x++) {
-				for (int y = 6; y < 14; y++) {
-					if (rand() % 2 == 0)
-						if (x-1 != guy.posx || y != guy.posy)
-							mvprintw(y, x, "?");
-				}
+			for (int i = 1; i < map.roomList.size(); i++) {
+				map.roomList.at(i).amnesia = TRUE;
 			}
+
+			map.UpdateMap(guy);
 		}
 		else {
 
@@ -3037,35 +3045,59 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck, Map &map) {
 			  ooooooo
 			   ooooo
 			*/
+			int maxx = 26;
+			int maxy = 8;
+			if (guy.infinite) {
+				maxx = 13;
+				maxy = 4;
+			}
 			for (int x = guy.posx-3; x <= guy.posx+3; x++) {
 				for (int y = guy.posy-3; y <= guy.posy+3; y++) {
-					if (x <= 25 && x >= 0 && y <= 7 && y >= 0 &&
-						(x != 25 || y != 7) &&
+					if (x <= maxx-1 && x >= 0 && y <= maxy-1 && y >= 0 &&
+						(x != maxx-1 || y != maxy-1) &&
 						rand() % 3 != 0) {
-						map.terrainGrid[x][y] = "Lava";
+						if(guy.infinite)
+							map.terrainGridInfinite[x][y] = "Lava";
+						else
+							map.terrainGrid[x][y] = "Lava";
 					}
 				}
 			}
 			for (int x = guy.posx - 2; x <= guy.posx + 2; x++) {
-				if (x <= 25 && x >= 0 && guy.posy-4 <= 7 && guy.posy-4 >= 0 && rand() % 3 != 0) {
-					map.terrainGrid[x][guy.posy - 4] = "Lava";
+				if (x <= maxx-1 && x >= 0 && guy.posy-4 <= maxy-1 && guy.posy-4 >= 0 && rand() % 3 != 0) {
+					if (guy.infinite)
+						map.terrainGridInfinite[x][guy.posy - 4] = "Lava";
+					else
+						map.terrainGrid[x][guy.posy - 4] = "Lava";
 				}
-				if (x <= 25 && x >= 0 && guy.posy+4 <= 7 && guy.posy+4 >= 0 && rand() % 3 != 0) {
-					map.terrainGrid[x][guy.posy + 4] = "Lava";
+				if (x <= maxx-1 && x >= 0 && guy.posy+4 <= maxy-1 && guy.posy+4 >= 0 && rand() % 3 != 0) {
+					if (guy.infinite)
+						map.terrainGridInfinite[x][guy.posy + 4] = "Lava";
+					else
+						map.terrainGrid[x][guy.posy + 4] = "Lava";
 				}
 			}
 			for (int y = guy.posy - 2; y <= guy.posy + 2; y++) {
-				if (guy.posx-4 <= 25 && guy.posx-4 >= 0 && y <= 7 && y >= 0 && rand() % 3 != 0) {
-					map.terrainGrid[guy.posx - 4][y] = "Lava";
+				if (guy.posx-4 <= maxx-1 && guy.posx-4 >= 0 && y <= maxy-1 && y >= 0 && rand() % 3 != 0) {
+					if (guy.infinite)
+						map.terrainGridInfinite[guy.posx - 4][y] = "Lava";
+					else
+						map.terrainGrid[guy.posx - 4][y] = "Lava";
 				}
 				if (guy.posx+4 <= 25 && guy.posx+4 >= 0 && y <= 7 && y >= 0 && rand() % 3 != 0) {
-					map.terrainGrid[guy.posx + 4][y] = "Lava";
+					if (guy.infinite)
+						map.terrainGridInfinite[guy.posx + 4][y] = "Lava";
+					else
+						map.terrainGrid[guy.posx + 4][y] = "Lava";
 				}
 			}
 			int i = 0;
-			for (int x = 0; x < 26; x++) {
-				for (int y = 0; y < 8; y++) {
-					map.roomList.at(i).Terrain = map.terrainGrid[x][y];
+			for (int x = 0; x < maxx; x++) {
+				for (int y = 0; y < maxy; y++) {
+					if (guy.infinite)
+						map.roomList.at(i).Terrain = map.terrainGridInfinite[x][y];
+					else
+						map.roomList.at(i).Terrain = map.terrainGrid[x][y];
 					i++;
 				}
 			}
@@ -3076,22 +3108,38 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck, Map &map) {
 	}
 	else if (GearName == "Flash Freeze") {
 		if (On) {
-				for (int x = guy.posx-10; x <= guy.posx+10; x++) {
-					if (x <= 25 && x >= 0 && (x != 25 || guy.posy != 7))
+			int maxx = 26;
+			int maxy = 8;
+			if (guy.infinite) {
+				maxx = 13;
+				maxy = 4;
+			}
+
+			for (int x = guy.posx-10; x <= guy.posx+10; x++) {
+				if (x <= maxx-1 && x >= 0 && (x != maxx-1 || guy.posy != maxy-1))
+					if(guy.infinite)
+						map.terrainGridInfinite[x][guy.posy] = "Ice";
+					else
 						map.terrainGrid[x][guy.posy] = "Ice";
-				}
-				for (int y = guy.posy-10; y <= guy.posy+10; y++) {
-					if (y <= 7 && y >= 0 && (guy.posx != 25 || y != 7))
+			}
+			for (int y = guy.posy-10; y <= guy.posy+10; y++) {
+				if (y <= maxy-1 && y >= 0 && (guy.posx != maxx-1 || y != maxy-1))
+					if(guy.infinite)
+						map.terrainGridInfinite[guy.posx][y] = "Ice";
+					else
 						map.terrainGrid[guy.posx][y] = "Ice";
-				}
-				int i = 0;
-				for (int x = 0; x < 26; x++) {
-					for (int y = 0; y < 8; y++) {
+			}
+			int i = 0;
+			for (int x = 0; x < maxx; x++) {
+				for (int y = 0; y < maxy; y++) {
+					if(guy.infinite)
+						map.roomList.at(i).Terrain = map.terrainGridInfinite[x][y];
+					else
 						map.roomList.at(i).Terrain = map.terrainGrid[x][y];
-						i++;
-					}
+					i++;
 				}
-				map.PrintWholeMap(guy);
+			}
+			map.PrintWholeMap(guy);
 		}
 		else {
 		}
@@ -3347,9 +3395,11 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck, Map &map) {
 	}
 	else if (GearName == "Inert") {
 	if (On) {
+		guy.ModStat(-3, "MaxEnergy", FALSE);
 		guy.Inert = TRUE;
 	}
 	else {
+		guy.ModStat(3, "MaxEnergy", FALSE);
 		guy.Inert = FALSE;
 	}
 	}
@@ -3475,17 +3525,28 @@ void Gear::SacrificeOnOrOff(bool On, Character &guy, Deck &deck, Map &map) {
 	}
 	else if (GearName == "Earthquake") {
 	if (On) {
-		for (int x = 0; x < 26; x++) {
-			for (int y = 0; y < 8; y++) {
-				if (map.terrainGrid[x][y] == "City")
+		int maxx = 26;
+		int maxy = 8;
+		if (guy.infinite) {
+			maxx = 13;
+			maxy = 4;
+		}
+		for (int x = 0; x < maxx; x++) {
+			for (int y = 0; y < maxy; y++) {
+				if (!guy.infinite && map.terrainGrid[x][y] == "City")
 					map.terrainGrid[x][y] = "Wasteland";
+				if (guy.infinite && map.terrainGridInfinite[x][y] == "City")
+					map.terrainGridInfinite[x][y] = "Wasteland";
 			}
 		}
 
 		int i = 0;
-		for (int x = 0; x < 26; x++) {
-			for (int y = 0; y < 8; y++) {
-				map.roomList.at(i).Terrain = map.terrainGrid[x][y];
+		for (int x = 0; x < maxx; x++) {
+			for (int y = 0; y < maxy; y++) {
+				if(guy.infinite)
+					map.roomList.at(i).Terrain = map.terrainGridInfinite[x][y];
+				else	
+					map.roomList.at(i).Terrain = map.terrainGrid[x][y];
 				i++;
 			}
 		}
@@ -4231,12 +4292,12 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck, Map &map) {
 		guy.Stockpile = FALSE;
 	}
 	}
-	else if (GearName == "Draining Touch") {
+	else if (GearName == "Therapy") {
 	if (On) {
-		guy.Draining_Touch = TRUE;
+		guy.Therapy = TRUE;
 	}
 	else {
-		guy.Draining_Touch = FALSE;
+		guy.Therapy = FALSE;
 	}
 	}
 	else if (GearName == "Fleet of Foot") {
@@ -4293,6 +4354,23 @@ void Gear::RewardOnOrOff(bool On, Character &guy, Deck &deck, Map &map) {
 	}
 	else {
 		guy.Dynamic = -1;
+	}
+	}
+	else if (GearName == "Resistant") {
+	if (On) {
+		guy.Resistant = TRUE;
+	}
+	else {
+		guy.Resistant = FALSE;
+	}
+	}
+	else if (GearName == "Carbon Copy") {
+	if (On) {
+		guy.Carbon_Copy = TRUE;
+		guy.Copy++;
+	}
+	else {
+		guy.Carbon_Copy = FALSE;
 	}
 	}
 	else if (GearName == "") {
